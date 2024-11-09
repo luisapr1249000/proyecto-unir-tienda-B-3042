@@ -1,0 +1,278 @@
+paths:
+  /products/{productId}/comments:
+    get:
+      tags:
+        - Comment
+      summary: "Retrieve a paginated list of comments for a specific product"
+      description: "Fetches paginated comments for a given product, including author details. Supports pagination parameters."
+      parameters:
+        - name: productId
+          in: path
+          required: true
+          description: "The ID of the product to retrieve comments for."
+          schema:
+            type: string
+
+        - name: page
+          in: query
+          required: false
+          description: "The page number to retrieve."
+          schema:
+            type: integer
+            minimum: 1
+            default: 1
+        - name: limit
+          in: query
+          required: false
+          description: "The number of categories to return per page."
+          schema:
+            type: integer
+            minimum: 1
+            default: 10
+        - name: sort
+          in: query
+          required: false
+          description: "The field by which to sort categories."
+          schema:
+            type: string
+            enum:
+              - createdAt
+              - -createdAt
+              - updatedAt
+              - -updatedAt
+            default: "-createdAt"
+      responses:
+        "200":
+          description: "A paginated list of comments for the specified product."
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/PaginationResult"
+                  - type: object
+                properties:
+                  docs:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Comment"
+        "404":
+          description: "Product not found or no comments available for this product."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotFoundError"
+        "500":
+          description: "Internal server error."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InternalServerError"
+
+    post:
+      tags:
+        - Comment
+      summary: "Create a comment for a product"
+      description: "Adds a new comment to the specified product, with the authenticated user as the author."
+      security:
+        - cookieAuth: []
+      parameters:
+        - name: productId
+          in: path
+          required: true
+          description: "The ID of the product to add a comment to."
+          schema:
+            type: string
+
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CommentInput" # Reference to the comment input schema
+      responses:
+        "201":
+          description: "Comment created successfully."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Comment" # Reference to the created comment schema
+        "400":
+          description: "Bad request due to invalid input."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BadRequestError"
+        "401":
+          description: "Unauthorized access due to missing or invalid token."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UnauthorizedError"
+        "404":
+          description: "Product not found."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotFoundError"
+        "500":
+          description: "Internal server error."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InternalServerError"
+  /products/{productId}/comments/{commentId}:
+    get:
+      tags:
+        - Comment
+      summary: "Retrieve a specific comment by its ID"
+      description: "Fetches a single comment for a specified product, including author and product details."
+      parameters:
+        - name: productId
+          in: path
+          required: true
+          description: "The ID of the product associated with the comment."
+          schema:
+            type: string
+
+        - name: commentId
+          in: path
+          required: true
+          description: "The ID of the comment to retrieve."
+          schema:
+            type: string
+
+      responses:
+        "200":
+          description: "Comment details for the specified comment ID."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Comment" # Reference to the comment schema with populated fields
+        "404":
+          description: "Comment not found for the specified product or comment ID."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotFoundError"
+        "500":
+          description: "Internal server error."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InternalServerError"
+
+    put:
+      tags:
+        - Comment
+      summary: "Update a specific comment on a product"
+      description: "Updates the specified comment for the product, ensuring the authenticated user is the comment author or has admin privileges."
+      security:
+        - cookieAuth: []
+      parameters:
+        - name: productId
+          in: path
+          required: true
+          description: "The ID of the product associated with the comment."
+          schema:
+            type: string
+
+        - name: commentId
+          in: path
+          required: true
+          description: "The ID of the comment to update."
+          schema:
+            type: string
+
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CommentInput" # Reference to the comment input schema
+      responses:
+        "200":
+          description: "Comment updated successfully."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Comment" # Reference to the updated comment schema
+        "400":
+          description: "Bad request due to invalid input."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BadRequestError"
+        "401":
+          description: "Unauthorized access due to missing or invalid token."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UnauthorizedError"
+        "403":
+          description: "Forbidden due to lack of permissions."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ForbiddenError"
+        "404":
+          description: "Product or comment not found."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotFoundError"
+        "500":
+          description: "Internal server error."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InternalServerError"
+
+    delete:
+      tags:
+        - Comment
+      summary: "Delete a specific comment on a product"
+      description: "Deletes the specified comment from the product, ensuring the authenticated user is the comment author or has admin privileges."
+      security:
+        - cookieAuth: []
+      parameters:
+        - name: productId
+          in: path
+          required: true
+          description: "The ID of the product associated with the comment."
+          schema:
+            type: string
+
+        - name: commentId
+          in: path
+          required: true
+          description: "The ID of the comment to delete."
+          schema:
+            type: string
+
+      responses:
+        "204":
+          description: "Comment deleted successfully."
+        "403":
+          description: "Forbidden due to lack of permissions."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ForbiddenError"
+        "401":
+          description: "Unauthorized access due to missing or invalid token."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UnauthorizedError"
+        "404":
+          description: "Product or comment not found."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotFoundError"
+        "500":
+          description: "Internal server error."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InternalServerError"

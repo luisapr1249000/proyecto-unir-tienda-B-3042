@@ -1,0 +1,96 @@
+components:
+  schemas:
+    ProductInput:
+      type: object
+      properties:
+        name:
+          type: string
+          description: "The name of the product."
+          example: "Smartphone XYZ"
+          required: true
+        description:
+          type: string
+          description: "A detailed description of the product."
+          example: "A feature-rich smartphone with advanced capabilities."
+          required: true
+        price:
+          type: number
+          description: "The price of the product."
+          example: 499.99
+          required: true
+          minimum: 0
+        quantity:
+          type: number
+          description: "The available quantity of the product."
+          example: 100
+          required: true
+          minimum: 0
+        categories:
+          type: array
+          description: "A list of category IDs associated with the product."
+          items:
+            type: string
+            example: "60d5f7f2b5c7d41c5c8c8e1b" # Example category ID
+          required: true
+        isDeleted:
+          type: boolean
+          description: "Indicates if the product is marked as deleted."
+          example: false
+        specifications:
+          type: object
+          properties:
+            dimensions:
+              type: object
+              properties:
+                width:
+                  type: string
+                  example: "6.5 inches"
+                depth:
+                  type: string
+                  example: "0.3 inches"
+                height:
+                  type: string
+                  example: "3 inches"
+            material:
+              type: string
+              example: "Aluminum"
+            finish:
+              type: string
+              example: "Matte"
+            assemblyRequired:
+              type: boolean
+              example: false
+            weightCapacity:
+              type: number
+              example: 150 # In kilograms
+        brand:
+          type: array
+          description: "The brand names associated with the product."
+          items:
+            type: string
+            example: "BrandA"
+      required:
+        - name
+        - description
+        - price
+        - quantity
+        - categories
+
+    Product:
+      allOf:
+        - $ref: "#/components/schemas/Abstract" # Reference to the abstract schema
+        - $ref: "#/components/schemas/ProductInput" # Reference to the abstract schema
+        - $ref: "#/components/schemas/Author" # Reference to the abstract schema
+        - type: object
+          properties:
+            category:
+              type: string
+              description: "The ID of the category."
+              example: "60d5f7f2b5c7d41c5c8c8e1a"
+            
+            images:
+              type: array
+              description: "An array of image objects for the product."
+              items:
+                $ref: "#/components/schemas/Image" # Reference to the Image schema
+          additionalProperties: false

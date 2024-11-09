@@ -1,0 +1,143 @@
+paths:
+  /users/address-direction:
+    post:
+      tags:
+        - AddressDirection
+      summary: "Create Address Direction"
+      description: "Add a new address direction for the authenticated user."
+      security:
+        - bearerAuth: [] # Assuming bearer token is used for authentication
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AddressDirectionInput"
+      responses:
+        "201":
+          description: "Address direction created successfully."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        "401":
+          description: "Unauthorized access due to missing or invalid token."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UnauthorizedError"
+        "404":
+          description: "User not found."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotFoundError"
+        "400":
+          description: "Bad request due to invalid input."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BadRequestError"
+        "500":
+          description: "Internal server error."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InternalServerError"
+
+  /users/address-direction/{addressDirectionId}:
+    put:
+      tags:
+        - AddressDirection
+      summary: "Update Address Direction"
+      description: "Update an existing address direction for the authenticated user."
+      security:
+        - bearerAuth: [] # Assuming bearer token is used for authentication
+      parameters:
+        - name: addressDirectionId
+          in: path
+          required: true
+          description: "The unique identifier of the address direction to update."
+          schema:
+            type: string
+            example: "60d5f7f2b5c7d41c5c8c8e1c"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AddressDirectionInput"
+      responses:
+        "200":
+          description: "Address direction updated successfully."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        "401":
+          description: "Unauthorized access due to missing or invalid token."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UnauthorizedError"
+        "404":
+          description: "Address direction not found."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotFoundError"
+        "400":
+          description: "Bad request due to invalid input."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BadRequestError"
+        "500":
+          description: "Internal server error."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InternalServerError"
+
+    delete:
+      tags:
+        - AddressDirection
+      summary: "Delete Address Direction"
+      description: "Delete an existing address direction for the authenticated user."
+      security:
+        - bearerAuth: [] # Assuming bearer token is used for authentication
+      parameters:
+        - name: addressDirectionId
+          in: path
+          required: true
+          description: "The unique identifier of the address direction to delete."
+          schema:
+            type: string
+            example: "60d5f7f2b5c7d41c5c8c8e1c"
+      responses:
+        "204":
+          description: "Address direction deleted successfully."
+        "401":
+          description: "Unauthorized access due to missing or invalid token."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UnauthorizedError"
+        "404":
+          description: "User not found or address direction not found."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotFoundError"
+        "400":
+          description: "Bad request due to invalid input."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BadRequestError"
+        "500":
+          description: "Internal server error."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InternalServerError"

@@ -1,0 +1,229 @@
+paths:
+  /categories:
+    get:
+      tags:
+        - Category
+      summary: "Retrieve a paginated list of categories"
+      description: "Fetches categories with optional pagination and sorting."
+      parameters:
+        - name: page
+          in: query
+          required: false
+          description: "The page number to retrieve."
+          schema:
+            type: integer
+            minimum: 1
+            default: 1
+        - name: limit
+          in: query
+          required: false
+          description: "The number of categories to return per page."
+          schema:
+            type: integer
+            minimum: 1
+            default: 10
+        - name: sort
+          in: query
+          required: false
+          description: "The field by which to sort categories."
+          schema:
+            type: string
+            enum:
+              - createdAt
+              - -createdAt
+              - updatedAt
+              - -updatedAt
+            default: "-createdAt"
+      responses:
+        "200":
+          description: "A paginated list of categories."
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/PaginationResult"
+                  - type: object
+                properties:
+                  docs:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Category"
+        "401":
+          description: "Unauthorized access due to missing or invalid token."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UnauthorizedError"
+        "404":
+          description: "No categories found."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotFoundError"
+        "400":
+          description: "Bad request due to invalid pagination parameters."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BadRequestError"
+        "500":
+          description: "Internal server error."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InternalServerError"
+
+    post:
+      tags:
+        - Category
+      summary: "Create a new category"
+      description: "Creates a new category with the authenticated user's ID as the author."
+      security:
+        - cookieAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CategoryInput" # Reference to the category input schema
+      responses:
+        "201":
+          description: "Category created successfully."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Category" # Reference to the created category schema
+                
+        "400":
+          description: "Bad request due to invalid input."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BadRequestError"
+        "401":
+          description: "Unauthorized access due to missing or invalid token."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UnauthorizedError"
+        "403":
+          description: "Forbidden due to lack of permissions."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ForbiddenError"
+        "500":
+          description: "Internal server error."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InternalServerError"
+
+  /categories/{categoryId}:
+    put:
+      tags:
+        - Category
+      summary: "Update an existing category"
+      description: "Updates the specified category with the provided data."
+      security:
+        - cookieAuth: []
+      parameters:
+        - name: categoryId
+          in: path
+          required: true
+          description: "The ID of the category to be updated."
+          schema:
+            type: string
+      # or use 'string' depending on your ID format
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CategoryInput" # Reference to the category input schema
+      responses:
+        "200":
+          description: "Category updated successfully."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Category" # Reference to the updated category schema
+        "400":
+          description: "Bad request due to invalid input."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BadRequestError"
+        "401":
+          description: "Unauthorized access due to missing or invalid token."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UnauthorizedError"
+        "403":
+          description: "Forbidden due to lack of permissions."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ForbiddenError"
+        "404":
+          description: "Category not found."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotFoundError"
+        "500":
+          description: "Internal server error."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InternalServerError"
+
+    delete:
+      tags:
+        - Category
+      summary: "delete a category"
+      description: "deletes the specified category."
+      security:
+        - cookieAuth: []
+      parameters:
+        - name: categoryId
+          in: path
+          required: true
+          description: "The ID of the category to be updated."
+          schema:
+            type: string
+      # or use 'string' depending on your ID format
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CategoryInput" # Reference to the category input schema
+      responses:
+        "204":
+          description: "Category deleted successfully."
+        "401":
+          description: "Unauthorized access due to missing or invalid token."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UnauthorizedError"
+        "403":
+          description: "Forbidden due to lack of permissions."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ForbiddenError"
+        "404":
+          description: "Category not found."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotFoundError"
+        "500":
+          description: "Internal server error."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InternalServerError"

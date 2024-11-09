@@ -1,0 +1,24 @@
+components:
+  schemas:
+    CategoryInput:
+      type: object
+      properties:
+        name:
+          type: string
+          description: "The name of the category."
+          unique: true # Note: 'unique' is not a standard OpenAPI property; consider removing or clarifying its use.
+          example: "Electronics"
+
+        description:
+          type: string
+          description: "A brief description of the category."
+          example: "Devices and gadgets related to electronics."
+
+      required:
+        - name
+
+    Category:
+      allOf:
+        - $ref: "#/components/schemas/Abstract" 
+        - $ref: "#/components/schemas/CategoryInput" 
+        - $ref: "#/components/schemas/Author"

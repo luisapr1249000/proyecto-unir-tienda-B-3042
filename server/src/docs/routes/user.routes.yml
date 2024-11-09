@@ -1,0 +1,699 @@
+paths:
+  /users/:
+    get:
+      tags:
+        - User
+      summary: "Get Users with Pagination"
+      description: "Retrieve a paginated list of users."
+      parameters:
+        - name: page
+          in: query
+          required: false
+          description: "The page number to retrieve, starting from 1."
+          schema:
+            type: integer
+            minimum: 1
+            default: 1
+        - name: limit
+          in: query
+          required: false
+          description: "The number of users to return per page."
+          schema:
+            type: integer
+            minimum: 10
+            default: 10
+        - name: sort
+          in: query
+          required: false
+          description: "The field to sort by. Prefix with '-' for descending order."
+          schema:
+            type: string
+            enum: ["createdAt", "-createdAt", "updatedAt", "-updatedAt"]
+            default: "-createdAt"
+      responses:
+        "200":
+          description: "A paginated list of users."
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/PaginationResult"
+                  - type: object
+                properties:
+                  docs:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/User"
+
+        "404":
+          description: "No users found."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotFoundError" # Reference to your NotFoundError schema
+        "400":
+          description: "Bad Request, invalid pagination parameters."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BadRequestError" # Reference to your BadRequestError schema
+        "500":
+          description: "Internal Server Error"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InternalServerError"
+
+    put:
+      tags:
+        - User
+      summary: "Update User Information"
+      description: "Update the information of the currently authenticated user."
+      security:
+        - cookieAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UserInput" # Reference to your user input schema
+
+      responses:
+        "200":
+          description: "Successfully updated user information."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        "404":
+          description: "User not found."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotFoundError"
+        "400":
+          description: "Bad Request"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BadRequestError"
+        "401":
+          description: "Unauthorized access due to missing or invalid token."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UnauthorizedError"
+        "500":
+          description: "Internal Server Error"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InternalServerError"
+
+  /users/{userId}:
+    delete:
+      tags:
+        - User
+      summary: "Delete User"
+      description: "Delete a user by their user ID. Only accessible by the user themselves or an admin."
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          description: "The unique identifier of the user to delete."
+          schema:
+            type: string
+            example: "60d5f7f2b5c7d41c5c8c8e1b"
+      security:
+        - cookieAuth: []
+      responses:
+        "204":
+          description: "User successfully deleted."
+        "404":
+          description: "User not found."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotFoundError" # Reference to your NotFoundError schema
+        "401":
+          description: "Unauthorized, access token is missing or invalid."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UnauthorizedError" # Reference to your UnauthorizedError schema
+        "403":
+          description: "Forbidden, user does not have permission to delete this user."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ForbiddenError" # Reference to your ForbiddenError schema
+        "500":
+          description: "Internal Server Error"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InternalServerError"
+    get:
+      tags:
+        - User
+      summary: "Get User by ID"
+      description: "Retrieve a user by their unique identifier."
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          description: "The unique identifier of the user."
+          schema:
+            type: string
+            example: "60d5f7f2b5c7d41c5c8c8e1b"
+      responses:
+        "200":
+          description: "User found."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        "404":
+          description: "User not found."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotFoundError"
+        "500":
+          description: "Internal server error."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InternalServerError"
+
+  /users/username/{username}:
+    get:
+      tags:
+        - User
+      summary: "Get User by Username"
+      description: "Retrieve a user by their unique username."
+      parameters:
+        - name: username
+          in: path
+          required: true
+          description: "The unique username of the user."
+          schema:
+            type: string
+            example: "john_doe"
+      responses:
+        "200":
+          description: "User found."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        "404":
+          description: "User not found."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotFoundError"
+        "500":
+          description: "Internal server error."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InternalServerError"
+
+  /users/{userId}/cart:
+    get:
+      security:
+        - cookieAuth: []
+      tags:
+        - Cart
+      summary: "Retrieve the cart for a specific user"
+      description: "Fetches the cart contents for a specified user, including product details if any."
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          description: "The ID of the user whose cart is to be retrieved."
+          schema:
+            type: string
+      responses:
+        "200":
+          description: "Cart contents for the specified user."
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  cart:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Product" # Reference to the product schema
+        "401":
+          description: "Unauthorized access due to missing or invalid token."
+          content:
+            text/plain:
+              schema:
+                $ref: "#/components/schemas/UnauthorizedError"
+        "403":
+          description: "Forbidden due to lack of permissions."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ForbiddenError"
+        "404":
+          description: "User not found or cart is empty."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotFoundError"
+        "500":
+          description: "Internal server error."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InternalServerError"
+
+  /users/{userId}/cart/{productId}:
+    post:
+      security:
+        - cookieAuth: []
+      tags:
+        - Cart
+      summary: "Add a product to a user's cart"
+      description: "Adds a specified product to the cart of a specified user."
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          description: "The ID of the user to add the product to their cart."
+          schema:
+            type: string
+        - name: productId
+          in: path
+          required: true
+          description: "The ID of the product to be added to the cart."
+          schema:
+            type: string
+      responses:
+        "200":
+          description: "Product added to the user's cart."
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  cart:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Product" # Updated cart contents
+        "401":
+          description: "Unauthorized access due to missing or invalid token."
+          content:
+            text/plain:
+              schema:
+                $ref: "#/components/schemas/UnauthorizedError"
+        "403":
+          description: "Forbidden due to lack of permissions."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ForbiddenError"
+        "404":
+          description: "User not found."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotFoundError"
+        "500":
+          description: "Internal server error."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InternalServerError"
+
+    delete:
+      security:
+        - cookieAuth: []
+      tags:
+        - Cart
+      summary: "Remove a product from a user's cart"
+      description: "Removes a specified product from the cart of a specified user."
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          description: "The ID of the user to remove the product from their cart."
+          schema:
+            type: string
+
+        - name: productId
+          in: path
+          required: true
+          description: "The ID of the product to be removed from the cart."
+          schema:
+            type: string
+
+      responses:
+        "204":
+          description: "Product removed from the user's cart successfully."
+        "401":
+          description: "Unauthorized access due to missing or invalid token."
+          content:
+            text/plain:
+              schema:
+                $ref: "#/components/schemas/UnauthorizedError"
+        "403":
+          description: "Forbidden due to lack of permissions."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ForbiddenError"
+        "404":
+          description: "User or product not found in the cart."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotFoundError"
+        "500":
+          description: "Internal server error."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InternalServerError"
+
+  /users/{userId}/saved-products:
+    get:
+      security:
+        - cookieAuth: []
+      tags:
+        - Saved Products
+      summary: "Retrieve saved products for a specific user"
+      description: "Fetches the list of products saved by a specified user."
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          description: "The ID of the user whose saved products are to be retrieved."
+          schema:
+            type: string
+      responses:
+        "200":
+          description: "Saved products for the specified user."
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Product" # Reference to the product schema
+        "401":
+          description: "Unauthorized access due to missing or invalid token."
+          content:
+            text/plain:
+              schema:
+                $ref: "#/components/schemas/UnauthorizedError"
+        "403":
+          description: "Forbidden due to lack of permissions."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ForbiddenError"
+        "404":
+          description: "User not found or no saved products found."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotFoundError"
+        "500":
+          description: "Internal server error."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InternalServerError"
+
+  /users/{userId}/saved-products/{productId}:
+    post:
+      security:
+        - cookieAuth: []
+      tags:
+        - Saved Products
+      summary: "Add a product to a user's saved products"
+      description: "Adds a specified product to the saved products of a specified user."
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          description: "The ID of the user to save the product for."
+          schema:
+            type: string
+
+        - name: productId
+          in: path
+          required: true
+          description: "The ID of the product to be saved."
+          schema:
+            type: string
+
+      responses:
+        "200":
+          description: "Product added to the user's saved products."
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  savedProducts:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Product" # Updated saved products
+        "401":
+          description: "Unauthorized access due to missing or invalid token."
+          content:
+            text/plain:
+              schema:
+                $ref: "#/components/schemas/UnauthorizedError"
+        "403":
+          description: "Forbidden due to lack of permissions."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ForbiddenError"
+        "404":
+          description: "User not found."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotFoundError"
+        "500":
+          description: "Internal server error."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InternalServerError"
+
+    delete:
+      security:
+        - cookieAuth: []
+      tags:
+        - Saved Products
+      summary: "Remove a product from a user's saved products"
+      description: "Removes a specified product from the saved products of a specified user."
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          description: "The ID of the user to remove the product from their saved products."
+          schema:
+            type: string
+
+        - name: productId
+          in: path
+          required: true
+          description: "The ID of the product to be removed from saved products."
+          schema:
+            type: string
+
+      responses:
+        "204":
+          description: "Product removed from the user's saved products successfully."
+        "401":
+          description: "Unauthorized access due to missing or invalid token."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UnauthorizedError"
+        "403":
+          description: "Forbidden due to lack of permissions."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ForbiddenError"
+        "404":
+          description: "User or product not found in the saved products."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotFoundError"
+        "500":
+          description: "Internal server error."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InternalServerError"
+
+  /users/{userId}/wishlist:
+    get:
+      security:
+        - cookieAuth: []
+      tags:
+        - Wishlist
+      summary: "Retrieve the wishlist for a specific user"
+      description: "Fetches the list of products in the wishlist of a specified user."
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          description: "The ID of the user whose cart is to be retrieved."
+          schema:
+            type: string
+      responses:
+        "200":
+          description: "Wishlist for the specified user."
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Product" # Reference to the product schema
+        "401":
+          description: "Unauthorized access due to missing or invalid token."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UnauthorizedError"
+        "403":
+          description: "Forbidden due to lack of permissions."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ForbiddenError"
+        "404":
+          description: "User not found or no products in the wishlist."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotFoundError"
+        "500":
+          description: "Internal server error."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InternalServerError"
+
+  /users/{userId}/wishlist/{productId}:
+    post:
+      security:
+        - cookieAuth: []
+      tags:
+        - Wishlist
+      summary: "Add a product to a user's wishlist"
+      description: "Adds a specified product to the wishlist of a specified user."
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          description: "The ID of the user to add the product to their wishlist."
+          schema:
+            type: string
+
+        - name: productId
+          in: path
+          required: true
+          description: "The ID of the product to be added to the wishlist."
+          schema:
+            type: string
+
+      responses:
+        "200":
+          description: "Product added to the user's wishlist."
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  wishlist:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Product" # Updated wishlist
+        "401":
+          description: "Unauthorized access due to missing or invalid token."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UnauthorizedError"
+        "403":
+          description: "Forbidden due to lack of permissions."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ForbiddenError"
+        "404":
+          description: "User not found."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotFoundError"
+        "500":
+          description: "Internal server error."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InternalServerError"
+
+    delete:
+      security:
+        - cookieAuth: []
+      tags:
+        - Wishlist
+      summary: "Remove a product from a user's wishlist"
+      description: "Removes a specified product from the wishlist of a specified user."
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          description: "The ID of the user to remove the product from their wishlist."
+          schema:
+            type: string
+
+        - name: productId
+          in: path
+          required: true
+          description: "The ID of the product to be removed from the wishlist."
+          schema:
+            type: string
+
+      responses:
+        "204":
+          description: "Product removed from the user's wishlist successfully."
+        "401":
+          description: "Unauthorized access due to missing or invalid token."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UnauthorizedError"
+        "403":
+          description: "Forbidden due to lack of permissions."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ForbiddenError"
+        "404":
+          description: "User or product not found in the wishlist."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotFoundError"
+        "500":
+          description: "Internal server error."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InternalServerError"

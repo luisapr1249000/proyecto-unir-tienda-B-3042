@@ -1,0 +1,214 @@
+paths:
+  /auth/signup:
+    post:
+      tags:
+        - Auth
+      summary: "User Signup"
+      description: "Create a new user account with a username, email, and password."
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                  description: "The username of the user."
+                  example: "john_doe"
+                email:
+                  type: string
+                  description: "The email address of the user."
+                  example: "john@example.com"
+                password:
+                  type: string
+                  description: "The password for the user account."
+                  example: "P@ssw0rd"
+              required:
+                - username
+                - email
+                - password
+      responses:
+        "201":
+          description: "User account successfully created."
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  userSaved:
+                    type: object
+                    description: "Details of the newly created user."
+                    properties:
+                      _id:
+                        type: string
+                        description: "The unique identifier of the user."
+                        example: "60d5f7f2b5c7d41c5c8c8e1b"
+                      username:
+                        type: string
+                        description: "The username of the user."
+                        example: "john_doe"
+                      email:
+                        type: string
+                        description: "The email address of the user."
+                        example: "john@example.com"
+                  accessToken:
+                    type: string
+                    description: "JWT access token for the user."
+                    example: "eyJhbGciOiJIUzI1NiIsInR..."
+        "400":
+          description: "Bad Request"
+          content:
+            application/json:
+              schema:
+                anyOf:
+                  - $ref: "#/components/schemas/BadRequestError"
+                  - $ref: "#/components/schemas/UserAlreadyExistsError"
+        "500":
+          description: "Internal Server Error"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InternalServerError"
+
+  /auth/login:
+    post:
+      tags:
+        - Auth
+      summary: "User login"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                rememberMe:
+                  type: boolean
+                  example: true
+                loginValue:
+                  type: string
+                  example: "user@example.com" # or username
+                password:
+                  type: string
+                  example: "strongpassword123"
+              required:
+                - loginValue
+                - password
+      responses:
+        "200":
+          description: "User logged in successfully"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  userId:
+                    type: string
+                    example: "605c72f7b1c7e925a0e8e8c4"
+        "400":
+          description: "Bad Request"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BadRequestError"
+        "404":
+          description: "Not Found - User not found"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotFoundError"
+        "500":
+          description: "Internal Server Error"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InternalServerError"
+
+  /auth/logout:
+    post:
+      tags:
+        - Auth
+      summary: "User Logout"
+      description: "Log out the user by clearing the access and refresh tokens."
+      security:
+        - cookieAuth: [] # Requires accessToken for authentication
+        - refreshTokenAuth: [] # Requires refreshToken for session management
+      responses:
+        "200":
+          description: "Successful logout"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: "success"
+                  message:
+                    type: string
+                    example: "Logged out"
+        "401":
+          description: "Bad Request"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UnauthorizedError"
+        "500":
+          description: "Internal Server Error"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InternalServerError"
+
+  /auth/token/refresh:
+    get:
+      tags:
+        - Auth
+      summary: "Refresh Access Token"
+      description: "Refresh the access token using the refresh token stored in cookies."
+      security:
+        - cookieAuth: [] # Requires refreshToken for authentication
+      responses:
+        "200":
+          description: "Access token successfully refreshed"
+        "401":
+          description: "Unauthorized"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UnauthorizedError"
+        "403":
+          description: "Invalid refresh token"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InvalidRefreshTokenError"
+        "500":
+          description: "Internal Server Error"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InternalServerError"
+
+  /auth/user/me:
+    get:
+      tags:
+        - Auth
+      summary: "Get Authenticated User Info"
+      description: "Retrieve the information of the currently authenticated user."
+      security:
+        - cookieAuth: [] # Requires authentication via cookies
+      responses:
+        "200":
+          description: "Successfully retrieved authenticated user information."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        "401":
+          description: "Unauthorized"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UnauthorizedError"

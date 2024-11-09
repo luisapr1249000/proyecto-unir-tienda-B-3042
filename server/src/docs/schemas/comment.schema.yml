@@ -1,0 +1,36 @@
+components:
+  schemas:
+    CommentInput:
+      type: object
+      properties:
+        content:
+          type: string
+          description: "The content of the comment."
+          example: "Great product! Highly recommend it."
+        product:
+          type: string
+          description: "The ID of the product being commented on."
+          example: "60d5f7f2b5c7d41c5c8c8e1b" # Example product ID
+        images:
+          type: array
+          description: "An array of image objects associated with the comment."
+          items:
+            $ref: "#/components/schemas/Image" # Reference to the Image schema
+        review:
+          type: integer  # Changed to integer for ratings
+          description: "A rating for the product, ranging from 1 to 5."
+          example: 4
+          minimum: 1
+          maximum: 5
+      required:
+        - content
+        - product
+      additionalProperties: false
+
+    Comment:
+      type: object
+      allOf:
+        - $ref: "#/components/schemas/Abstract" # Reference to the Abstract schema
+        - $ref: "#/components/schemas/CommentInput" # Reference to CommentInput schema
+        - $ref: "#/components/schemas/Author" # Reference to Author schema
+        - type: object

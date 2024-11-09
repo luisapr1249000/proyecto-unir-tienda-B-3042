@@ -1,0 +1,184 @@
+components:
+  schemas:
+    User:
+      type: object
+      allOf:
+        - $ref: "#/components/schemas/Abstract" # Extend the abstract schema
+        - type: object
+          properties:
+            username:
+              type: string
+              description: "The unique username for the user."
+              example: "john_doe"
+            email:
+              type: string
+              format: email
+              description: "The email address of the user."
+              example: "john_doe@example.com"
+            password:
+              type: string
+              description: "The hashed password for the user."
+              example: "$2b$10$EIXNwzQVmGdReBf4JWVqUe6QOaI2D5G5TfiyDi5mGxAOaRj0WxkO2"
+            firstName:
+              type: string
+              description: "User's first name."
+              example: "John"
+            lastName:
+              type: string
+              description: "User's last name."
+              example: "Doe"
+            bio:
+              type: string
+              description: "Short biography of the user."
+              example: "Passionate about technology and coding."
+            phoneNumber:
+              type: integer
+              description: "User's phone number."
+              example: 1234567890
+            avatar:
+              $ref: "#/components/schemas/Image" # Reference to the image schema (assuming defined elsewhere)
+            lastLogin:
+              type: string
+              format: date-time
+              description: "Timestamp of the user's last login."
+              example: "2024-11-02T10:30:00Z"
+            savedProducts:
+              type: array
+              items:
+                type: string
+                format: objectid
+                description: "Array of saved product IDs."
+                example: "60d0fe4f5311236168a109ca"
+            wishlist:
+              type: array
+              items:
+                type: string
+                format: objectid
+                description: "Array of product IDs in the wishlist."
+                example: "60d0fe4f5311236168a109cb"
+            cart:
+              type: array
+              items:
+                type: string
+                format: objectid
+                description: "Array of product IDs in the cart."
+                example: "60d0fe4f5311236168a109cc"
+            isSeller:
+              type: boolean
+              description: "Indicates if the user is a seller."
+              example: false
+            role:
+              type: string
+              enum:
+                - user
+                - admin
+              description: "Role assigned to the user."
+              example: "user"
+            addressDirections:
+              type: array
+              items:
+                $ref: "#/components/schemas/AddressDirection" # Reference to the Address schema
+
+          required:
+            - username
+            - email
+            - password
+            - role
+
+    AddressDirectionInput:
+      type: object
+      properties:
+        pinCode:
+          type: string
+          description: "The postal code of the address."
+          example: "12345"
+
+        locality:
+          type: string
+          description: "The locality or area of the address."
+          minLength: 10
+          maxLength: 100
+          example: "Downtown Area"
+
+        addressLine1:
+          type: string
+          description: "The first line of the address."
+          minLength: 10
+          maxLength: 100
+          example: "123 Main St"
+
+        addressLine2:
+          type: string
+          description: "The second line of the address (optional)."
+          maxLength: 100
+          example: "Apt 4B"
+
+        cityDistrictTown:
+          type: string
+          description: "The city, district, or town of the address."
+          example: "Los Angeles"
+
+        state:
+          type: string
+          description: "The state of the address."
+          example: "CA"
+
+        alternatePhone:
+          type: string
+          description: "An optional alternate phone number."
+          example: "+1-234-567-8901"
+
+        addressType:
+          type: string
+          description: "Type of address, can be home or work."
+          enum:
+            - home
+            - work
+          example: "home"
+
+      required:
+        - pinCode
+        - locality
+        - addressLine1
+        - cityDistrictTown
+        - state
+        - addressType
+
+      additionalProperties: false
+
+    AddressDirection:
+      allOf:
+        - $ref: "#/components/schemas/Abstract" # Reference to the abstract schema
+        - $ref: "#/components/schemas/AddressDirectionInput" # Reference to the abstract schema
+        - type: object
+    UserInput:
+      type: object
+      properties:
+        username:
+          type: string
+          description: "The username of the user, must not contain spaces and can only include dots."
+          example: "john.doe"
+        email:
+          type: string
+          description: "The email address of the user, must be a valid email format."
+          example: "john@example.com"
+        firstName:
+          type: string
+          description: "The first name of the user."
+          example: "John"
+        lastName:
+          type: string
+          description: "The last name of the user."
+          example: "Doe"
+        bio:
+          type: string
+          description: "A short biography of the user."
+          example: "Software Developer based in New York."
+        phoneNumber:
+          type: string
+          description: "The user's phone number, must be in a valid format."
+          example: "+1234567890"
+      required:
+        - username
+        - email
+        - password

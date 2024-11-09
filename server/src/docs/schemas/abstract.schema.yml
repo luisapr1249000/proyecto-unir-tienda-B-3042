@@ -1,0 +1,108 @@
+components:
+  schemas:
+    Abstract:
+      type: object
+      properties:
+        _id:
+          type: string
+          format: objectid
+          description: "The unique identifier for the document, represented as an ObjectId."
+        createdAt:
+          type: string
+          format: date-time
+          description: "The date and time when the document was created."
+        updatedAt:
+          type: string
+          format: date-time
+          description: "The date and time when the document was last updated."
+    Image:
+      type: object
+      properties:
+        originalName:
+          type: string
+          description: "The original name of the uploaded image file."
+          example: "photo.jpg"
+        url:
+          type: string
+          format: uri
+          description: "The URL where the image is stored."
+          example: "https://example.com/images/photo.jpg"
+        contentType:
+          type: string
+          description: "The MIME type of the image."
+          example: "image/jpeg"
+        size:
+          type: string
+          description: "The size of the image file, typically in bytes."
+          example: "204800" # Size in bytes (200 KB)
+      required:
+        - originalName
+        - url
+        - contentType
+        - size
+    # Category:
+    #   type: object
+    #   properties:
+    #     category:
+    #       type: string
+    #       description: "The ID of the category."
+    #       example: "60d5f7f2b5c7d41c5c8c8e1a"
+
+
+    Author:
+      type: object
+      properties:
+        author:
+          type: string
+          description: "The ID of the author."
+          example: "60d5f7f2b5c7d41c5c8c8e1a"
+
+
+    # Product:
+    #   type: object
+    #   properties:
+    #     product:
+    #       type: string
+    #       description: "The ID of the product."
+    #       example: "60d5f7f2b5c7d41c5c8c8e1a"
+
+    PaginationResult:
+      type: object
+      properties:
+        totalDocs:
+          type: integer
+          description: "Total number of documents."
+          example: 100
+        limit:
+          type: integer
+          description: "Number of documents per page."
+          example: 10
+        page:
+          type: integer
+          description: "Current page number."
+          example: 1
+        totalPages:
+          type: integer
+          description: "Total number of pages."
+          example: 10
+        hasNextPage:
+          type: boolean
+          description: "Indicates if there is a next page."
+          example: true
+        nextPage:
+          type: integer
+          description: "The next page number, if available."
+          example: 2
+        hasPrevPage:
+          type: boolean
+          description: "Indicates if there is a previous page."
+          example: false
+        prevPage:
+          type: integer
+          nullable: true
+          description: "The previous page number, if available."
+          example: null
+        pagingCounter:
+          type: integer
+          description: "The counter for the current page."
+          example: 1

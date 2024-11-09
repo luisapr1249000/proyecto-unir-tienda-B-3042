@@ -1,0 +1,43 @@
+{
+  "compilerOptions": {
+    "target": "ES2023",
+    "module": "commonjs",
+    "rootDir": "./src", // Set rootDir to the source directory
+    "outDir": "./dist",
+    "esModuleInterop": true,
+    "resolveJsonModule": true,
+    "skipLibCheck": true,
+    "removeComments": true,
+
+    // Strict mode
+    "strict": true,
+    "alwaysStrict": true,
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    "useUnknownInCatchVariables": true,
+
+    // No unused code
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "allowUnusedLabels": false,
+    "allowUnreachableCode": false,
+
+    // Others (5)
+    "noUncheckedIndexedAccess": true,
+    "noFallthroughCasesInSwitch": true,
+    "exactOptionalPropertyTypes": true,
+    "forceConsistentCasingInFileNames": true
+  },
+  "include": ["src/**/*.ts"],
+  "exclude": [
+    "./coverage",
+    "./dist",
+    "./src/__tests__",
+    "jest.config.js",
+    "./src/__fixture__/"
+  ],
+  "ts-node": {
+    "transpileOnly": true,
+    "files": true
+  }
+}
