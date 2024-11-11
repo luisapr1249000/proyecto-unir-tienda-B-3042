@@ -22,7 +22,36 @@ class UserController {
       return handleError(res, e);
     }
   }
+  public async uploadImages(req: Request, res: Response) {
+    try {
+      const authUserId = extractAuthUserId(req);
 
+      if (!req.file) {
+        return handleObjectNotFound(res, "Product");
+      }
+      const { file } = req;
+      const fileName = file.location.split("/").pop();
+      const image = {
+        url: file.location,
+        originalName: fileName,
+        contentType: file.mimetype,
+        size: file.size,
+      };
+      const user = await User.findByIdAndUpdate(
+        authUserId,
+        {
+          avatar: image,
+        },
+        { new: true },
+      );
+      if (!user) {
+        return handleObjectNotFound(res, "User");
+      }
+      return res.status(200).json(user);
+    } catch (e) {
+      return handleError(res, e);
+    }
+  }
   public async getUserById(req: Request, res: Response) {
     try {
       const { userId } = req.params;

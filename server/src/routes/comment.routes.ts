@@ -11,6 +11,7 @@ import {
   validateSchemaBody,
   validPagination,
 } from "../middlewares/requestValidation.middleware";
+import { uploadImageComment } from "../config/multer/multer.comment";
 
 const router = Router();
 
@@ -26,7 +27,6 @@ router.get(
   isAdmin,
   validPagination,
   validateObjectIdParams(["userId"]),
-
   commentController.getUserComments,
 );
 
@@ -49,6 +49,15 @@ router.post(
   validateSchemaBody(commentInputSchema),
   commentController.createComment,
 );
+
+router.post(
+  "/products/:productId/comments/:commentId/image",
+  authMiddleware,
+  validateObjectIdParams(["productId"]),
+  uploadImageComment,
+  commentController.createComment,
+);
+
 router.put(
   "/products/:productId/comments/:commentId",
   authMiddleware,

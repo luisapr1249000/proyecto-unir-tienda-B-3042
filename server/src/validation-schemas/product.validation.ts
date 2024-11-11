@@ -29,7 +29,7 @@ export const specificationsSchema = z.object({
 export const productInputSchema = z.object({
   name: baseStringSchema,
   description: z.string().min(1, "Description is required"),
-  category: z
+  categories: z
     .array(mongooseObjectId)
     .refine((items) => new Set(items).size === items.length, {
       message: "All categories must be unique",

@@ -4,14 +4,47 @@ import { handleError, handleObjectNotFound } from "../utils/error.utils";
 import { Product } from "../models/product.model";
 import ViewedProduct from "../models/viewedProduct.model";
 import { hasNotViewedRecently } from "../utils/product.utils";
-
+import { Image } from "../types/image";
 class ProductController {
   public async createProduct(req: Request, res: Response) {
     try {
       const authUserId = extractAuthUserId(req);
       const product = new Product({ ...req.body, author: authUserId });
       await product.save();
-      return res.status(201).json(product);
+      return res.status(201).json({ f: req.files });
+    } catch (e) {
+      return handleError(res, e);
+    }
+  }
+
+  public async uploadImages(req: Request, res: Response) {
+    try {
+      const { productId } = req.params;
+      if (!req.files || req.files.length === 0) {
+        return handleObjectNotFound(res, "Product");
+      }
+      const images: Image[] = [];
+      (req.files as Express.Multer.File[]).map((file) => {
+        const fileName = file.location.split("/").pop();
+        const image = {
+          url: file.location,
+          originalName: fileName,
+          contentType: file.mimetype,
+          size: file.size,
+        } as Image;
+        images.push(image);
+      });
+      const product = await Product.findByIdAndUpdate(
+        productId,
+        {
+          images: images,
+        },
+        { new: true },
+      );
+      if (!product) {
+        return handleObjectNotFound(res, "Product");
+      }
+      return res.status(200).json(product);
     } catch (e) {
       return handleError(res, e);
     }

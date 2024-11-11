@@ -150,3 +150,5 @@ export const User = model<UserDocument, PaginateModel<UserDocument>>(
   "User",
   userSchema,
 );
+
+export const ImageModel = model("Image", imageSchema);

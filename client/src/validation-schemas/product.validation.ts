@@ -5,6 +5,8 @@ import {
   basicString,
 } from "./abstract.validation";
 import { imageSchema } from "./image.validation";
+import { userSchema } from "./user.validation";
+import { categorySchema } from "./category.validation";
 
 export const specificationsSchema = z.object({
   dimensions: z
@@ -34,6 +36,12 @@ export const productInputSchema = z.object({
   specifications: specificationsSchema.optional(),
 });
 
+export const productAuthor = z.object({ author: userSchema });
+export const productCategory = z.object({
+  categories: z.array(categorySchema),
+});
+
 export const productSchema = abstractSchema
-  .merge(productInputSchema)
-  .merge(authorFieldSchema);
+  .merge(productInputSchema.omit({ categories: true }))
+  .merge(productCategory)
+  .merge(productAuthor);

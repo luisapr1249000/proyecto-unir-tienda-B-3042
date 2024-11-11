@@ -1,7 +1,7 @@
 import { RouteObject } from "react-router-dom";
 import Login from "../pages/auth/login/Login";
 import Signup from "../pages/auth/signup/Signup";
-import GuessRoute from "./GuessRoute";
+import GuessRoute from "./guards/GuessRoute";
 
 const authRoutes: RouteObject[] = [
   {

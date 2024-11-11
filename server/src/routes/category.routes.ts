@@ -19,6 +19,19 @@ router.get(
   validPagination,
   categoryController.getCategoriesWithPagination,
 );
+
+router.get(
+  "/categories/:categoryId",
+  validPagination,
+  categoryController.getCategoryById,
+);
+
+router.get(
+  "/categories/name/:categoryName",
+  validPagination,
+  categoryController.getCategoryByName,
+);
+
 router.post(
   "/categories",
   isAdmin,

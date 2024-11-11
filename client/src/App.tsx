@@ -3,17 +3,13 @@
 // import viteLogo from '/vite.svg'
 // import './App.css'
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import Signup from "./pages/auth/signup/Signup";
-import Login from "./pages/auth/login/Login";
-import GuessRoute from "./routes/GuessRoute";
-import { useQuery } from "@tanstack/react-query";
-import { getAuthUser } from "./api/auth.api";
 import BaseLayout from "./components/layout/base-layout/BaseLayout";
-import authRoutes from "./routes/auth";
+import authRoutes from "./routes/auth.routes";
 import { useAuthUser } from "./hooks/auth";
 import { ToastContainer } from "react-toastify";
-import userRoutes from "./routes/user";
-import productRoutes from "./routes/products";
+import userRoutes from "./routes/user.routes";
+import productRoutes from "./routes/products.routes";
+import categoryRoutes from "./routes/category.routes";
 
 function App() {
   const { data: authUser, error } = useAuthUser();
@@ -27,6 +23,7 @@ function App() {
     ...authRoutes,
     ...userRoutes,
     ...productRoutes,
+    ...categoryRoutes,
   ]);
 
   return (

@@ -3,6 +3,7 @@ import { extractAuthUserId } from "../utils/auth.utils";
 import { handleError, handleObjectNotFound } from "../utils/error.utils";
 import { Product } from "../models/product.model";
 import { Comment } from "../models/comment.model";
+import { Image } from "../types/image";
 
 class CommentController {
   public async createComment(req: Request, res: Response) {
@@ -22,6 +23,39 @@ class CommentController {
       await comment.save();
 
       return res.status(201).json(comment);
+    } catch (e) {
+      return handleError(res, e);
+    }
+  }
+
+  public async uploadImages(req: Request, res: Response) {
+    try {
+      const { commentId } = req.params;
+      if (!req.files || req.files.length === 0) {
+        return handleObjectNotFound(res, "Product");
+      }
+      const images: Image[] = [];
+      (req.files as Express.Multer.File[]).map((file) => {
+        const fileName = file.location.split("/").pop();
+        const image = {
+          url: file.location,
+          originalName: fileName,
+          contentType: file.mimetype,
+          size: file.size,
+        } as Image;
+        images.push(image);
+      });
+      const comment = await Comment.findByIdAndUpdate(
+        commentId,
+        {
+          images: images,
+        },
+        { new: true },
+      );
+      if (!comment) {
+        return handleObjectNotFound(res, "Comment");
+      }
+      return res.status(200).json(comment);
     } catch (e) {
       return handleError(res, e);
     }

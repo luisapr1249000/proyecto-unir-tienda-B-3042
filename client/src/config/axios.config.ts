@@ -6,8 +6,3 @@ export const api = axios.create({
   baseURL: API_BASE,
   withCredentials: true,
 });
-
-const refreshAuthLogic = () => {
-  api("/auth/token/refresh");
-};
-createAuthRefreshInterceptor(api, refreshAuthLogic);

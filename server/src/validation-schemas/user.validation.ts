@@ -8,6 +8,7 @@ import {
   noSpacesAndOnlyDotSchema,
   phoneNumberSchema,
 } from "./abstract.validation";
+import { imageSchema } from "./product.validation";
 
 export const addressDirectionInputSchema = z.object({
   mobileNumber: phoneNumberSchema.optional(),
@@ -42,6 +43,7 @@ export const userSchema = userInputSchema.extend({
   savedProducts: z.array(mongooseObjectId).optional(),
   whislist: z.array(mongooseObjectId).optional(),
   cart: z.array(mongooseObjectId).optional(),
+  avatar: imageSchema,
 });
 
 export const userSchemaComplete = abstractSchema.merge(userSchema);

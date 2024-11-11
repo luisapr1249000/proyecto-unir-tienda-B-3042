@@ -1,8 +1,8 @@
 import { Link, RouteObject } from "react-router-dom";
 import UserAccount from "../pages/user-account/UserAccount";
-import AccountOwnershipGuard from "./AccountOwnershipGuard";
+import AccountOwnershipGuard from "./guards/AccountOwnershipGuard";
 import UserAccountUpdate from "../pages/user-account/user-account-update/UserAccountUpdate";
-import ProtectedRoute from "./ProtectedRoute";
+import ProtectedRoute from "./guards/ProtectedRoute";
 import UserAddressDirections from "../pages/user-account/user-address-directions/UserAddressDirections";
 import UserAddressDirectionCreate from "../components/users/account/user-address-direction-create/UserAddressDirectionCreate";
 

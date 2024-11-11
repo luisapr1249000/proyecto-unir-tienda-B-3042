@@ -1,6 +1,7 @@
-import { Category } from "./category";
-import { Comment } from "./comment";
-import { Product } from "./product";
+import { Category, CategoryId } from "./category";
+import { Comment, CommentId } from "./comment";
+import { Product, ProductId } from "./product";
+import { UserId } from "./user";
 
 export type PaginationConfig = {
   page?: number;
@@ -8,6 +9,14 @@ export type PaginationConfig = {
   sort?: string;
 };
 
+export type PaginationOptionsCategoryId = PaginationConfig & CategoryId;
+export type PaginationOptionsCategoryName = PaginationConfig & {
+  categoryName: string;
+};
+
+export type PaginationOptionsUserId = PaginationConfig & UserId;
+export type PaginationOptionsProductId = PaginationConfig & ProductId;
+export type PaginationOptionsCommentId = PaginationConfig & CommentId;
 export type PaginationResult = {
   hasNextPage: boolean;
   hasPrevPage: boolean;
@@ -25,14 +34,32 @@ export type PaginationResultCategories = PaginationResult & {
   docs: Category[];
 };
 
-export type PaginationResultCategories = PaginationResult & {
+export type PaginationResultProducts = PaginationResult & {
   docs: Product[];
 };
 
-export type PaginationResultCategories = PaginationResult & {
+export type PaginationResultComments = PaginationResult & {
   docs: Comment[];
 };
 
-export type PaginationResultCategories = PaginationResult & {
+export type PaginationResultUsers = PaginationResult & {
   docs: User[];
 };
+
+export type QueryKey = { queryKey: (string | boolean)[] };
+export type PaginationOptionAndQueryKey = PaginationConfig & QueryKey;
+export type PaginationOptionUserIdAndQueryKey = PaginationOptionAndQueryKey &
+  UserId;
+
+export type EnabledQuery = { enabled: boolean };
+export type PaginationOptionCategoryIdAndQueryKey =
+  PaginationOptionAndQueryKey & CategoryId & EnabledQuery;
+
+export type PaginationOptionCategoryNameAndQueryKey =
+  PaginationOptionAndQueryKey & { categoryName: string };
+
+export type PaginationOptionProductIddAndQueryKey =
+  PaginationOptionAndQueryKey & ProductId;
+
+export type PaginationOptionCommentIdAndQueryKey = PaginationOptionAndQueryKey &
+  CommentId;

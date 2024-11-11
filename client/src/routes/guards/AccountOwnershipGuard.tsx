@@ -1,6 +1,6 @@
 import React from "react";
 import { Navigate, Outlet, useParams } from "react-router-dom";
-import { useAuthUser } from "../hooks/auth";
+import { useAuthUser } from "../../hooks/auth";
 
 const AccountOwnershipGuard = () => {
   const { username } = useParams();

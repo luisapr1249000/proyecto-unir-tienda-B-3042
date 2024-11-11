@@ -6,3 +6,4 @@ import {
 
 export type Category = z.infer<typeof categorySchema>;
 export type CategoryInput = z.infer<typeof categoryInputSchema>;
+export type CategoryId = { categoryId: string };

@@ -15,6 +15,32 @@ class CategoryController {
     }
   }
 
+  public async getCategoryById(req: Request, res: Response) {
+    try {
+      const { categoryId } = req.params;
+      const category = await Category.findById(categoryId);
+      if (!category) {
+        return handleObjectNotFound(res, "Category");
+      }
+      return res.status(200).json(category);
+    } catch (e) {
+      return handleError(res, e);
+    }
+  }
+
+  public async getCategoryByName(req: Request, res: Response) {
+    try {
+      const { categoryName } = req.params;
+      const category = await Category.findOne({ name: categoryName });
+      if (!category) {
+        return handleObjectNotFound(res, "Category");
+      }
+      return res.status(200).json(category);
+    } catch (e) {
+      return handleError(res, e);
+    }
+  }
+
   public async updateCategory(req: Request, res: Response) {
     try {
       const { categoryId } = req.params;
@@ -26,7 +52,7 @@ class CategoryController {
       if (!category) {
         return handleObjectNotFound(res, "Category");
       }
-      return res.status(201).json(category);
+      return res.status(200).json(category);
     } catch (e) {
       return handleError(res, e);
     }

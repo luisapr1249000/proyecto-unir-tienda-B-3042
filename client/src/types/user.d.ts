@@ -8,7 +8,7 @@ import {
 
 export type User = z.infer<typeof userSchema>;
 export type UserInput = z.infer<typeof userInputSchema>;
+export type UserId = { userId: string };
 
-
-export type AddressDirection = z.infer<typeof addressDirection>
-export type AddressDirectionInput = z.infer<typeof addressDirectionInputSchema
+export type AddressDirection = z.infer<typeof addressDirection>;
+export type AddressDirectionInput = z.infer<typeof addressDirectionInputSchema>;

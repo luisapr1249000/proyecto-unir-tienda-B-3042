@@ -9,6 +9,7 @@ import {
 } from "../middlewares/requestValidation.middleware";
 import { productInputSchema } from "../validation-schemas/product.validation";
 import { optionalAuth } from "../middlewares/optinalAuth.middleware";
+import { uploadImageProduct } from "../config/multer/multer.product";
 
 const router = Router();
 router.get("/products/search-post", productController.searchProducts);
@@ -24,6 +25,15 @@ router.post(
   validateSchemaBody(productInputSchema),
   productController.createProduct,
 );
+
+router.post(
+  "/products/:productId/image",
+  authMiddleware,
+  validateObjectIdParams(["productId"]),
+  uploadImageProduct,
+  productController.uploadImages,
+);
+
 router.put(
   "/products/:productId",
   authMiddleware,
@@ -53,7 +63,7 @@ router.get(
 router.get(
   "/products/category/:categoryId",
   validPagination,
-  validateObjectIdParams(["categoryId"]),
+  // validateObjectIdParams(["categoryId"]),
   productController.getProductsByCategoryWithPagination,
 );
 
