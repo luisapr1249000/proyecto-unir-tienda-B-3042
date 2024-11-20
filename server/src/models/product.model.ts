@@ -52,6 +52,9 @@ export const productSchema = new Schema(
     brand: [String],
     images: [imageSchema],
     discount: { type: Number, default: 0 },
+    likes: { type: Number, default: 0 },
+    dislikes: { type: Number, default: 0 },
+    wishlistCount: { type: Number, default: 0 },
   },
   {
     virtuals: {

@@ -41,8 +41,18 @@ export const productInputSchema = z.object({
 });
 
 export const viewCount = z.object({ viewCount: z.number().default(0) });
+export const otherProps = z.object({
+  likes: z.number().default(0),
+  dislikes: z.number().default(0),
+  wishlistCount: z.number().default(0),
+});
 
 export const productSchema = abstractSchema
   .merge(productInputSchema)
   .merge(authorObjIdSchema)
+  .merge(otherProps)
   .merge(viewCount);
+
+export const reactionSchema = z.object({
+  interactionType: z.enum(["like", "dislike"]),
+});

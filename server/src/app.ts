@@ -16,6 +16,8 @@ import { ProductRoutes } from "./routes/product.routes";
 import { CommentRoutes } from "./routes/comment.routes";
 import { passportJwt } from "./auth/passport/passport.jwt";
 import { OrderRoutes } from "./routes/order.routes";
+import { UserProductActionsRoutes } from "./routes/userProductActions.routes";
+import { ReactionRoutes } from "./routes/reaction.routes";
 
 const app: Application = express();
 
@@ -47,11 +49,13 @@ app.use(passportJwt.initialize());
 
 app.use("/api/v1", AuthRoutes);
 app.use("/api/v1", UserRoutes);
+app.use("/api/v1", UserProductActionsRoutes);
 app.use("/api/v1", AddressDirectionRoutes);
 app.use("/api/v1", CategoryRoutes);
 app.use("/api/v1", ProductRoutes);
 app.use("/api/v1", CommentRoutes);
 app.use("/api/v1", OrderRoutes);
+app.use("/app/v1", ReactionRoutes);
 
 app.use("/api/v1/docs/", swaggerUiExpress.serve, swaggerUiExpress.setup(specs));
 
