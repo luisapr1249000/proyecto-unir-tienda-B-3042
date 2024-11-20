@@ -17,6 +17,7 @@ router.get("/products/search-post", productController.searchProducts);
 router.get(
   "/products",
   validPagination,
+  optionalAuth,
   productController.getProductsWithPagination,
 );
 router.post(
@@ -52,6 +53,7 @@ router.get(
   "/products/author/:userId",
   validPagination,
   validateObjectIdParams(["userId"]),
+  optionalAuth,
   productController.getProductsByAuthorWithPagination,
 );
 router.get(
@@ -64,6 +66,7 @@ router.get(
   "/products/category/:categoryId",
   validPagination,
   // validateObjectIdParams(["categoryId"]),
+  optionalAuth,
   productController.getProductsByCategoryWithPagination,
 );
 

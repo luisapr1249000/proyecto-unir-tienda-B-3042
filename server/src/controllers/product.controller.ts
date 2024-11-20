@@ -3,7 +3,7 @@ import { extractAuthUserId } from "../utils/auth.utils";
 import { handleError, handleObjectNotFound } from "../utils/error.utils";
 import { Product } from "../models/product.model";
 import ViewedProduct from "../models/viewedProduct.model";
-import { hasNotViewedRecently } from "../utils/product.utils";
+import { hasNotViewedRecently, hasReacted } from "../utils/product.utils";
 import { Image } from "../types/image";
 class ProductController {
   public async createProduct(req: Request, res: Response) {
@@ -84,6 +84,7 @@ class ProductController {
 
   public async getProductsWithPagination(req: Request, res: Response) {
     try {
+      const userAuth = extractAuthUserId(req);
       const products = await Product.paginate(
         {},
         { ...req.query, populate: ["author", "categories"] },
@@ -92,7 +93,21 @@ class ProductController {
         return handleObjectNotFound(res, "Product", true);
       }
 
-      return res.status(200).json(products);
+      if (!userAuth) {
+        return res.status(200).json(products);
+      }
+
+      const productsReaction = products.docs.map(async (product) => {
+        const hasReactedObj = await hasReacted(
+          product._id.toString(),
+          userAuth,
+        );
+        return { product, hasReactedObj };
+      });
+
+      const productsWithReactions = await Promise.all(productsReaction);
+
+      return res.status(200).json(productsWithReactions);
     } catch (e) {
       return handleError(res, e);
     }

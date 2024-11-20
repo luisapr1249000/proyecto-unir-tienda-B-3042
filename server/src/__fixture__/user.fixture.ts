@@ -3,6 +3,9 @@ import { faker } from "@faker-js/faker";
 import { User } from "../models/user.model";
 import { createAddressFixture } from "./addressDirection.fixture";
 
+export const getTotalUsersCount = async () =>
+  await User.countDocuments().exec();
+
 export const createUserFixture = async (
   isAdmin = false,
   hasAddresDirection = false,
@@ -10,8 +13,8 @@ export const createUserFixture = async (
   const authInfo = createUserData();
   const user = new User({
     ...authInfo,
-    firstName: faker.name.firstName(),
-    lastName: faker.name.lastName(),
+    firstName: faker.person.firstName(),
+    lastName: faker.person.lastName(),
     bio: faker.lorem.sentence(),
     avatar: {
       originalName: faker.system.commonFileName(),
@@ -40,7 +43,12 @@ export const createUserData = () => {
 };
 
 export const getOrCreateUser = async () => {
-  let user = await User.findOne();
+  const random = faker.number.int({
+    min: 0,
+    max: await getTotalUsersCount(),
+  });
+
+  let user = await User.findOne().skip(random).exec();
   if (!user) {
     const newUser = await createUserFixture();
     user = newUser.user;

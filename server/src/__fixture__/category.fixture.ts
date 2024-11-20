@@ -1,6 +1,10 @@
 import { faker } from "@faker-js/faker";
 import { Category } from "../models/category.model";
 import { getOrCreateUser } from "./user.fixture";
+
+export const getTotalCategoriesCount = async () =>
+  await Category.countDocuments().exec();
+
 export const createCategoryData = () => {
   return {
     name: faker.commerce.department(),
@@ -21,9 +25,17 @@ export const createCategoryFixture = async (userId?: string) => {
   return category;
 };
 
+export const getRandomNumber = (randomNumber: number) => {
+  return faker.number.int({
+    min: 1,
+    max: randomNumber - 1,
+  });
+};
+
 export const getOrCreateCategory = async () => {
   const userId = await getOrCreateUser();
-  let category = await Category.findOne();
+  const skip = getRandomNumber(await getTotalCategoriesCount());
+  let category = await Category.findOne().skip(skip);
   if (!category) {
     const newCategory = await createCategoryFixture(userId);
     category = newCategory;

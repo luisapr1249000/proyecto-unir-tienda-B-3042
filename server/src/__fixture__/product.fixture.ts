@@ -1,18 +1,37 @@
 import { faker } from "@faker-js/faker";
-import { Category } from "../models/category.model";
-import { Product } from "../models/product.model";
 import { getOrCreateCategory } from "./category.fixture";
 import { getOrCreateUser } from "./user.fixture";
+import { Product } from "../models/product.model";
 
 export const createProductData = async (categoryId?: string) => {
-  const category = await getOrCreateCategory();
+  const randomImagesNumber = faker.number.int({ min: 1, max: 8 });
+  const randomCategoryNumber = faker.number.int({ min: 1, max: 5 });
+  const images = [...Array(randomImagesNumber).keys()].map((_) => ({
+    originalName: faker.system.fileName(),
+    url: faker.image.url(),
+    contentType: "image/jpeg",
+    size: faker.number.float({ min: 500, max: 5000 }),
+  }));
+
+  const generateUniqueCategories = async (randomCategoryNumber: number) => {
+    const uniqueCategories = [...Array(randomCategoryNumber).keys()].map(
+      async () => {
+        return await getOrCreateCategory();
+      },
+    );
+    const categoriesId = await Promise.all(uniqueCategories);
+    const uniqueCategoriesId = [...new Set(categoriesId)];
+    return uniqueCategoriesId;
+  };
 
   return {
     name: faker.commerce.productName(),
     description: faker.commerce.productDescription(),
     price: parseFloat(faker.commerce.price({ min: 10, max: 1000 })),
-    quantity: faker.number.float({ min: 1, max: 100 }),
-    categories: [categoryId ?? category],
+    quantity: faker.number.int({ min: 1, max: 100 }),
+    categories: categoryId
+      ? [categoryId]
+      : await generateUniqueCategories(randomCategoryNumber),
     specifications: {
       dimensions: {
         width: faker.number.float({ min: 10, max: 200 }).toString(),
@@ -25,14 +44,7 @@ export const createProductData = async (categoryId?: string) => {
       weightCapacity: faker.number.float({ min: 10, max: 500 }),
     },
     brand: [faker.company.name()],
-    images: [
-      {
-        originalName: faker.system.fileName(),
-        url: faker.image.url(),
-        contentType: "image/jpeg",
-        size: `${faker.number.float({ min: 500, max: 5000 })} KB`,
-      },
-    ],
+    images: images,
   };
 };
 

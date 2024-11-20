@@ -1,6 +1,5 @@
 import { User } from "../models/user.model";
 import { Request, Response } from "express";
-import { extractAuthUserId } from "../utils/auth.utils";
 import {
   handleError,
   handleObjectNotFound,

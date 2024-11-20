@@ -11,7 +11,7 @@ config();
 mongoose.Promise = global.Promise;
 
 // const userSeeder = async () => {
-//   for (let index = 0; index < 100; index++) {
+//   for (let index = 0; index < 500; index++) {
 //     await createUserFixture();
 //   }
 // };
@@ -45,3 +45,6 @@ const connectDB = async () => {
   }
 };
 connectDB();
+// userSeeder();
+// categorySeeder();
+// productSeeder();
