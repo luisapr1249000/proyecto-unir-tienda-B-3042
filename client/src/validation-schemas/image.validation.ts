@@ -6,3 +6,5 @@ export const imageSchema = z.object({
   contentType: z.string(),
   size: z.number().nonnegative("Size must be a non-negative number"),
 });
+
+export const avatarSchema = z.object({ avatar: z.instanceof(File) });

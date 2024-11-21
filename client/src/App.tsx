@@ -10,6 +10,7 @@ import { ToastContainer } from "react-toastify";
 import userRoutes from "./routes/user.routes";
 import productRoutes from "./routes/products.routes";
 import categoryRoutes from "./routes/category.routes";
+import GoogleMaps from "./components/google-maps/GoogleMaps";
 
 function App() {
   const { data: authUser, error } = useAuthUser();
@@ -29,6 +30,7 @@ function App() {
   return (
     <>
       <ToastContainer />
+      {/* <GoogleMaps /> */}
       <RouterProvider router={router} />;
     </>
   );

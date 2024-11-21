@@ -4,10 +4,9 @@ import { useAuthUser } from "../../hooks/auth";
 
 const AccountOwnershipGuard = () => {
   const { username } = useParams();
-  console.log(username);
-  const { data: authUser } = useAuthUser();
-  if (authUser?.username !== username) return <Navigate to="/" />;
-  return <Outlet />;
+  const { data: authUser, isLoading } = useAuthUser();
+  if (!isLoading && authUser?.username !== username) return <Navigate to="/" />;
+  return <Outlet context={authUser} />;
 };
 
 export default AccountOwnershipGuard;

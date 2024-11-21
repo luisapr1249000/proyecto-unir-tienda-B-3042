@@ -4,7 +4,6 @@ import React from "react";
 
 const CancelButton = ({
   fullWidth = false,
-  isValid = false,
   onCancel,
 }: {
   fullWidth?: boolean;

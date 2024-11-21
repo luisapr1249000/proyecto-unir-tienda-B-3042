@@ -16,7 +16,7 @@ export const login = async (data: AuthLogin) => {
 };
 
 export const getAuthUser = async (): Promise<User> => {
-  const response = await api("/auth/user/me");
+  const response = await api("/auth/user/me", { timeout: 1000 });
   return response.data.user;
 };
 

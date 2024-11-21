@@ -1,6 +1,5 @@
 import Reaction from "../models/reaction.model";
 import ViewedProduct from "../models/viewedProduct.model";
-import { Product } from "../types/product";
 
 export const hasNotViewedRecently = async (
   userId: string,

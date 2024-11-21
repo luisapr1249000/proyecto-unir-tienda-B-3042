@@ -24,7 +24,7 @@ const ProductCard = ({ product }: { product: Product }) => {
       <CardMedia
         sx={{ height: 200, objectFit: "cover" }}
         component="img"
-        image={product.images[0].url}
+        src={product.images[0].url}
       />
       <Grid
         container

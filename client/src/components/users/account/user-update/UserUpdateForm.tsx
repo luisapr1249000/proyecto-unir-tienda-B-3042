@@ -6,30 +6,47 @@ import { toFormikValidationSchema } from "zod-formik-adapter";
 import { userInputSchema } from "../../../../validation-schemas/user.validation";
 import { TextField } from "@mui/material";
 import SubmitButton from "../../../common/buttons/submit-button/SubmitButton";
+import { useMutation } from "@tanstack/react-query";
+import { updateUser } from "../../../../api/user.api";
+import { UserInput } from "../../../../types/user";
 
 const UserUpdateForm = () => {
+  const { mutate: update } = useMutation({ mutationFn: updateUser });
   const { data: authUser } = useAuthUser();
-  const initialValues = {
-    username: authUser?.username,
-    email: authUser?.email,
-    firstName: authUser?.firstName,
-    lastName: authUser?.lastName,
-    phoneNumber: authUser?.phoneNumber,
-    bio: authUser?.bio,
+  let initialValues: UserInput = {
+    username: "",
+    email: "",
+    firstName: "",
+    lastName: "",
+    phoneNumber: "",
+    bio: "",
   };
+
+  if (authUser) {
+    initialValues = {
+      username: authUser.username,
+      email: authUser.email,
+      firstName: authUser.firstName,
+      lastName: authUser.lastName,
+      phoneNumber: authUser.phoneNumber,
+      bio: authUser.bio,
+    };
+  }
   const formik = useFormik({
     initialValues,
+    enableReinitialize: true,
     validationSchema: toFormikValidationSchema(userInputSchema),
-    onSubmit: (values) => console.log(values),
+    onSubmit: (values) => update(values),
   });
+
   return (
-    <Grid container component="form" onSubmit={formik.handleSubmit}>
+    <Grid spacing={3} container component="form" onSubmit={formik.handleSubmit}>
       <Grid size={{ xs: 12 }}>
         <TextField
           required
           fullWidth
           name="username"
-          label="username"
+          label="Username"
           placeholder="Username"
           value={formik.values.username}
           onChange={formik.handleChange}

@@ -68,8 +68,12 @@ class UserProductActions {
   public async addProductToCart(req: Request, res: Response) {
     try {
       const { userId } = req.params;
-
       const { productId } = req.params;
+
+      const product = await Product.findById(productId);
+      if (!product) {
+        return handleObjectNotFound(res, "Product");
+      }
       const user = await User.findById(userId).select("cart");
       if (!user) {
         return handleObjectNotFound(res, "User");
@@ -163,7 +167,13 @@ class UserProductActions {
     try {
       const { userId } = req.params;
       const { productId } = req.params;
+      const product = await Product.findById(productId);
+      if (!product) {
+        return handleObjectNotFound(res, "Product");
+      }
+
       const user = await User.findById(userId).select("savedProducts");
+
       if (!user) {
         return handleObjectNotFound(res, "User");
       }
@@ -181,6 +191,10 @@ class UserProductActions {
     try {
       const { userId } = req.params;
       const { productId } = req.params;
+      const product = await Product.findById(productId);
+      if (!product) {
+        return handleObjectNotFound(res, "Product");
+      }
 
       const user = await User.findById(userId).select("savedProducts");
       if (!user) {

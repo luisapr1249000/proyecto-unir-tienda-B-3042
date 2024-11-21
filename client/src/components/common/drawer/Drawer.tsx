@@ -1,0 +1,168 @@
+import {
+  Divider,
+  Drawer,
+  List,
+  ListItem,
+  ListItemButton,
+  ListItemIcon,
+  ListItemText,
+  Toolbar,
+  Typography,
+} from "@mui/material";
+import React, { ReactNode, useState } from "react";
+import UserAccountSideMenu from "../../users/account/user-account-side-menu/UserAccountSideMenu";
+import KeyboardBackspaceIcon from "@mui/icons-material/KeyboardBackspace";
+import { User } from "../../../types/user";
+import MailIcon from "@mui/icons-material/Mail";
+import { NavLink } from "react-router-dom";
+
+const CustomDrawer = ({ user }: { user: User }) => {
+  const drawerWidth = 300;
+  const shortDrawerWidth = 50;
+
+  const [open, setOpen] = useState(true);
+  const handleOpen = () => setOpen((prev) => !prev);
+  const listOptions = [
+    {
+      label: "Actualiza tu informacion",
+      link: `account/${user.username}/update`,
+      description: "something i used to have. ",
+      icon: <MailIcon fontSize="small" />,
+    },
+    {
+      label: "Direcciones de Entrega",
+      link: `account/${user.username}/address-directions`,
+      description: "something i used to have. ",
+      icon: <MailIcon fontSize="small" />,
+    },
+    {
+      label: "Informacion General",
+      link: `account/${user.username}/general-information`,
+      description: "something i used to have. ",
+      icon: <MailIcon fontSize="small" />,
+    },
+
+    {
+      label: "Tu etc",
+      link: "actualizar",
+      description: "something i used to have. ",
+      icon: <MailIcon fontSize="small" />,
+    },
+  ];
+  return (
+    <Drawer
+      sx={{
+        flexShrink: 0,
+        whiteSpace: "nowrap",
+        boxSizing: "border-box",
+        transition: (theme) =>
+          theme.transitions.create("width", {
+            easing: theme.transitions.easing.sharp,
+            duration: theme.transitions.duration.enteringScreen,
+          }),
+        width: open ? drawerWidth : shortDrawerWidth,
+        [`& .MuiDrawer-paper`]: {
+          width: open ? drawerWidth : shortDrawerWidth,
+          boxSizing: "border-box",
+        },
+      }}
+      variant="permanent"
+    >
+      <Toolbar />
+      <List sx={{}}>
+        <ListItem disablePadding sx={{ display: "block" }}>
+          <ListItemButton
+            sx={[
+              { minHeight: 48, px: 2.5 },
+              open
+                ? {
+                    justifyContent: "initial",
+                  }
+                : {
+                    justifyContent: "center",
+                  },
+            ]}
+            onClick={handleOpen}
+          >
+            <ListItemIcon
+              sx={[
+                {
+                  minWidth: 0,
+                  justifyContent: "center",
+                },
+                open
+                  ? {
+                      mr: 3,
+                    }
+                  : {
+                      mr: "auto",
+                    },
+              ]}
+            >
+              <KeyboardBackspaceIcon />
+            </ListItemIcon>
+            <ListItemText
+              sx={{ display: open ? "block" : "none" }}
+              primary="Close"
+            />
+          </ListItemButton>
+        </ListItem>
+      </List>
+      <List
+        component="nav"
+        disablePadding
+        sx={{
+          height: 0.3,
+          // border: 1,
+          flexDirection: "column",
+          justifyContent: "space-around",
+          display: "flex",
+        }}
+      >
+        {listOptions.map((option) => (
+          <ListItem disablePadding={!open}>
+            <ListItemButton
+              component={NavLink}
+              to={`/${option.link}`}
+              sx={{
+                display: "flex",
+                p: open ? 1 : undefined,
+                "&.active": { bgcolor: "info.light", boxShadow: 1 },
+              }}
+            >
+              <ListItemIcon
+                sx={{
+                  minWidth: 0,
+                  justifyContent: "center",
+                  mr: open ? 3 : "auto",
+                }}
+              >
+                {option.icon}
+              </ListItemIcon>
+              <ListItemText
+                sx={{ display: open ? "block" : "none" }}
+                primary={
+                  <Typography
+                    component={NavLink}
+                    to={`/${option.link}`}
+                    sx={{
+                      "&.active": { color: "#fff" },
+                      textTransform: "none",
+                      textDecoration: "none",
+                      color: "#000",
+                    }}
+                    variant="body2"
+                  >
+                    {option.label}
+                  </Typography>
+                }
+              />
+            </ListItemButton>
+          </ListItem>
+        ))}
+      </List>
+    </Drawer>
+  );
+};
+
+export default CustomDrawer;

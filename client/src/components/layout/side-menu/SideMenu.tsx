@@ -1,10 +1,20 @@
-import { Drawer, List, ListItem, Menu, Toolbar } from "@mui/material";
+import {
+  Drawer,
+  List,
+  ListItem,
+  ListItemButton,
+  ListItemText,
+  Menu,
+  Toolbar,
+} from "@mui/material";
 import Grid from "@mui/material/Grid2";
 
 import React from "react";
+import CategoryList from "../../categories/category-list/CategoryList";
+import ReactLink from "../../common/react-link/ReactLink";
 
 const SideMenu = () => {
-  const drawerWidth = 400;
+  const drawerWidth = 250;
 
   return (
     <Drawer
@@ -16,11 +26,7 @@ const SideMenu = () => {
       }}
     >
       <Toolbar />
-      <Grid container size={{ xs: 12 }} sx={{ border: 1 }}>
-        <List>
-          <ListItem>123</ListItem>
-        </List>
-      </Grid>
+      <CategoryList />
     </Drawer>
   );
 };

@@ -19,9 +19,13 @@ import PermIdentityIcon from "@mui/icons-material/PermIdentity";
 import Grid from "@mui/material/Grid2";
 import { logout } from "../../../../api/auth.api";
 import { User } from "../../../../types/user";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import LoadSpinner from "../../../common/load-spinner/LoadSpinner";
 const HeaderAuth = () => {
-  const { data: authUser } = useQuery<User>({ queryKey: ["authUser"] });
+  const navigate = useNavigate();
+  const { data: authUser, isLoading } = useQuery<User>({
+    queryKey: ["authUser"],
+  });
   const queryClient = useQueryClient();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
@@ -40,7 +44,7 @@ const HeaderAuth = () => {
     },
     {
       label: "Account",
-      link: `/account/${authUser?.username}`,
+      link: `/account/${authUser?.username}/update`,
       icon: <SettingsIcon />,
     },
     {
@@ -56,6 +60,7 @@ const HeaderAuth = () => {
     queryClient.setQueryData(["authUser"], null);
     handleClose();
     await logout();
+    navigate("/");
   };
   const logoutItem = (
     <MenuItem onClick={logoutFunction}>
@@ -71,24 +76,34 @@ const HeaderAuth = () => {
       container
       sx={{ justifyContent: "flex-end", alignItems: "center" }}
     >
-      <IconButton size="large" onClick={handleMenu} color="inherit">
-        <Avatar alt="Remy Sharp" />
-      </IconButton>
-      <Menu anchorEl={anchorEl} onClose={handleClose} open={Boolean(anchorEl)}>
-        {settings.map((setting) => (
-          <MenuItem
-            component={Link}
-            to={setting.link}
-            onClick={handleClose}
-            divider
-            key={setting.label}
+      {isLoading ? (
+        <LoadSpinner />
+      ) : (
+        <>
+          <IconButton size="large" onClick={handleMenu} color="inherit">
+            <Avatar alt="Remy Sharp" />
+          </IconButton>
+          <Menu
+            anchorEl={anchorEl}
+            onClose={handleClose}
+            open={Boolean(anchorEl)}
           >
-            <ListItemIcon>{setting.icon}</ListItemIcon>
-            <Typography variant="body2">{setting.label}</Typography>
-          </MenuItem>
-        ))}
-        {logoutItem}
-      </Menu>
+            {settings.map((setting) => (
+              <MenuItem
+                component={Link}
+                to={setting.link}
+                onClick={handleClose}
+                divider
+                key={setting.label}
+              >
+                <ListItemIcon>{setting.icon}</ListItemIcon>
+                <Typography variant="body2">{setting.label}</Typography>
+              </MenuItem>
+            ))}
+            {logoutItem}
+          </Menu>
+        </>
+      )}
     </Grid>
   );
 };

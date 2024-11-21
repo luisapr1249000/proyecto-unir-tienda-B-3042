@@ -41,14 +41,17 @@ const ProductsCategory = () => {
       }}
       spacing={5}
     >
-      {isLoadingCategory &&
-        [...Array(25).keys()].map((_, index) => <SkeletonCard key={index} />)}
-      {isLoadingProducts && <LoadSpinner />}
       {errorCategory && <Typography>Category Not Found</Typography>}
       {errorProducts && <Typography>Products Not Found</Typography>}
-      {products?.docs.map((product) => (
-        <ProductCard key={product._id} product={product} />
-      ))}
+      {isLoadingProducts && !products ? (
+        [...Array(25).keys()].map((_, index) => <SkeletonCard key={index} />)
+      ) : (
+        <>
+          {products?.docs.map((product) => (
+            <ProductCard key={product._id} product={product} />
+          ))}
+        </>
+      )}
     </Grid>
   );
 };

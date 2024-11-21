@@ -52,7 +52,7 @@ class UserController {
     try {
       const { userId } = req.params;
 
-      const user = await User.findById(userId).select("-addressDirections");
+      const user = await User.findById(userId);
       if (!user) {
         return handleObjectNotFound(res, "User");
       }
