@@ -24,3 +24,6 @@ export const loginSchema = z.object({
   loginValue: basicString,
   password: passwordSchema,
 });
+
+export const resetPasswordSchema = z.object({ newPassword: basicString });
+export const emailSchema = z.object({ email: emailString });

@@ -23,4 +23,13 @@ router.post("/auth/logout", authMiddleware, authController.logout);
 router.get("/auth/user/me", authMiddleware, authController.getAuthUser);
 router.get("/auth/token/refresh", authController.refreshToken);
 
+router.post("/auth/reset-password", authController.resetPassword);
+router.post("/auth/resend-reset-password", authController.resendResetPassword);
+
+router.post("/auth/confirmation-email", authController.confirmationEmail);
+router.post(
+  "/auth/resend-confirmation-email",
+  authController.resendConfirmationEmail,
+);
+
 export { router as AuthRoutes };

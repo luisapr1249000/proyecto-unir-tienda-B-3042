@@ -15,6 +15,8 @@ export const useGetCategories = ({
   return useQuery({
     queryKey: ["categories", { page, limit, sort }],
     queryFn: () => getCategories({ page, limit, sort }),
+    retry: false,
+    refetchOnWindowFocus: false,
   });
 };
 

@@ -82,6 +82,7 @@ const userSchema = new Schema(
       required: [true, "Password required"],
       select: false,
     },
+    hasConfirmedEmail: { type: Boolean, default: false },
     firstName: String,
     lastName: String,
     bio: String,

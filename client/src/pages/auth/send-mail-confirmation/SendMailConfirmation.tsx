@@ -2,10 +2,9 @@ import React from "react";
 import Grid from "@mui/material/Grid2";
 import { Divider, Paper, Typography } from "@mui/material";
 import { Link } from "react-router-dom";
-import LoginForm from "../../../components/auth/loginForm/LoginForm";
-import ReactLink from "../../../components/common/react-link/ReactLink";
+import SendMailConfirmationForm from "../../../components/auth/send-mail/SendMailConfirmationForm";
 
-const Login = () => {
+const SendMailConfirmation = () => {
   return (
     <Grid
       container
@@ -25,36 +24,20 @@ const Login = () => {
       >
         <Grid direction="column" container size={{ xs: 12 }} sx={{}}>
           <Typography gutterBottom variant="h4">
-            Login to your account
+            Signup For Free!
           </Typography>
           <Divider sx={{ width: 1 }} />
-          <Typography component="div" variant="body2">
-            Dont you have an account yet?{" "}
-            <Typography
-              sx={{ color: "#00f" }}
-              to="/auth/signup"
-              component={ReactLink}
-              variant="body2"
-            >
-              Sign up here!
-            </Typography>
+          <Typography gutterBottom variant="body2">
+            Already have an account? <Link to="/auth/login">Login Here</Link>
           </Typography>
         </Grid>
         <Divider sx={{ width: 1 }} />
         <Grid container size={{ xs: 12 }} sx={{}}>
-          <LoginForm />
+          <SendMailConfirmationForm />
         </Grid>
-        <Typography
-          sx={{ color: "#00f" }}
-          variant="body2"
-          component={ReactLink}
-          to="/auth/reset-password"
-        >
-          Forgot Password?
-        </Typography>
       </Grid>
     </Grid>
   );
 };
 
-export default Login;
+export default SendMailConfirmation;

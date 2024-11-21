@@ -43,7 +43,7 @@ const connectDB = async () => {
     process.exit(1);
   }
 };
-connectDB();
+connectDB().catch(console.error);
 // userSeeder();
 // categorySeeder();
 // productSeeder();
