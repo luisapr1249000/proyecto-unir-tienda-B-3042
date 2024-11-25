@@ -47,9 +47,8 @@ class ProductController {
         },
         { new: true },
       );
-      if (!product) {
-        return handleObjectNotFound(res, "Product");
-      }
+      if (!product) return handleObjectNotFound(res, "Product", true);
+
       return res.status(200).json(product);
     } catch (e) {
       return handleError(res, e);
@@ -66,9 +65,8 @@ class ProductController {
         },
         { new: true },
       );
-      if (!product) {
-        return handleObjectNotFound(res, "Product");
-      }
+      if (!product) return handleObjectNotFound(res, "Product", true);
+
       return res.status(200).json(product);
     } catch (e) {
       return handleError(res, e);
@@ -79,9 +77,8 @@ class ProductController {
     try {
       const { productId } = req.params;
       const product = await Product.findByIdAndDelete(productId);
-      if (!product) {
-        return handleObjectNotFound(res, "Product");
-      }
+      if (!product) return handleObjectNotFound(res, "Product", true);
+
       return res.status(204).json(product);
     } catch (e) {
       return handleError(res, e);
@@ -235,9 +232,7 @@ class ProductController {
       const questionObject = { content: questionContent, user: userAuth };
       const product =
         await Product.findById(productId).select("+userQuestions");
-      if (!product) {
-        return handleObjectNotFound(res, "Product");
-      }
+      if (!product) return handleObjectNotFound(res, "Product", true);
 
       product.userQuestions.push(questionObject);
 
@@ -256,9 +251,7 @@ class ProductController {
       const { productId, userQuestionId } = req.params;
       const query = { _id: productId };
       const product = await Product.findOne(query).select("+userQuestions");
-      if (!product) {
-        return handleObjectNotFound(res, "Product");
-      }
+      if (!product) return handleObjectNotFound(res, "Product", true);
 
       const productQuestion = product.userQuestions.id(userQuestionId);
       if (!productQuestion) {
@@ -280,9 +273,7 @@ class ProductController {
       const { productId, userQuestionId } = req.params;
       const query = { _id: productId };
       const product = await Product.findOne(query).select("+userQuestions");
-      if (!product) {
-        return handleObjectNotFound(res, "Product");
-      }
+      if (!product) return handleObjectNotFound(res, "Product", true);
 
       const productQuestion = product.userQuestions.id(userQuestionId);
       if (!productQuestion) {

@@ -1,6 +1,7 @@
 import { User } from "../models/user.model";
 import { Request, Response } from "express";
 import {
+  handleBadSaved,
   handleError,
   handleObjectNotFound,
   isArrayEmptyOrUndefined,
@@ -14,12 +15,11 @@ class UserProductActions {
       const { userId } = req.params;
 
       const user = await User.findById(userId).select("cart").populate("cart");
-      if (!user) {
-        return handleObjectNotFound(res, "User");
-      }
-      if (isArrayEmptyOrUndefined(user?.cart)) {
+      if (!user) return handleObjectNotFound(res, "User");
+
+      if (isArrayEmptyOrUndefined(user?.cart))
         return handleObjectNotFound(res, "Cart");
-      }
+
       return res.status(200).json(user);
     } catch (e) {
       return handleError(res, e);
@@ -33,12 +33,10 @@ class UserProductActions {
       const user = await User.findById(userId)
         .select("savedProducts")
         .populate("savedProducts");
-      if (!user) {
-        return handleObjectNotFound(res, "User");
-      }
-      if (isArrayEmptyOrUndefined(user?.savedProducts)) {
+      if (!user) return handleObjectNotFound(res, "User");
+
+      if (isArrayEmptyOrUndefined(user?.savedProducts))
         return handleObjectNotFound(res, "Saved Products");
-      }
 
       return res.status(200).json(user);
     } catch (e) {
@@ -53,159 +51,12 @@ class UserProductActions {
       const user = await User.findById(userId)
         .select("wishlist")
         .populate("wishlist");
-      if (!user) {
-        return handleObjectNotFound(res, "User");
-      }
-      if (isArrayEmptyOrUndefined(user?.wishlist)) {
+      if (!user) return handleObjectNotFound(res, "User");
+
+      if (isArrayEmptyOrUndefined(user?.wishlist))
         return handleObjectNotFound(res, "Wishlist");
-      }
 
       return res.status(200).json(user);
-    } catch (e) {
-      return handleError(res, e);
-    }
-  }
-
-  public async addProductToCart(req: Request, res: Response) {
-    try {
-      const { userId } = req.params;
-      const { productId } = req.params;
-
-      const product = await Product.findById(productId);
-      if (!product) {
-        return handleObjectNotFound(res, "Product");
-      }
-      const user = await User.findById(userId).select("cart");
-      if (!user) {
-        return handleObjectNotFound(res, "User");
-      }
-
-      user.cart?.push(productId);
-      user.populate("cart");
-      await user.save();
-
-      return res.status(200).json(user);
-    } catch (e) {
-      return handleError(res, e);
-    }
-  }
-
-  public async removeProductFromCart(req: Request, res: Response) {
-    try {
-      const { userId } = req.params;
-
-      const { productId } = req.params;
-      const product = Product.findById(productId);
-      if (!product) {
-        return handleObjectNotFound(res, "Product");
-      }
-
-      const user = await User.findById(userId).select("cart");
-      if (!user) {
-        return handleObjectNotFound(res, "User");
-      }
-
-      user.cart.pull(productId);
-      await user.save();
-
-      return res.status(204);
-    } catch (e) {
-      return handleError(res, e);
-    }
-  }
-
-  public async addProductToWishlist(req: Request, res: Response) {
-    try {
-      const { userId } = req.params;
-      const { productId } = req.params;
-      const product = await Product.findById(productId);
-      if (!product) {
-        return handleObjectNotFound(res, "Product");
-      }
-
-      const user = await User.findById(userId).select("wishlist");
-      if (!user) {
-        return handleObjectNotFound(res, "User");
-      }
-      user.wishlist?.push(productId);
-      product.wishlistCount += 1;
-      await user.save();
-      await product.save();
-
-      return res.status(200).json(user);
-    } catch (e) {
-      return handleError(res, e);
-    }
-  }
-
-  public async removeProductFromWishlist(req: Request, res: Response) {
-    try {
-      const { userId } = req.params;
-
-      const { productId } = req.params;
-      const product = await Product.findById(productId);
-      if (!product) {
-        return handleObjectNotFound(res, "Product");
-      }
-
-      const user = await User.findById(userId).select("wishlist");
-      if (!user) {
-        return handleObjectNotFound(res, "User");
-      }
-
-      user.wishlist.pull(productId);
-      await user.save();
-      product.wishlistCount += -1;
-      await product.save();
-
-      return res.status(204);
-    } catch (e) {
-      return handleError(res, e);
-    }
-  }
-
-  public async addProductToSavedProducts(req: Request, res: Response) {
-    try {
-      const { userId } = req.params;
-      const { productId } = req.params;
-      const product = await Product.findById(productId);
-      if (!product) {
-        return handleObjectNotFound(res, "Product");
-      }
-
-      const user = await User.findById(userId).select("savedProducts");
-
-      if (!user) {
-        return handleObjectNotFound(res, "User");
-      }
-
-      user.savedProducts.push(productId);
-      await user.save();
-
-      return res.status(200).json(user);
-    } catch (e) {
-      return handleError(res, e);
-    }
-  }
-
-  public async removeProductFromSavedProducts(req: Request, res: Response) {
-    try {
-      const { userId } = req.params;
-      const { productId } = req.params;
-      const product = await Product.findById(productId);
-      if (!product) {
-        return handleObjectNotFound(res, "Product");
-      }
-
-      const user = await User.findById(userId).select("savedProducts");
-      if (!user) {
-        return handleObjectNotFound(res, "User");
-      }
-
-      user.savedProducts.pull(productId);
-      await user.save();
-
-      return res.status(204);
     } catch (e) {
       return handleError(res, e);
     }
@@ -220,9 +71,7 @@ class UserProductActions {
       }
 
       const user = await User.findById(userId).select("wishlist");
-      if (!user) {
-        return handleObjectNotFound(res, "User");
-      }
+      if (!user) return handleObjectNotFound(res, "User");
 
       const productExisted = user.wishlist.includes(createObjectId(productId));
       if (productExisted) {
@@ -232,10 +81,11 @@ class UserProductActions {
         user.wishlist?.push(productId);
         product.wishlistCount += 1;
       }
-      await user.save();
-      await product.save();
+      const productSaved = await product.save();
+      const userSaved = await user.save();
+      if (!userSaved || !productSaved) return handleBadSaved(res);
 
-      return res.status(200).json(user);
+      return res.status(200).json(userSaved);
     } catch (e) {
       return handleError(res, e);
     }
@@ -244,14 +94,10 @@ class UserProductActions {
     try {
       const { userId, productId } = req.params;
       const product = await Product.findById(productId);
-      if (!product) {
-        return handleObjectNotFound(res, "Product");
-      }
+      if (!product) return handleObjectNotFound(res, "Product");
 
       const user = await User.findById(userId).select("wishlist");
-      if (!user) {
-        return handleObjectNotFound(res, "User");
-      }
+      if (!user) return handleObjectNotFound(res, "User");
 
       const productExisted = user.wishlist.includes(createObjectId(productId));
       if (productExisted) {
@@ -259,10 +105,10 @@ class UserProductActions {
       } else {
         user.cart?.push(productId);
       }
-      await user.save();
-      await product.save();
+      const userSaved = await user.save();
+      if (!userSaved) return handleBadSaved(res);
 
-      return res.status(200).json(user);
+      return res.status(200).json(userSaved);
     } catch (e) {
       return handleError(res, e);
     }
@@ -272,25 +118,19 @@ class UserProductActions {
     try {
       const { userId, productId } = req.params;
       const product = await Product.findById(productId);
-      if (!product) {
-        return handleObjectNotFound(res, "Product");
-      }
+      if (!product) return handleObjectNotFound(res, "Product");
 
       const user = await User.findById(userId).select("wishlist");
-      if (!user) {
-        return handleObjectNotFound(res, "User");
-      }
+      if (!user) return handleObjectNotFound(res, "User");
 
       const productExisted = user.wishlist.includes(createObjectId(productId));
-      if (productExisted) {
-        user.savedProducts.pull(productId);
-      } else {
-        user.savedProducts?.push(productId);
-      }
-      await user.save();
-      await product.save();
+      if (productExisted) user.savedProducts.pull(productId);
+      else user.savedProducts?.push(productId);
 
-      return res.status(200).json(user);
+      const userSaved = await user.save();
+      if (!userSaved) return handleBadSaved(res);
+
+      return res.status(200).json(userSaved);
     } catch (e) {
       return handleError(res, e);
     }

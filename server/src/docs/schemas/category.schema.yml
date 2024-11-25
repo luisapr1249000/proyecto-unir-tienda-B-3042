@@ -19,6 +19,6 @@ components:
 
     Category:
       allOf:
-        - $ref: "#/components/schemas/Abstract" 
-        - $ref: "#/components/schemas/CategoryInput" 
+        - $ref: "#/components/schemas/Abstract"
+        - $ref: "#/components/schemas/CategoryInput"
         - $ref: "#/components/schemas/Author"

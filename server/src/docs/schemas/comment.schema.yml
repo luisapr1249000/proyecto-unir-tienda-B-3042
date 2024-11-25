@@ -17,7 +17,7 @@ components:
           items:
             $ref: "#/components/schemas/Image" # Reference to the Image schema
         review:
-          type: integer  # Changed to integer for ratings
+          type: integer # Changed to integer for ratings
           description: "A rating for the product, ranging from 1 to 5."
           example: 4
           minimum: 1

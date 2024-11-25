@@ -10,9 +10,8 @@ class UserController {
       const userUpdated = await User.findByIdAndUpdate(authUserId, req.body, {
         new: true,
       });
-      if (!userUpdated) {
-        return handleObjectNotFound(res, "User");
-      }
+      if (!userUpdated) return handleObjectNotFound(res, "User");
+
       return res.status(200).json(userUpdated);
     } catch (e) {
       return handleError(res, e);
@@ -22,9 +21,8 @@ class UserController {
     try {
       const authUserId = extractAuthUserId(req);
 
-      if (!req.file) {
-        return handleObjectNotFound(res, "Product");
-      }
+      if (!req.file) return handleObjectNotFound(res, "Product");
+
       const { file } = req;
       const fileName = file.location.split("/").pop();
       const image = {
@@ -40,9 +38,8 @@ class UserController {
         },
         { new: true },
       );
-      if (!user) {
-        return handleObjectNotFound(res, "User");
-      }
+      if (!user) return handleObjectNotFound(res, "User");
+
       return res.status(200).json(user);
     } catch (e) {
       return handleError(res, e);
@@ -53,9 +50,8 @@ class UserController {
       const { userId } = req.params;
 
       const user = await User.findById(userId);
-      if (!user) {
-        return handleObjectNotFound(res, "User");
-      }
+      if (!user) return handleObjectNotFound(res, "User");
+
       return res.status(200).json(user);
     } catch (e) {
       return handleError(res, e);
@@ -66,9 +62,8 @@ class UserController {
     try {
       const users = await User.paginate({}, { ...req.query });
       const { docs } = users;
-      if (docs.length <= 0) {
-        return handleObjectNotFound(res, "User", true);
-      }
+      if (docs.length <= 0) return handleObjectNotFound(res, "User", true);
+
       return res.status(200).json(users);
     } catch (e) {
       return handleError(res, e);
@@ -79,9 +74,8 @@ class UserController {
     const { username } = req.params;
     try {
       const user = await User.findOne({ username: username });
-      if (!user) {
-        return handleObjectNotFound(res, "User");
-      }
+      if (!user) return handleObjectNotFound(res, "User");
+
       return res.status(200).json(user);
     } catch (e) {
       return handleError(res, e);
@@ -92,9 +86,7 @@ class UserController {
     try {
       const { userId } = req.params;
       const userDeleted = await User.findByIdAndDelete(userId);
-      if (!userDeleted) {
-        return handleObjectNotFound(res, "User");
-      }
+      if (!userDeleted) return handleObjectNotFound(res, "User");
 
       return res.status(204).send();
     } catch (e) {

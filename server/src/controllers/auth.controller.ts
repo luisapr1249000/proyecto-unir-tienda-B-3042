@@ -28,9 +28,8 @@ class AuthController {
 
       const user = new User({ email, password, username });
       const userSaved = await user.save();
-      if (!userSaved) {
+      if (!userSaved)
         return res.status(400).json({ message: "Something went bad." });
-      }
 
       const payload = createPayload(
         userSaved._id.toString(),
@@ -54,14 +53,12 @@ class AuthController {
         $or: [{ email: loginValue }, { username: loginValue }],
       }).select("+password");
 
-      if (!user) {
-        return res.status(404).json({ message: "User not found" });
-      }
+      if (!user) return res.status(404).json({ message: "User not found" });
 
       const passwordIsValid = user.comparePasswords(password);
-      if (!passwordIsValid) {
+      if (!passwordIsValid)
         return res.status(400).json({ message: "Invalid credentials" });
-      }
+
       const payload = createPayload(user._id.toString(), user.username);
 
       const accessToken = genAccessToken(payload);
@@ -94,13 +91,12 @@ class AuthController {
   public async refreshToken(req: Request, res: Response) {
     try {
       const { refreshToken } = req.cookies;
-      if (!refreshToken) {
-        return res.status(401).json({ error: "Unauthorized" });
-      }
+      if (!refreshToken) return res.status(401).json({ error: "Unauthorized" });
+
       const newAccessToken = checkRefreshTokenAndGenAccessToken(refreshToken);
-      if (!newAccessToken) {
+      if (!newAccessToken)
         return res.status(403).json({ error: "Invalid refresh token" });
-      }
+
       setTokenCookie(res, "accessToken", newAccessToken);
       return res.status(200).json();
     } catch (e) {

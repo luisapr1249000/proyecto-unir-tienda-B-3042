@@ -24,9 +24,8 @@ class CategoryController {
     try {
       const { categoryId } = req.params;
       const category = await Category.findById(categoryId);
-      if (!category) {
-        return handleObjectNotFound(res, "Category");
-      }
+      if (!category) return handleObjectNotFound(res, "Category");
+
       return res.status(200).json(category);
     } catch (e) {
       return handleError(res, e);
@@ -37,9 +36,8 @@ class CategoryController {
     try {
       const { categoryName } = req.params;
       const category = await Category.findOne({ name: categoryName });
-      if (!category) {
-        return handleObjectNotFound(res, "Category");
-      }
+      if (!category) return handleObjectNotFound(res, "Category");
+
       return res.status(200).json(category);
     } catch (e) {
       return handleError(res, e);
@@ -54,9 +52,8 @@ class CategoryController {
         req.body,
         { new: true },
       );
-      if (!category) {
-        return handleObjectNotFound(res, "Category");
-      }
+      if (!category) return handleObjectNotFound(res, "Category");
+
       return res.status(200).json(category);
     } catch (e) {
       return handleError(res, e);
@@ -69,9 +66,8 @@ class CategoryController {
       const category = await Category.findOneAndDelete({
         _id: categoryId,
       });
-      if (!category) {
-        return handleObjectNotFound(res, "Category");
-      }
+      if (!category) return handleObjectNotFound(res, "Category");
+
       return res.status(204);
     } catch (e) {
       return handleError(res, e);
@@ -85,9 +81,8 @@ class CategoryController {
         { ...req.query, populate: "author" },
       );
       const { docs } = categories;
-      if (docs.length <= 0) {
-        return handleObjectNotFound(res, "Categories");
-      }
+      if (docs.length <= 0) return handleObjectNotFound(res, "Categories");
+
       return res.status(200).json(categories);
     } catch (e) {
       return handleError(res, e);
@@ -102,9 +97,9 @@ class CategoryController {
       };
 
       const categories = await Category.paginate(myQuery, { ...req.query });
-      if (categories.docs.length === 0) {
+      if (categories.docs.length === 0)
         return handleObjectNotFound(res, "Product", true);
-      }
+
       return res.status(200).json(categories);
     } catch (e) {
       return handleError(res, e);

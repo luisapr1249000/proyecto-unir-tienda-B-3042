@@ -11,9 +11,7 @@ class CommentController {
       const authUserId = extractAuthUserId(req);
       const { productId } = req.params;
       const product = await Product.findById(productId);
-      if (!product) {
-        return handleObjectNotFound(res, "Product", true);
-      }
+      if (!product) return handleObjectNotFound(res, "Product", true);
 
       const comment = new Comment({
         ...req.body,
@@ -54,9 +52,8 @@ class CommentController {
         },
         { new: true },
       );
-      if (!comment) {
-        return handleObjectNotFound(res, "Comment");
-      }
+      if (!comment) return handleObjectNotFound(res, "Comment");
+
       return res.status(200).json(comment);
     } catch (e) {
       return handleError(res, e);
@@ -68,9 +65,7 @@ class CommentController {
       const authUserId = extractAuthUserId(req);
       const { productId, commentId } = req.params;
       const product = await Product.findById(productId);
-      if (!product) {
-        return handleObjectNotFound(res, "Product", true);
-      }
+      if (!product) return handleObjectNotFound(res, "Product", true);
 
       const comment = await Comment.findOneAndUpdate(
         {
@@ -81,9 +76,7 @@ class CommentController {
         req.body,
         { new: true },
       );
-      if (!comment) {
-        return handleObjectNotFound(res, "Comment");
-      }
+      if (!comment) return handleObjectNotFound(res, "Comment");
 
       return res.status(200).json(comment);
     } catch (e) {
@@ -96,17 +89,15 @@ class CommentController {
       const authUserId = extractAuthUserId(req);
       const { productId, commentId } = req.params;
       const product = await Product.findById(productId);
-      if (!product) {
-        return handleObjectNotFound(res, "Product", true);
-      }
+      if (!product) return handleObjectNotFound(res, "Product", true);
+
       const comment = await Comment.findOneAndDelete({
         _id: commentId,
         author: authUserId,
         product: productId,
       });
-      if (!comment) {
-        return handleObjectNotFound(res, "Comment");
-      }
+      if (!comment) return handleObjectNotFound(res, "Comment");
+
       product.commentCount -= 1;
       await product.save();
       return res.status(204).send();
@@ -128,9 +119,7 @@ class CommentController {
 
       const comments = await Comment.paginate(query, options);
       const { docs } = comments;
-      if (docs.length <= 0) {
-        return handleObjectNotFound(res, "Comment", true);
-      }
+      if (docs.length <= 0) return handleObjectNotFound(res, "Comment", true);
 
       return res.status(200).json(comments);
     } catch (e) {
@@ -154,9 +143,7 @@ class CommentController {
 
       const comments = await Comment.paginate(query, options);
       const { docs } = comments;
-      if (docs.length <= 0) {
-        return handleObjectNotFound(res, "Comment", true);
-      }
+      if (docs.length <= 0) return handleObjectNotFound(res, "Comment", true);
 
       return res.status(200).json(comments);
     } catch (e) {
@@ -180,9 +167,7 @@ class CommentController {
 
       const comments = await Comment.paginate(query, options);
       const { docs } = comments;
-      if (docs.length <= 0) {
-        return handleObjectNotFound(res, "Comment", true);
-      }
+      if (docs.length <= 0) return handleObjectNotFound(res, "Comment", true);
 
       return res.status(200).json(comments);
     } catch (e) {
@@ -196,9 +181,7 @@ class CommentController {
       const comments = await Comment.findById(commentId)
         .populate("author")
         .populate("product");
-      if (!comments) {
-        return handleObjectNotFound(res, "Comment");
-      }
+      if (!comments) return handleObjectNotFound(res, "Comment");
 
       return res.status(200).json(comments);
     } catch (e) {

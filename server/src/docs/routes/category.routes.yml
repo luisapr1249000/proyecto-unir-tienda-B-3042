@@ -93,7 +93,7 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Category" # Reference to the created category schema
-                
+
         "400":
           description: "Bad request due to invalid input."
           content:

@@ -87,7 +87,7 @@ components:
               type: string
               description: "The ID of the category."
               example: "60d5f7f2b5c7d41c5c8c8e1a"
-            
+
             images:
               type: array
               description: "An array of image objects for the product."

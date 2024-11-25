@@ -12,9 +12,8 @@ class AddressDirectionController {
     try {
       const authUserId = extractAuthUserId(req);
       const user = await User.findById(authUserId);
-      if (!user) {
-        return handleObjectNotFound(res, "User");
-      }
+      if (!user) return handleObjectNotFound(res, "User");
+
       user.addressDirections.push({ ...req.body, author: authUserId });
 
       const userSaved = await user.save();
@@ -34,9 +33,7 @@ class AddressDirectionController {
         { $set: { "addressDirection.$": req.body } },
         { new: true },
       );
-      if (!addressDirectionUpdated) {
-        return handleObjectNotFound(res, "Address");
-      }
+      if (!addressDirectionUpdated) return handleObjectNotFound(res, "Address");
 
       return res.status(200).json(addressDirectionUpdated);
     } catch (e) {
@@ -49,9 +46,7 @@ class AddressDirectionController {
       const authUserId = extractAuthUserId(req);
 
       const user = await User.findById(authUserId);
-      if (!user) {
-        return handleObjectNotFound(res, "Address");
-      }
+      if (!user) return handleObjectNotFound(res, "Address");
 
       user.addressDirections.id(addressDirectionId)?.deleteOne();
       const userSaved = await user.save();
