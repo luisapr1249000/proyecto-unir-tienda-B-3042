@@ -4,6 +4,7 @@ import {
   basicString,
   emailString,
 } from "./abstract.validation";
+import { userSchema } from "./user.validation";
 
 const passwordSchema = z.string().min(1);
 
@@ -27,3 +28,10 @@ export const loginSchema = z.object({
 
 export const resetPasswordSchema = z.object({ newPassword: basicString });
 export const emailSchema = z.object({ email: emailString });
+
+export const signupResponse = z.object({
+  userSaved: userSchema,
+  accessToken: basicString,
+});
+
+export const loginResponse = z.object({ userId: basicString });

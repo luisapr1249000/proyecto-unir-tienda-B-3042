@@ -9,8 +9,11 @@ import {
   Toolbar,
   Typography,
 } from "@mui/material";
+import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
+
 import React, { ReactNode, useState } from "react";
-import UserAccountSideMenu from "../../users/account/user-account-side-menu/UserAccountSideMenu";
+import BookmarkAddedIcon from "@mui/icons-material/BookmarkAdded";
+import LocalMallIcon from "@mui/icons-material/LocalMall";
 import KeyboardBackspaceIcon from "@mui/icons-material/KeyboardBackspace";
 import { User } from "../../../types/user";
 import MailIcon from "@mui/icons-material/Mail";
@@ -36,17 +39,19 @@ const CustomDrawer = ({ user }: { user: User }) => {
       icon: <MailIcon fontSize="small" />,
     },
     {
-      label: "Informacion General",
-      link: `account/${user.username}/general-information`,
-      description: "something i used to have. ",
-      icon: <MailIcon fontSize="small" />,
+      label: "Cart",
+      link: `account/${user?.username}/cart`,
+      icon: <ShoppingCartIcon />,
     },
-
     {
-      label: "Tu etc",
-      link: "actualizar",
-      description: "something i used to have. ",
-      icon: <MailIcon fontSize="small" />,
+      label: "Wishlist",
+      link: `account/${user?.username}/wishlist`,
+      icon: <LocalMallIcon />,
+    },
+    {
+      label: "Saved Products",
+      link: `account/${user?.username}/saved-products`,
+      icon: <BookmarkAddedIcon />,
     },
   ];
   return (

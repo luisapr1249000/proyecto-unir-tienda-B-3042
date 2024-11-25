@@ -9,6 +9,7 @@ import {
   validUsername,
 } from "../middlewares/requestValidation.middleware";
 import { userInputSchema } from "../validation-schemas/user.validation";
+import { USER_ID } from "../constants";
 
 const router = Router();
 
@@ -22,13 +23,13 @@ router.put(
 router.delete(
   "/users/:userId",
   authMiddleware,
-  validateObjectIdParams(["userId"]),
+  validateObjectIdParams(USER_ID),
   verifyUserOwnershipOrAdminRole("userId"),
   userController.deleteUser,
 );
 router.get(
   "/users/:userId",
-  validateObjectIdParams(["userId"]),
+  validateObjectIdParams(USER_ID),
   userController.getUserById,
 );
 router.get(

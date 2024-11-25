@@ -4,23 +4,21 @@ import { Divider, Paper, Typography } from "@mui/material";
 import { Link } from "react-router-dom";
 import SignupForm from "../../../components/auth/signupForm/SignupForm";
 import ReactLink from "../../../components/common/react-link/ReactLink";
+import { gridContainerCenter } from "../../../assets/css/mui-css-objects/gridCenter";
+import { gridBreakpoints } from "../../../assets/css/mui-css-objects/muiStyles";
 
 const Signup = () => {
   return (
     <Grid
       container
       spacing={2}
-      sx={{
-        height: "calc(100vh)",
-        justifyContent: "center",
-        alignItems: "center",
-      }}
+      sx={{ ...gridContainerCenter, height: "calc(100vh)" }}
     >
       <Grid
         component={Paper}
         elevation={2}
         container
-        size={{ xs: 4 }}
+        size={gridBreakpoints}
         sx={{ p: 3 }}
       >
         <Grid direction="column" container size={{ xs: 12 }} sx={{}}>

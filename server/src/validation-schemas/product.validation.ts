@@ -45,6 +45,7 @@ export const otherProps = z.object({
   likes: z.number().default(0),
   dislikes: z.number().default(0),
   wishlistCount: z.number().default(0),
+  commentCount: z.number().default(0),
 });
 
 export const productSchema = abstractSchema
@@ -56,3 +57,15 @@ export const productSchema = abstractSchema
 export const reactionSchema = z.object({
   interactionType: z.enum(["like", "dislike"]),
 });
+
+export const userQuestionInput = z.object({ content: baseStringSchema });
+export const userQuestionInputAnswer = z.object({ answer: baseStringSchema });
+export const userQuestionOtherValues = z.object({
+  user: mongooseObjectId,
+  isAnswered: z.boolean().default(false),
+});
+
+export const userQuestionSchema = abstractSchema
+  .merge(userQuestionInput)
+  .merge(userQuestionInputAnswer)
+  .merge(userQuestionOtherValues);

@@ -12,6 +12,7 @@ import Grid from "@mui/material/Grid2";
 import React from "react";
 import CategoryList from "../../categories/category-list/CategoryList";
 import ReactLink from "../../common/react-link/ReactLink";
+import LisItemHomeButton from "../../common/buttons/home-button/LisItemHomeButton";
 
 const SideMenu = () => {
   const drawerWidth = 250;
@@ -26,6 +27,10 @@ const SideMenu = () => {
       }}
     >
       <Toolbar />
+      <List>
+        <LisItemHomeButton />
+      </List>
+
       <CategoryList />
     </Drawer>
   );

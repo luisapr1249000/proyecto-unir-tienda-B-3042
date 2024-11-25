@@ -6,79 +6,67 @@ import {
   checkProductExists,
 } from "../middlewares/requestValidation.middleware";
 import userProductActionController from "../controllers/userProductAction.controller";
+import { USER_ID, USER_ID_AND_PRODUCT_ID } from "../constants";
 
 const router = Router();
 // -------------------------------- cart ------------------
 router.get(
   "/users/:userId/cart",
   authMiddleware,
-  validateObjectIdParams(["userId"]),
+  validateObjectIdParams(USER_ID),
   isUserOwnerOrAdmin,
   userProductActionController.getUserCart,
 );
+
 router.post(
   "/users/:userId/cart/:productId",
   authMiddleware,
-  validateObjectIdParams(["userId", "productId"]),
+  validateObjectIdParams(USER_ID_AND_PRODUCT_ID),
   isUserOwnerOrAdmin,
   checkProductExists,
-  userProductActionController.addProductToCart,
+  userProductActionController.toggleProductCart,
 );
-router.delete(
-  "/users/:userId/cart/:productId",
-  authMiddleware,
-  validateObjectIdParams(["userId", "productId"]),
-  isUserOwnerOrAdmin,
-  userProductActionController.removeProductFromCart,
-);
+
 // -------------------------------- cart ------------------
 // -------------------------------- saved products ------------------
 router.get(
   "/users/:userId/saved-products",
   authMiddleware,
-  validateObjectIdParams(["userId"]),
+  validateObjectIdParams(USER_ID),
   isUserOwnerOrAdmin,
   userProductActionController.getUseSavedProducts,
 );
+
 router.post(
   "/users/:userId/saved-products/:productId",
   authMiddleware,
-  validateObjectIdParams(["userId", "productId"]),
+  validateObjectIdParams(USER_ID_AND_PRODUCT_ID),
   isUserOwnerOrAdmin,
   checkProductExists,
-  userProductActionController.addProductToSavedProducts,
+  userProductActionController.toggleSavedProducts,
 );
-router.delete(
-  "/users/:userId/saved-products/:productId",
-  authMiddleware,
-  validateObjectIdParams(["userId", "productId"]),
-  isUserOwnerOrAdmin,
-  userProductActionController.removeProductFromSavedProducts,
-);
+
 // -------------------------------- saved products ------------------
 // -------------------------------- wishlist ------------------
 router.get(
   "/users/:userId/wishlist",
   authMiddleware,
-  validateObjectIdParams(["userId"]),
+  validateObjectIdParams(USER_ID),
   isUserOwnerOrAdmin,
   userProductActionController.getUseWishlist,
 );
 router.post(
   "/users/:userId/wishlist/:productId",
   authMiddleware,
-  validateObjectIdParams(["userId", "productId"]),
+  validateObjectIdParams(USER_ID_AND_PRODUCT_ID),
   isUserOwnerOrAdmin,
   checkProductExists,
-  userProductActionController.addProductToWishlist,
+  userProductActionController.toggleProductWishlist,
 );
-router.delete(
-  "/users/:userId/wishlist/:productId",
-  authMiddleware,
-  validateObjectIdParams(["userId", "productId"]),
-  isUserOwnerOrAdmin,
-  userProductActionController.removeProductFromWishlist,
-);
-// -------------------------------- wishlist ------------------
+
+// -------------------------------- end toggle cart ------------------
+// -------------------------------- toggle saved products ------------------
+
+// -------------------------------- end toggle saved products ------------------
 
 export { router as UserProductActionsRoutes };

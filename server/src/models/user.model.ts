@@ -116,7 +116,7 @@ const userSchema = new Schema(
     isSeller: { type: Boolean, default: false },
     role: { type: String, enum: ["user", "admin"], default: "user" },
     addressDirections: {
-      type: [addressDirectionSchema],
+      type: addressDirectionSchema,
       select: false,
     },
   },

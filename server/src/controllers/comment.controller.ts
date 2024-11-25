@@ -20,7 +20,9 @@ class CommentController {
         author: authUserId,
         product: productId,
       });
+      product.commentCount += 1;
       await comment.save();
+      await product.save();
 
       return res.status(201).json(comment);
     } catch (e) {
@@ -105,8 +107,9 @@ class CommentController {
       if (!comment) {
         return handleObjectNotFound(res, "Comment");
       }
-
-      return res.status(204);
+      product.commentCount -= 1;
+      await product.save();
+      return res.status(204).send();
     } catch (e) {
       return handleError(res, e);
     }

@@ -5,6 +5,7 @@ import {
   emailString,
 } from "./abstract.validation";
 import { imageSchema } from "./image.validation";
+import { productSchema } from "./product.validation";
 
 export const addressDirectionInputSchema = z.object({
   phoneNumber: basicString.optional(),
@@ -41,5 +42,4 @@ export const userInfo = z.object({
   cart: z.array(z.string()).optional(),
   avatar: imageSchema.optional(),
 });
-
 export const userSchema = abstractSchema.merge(userInputSchema).merge(userInfo);

@@ -3,6 +3,16 @@ import { imageSchema } from "./user.model";
 import mongoosePaginate from "mongoose-paginate-v2";
 import { ProductDocument } from "../types/product";
 
+const userQuestionSchema = new Schema(
+  {
+    user: { type: Schema.Types.ObjectId, ref: "User", required: true },
+    content: { type: String, required: true },
+    answer: String,
+    isAnswered: { type: Boolean, default: false },
+  },
+  { timestamps: true },
+);
+
 export const productSchema = new Schema(
   {
     author: {
@@ -55,6 +65,8 @@ export const productSchema = new Schema(
     likes: { type: Number, default: 0 },
     dislikes: { type: Number, default: 0 },
     wishlistCount: { type: Number, default: 0 },
+    commentCount: { type: Number, default: 0 },
+    userQuestions: { type: [userQuestionSchema], select: false },
   },
   {
     virtuals: {

@@ -48,3 +48,8 @@ export const handleBadRequest = (res: Response, e: unknown) => {
 export const isArrayEmptyOrUndefined = (array: Types.ObjectId[]) => {
   return array.length === 0 || !array;
 };
+
+export const handleBadSaved = (
+  res: Response,
+  message = "Something Went Wrong while saving",
+) => res.status(500).json(message);

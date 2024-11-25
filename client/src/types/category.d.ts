@@ -10,3 +10,5 @@ export type CategoryInput = z.infer<typeof categoryInputSchema>;
 export type CategoryId = { categoryId: string };
 
 export type CategoryAndLink = Category & Link;
+
+export type CategoryProp = { category: Category };

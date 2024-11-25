@@ -42,7 +42,7 @@ const LoginForm = () => {
     validationSchema: toFormikValidationSchema(loginSchema),
     onSubmit: (values) => {
       mutate(values);
-      formik.setFieldValue("password", "");
+      if (error) formik.setFieldValue("password", "");
     },
   });
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {

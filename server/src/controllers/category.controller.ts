@@ -1,6 +1,10 @@
 import { Request, Response } from "express";
 import { extractAuthUserId } from "../utils/auth.utils";
-import { handleError, handleObjectNotFound } from "../utils/error.utils";
+import {
+  handleBadSaved,
+  handleError,
+  handleObjectNotFound,
+} from "../utils/error.utils";
 import { Category } from "../models/category.model";
 
 class CategoryController {
@@ -8,8 +12,9 @@ class CategoryController {
     try {
       const authUserId = extractAuthUserId(req);
       const category = new Category({ ...req.body, author: authUserId });
-      await category.save();
-      return res.status(201).json(category);
+      const categorySaved = await category.save();
+      if (!categorySaved) return handleBadSaved(res);
+      return res.status(201).json(categorySaved);
     } catch (e) {
       return handleError(res, e);
     }

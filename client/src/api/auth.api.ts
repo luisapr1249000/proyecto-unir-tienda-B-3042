@@ -1,17 +1,19 @@
 import { api } from "../config/axios.config";
-import { AuthLogin, AuthSignup } from "../types/auth";
+import {
+  AuthLogin,
+  AuthSignup,
+  LoginResponse,
+  SignupResponse,
+} from "../types/auth";
 import { User } from "../types/user";
 
-export const signup = async (data: AuthSignup) => {
-  const response = await api.post<{ userSaved: User; accessToken: string }>(
-    "/auth/signup",
-    data
-  );
+export const signup = async (data: AuthSignup): Promise<SignupResponse> => {
+  const response = await api.post<SignupResponse>("/auth/signup", data);
   return response.data;
 };
 
-export const login = async (data: AuthLogin) => {
-  const response = await api.post<{ userId: string }>("/auth/login", data);
+export const login = async (data: AuthLogin): Promise<LoginResponse> => {
+  const response = await api.post<LoginResponse>("/auth/login", data);
   return response.data;
 };
 

@@ -13,6 +13,12 @@ import LoadSpinner from "../../../common/load-spinner/LoadSpinner";
 import SkeletonCircle from "../../../common/skeleton/SkeletonCircle";
 import { useAuthUser } from "../../../../hooks/auth";
 import { useEffect } from "react";
+import ResponsiveButton from "../../../common/buttons/responsive-buttons/ResponsiveButton";
+import ResponsiveIconButton from "../../../common/buttons/responsive-buttons/ResponsiveButton";
+import {
+  responsiveDisplay,
+  responsiveDisplayIconButtons,
+} from "../../../../assets/css/mui-css-objects/muiStyles";
 
 const Header = () => {
   const { data: authUser, isSuccess, isLoading } = useAuthUser();
@@ -22,36 +28,52 @@ const Header = () => {
         component={Grid}
         container
         sx={{
-          justifyContent: "space-around",
+          justifyContent: "space-between",
           alignItems: "center",
+          // p: { xs: 3, md: 0 },
         }}
+        spacing={2}
       >
-        <Grid
-          container
-          spacing={1}
-          sx={{ justifyContent: "space-around", alignItems: "center" }}
-        >
-          <IconButton
-            size="large"
-            edge="start"
-            color="inherit"
-            aria-label="menu"
-            sx={{ mr: 2 }}
+        <Grid spacing={2} container size={{ xs: 7 }} sx={{ border: 1 }}>
+          <Grid
+            container
+            spacing={1}
+            // size={{ xs: 12, sm: 2, md: 2 }}
+            // sx={{
+            //   justifyContent: "space-around",
+            //   alignItems: "center",
+            //   // border: 4,
+            // }}
+            // size={{ xs: 5, md: 2 }}
           >
-            <MenuIcon />
-          </IconButton>
-          <Button
-            startIcon={<HomeIcon />}
-            variant="text"
-            color="inherit"
-            component={Link}
-            to="/"
-          >
-            Home
-          </Button>
+            <IconButton
+              component={ReactLink}
+              to="/"
+              sx={{ ...responsiveDisplayIconButtons, mr: 2 }}
+            >
+              <MenuIcon />
+            </IconButton>
+            {/* <IconButton
+              component={ReactLink}
+              to="/"
+              sx={{ ...responsiveDisplayIconButtons, mr: 2 }}
+            >
+              <HomeIcon />
+            </IconButton> */}
+            <Button
+              sx={{ ...responsiveDisplay }}
+              startIcon={<HomeIcon />}
+              variant="text"
+              color="inherit"
+              component={Link}
+              to="/"
+            >
+              Home
+            </Button>
+          </Grid>
+          <HeaderSearchBar />
         </Grid>
-        <Grid size={{ xs: 3 }} sx={{ border: 1 }}></Grid>
-        <HeaderSearchBar />
+        <HeaderSearchBar isFullBar />
         {isLoading && <SkeletonCircle />}
         {!isLoading && isSuccess && authUser && <HeaderAuth />}
         {!isLoading && (!isSuccess || !authUser) && <HeaderAuthButtons />}

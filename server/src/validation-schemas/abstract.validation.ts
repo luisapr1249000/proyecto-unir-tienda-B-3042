@@ -12,7 +12,11 @@ export const objectIdValidator = z
     message: "Invalid ObjectId format",
   });
 
-export const mongooseObjectId = z.instanceof(Types.ObjectId);
+export const mongooseObjectId = z
+  .instanceof(Types.ObjectId)
+  .refine((id) => Types.ObjectId.isValid(id), {
+    message: "Invalid ObjectId format",
+  });
 
 export const abstractSchema = z.object({
   _id: z.instanceof(Types.ObjectId),

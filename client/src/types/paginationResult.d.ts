@@ -17,6 +17,9 @@ export type PaginationOptionsCategoryName = PaginationConfig & {
 export type PaginationOptionsUserId = PaginationConfig & UserId;
 export type PaginationOptionsProductId = PaginationConfig & ProductId;
 export type PaginationOptionsCommentId = PaginationConfig & CommentId;
+export type PaginationOptionsProductIdAndCommentId = PaginationConfig &
+  CommentId &
+  ProductId;
 export type PaginationResult = {
   hasNextPage: boolean;
   hasPrevPage: boolean;

@@ -9,10 +9,21 @@ import categoryRoutes from "./routes/category.routes";
 import { useServerStatus } from "./hooks/server.hook";
 import ServerDownMessage from "./components/common/server-down-message/ServerDownMessage";
 import LoadSpinner from "./components/common/load-spinner/LoadSpinner";
+import { useNavigatorOnLine } from "./hooks/navigatorOnLine.hooks";
+import { useEffect } from "react";
+import NetworkStatusIndicator from "./components/network/network-status-indicator/NetworkStatusIndicator";
+import NetworkOffline from "./components/network/network-offline/NetworkOffline";
 
 function App() {
-  const { data: authUser, error } = useAuthUser();
-  const { isLoading, refetch, isSuccess, isError } = useServerStatus();
+  const isOnline = useNavigatorOnLine();
+  const { data: authUser, error: authError } = useAuthUser();
+  const {
+    isLoading,
+    refetch,
+    isSuccess,
+    isError,
+    error: serverError,
+  } = useServerStatus();
 
   const router = createBrowserRouter([
     {
@@ -26,19 +37,22 @@ function App() {
     ...categoryRoutes,
   ]);
 
-  const serverDown = isError || Boolean(error) || !isSuccess;
-  if (isLoading) return <LoadSpinner isBackdrop />;
+  if (!isOnline) return <NetworkOffline />;
 
+  const serverDown =
+    !isLoading && (isError || Boolean(serverError) || !isSuccess);
+  // if (isLoading) return <LoadSpinner isBackdrop />;
   return (
     <>
+      {/* {isOnline}
       {serverDown ? (
         <ServerDownMessage onRetry={refetch} />
-      ) : (
-        <>
-          <ToastContainer />
-          <RouterProvider router={router} />
-        </>
-      )}
+      ) : ( */}
+      <>
+        <ToastContainer />
+        <RouterProvider router={router} />
+      </>
+      {/* )} */}
     </>
   );
 }

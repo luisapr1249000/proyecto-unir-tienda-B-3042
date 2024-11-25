@@ -14,7 +14,7 @@ export const getProductsWithPagination = async ({
   limit,
   sort,
 }: PaginationConfig): Promise<PaginationResultProducts> => {
-  const response = await api(
+  const response = await api<PaginationResultProducts>(
     `/products?page${page}&limit=${limit}&sort=${sort}`
   );
   return response.data;
@@ -26,7 +26,7 @@ export const getProductsByCategoryWithPagination = async ({
   limit,
   sort,
 }: PaginationOptionsCategoryId): Promise<PaginationResultProducts> => {
-  const response = await api(
+  const response = await api<PaginationResultProducts>(
     `/products/category/${categoryId}?page${page}&limit=${limit}&sort=${sort}`
   );
   return response.data;
@@ -38,7 +38,7 @@ export const getProductsByCategoryByNameWithPagination = async ({
   limit = 10,
   sort = "-createdAt",
 }: PaginationOptionsCategoryName): Promise<PaginationResultProducts> => {
-  const response = await api(
+  const response = await api<PaginationResultProducts>(
     `/products/category/${categoryName}?page=${page}&limit=${limit}&sort=${sort}`
   );
   return response.data;
@@ -59,7 +59,7 @@ export const getProductsByCategoryByIdWithPagination = async ({
 export const getProductById = async ({
   productId,
 }: ProductId): Promise<Product> => {
-  const response = await api(`/products/${productId}`);
+  const response = await api<Product>(`/products/${productId}`);
   return response.data;
 };
 
@@ -69,7 +69,7 @@ export const getProductstByAuthorWithPagination = async ({
   page,
   sort,
 }: PaginationOptionsUserId): Promise<PaginationResultProducts> => {
-  const response = await api(
+  const response = await api<PaginationResultProducts>(
     `/products/author/${userId}?page${page}&limit=${limit}&sort=${sort}`
   );
   return response.data;

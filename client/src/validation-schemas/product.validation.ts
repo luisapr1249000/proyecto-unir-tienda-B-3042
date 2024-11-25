@@ -36,12 +36,32 @@ export const productInputSchema = z.object({
   specifications: specificationsSchema.optional(),
 });
 
-export const productAuthor = z.object({ author: userSchema });
 export const productCategory = z.object({
   categories: z.array(categorySchema),
 });
+export const productAuthor = z.object({ author: userSchema });
 
 export const productSchema = abstractSchema
   .merge(productInputSchema.omit({ categories: true }))
   .merge(productCategory)
   .merge(productAuthor);
+
+export const productQuantitySchema = (quantity: number) =>
+  z.object({ quantity: z.number().min(1).max(quantity) });
+
+export const userCartArray = z.object({ cart: z.array(productSchema) });
+export const userWishlistArray = z.object({ wishlist: z.array(productSchema) });
+export const userSavedProductsArray = z.object({
+  savedProducts: z.array(productSchema),
+});
+export const userCartSchema = abstractSchema
+  .omit({ updatedAt: true, createdAt: true })
+  .merge(userCartArray);
+
+export const userWishlistSchema = abstractSchema
+  .omit({ updatedAt: true, createdAt: true })
+  .merge(userWishlistArray);
+
+export const userSavedProductsSchema = abstractSchema
+  .omit({ updatedAt: true, createdAt: true })
+  .merge(userSavedProductsArray);

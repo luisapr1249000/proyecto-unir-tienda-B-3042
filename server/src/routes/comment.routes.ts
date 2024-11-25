@@ -12,6 +12,7 @@ import {
   validPagination,
 } from "../middlewares/requestValidation.middleware";
 import { uploadImageComment } from "../config/multer/multer.comment";
+import { PRODUCT_ID, PRODUCT_ID_AND_COMMENT_ID, USER_ID } from "../constants";
 
 const router = Router();
 
@@ -26,26 +27,26 @@ router.get(
   "/comments/user/:userId",
   isAdmin,
   validPagination,
-  validateObjectIdParams(["userId"]),
+  validateObjectIdParams(USER_ID),
   commentController.getUserComments,
 );
 
 router.get(
   "/products/:productId/comments/",
   validPagination,
-  validateObjectIdParams(["productId"]),
+  validateObjectIdParams(PRODUCT_ID),
   commentController.getCommentsFromProduct,
 );
 router.get(
   "/products/:productId/comments/:commentId",
-  validateObjectIdParams(["productId", "commentId"]),
+  validateObjectIdParams(PRODUCT_ID_AND_COMMENT_ID),
   commentController.getCommentById,
 );
 
 router.post(
   "/products/:productId/comments/",
   authMiddleware,
-  validateObjectIdParams(["productId"]),
+  validateObjectIdParams(PRODUCT_ID),
   validateSchemaBody(commentInputSchema),
   commentController.createComment,
 );
@@ -53,16 +54,16 @@ router.post(
 router.post(
   "/products/:productId/comments/:commentId/image",
   authMiddleware,
-  validateObjectIdParams(["productId"]),
+  validateObjectIdParams(PRODUCT_ID),
   uploadImageComment,
-  commentController.createComment,
+  commentController.uploadImages,
 );
 
 router.put(
   "/products/:productId/comments/:commentId",
   authMiddleware,
   verifyUserOwnershipOrAdminRole("commentId"),
-  validateObjectIdParams(["productId", "commentId"]),
+  validateObjectIdParams(PRODUCT_ID_AND_COMMENT_ID),
   validateSchemaBody(commentInputSchema),
   commentController.updateComment,
 );
@@ -71,7 +72,7 @@ router.delete(
   "/products/:productId/comments/:commentId",
   authMiddleware,
   verifyUserOwnershipOrAdminRole("commentId"),
-  validateObjectIdParams(["productId", "commentId"]),
+  validateObjectIdParams(PRODUCT_ID_AND_COMMENT_ID),
   commentController.deleteComment,
 );
 

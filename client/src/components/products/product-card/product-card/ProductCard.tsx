@@ -7,6 +7,7 @@ import ProductCardBody from "../product-card-body/ProductCardBody";
 import AddIcon from "@mui/icons-material/Add";
 import PlaylistAddIcon from "@mui/icons-material/PlaylistAdd";
 import ReactLink from "../../../common/react-link/ReactLink";
+import ProductIconButtonActions from "../../product-iconbutton-actions/ProductIconButtonActions";
 const ProductCard = ({ product }: { product: Product }) => {
   return (
     <Card
@@ -26,18 +27,8 @@ const ProductCard = ({ product }: { product: Product }) => {
         component="img"
         src={product.images[0].url}
       />
-      <Grid
-        container
-        direction="column"
-        sx={{ position: "absolute", right: 0, top: 0 }}
-      >
-        <IconButton color="inherit">
-          <AddIcon />
-        </IconButton>
-        <IconButton color="inherit">
-          <PlaylistAddIcon />
-        </IconButton>
-      </Grid>
+      <ProductIconButtonActions product={product} />
+
       <ProductCardBody product={product} />
     </Card>
   );

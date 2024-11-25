@@ -10,6 +10,7 @@ import {
 import { productInputSchema } from "../validation-schemas/product.validation";
 import { optionalAuth } from "../middlewares/optinalAuth.middleware";
 import { uploadImageProduct } from "../config/multer/multer.product";
+import { PRODUCT_ID, USER_ID } from "../constants";
 
 const router = Router();
 router.get("/products/search-post", productController.searchProducts);
@@ -30,7 +31,7 @@ router.post(
 router.post(
   "/products/:productId/image",
   authMiddleware,
-  validateObjectIdParams(["productId"]),
+  validateObjectIdParams(PRODUCT_ID),
   uploadImageProduct,
   productController.uploadImages,
 );
@@ -38,28 +39,28 @@ router.post(
 router.put(
   "/products/:productId",
   authMiddleware,
-  validateObjectIdParams(["productId"]),
+  validateObjectIdParams(PRODUCT_ID),
   validateSchemaBody(productInputSchema),
   productController.updateProduct,
 );
 router.delete(
   "/products/:productId",
   authMiddleware,
-  validateObjectIdParams(["productId"]),
+  validateObjectIdParams(PRODUCT_ID),
   verifyUserOwnershipOrAdminRole("productId"),
   productController.deleteProduct,
 );
 router.get(
   "/products/author/:userId",
   validPagination,
-  validateObjectIdParams(["userId"]),
+  validateObjectIdParams(USER_ID),
   optionalAuth,
   productController.getProductsByAuthorWithPagination,
 );
 router.get(
   "/products/:productId",
   optionalAuth,
-  validateObjectIdParams(["productId"]),
+  validateObjectIdParams(PRODUCT_ID),
   productController.getProductById,
 );
 router.get(
@@ -68,6 +69,24 @@ router.get(
   // validateObjectIdParams(["categoryId"]),
   optionalAuth,
   productController.getProductsByCategoryWithPagination,
+);
+
+router.post(
+  "/products/:productId/questions/",
+  authMiddleware,
+
+  productController.createUserQuestion,
+);
+router.post(
+  "/products/:productId/questions/:userQuestionId/answer",
+  authMiddleware,
+  productController.createAnswerForQuestion,
+);
+
+router.delete(
+  "/products/:productId/questions/:userQuestionId/",
+  authMiddleware,
+  productController.deleteUserQuestion,
 );
 
 export { router as ProductRoutes };

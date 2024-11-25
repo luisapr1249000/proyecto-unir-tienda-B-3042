@@ -1,6 +1,10 @@
 import { Request, Response } from "express";
 import { extractAuthUserId } from "../utils/auth.utils";
-import { handleError, handleObjectNotFound } from "../utils/error.utils";
+import {
+  handleBadSaved,
+  handleError,
+  handleObjectNotFound,
+} from "../utils/error.utils";
 import { Product } from "../models/product.model";
 import ViewedProduct from "../models/viewedProduct.model";
 import { hasNotViewedRecently, hasReacted } from "../utils/product.utils";
@@ -10,8 +14,10 @@ class ProductController {
     try {
       const authUserId = extractAuthUserId(req);
       const product = new Product({ ...req.body, author: authUserId });
-      await product.save();
-      return res.status(201).json({ f: req.files });
+      const savedProduct = await product.save();
+      if (!savedProduct) return handleBadSaved(res);
+
+      return res.status(201).json({ f: req.files, savedProduct });
     } catch (e) {
       return handleError(res, e);
     }
@@ -102,6 +108,7 @@ class ProductController {
           product._id.toString(),
           userAuth,
         );
+
         return { product, hasReactedObj };
       });
 
@@ -118,6 +125,8 @@ class ProductController {
       // console.log(req.user);
       const { productId } = req.params;
       const product = await Product.findById(productId)
+        .select("+userQuestions")
+        .populate("userQuestions")
         .populate("author")
         .populate("categories");
       if (!product) {
@@ -150,6 +159,7 @@ class ProductController {
           product.viewCount += 1;
         }
       }
+
       await product.save();
 
       return res.status(200).json(product);
@@ -212,6 +222,78 @@ class ProductController {
         return handleObjectNotFound(res, "Product", true);
       }
       return res.status(200).json(productResults);
+    } catch (e) {
+      return handleError(res, e);
+    }
+  }
+
+  public async createUserQuestion(req: Request, res: Response) {
+    try {
+      const userAuth = extractAuthUserId(req);
+      const { questionContent } = req.body;
+      const { productId } = req.params;
+      const questionObject = { content: questionContent, user: userAuth };
+      const product =
+        await Product.findById(productId).select("+userQuestions");
+      if (!product) {
+        return handleObjectNotFound(res, "Product");
+      }
+
+      product.userQuestions.push(questionObject);
+
+      const savedProduct = await product.save();
+      if (!savedProduct) return handleBadSaved(res);
+      return res.status(200).json(savedProduct);
+    } catch (e) {
+      return handleError(res, e);
+    }
+  }
+
+  public async createAnswerForQuestion(req: Request, res: Response) {
+    try {
+      // const userAuth = extractAuthUserId(req);
+      const { answerContent } = req.body;
+      const { productId, userQuestionId } = req.params;
+      const query = { _id: productId };
+      const product = await Product.findOne(query).select("+userQuestions");
+      if (!product) {
+        return handleObjectNotFound(res, "Product");
+      }
+
+      const productQuestion = product.userQuestions.id(userQuestionId);
+      if (!productQuestion) {
+        return handleObjectNotFound(res, "Product");
+      }
+      productQuestion.answer = answerContent;
+      productQuestion.isAnswered = true;
+
+      const savedProduct = await product.save();
+      if (!savedProduct) return handleBadSaved(res);
+      return res.status(200).json(savedProduct);
+    } catch (e) {
+      return handleError(res, e);
+    }
+  }
+
+  public async deleteUserQuestion(req: Request, res: Response) {
+    try {
+      const { productId, userQuestionId } = req.params;
+      const query = { _id: productId };
+      const product = await Product.findOne(query).select("+userQuestions");
+      if (!product) {
+        return handleObjectNotFound(res, "Product");
+      }
+
+      const productQuestion = product.userQuestions.id(userQuestionId);
+      if (!productQuestion) {
+        return handleObjectNotFound(res, "Product");
+      }
+      productQuestion.deleteOne();
+      const savedProduct = await product.save();
+      if (!savedProduct) {
+        return handleBadSaved(res);
+      }
+      return res.status(204).send();
     } catch (e) {
       return handleError(res, e);
     }

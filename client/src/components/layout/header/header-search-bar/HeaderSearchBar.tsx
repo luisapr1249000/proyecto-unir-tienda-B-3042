@@ -5,7 +5,7 @@ import SearchIcon from "@mui/icons-material/Search";
 import InputAdornment from "@mui/material/InputAdornment";
 import { useNavigate } from "react-router-dom";
 
-const HeaderSearchBar = () => {
+const HeaderSearchBar = ({ isFullBar = false }: { isFullBar?: boolean }) => {
   const navigate = useNavigate();
   const [search, setSearch] = useState("");
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -19,18 +19,32 @@ const HeaderSearchBar = () => {
   };
 
   return (
-    <Grid container size={{ xs: 3 }}>
+    <Grid
+      sx={{
+        border: 1,
+        justifyContent: "center",
+        alignContent: "center",
+        display: {
+          xs: isFullBar ? "flex" : "none",
+          md: isFullBar ? "none" : "flex",
+        },
+      }}
+      container
+      size={{
+        xs: isFullBar ? 12 : undefined,
+        md: isFullBar ? "auto" : "grow",
+      }}
+    >
       <TextField
+        placeholder="Search anything you like!"
         onChange={handleChange}
         onKeyDown={handleEnter}
         fullWidth
         size="small"
         slotProps={{
           input: {
-            endAdornment: (
-              <InputAdornment position="end">
-                {" "}
-                {/* Changed to "end" */}
+            startAdornment: (
+              <InputAdornment position="start">
                 <IconButton>
                   <SearchIcon />
                 </IconButton>

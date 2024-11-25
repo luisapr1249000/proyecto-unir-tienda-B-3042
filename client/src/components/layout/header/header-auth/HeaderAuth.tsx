@@ -3,7 +3,7 @@ import AccountBoxIcon from "@mui/icons-material/AccountBox";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import SettingsIcon from "@mui/icons-material/Settings";
 import LogoutIcon from "@mui/icons-material/Logout";
-
+import LocalMallIcon from "@mui/icons-material/LocalMall";
 import {
   Avatar,
   Box,
@@ -49,8 +49,13 @@ const HeaderAuth = () => {
     },
     {
       label: "Cart",
-      link: `/account/${authUser?.username}`,
+      link: `/account/${authUser?.username}/cart`,
       icon: <ShoppingCartIcon />,
+    },
+    {
+      label: "Wishlist",
+      link: `/account/${authUser?.username}/wishlist`,
+      icon: <LocalMallIcon />,
     },
   ];
 
@@ -80,7 +85,7 @@ const HeaderAuth = () => {
         <LoadSpinner />
       ) : (
         <>
-          <IconButton size="large" onClick={handleMenu} color="inherit">
+          <IconButton onClick={handleMenu} color="inherit">
             <Avatar alt="Remy Sharp" />
           </IconButton>
           <Menu

@@ -1,10 +1,10 @@
 import { Navigate, Outlet } from "react-router-dom";
-
-import { useQuery } from "@tanstack/react-query";
+import { useAuthUser } from "../../hooks/auth";
 
 const ProtectedRoute = () => {
-  const { data: user } = useQuery({ queryKey: ["authUser"] });
-  if (!user) return <Navigate to="/" />;
+  const { isSuccess, isLoading, isError, error } = useAuthUser();
+  if ((!isSuccess || Boolean(error) || isError) && !isLoading)
+    return <Navigate to="/" />;
   return <Outlet />;
 };
 

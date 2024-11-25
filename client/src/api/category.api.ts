@@ -11,7 +11,7 @@ export const getCategories = async ({
   limit?: number;
   sort?: string;
 }): Promise<PaginationResultCategories> => {
-  const response = await api(
+  const response = await api<PaginationResultCategories>(
     `/categories?page=${page}&limit=${limit}&sort=${sort}`
   );
   return response.data;
@@ -22,7 +22,7 @@ export const getCategoryById = async ({
 }: {
   categoryId: string;
 }): Promise<Category> => {
-  const response = await api(`/categories/${categoryId}`);
+  const response = await api<Category>(`/categories/${categoryId}`);
   return response.data;
 };
 
@@ -31,6 +31,6 @@ export const getCategoryByName = async ({
 }: {
   categoryName: string;
 }): Promise<Category> => {
-  const response = await api(`/categories/name/${categoryName}`);
+  const response = await api<Category>(`/categories/name/${categoryName}`);
   return response.data;
 };
