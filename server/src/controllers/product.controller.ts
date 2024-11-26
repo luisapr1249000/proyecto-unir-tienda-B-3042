@@ -92,13 +92,10 @@ class ProductController {
         {},
         { ...req.query, populate: ["author", "categories"] },
       );
-      if (products.docs.length === 0) {
+      if (products.docs.length === 0)
         return handleObjectNotFound(res, "Product", true);
-      }
 
-      if (!userAuth) {
-        return res.status(200).json(products);
-      }
+      if (!userAuth) return res.status(200).json(products);
 
       const productsReaction = products.docs.map(async (product) => {
         const hasReactedObj = await hasReacted(
@@ -126,9 +123,7 @@ class ProductController {
         .populate("userQuestions")
         .populate("author")
         .populate("categories");
-      if (!product) {
-        return handleObjectNotFound(res, "Product", true);
-      }
+      if (!product) return handleObjectNotFound(res, "Product");
 
       const noAuthUserHasViewed = req.cookies[`viewed_${productId}`];
 
@@ -175,9 +170,8 @@ class ProductController {
         ...req.query,
         populate: ["author", "categories"],
       });
-      if (products.docs.length === 0) {
+      if (products.docs.length === 0)
         return handleObjectNotFound(res, "Product", true);
-      }
 
       return res.status(200).json(products);
     } catch (e) {
@@ -197,9 +191,8 @@ class ProductController {
         ...req.query,
         populate: ["author"],
       });
-      if (products.docs.length === 0) {
+      if (products.docs.length === 0)
         return handleObjectNotFound(res, "Product", true);
-      }
 
       return res.status(200).json(products);
     } catch (e) {
@@ -215,9 +208,9 @@ class ProductController {
       };
 
       const productResults = await Product.paginate(myQuery, { ...req.query });
-      if (productResults.docs.length === 0) {
+      if (productResults.docs.length === 0)
         return handleObjectNotFound(res, "Product", true);
-      }
+
       return res.status(200).json(productResults);
     } catch (e) {
       return handleError(res, e);
@@ -232,9 +225,31 @@ class ProductController {
       const questionObject = { content: questionContent, user: userAuth };
       const product =
         await Product.findById(productId).select("+userQuestions");
-      if (!product) return handleObjectNotFound(res, "Product", true);
+      if (!product) return handleObjectNotFound(res, "Product");
 
       product.userQuestions.push(questionObject);
+
+      const savedProduct = await product.save();
+      if (!savedProduct) return handleBadSaved(res);
+      return res.status(200).json(savedProduct);
+    } catch (e) {
+      return handleError(res, e);
+    }
+  }
+
+  public async updateUserQuestion(req: Request, res: Response) {
+    try {
+      const userAuth = extractAuthUserId(req);
+      const { questionContent } = req.body;
+      const { productId, userQuestionId } = req.params;
+      const product =
+        await Product.findById(productId).select("+userQuestions");
+      if (!product) return handleObjectNotFound(res, "Product");
+
+      const productQuestion = product.userQuestions.id(userQuestionId);
+      if (!productQuestion) return handleObjectNotFound(res, "Product");
+
+      productQuestion.content = questionContent;
 
       const savedProduct = await product.save();
       if (!savedProduct) return handleBadSaved(res);
@@ -251,12 +266,11 @@ class ProductController {
       const { productId, userQuestionId } = req.params;
       const query = { _id: productId };
       const product = await Product.findOne(query).select("+userQuestions");
-      if (!product) return handleObjectNotFound(res, "Product", true);
+      if (!product) return handleObjectNotFound(res, "Product");
 
       const productQuestion = product.userQuestions.id(userQuestionId);
-      if (!productQuestion) {
-        return handleObjectNotFound(res, "Product");
-      }
+      if (!productQuestion) return handleObjectNotFound(res, "Product");
+
       productQuestion.answer = answerContent;
       productQuestion.isAnswered = true;
 
@@ -273,17 +287,15 @@ class ProductController {
       const { productId, userQuestionId } = req.params;
       const query = { _id: productId };
       const product = await Product.findOne(query).select("+userQuestions");
-      if (!product) return handleObjectNotFound(res, "Product", true);
+      if (!product) return handleObjectNotFound(res, "Product");
 
       const productQuestion = product.userQuestions.id(userQuestionId);
-      if (!productQuestion) {
-        return handleObjectNotFound(res, "Product");
-      }
+      if (!productQuestion) return handleObjectNotFound(res, "Product");
+
       productQuestion.deleteOne();
       const savedProduct = await product.save();
-      if (!savedProduct) {
-        return handleBadSaved(res);
-      }
+      if (!savedProduct) return handleBadSaved(res);
+
       return res.status(204).send();
     } catch (e) {
       return handleError(res, e);

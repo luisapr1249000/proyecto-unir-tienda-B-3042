@@ -5,6 +5,8 @@ export const loadableOptions = { fallback: <LoadSpinner isBackdrop /> };
 
 type LoadableOptions<T extends DefaultComponent<any>> = {
   loader: () => Promise<T>;
+  delay: number;
+  options: unknown;
 };
 
 export const createLoadable = <T extends DefaultComponent<any>>(

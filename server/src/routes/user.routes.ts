@@ -8,7 +8,7 @@ import {
   validPagination,
   validUsername,
 } from "../middlewares/requestValidation.middleware";
-import { userInputSchema } from "../validation-schemas/user.validation";
+import { userInputSchema } from "../validation-schemas/user-schemas/user.validation";
 import { USER_ID } from "../constants";
 
 const router = Router();

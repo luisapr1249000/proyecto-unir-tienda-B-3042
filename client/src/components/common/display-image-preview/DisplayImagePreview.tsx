@@ -11,7 +11,6 @@ const DisplayImagePreview = ({
   files: File[];
 }) => {
   const [previews, setPreviews] = useState<string[]>();
-
   useEffect(() => {
     if (files) {
       const previewUrls = files.map((file) => URL.createObjectURL(file));
@@ -21,7 +20,7 @@ const DisplayImagePreview = ({
           URL.revokeObjectURL(preview);
         });
     }
-  }, [files]);
+  }, []);
 
   return (
     <Grid sx={{ position: "relative" }}>

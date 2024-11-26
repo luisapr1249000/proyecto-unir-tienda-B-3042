@@ -3,7 +3,7 @@ import { Document, PaginateModel, Types } from "mongoose";
 import {
   userInputSchema,
   userSchemaComplete,
-} from "../validation-schemas/user.validation";
+} from "../validation-schemas/user-schemas/user.validation";
 import { z } from "zod";
 import { AddressDirection } from "./addressDirectionSchema";
 
@@ -16,7 +16,7 @@ export type User = z.infer<typeof userSchemaComplete> & {
 };
 export type UserDocument = Document &
   User & {
-    comparePasswords(candidatePassword: string): boolean;
+    comparePasswords: (candidatePassword: string) => boolean;
     hashPassword: (newPassword: string) => void;
   };
 

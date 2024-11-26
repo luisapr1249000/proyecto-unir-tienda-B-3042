@@ -1,15 +1,26 @@
 import { z } from "zod";
-import { imageSchema } from "./product.validation";
 import {
   abstractSchema,
   authorObjIdSchema,
-  baseStringSchema,
+  createNonNegativeNumberField,
+  createValidStringField,
   productObjIdSchema,
 } from "./abstract.validation";
+import { imageSchema } from "./image.schema";
+
+const commentContentField = createValidStringField({
+  fieldName: "content",
+  maxLength: 200,
+});
+
+const reviewField = createNonNegativeNumberField({
+  fieldName: "review",
+  maxValue: 5,
+});
 
 export const commentInputSchema = z.object({
-  content: baseStringSchema,
-  review: z.coerce.number().nonnegative().optional().default(1),
+  content: commentContentField,
+  review: reviewField,
   image: z.array(imageSchema).optional().default([]),
 });
 

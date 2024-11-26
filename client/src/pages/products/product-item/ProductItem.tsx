@@ -47,14 +47,31 @@ const ProductItem = () => {
       sx={{
         justifyContent: "center",
         alignItems: "center",
-        height: "calc(100vh)",
+        // height: "calc(100vh)",
         border: 1,
+        p: 3,
       }}
+      spacing={3}
     >
       {isLoading && <LoadSpinner />}
       {error && <Typography>Product Not Found</Typography>}
       {product && (
-        <ProductItemCard product={product} />
+        <>
+          <ProductItemCard product={product} />
+          <Grid
+            component={Card}
+            variant="outlined"
+            size={{ xs: 10 }}
+            sx={{ height: 100 }}
+          >
+            <CardContent>
+              <Typography>Most Common Questions</Typography>
+            </CardContent>
+            <Divider />
+            <CardContent></CardContent>
+          </Grid>
+        </>
+
         // <Card
         //   component={Grid}
         //   container

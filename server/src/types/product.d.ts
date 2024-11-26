@@ -5,7 +5,7 @@ import {
   userQuestionInput,
   userQuestionInputAnswer,
   userQuestionSchema,
-} from "../validation-schemas/product.validation";
+} from "../validation-schemas/product-schemas/product.validation";
 import { Document, Types } from "mongoose";
 
 export type UserQuestionContent = z.infer<typeof userQuestionInput>;

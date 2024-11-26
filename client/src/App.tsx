@@ -13,6 +13,7 @@ import { useNavigatorOnLine } from "./hooks/navigatorOnLine.hooks";
 import { useEffect } from "react";
 import NetworkStatusIndicator from "./components/network/network-status-indicator/NetworkStatusIndicator";
 import NetworkOffline from "./components/network/network-offline/NetworkOffline";
+import commentsRoutes from "./routes/comments.routes";
 
 function App() {
   const isOnline = useNavigatorOnLine();
@@ -35,6 +36,7 @@ function App() {
     ...userRoutes,
     ...productRoutes,
     ...categoryRoutes,
+    ...commentsRoutes,
   ]);
 
   if (!isOnline) return <NetworkOffline />;

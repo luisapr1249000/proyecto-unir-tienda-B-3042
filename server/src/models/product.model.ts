@@ -67,6 +67,7 @@ export const productSchema = new Schema(
     wishlistCount: { type: Number, default: 0 },
     commentCount: { type: Number, default: 0 },
     userQuestions: { type: [userQuestionSchema], select: false },
+    averageReview: { type: Number, default: 0 },
   },
   {
     virtuals: {

@@ -65,3 +65,13 @@ export const userWishlistSchema = abstractSchema
 export const userSavedProductsSchema = abstractSchema
   .omit({ updatedAt: true, createdAt: true })
   .merge(userSavedProductsArray);
+
+export const productUserQuestionSchema = z.object({
+  questionContent: basicString,
+});
+export const productQuestionAnswer = z.object({ answerContent: basicString });
+export const productQuestionOptionalAnswer = z.object({
+  answerContent: z.string().optional(),
+});
+
+export const productUserQuestionId = z.object({ userQuestionId: basicString });

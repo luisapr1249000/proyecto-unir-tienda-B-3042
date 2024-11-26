@@ -5,7 +5,7 @@ import {
   validateObjectIdParams,
   validateSchemaBody,
 } from "../middlewares/requestValidation.middleware";
-import { addressDirectionInputSchema } from "../validation-schemas/user.validation";
+import { addressDirectionInputSchema } from "../validation-schemas/user-schemas/user.validation";
 
 const router = Router();
 

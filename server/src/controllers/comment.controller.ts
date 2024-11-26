@@ -4,6 +4,7 @@ import { handleError, handleObjectNotFound } from "../utils/error.utils";
 import { Product } from "../models/product.model";
 import { Comment } from "../models/comment.model";
 import { Image } from "../types/image";
+import { getAverageReview } from "../utils/product.utils";
 
 class CommentController {
   public async createComment(req: Request, res: Response) {
@@ -13,15 +14,13 @@ class CommentController {
       const product = await Product.findById(productId);
       if (!product) return handleObjectNotFound(res, "Product", true);
 
-      const comment = new Comment({
-        ...req.body,
-        author: authUserId,
-        product: productId,
-      });
+      const data = { ...req.body, author: authUserId, product: productId };
+      const comment = new Comment(data);
+
       product.commentCount += 1;
       await comment.save();
-      await product.save();
-
+      product.averageReview = await getAverageReview(product._id.toString());
+      product.save();
       return res.status(201).json(comment);
     } catch (e) {
       return handleError(res, e);
@@ -31,9 +30,9 @@ class CommentController {
   public async uploadImages(req: Request, res: Response) {
     try {
       const { commentId } = req.params;
-      if (!req.files || req.files.length === 0) {
+      if (!req.files || req.files.length === 0)
         return handleObjectNotFound(res, "Product");
-      }
+
       const images: Image[] = [];
       (req.files as Express.Multer.File[]).map((file) => {
         const fileName = file.location.split("/").pop();
@@ -99,7 +98,8 @@ class CommentController {
       if (!comment) return handleObjectNotFound(res, "Comment");
 
       product.commentCount -= 1;
-      await product.save();
+      product.averageReview = await getAverageReview(product._id.toString());
+      product.save();
       return res.status(204).send();
     } catch (e) {
       return handleError(res, e);

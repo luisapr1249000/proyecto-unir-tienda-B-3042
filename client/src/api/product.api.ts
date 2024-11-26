@@ -6,7 +6,13 @@ import {
   PaginationOptionsUserId,
   PaginationResultProducts,
 } from "../types/paginationResult";
-import { Product, ProductId } from "../types/product";
+import {
+  Product,
+  ProductId,
+  ProductQuestionContent,
+  ProductQuestionContentAnswer,
+  ProductUserQuestionId,
+} from "../types/product";
 import { UserId } from "../types/user";
 
 export const getProductsWithPagination = async ({
@@ -73,4 +79,51 @@ export const getProductstByAuthorWithPagination = async ({
     `/products/author/${userId}?page${page}&limit=${limit}&sort=${sort}`
   );
   return response.data;
+};
+
+export const createUserQuestionForOneProduct = async ({
+  productId,
+  questionContent,
+}: ProductId & ProductQuestionContent): Promise<Product> => {
+  const response = await api.post<Product>(
+    `/products/${productId}/questions`,
+    questionContent
+  );
+  return response.data;
+};
+
+export const updateUserQuestionForOneProduct = async ({
+  productId,
+  questionContent,
+  userQuestionId,
+}: ProductId &
+  ProductQuestionContent &
+  ProductUserQuestionId): Promise<Product> => {
+  const response = await api.put<Product>(
+    `/products/${productId}/questions/${userQuestionId}`,
+    questionContent
+  );
+  return response.data;
+};
+export const answerUserQuestionForOneProduct = async ({
+  productId,
+  answerContent,
+  userQuestionId,
+}: ProductId &
+  ProductQuestionContentAnswer &
+  ProductUserQuestionId): Promise<Product> => {
+  const response = await api.put<Product>(
+    `/products/${productId}/questions/${userQuestionId}/answer`,
+    answerContent
+  );
+  return response.data;
+};
+
+export const deleteUserQuestionForOneProduct = async ({
+  productId,
+  userQuestionId,
+}: ProductId & ProductUserQuestionId): Promise<Product> => {
+  await api.delete<Product>(
+    `/products/${productId}/questions/${userQuestionId}/answer`
+  );
 };

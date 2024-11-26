@@ -4,7 +4,9 @@ import React from "react";
 
 const IconButtonDelete = ({ onDelete }: { onDelete: () => void }) => {
   return (
-    <Box sx={{ position: "absolute", top: 0, right: 0 }}>
+    <Box
+      sx={{ bgcolor: "#fff", p: 0.3, position: "absolute", top: 0, right: 0 }}
+    >
       <IconButton size="small" onClick={onDelete}>
         <ClearIcon fontSize="inherit" />
       </IconButton>

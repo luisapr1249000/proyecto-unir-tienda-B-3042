@@ -7,7 +7,7 @@ import {
   validateSchemaBody,
   validPagination,
 } from "../middlewares/requestValidation.middleware";
-import { productInputSchema } from "../validation-schemas/product.validation";
+import { productInputSchema } from "../validation-schemas/product-schemas/product.validation";
 import { optionalAuth } from "../middlewares/optinalAuth.middleware";
 import { uploadImageProduct } from "../config/multer/multer.product";
 import { PRODUCT_ID, USER_ID } from "../constants";
@@ -74,10 +74,16 @@ router.get(
 router.post(
   "/products/:productId/questions/",
   authMiddleware,
-
   productController.createUserQuestion,
 );
-router.post(
+
+router.put(
+  "/products/:productId/questions/:userQuestionId/",
+  authMiddleware,
+  productController.updateUserQuestion,
+);
+
+router.put(
   "/products/:productId/questions/:userQuestionId/answer",
   authMiddleware,
   productController.createAnswerForQuestion,

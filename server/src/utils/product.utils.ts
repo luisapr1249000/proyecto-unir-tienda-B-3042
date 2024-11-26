@@ -36,3 +36,17 @@ export const checkIfModelSaved = <T>(object: T, res: Response) => {
     return res.status(400).json({ message: "Something went Bad" });
   }
 };
+
+export const getTotalProductCommentReviews = async (productId: string) => {
+  const comments = await Comment.find({ productId });
+  return comments.map((comment) => comment.review);
+};
+
+export const getAverageReview = async (productId: string) => {
+  const totalReviews = await getTotalProductCommentReviews(productId);
+  const total = totalReviews.reduce(
+    (accumulator, currentValue) => accumulator + currentValue,
+    0,
+  );
+  return total / totalReviews.length;
+};

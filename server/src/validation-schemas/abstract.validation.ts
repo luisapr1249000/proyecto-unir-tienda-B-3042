@@ -25,10 +25,10 @@ export const abstractSchema = z.object({
 });
 
 export const authorObjIdSchema = z.object({
-  author: objectIdValidator,
+  author: mongooseObjectId,
 });
 export const productObjIdSchema = z.object({
-  product: objectIdValidator,
+  product: mongooseObjectId,
 });
 
 export const noSpacesAndOnlyDotSchema = z
@@ -40,14 +40,52 @@ export const noSpacesAndOnlyDotSchema = z
     message: "No spaces are allowed",
   });
 
-export const emailSchema = z.string().trim().email().min(1, "Email required");
+export const emailSchema = z
+  .string()
+  .trim()
+  .email()
+  .min(1, "Email required")
+  .max(100);
 
-export const descriptionSchema = z.string().trim().optional().default("");
+export const basicStringField = z.string().trim();
 
-export const baseStringSchema = z.string().trim().min(1);
+export const createValidStringField = ({
+  fieldName,
+  minLength = 1,
+  maxLength = 25,
+}: {
+  fieldName: string;
+  minLength?: number;
+  maxLength?: number;
+}) =>
+  basicStringField
+    .min(minLength, `${fieldName} required`)
+    .max(
+      maxLength,
+      `${fieldName} must be no more than ${maxLength} characters`,
+    );
 
 export const phoneNumberSchema = z
   .string()
   .trim()
   .min(1)
   .refine(validator.isMobilePhone);
+
+export const createNonNegativeNumberField = ({
+  fieldName,
+  maxValue,
+}: {
+  fieldName: string;
+  maxValue?: number;
+}) => {
+  const schema = z.coerce
+    .number()
+    .int(`The ${fieldName} must be int`)
+    .nonnegative(`The ${fieldName} must be non-negative`);
+
+  if (maxValue) {
+    schema.max(maxValue, `The ${fieldName} must not exceed ${maxValue}`);
+  }
+
+  return schema;
+};

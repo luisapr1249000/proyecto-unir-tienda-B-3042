@@ -9,8 +9,11 @@ import { imageSchema } from "./image.validation";
 
 export const commentInputSchema = z.object({
   content: basicString,
-  review: z.coerce.number().nonnegative().optional().default(1),
-  image: z.array(imageSchema).optional().default([]),
+  review: z.coerce.number().nonnegative().min(1).max(5).optional().default(1),
+  images: z
+    .array(imageSchema.or(z.instanceof(File)))
+    .optional()
+    .default([]),
 });
 
 export const commentSchema = abstractSchema

@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "target": "ES2023",
+    "target": "ES2018",
     "module": "commonjs",
     "rootDir": "./src", // Set rootDir to the source directory
     "outDir": "./dist",
