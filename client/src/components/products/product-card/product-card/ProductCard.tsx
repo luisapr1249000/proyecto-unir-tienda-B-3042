@@ -1,35 +1,46 @@
-import React from "react";
 import { Product } from "../../../../types/product";
-import { Card, CardActionArea, CardMedia, IconButton } from "@mui/material";
+import {
+  Box,
+  Button,
+  Card,
+  CardActionArea,
+  CardActions,
+  CardContent,
+  CardHeader,
+  CardMedia,
+  Chip,
+  Collapse,
+  Divider,
+  IconButton,
+  MobileStepper,
+  Typography,
+} from "@mui/material";
 import Grid from "@mui/material/Grid2";
-import ProductCardHeader from "../product-card-header/ProductCardHeader";
+import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import ProductCardBody from "../product-card-body/ProductCardBody";
-import AddIcon from "@mui/icons-material/Add";
-import PlaylistAddIcon from "@mui/icons-material/PlaylistAdd";
 import ReactLink from "../../../common/react-link/ReactLink";
 import ProductIconButtonActions from "../../product-iconbutton-actions/ProductIconButtonActions";
+import { useState } from "react";
+import { formatDate } from "../../../../utils/util.dates";
+import ProductCardImage from "../product-card-image/ProductCardImage";
 const ProductCard = ({ product }: { product: Product }) => {
   return (
     <Card
+      component={Grid}
+      size={{ xs: 12, lg: 3 }}
       sx={{
-        maxWidth: 250,
-        width: 250,
-        // maxHeight: 300,
-        // height: 300,
         position: "relative",
       }}
-      component={ReactLink}
-      to={`/products/item/${product._id}`}
       variant="outlined"
     >
-      <CardMedia
-        sx={{ height: 200, objectFit: "cover" }}
-        component="img"
-        src={product.images[0].url}
-      />
+      <ProductCardImage product={product} />
       <ProductIconButtonActions product={product} />
-
-      <ProductCardBody product={product} />
+      <CardActionArea
+        component={ReactLink}
+        to={`/products/item/${product._id}`}
+      >
+        <ProductCardBody product={product} />
+      </CardActionArea>
     </Card>
   );
 };

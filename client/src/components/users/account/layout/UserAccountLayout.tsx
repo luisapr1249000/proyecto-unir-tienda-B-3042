@@ -9,14 +9,16 @@ import { User } from "../../../../types/user";
 const UserAccountLayout = () => {
   const context = useOutletContext<User>();
   return (
-    <Box sx={{ display: "flex" }}>
+    <>
       <Header />
-      <CustomDrawer user={context} />
-      <Box sx={{ flexGrow: 1, border: 1 }}>
-        <Toolbar />
-        <Outlet context={context} />
+      <Box sx={{ display: "flex" }}>
+        <CustomDrawer user={context} />
+        <Box sx={{ flexGrow: 1, border: 1 }}>
+          <Toolbar />
+          <Outlet context={context} />
+        </Box>
       </Box>
-    </Box>
+    </>
   );
 };
 

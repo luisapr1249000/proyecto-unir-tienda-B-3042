@@ -13,7 +13,14 @@ class ProductController {
   public async createProduct(req: Request, res: Response) {
     try {
       const authUserId = extractAuthUserId(req);
-      const product = new Product({ ...req.body, author: authUserId });
+      const price = parseFloat(req.body.price);
+      const discount = parseFloat(req.body.discount);
+      const finalPrice = discount ? price * (1 - discount / 100) : price;
+      const product = new Product({
+        ...req.body,
+        author: authUserId,
+        finalPrice: finalPrice.toFixed(2),
+      });
       const savedProduct = await product.save();
       if (!savedProduct) return handleBadSaved(res);
 
@@ -58,13 +65,13 @@ class ProductController {
   public async updateProduct(req: Request, res: Response) {
     try {
       const { productId } = req.params;
-      const product = await Product.findByIdAndUpdate(
-        productId,
-        {
-          ...req.body,
-        },
-        { new: true },
-      );
+      const price = parseFloat(req.body.price);
+      const discount = parseFloat(req.body.discount);
+      const finalPrice = discount ? price * (1 - discount / 100) : price;
+      const updates = { ...req.body, finalPrice: finalPrice.toFixed(2) };
+      const product = await Product.findByIdAndUpdate(productId, updates, {
+        new: true,
+      });
       if (!product) return handleObjectNotFound(res, "Product", true);
 
       return res.status(200).json(product);
@@ -207,7 +214,10 @@ class ProductController {
         $text: { $search: query },
       };
 
-      const productResults = await Product.paginate(myQuery, { ...req.query });
+      const productResults = await Product.paginate(myQuery, {
+        ...req.query,
+        populate: ["author", "categories"],
+      });
       if (productResults.docs.length === 0)
         return handleObjectNotFound(res, "Product", true);
 
@@ -239,7 +249,7 @@ class ProductController {
 
   public async updateUserQuestion(req: Request, res: Response) {
     try {
-      const userAuth = extractAuthUserId(req);
+      // const userAuth = extractAuthUserId(req);
       const { questionContent } = req.body;
       const { productId, userQuestionId } = req.params;
       const product =

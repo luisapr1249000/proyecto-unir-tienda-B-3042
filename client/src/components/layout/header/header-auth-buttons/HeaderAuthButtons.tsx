@@ -26,7 +26,11 @@ const HeaderAuthButtons = () => {
   ];
 
   return (
-    <Grid sx={{ height: 4, ...gridContainerCenter }} container spacing={2}>
+    <Grid
+      sx={{ border: 1, ...gridContainerCenter, p: undefined }}
+      container
+      spacing={2}
+    >
       {settings.map((setting) => (
         <Box key={setting.link}>
           <Tooltip title={setting.label}>

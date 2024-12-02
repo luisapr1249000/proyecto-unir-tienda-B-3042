@@ -4,11 +4,13 @@ import {
   authorObjIdSchema,
   createNonNegativeNumberField,
   createValidStringField,
-  mongooseObjectId,
+  objectIdValidator,
 } from "../abstract.validation";
 import { specificationsSchema } from "./productSpecifications.validation";
 import { imageSchema } from "../image.schema";
+import { userQuestionSchema } from "./product.user.question.validation";
 
+// -------------------------------------------------------
 const productNameField = createValidStringField({
   fieldName: "Product Name",
   maxLength: 50,
@@ -18,21 +20,24 @@ const productDescriptionField = createValidStringField({
   maxLength: 500,
 });
 
-const priceField = createNonNegativeNumberField({ fieldName: "Price" });
 const quantityField = createNonNegativeNumberField({ fieldName: "Quantity" });
 
 export const productInputSchema = z.object({
   name: productNameField,
   description: productDescriptionField,
   categories: z
-    .array(mongooseObjectId)
+    .array(objectIdValidator)
     .refine((items) => new Set(items).size === items.length, {
       message: "All categories must be unique",
     }),
-  price: priceField,
+  price: z.coerce
+    .number()
+    .nonnegative("The Price must be positive")
+    .multipleOf(0.01),
   quantity: quantityField,
   images: z.array(imageSchema).default([]),
-  specifications: specificationsSchema.optional(),
+  specifications: specificationsSchema.default({}),
+  discount: z.coerce.number().nonnegative().multipleOf(0.01).optional(),
 });
 
 const likesField = createNonNegativeNumberField({ fieldName: "Likes" });
@@ -57,6 +62,8 @@ export const otherProps = z.object({
   commentCount: commentCountField,
   averageReview: averageReviewField,
   viewCount: viewCountField,
+  userQuestions: z.array(userQuestionSchema),
+  finalPrice: z.number().nonnegative().multipleOf(0.01),
 });
 
 export const productSchema = abstractSchema
@@ -67,26 +74,3 @@ export const productSchema = abstractSchema
 export const reactionSchema = z.object({
   interactionType: z.enum(["like", "dislike"]),
 });
-
-const userQuestionInputField = createValidStringField({
-  fieldName: "User Question Content",
-  maxLength: 150,
-});
-const userQuestionInputAnswerField = createValidStringField({
-  fieldName: "User Question Answer",
-  maxLength: 150,
-});
-
-export const userQuestionInput = z.object({ content: userQuestionInputField });
-export const userQuestionInputAnswer = z.object({
-  answer: userQuestionInputAnswerField,
-});
-export const userQuestionOtherValues = z.object({
-  user: mongooseObjectId,
-  isAnswered: z.boolean().default(false),
-});
-
-export const userQuestionSchema = abstractSchema
-  .merge(userQuestionInput)
-  .merge(userQuestionInputAnswer)
-  .merge(userQuestionOtherValues);

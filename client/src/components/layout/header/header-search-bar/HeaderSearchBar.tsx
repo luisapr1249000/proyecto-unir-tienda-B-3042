@@ -1,41 +1,51 @@
 import React, { useState } from "react";
 import Grid from "@mui/material/Grid2";
-import { IconButton, TextField } from "@mui/material";
+import { IconButton, TextField, Tooltip } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import InputAdornment from "@mui/material/InputAdornment";
 import { useNavigate } from "react-router-dom";
 
-const HeaderSearchBar = ({ isFullBar = false }: { isFullBar?: boolean }) => {
+const HeaderSearchBar = ({
+  isFullBar = false,
+  handleDrawerClose,
+  search,
+  setSearch,
+}: {
+  isFullBar?: boolean;
+  handleDrawerClose?: () => void;
+  search?: string;
+  setSearch?: (search: string) => void;
+}) => {
   const navigate = useNavigate();
-  const [search, setSearch] = useState("");
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearch(e.currentTarget.value);
+    setSearch?.(e.currentTarget.value);
   };
 
-  const handleEnter = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Enter") {
-      navigate(search); // Use value instead of target
+  const handleEnter = (e: React.KeyboardEvent<HTMLDivElement>) => {
+    if (e.key === "Enter" && search && search.length > 0) {
+      navigate(`/products/search/${search}`);
+      handleDrawerClose?.();
+    }
+  };
+  const handleClick = () => {
+    if (search && search.length > 0) {
+      handleDrawerClose?.();
+      navigate(`/products/search/${search}`);
     }
   };
 
+  console.log(search);
   return (
     <Grid
       sx={{
-        border: 1,
         justifyContent: "center",
         alignContent: "center",
-        display: {
-          xs: isFullBar ? "flex" : "none",
-          md: isFullBar ? "none" : "flex",
-        },
       }}
       container
-      size={{
-        xs: isFullBar ? 12 : undefined,
-        md: isFullBar ? "auto" : "grow",
-      }}
+      size={{ xs: 8, md: 5 }}
     >
       <TextField
+        value={search}
         placeholder="Search anything you like!"
         onChange={handleChange}
         onKeyDown={handleEnter}
@@ -45,9 +55,11 @@ const HeaderSearchBar = ({ isFullBar = false }: { isFullBar?: boolean }) => {
           input: {
             startAdornment: (
               <InputAdornment position="start">
-                <IconButton>
-                  <SearchIcon />
-                </IconButton>
+                <Tooltip title="Search">
+                  <IconButton size="small" onClick={handleClick}>
+                    <SearchIcon fontSize="inherit" />
+                  </IconButton>
+                </Tooltip>
               </InputAdornment>
             ),
             sx: { bgcolor: "#fff" },

@@ -49,7 +49,7 @@ export type PaginationResultUsers = PaginationResult & {
   docs: User[];
 };
 
-export type QueryKey = { queryKey: (string | boolean)[] };
+export type QueryKey = { queryKey: (string | boolean | number)[] };
 export type PaginationOptionAndQueryKey = PaginationConfig & QueryKey;
 export type PaginationOptionUserIdAndQueryKey = PaginationOptionAndQueryKey &
   UserId;

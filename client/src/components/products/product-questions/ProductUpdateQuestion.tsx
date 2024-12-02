@@ -7,7 +7,7 @@ import {
 } from "../../../types/product";
 import { useFormik } from "formik";
 import { toFormikValidationSchema } from "zod-formik-adapter";
-import { productUserQuestionSchema } from "../../../validation-schemas/product.validation";
+import { productUserQuestionSchema } from "../../../validation-schemas/product-schemas/product.validation";
 import Grid from "@mui/material/Grid2";
 import { TextField } from "@mui/material";
 import SubmitButton from "../../common/buttons/submit-button/SubmitButton";

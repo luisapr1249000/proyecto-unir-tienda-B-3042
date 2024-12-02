@@ -1,29 +1,31 @@
-import { Card } from "@mui/material";
-import React from "react";
+import { Card, Divider } from "@mui/material";
+import React, { useState } from "react";
 import Grid from "@mui/material/Grid2";
 import ProductItemImage from "./ProductItemImage";
-import { Product } from "../../../types/product";
-import ProductIconButtonActions from "../product-iconbutton-actions/ProductIconButtonActions";
-import ProductItemTextField from "./ProductItemTextField";
+import { Product } from "../../../../types/product";
 import ProductItemContent from "./ProductItemContent";
 import ProductItemPrice from "./ProductItemPrice";
 
 const ProductItemCard = ({ product }: { product: Product }) => {
   return (
     <Card
-      direction="row"
       component={Grid}
       container
       variant="outlined"
+      direction={{ xs: "column", md: "row" }}
       sx={{
-        height: 400,
         position: "relative",
-        border: 1,
+        display: "flex",
+        justifyContent: "space-evenly",
       }}
       size={{ xs: 10 }}
     >
-      <ProductItemImage imageUrl={product.images[0].url} />
+      <ProductItemImage product={product} />
+      <Divider orientation="vertical" flexItem />
+
       <ProductItemContent product={product} />
+      <Divider orientation="vertical" flexItem />
+
       <ProductItemPrice product={product} />
     </Card>
   );

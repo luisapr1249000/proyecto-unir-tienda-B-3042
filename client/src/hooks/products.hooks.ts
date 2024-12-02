@@ -1,4 +1,4 @@
-import { useQuery } from "@tanstack/react-query";
+import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import {
   PaginationOptionAndQueryKey,
   PaginationOptionCategoryIdAndQueryKey,
@@ -9,7 +9,6 @@ import {
   getProductById,
   getProductsByCategoryByIdWithPagination,
   getProductsByCategoryByNameWithPagination,
-  getProductsByCategoryWithPagination,
   getProductstByAuthorWithPagination,
   getProductsWithPagination,
 } from "../api/product.api";
@@ -80,6 +79,8 @@ export const useGetProductsByCategoryByIdWithPagination = ({
     enabled: !!enabled,
     retry: false,
     refetchOnWindowFocus: false,
+    placeholderData: keepPreviousData,
+    staleTime: 5000,
   });
 };
 

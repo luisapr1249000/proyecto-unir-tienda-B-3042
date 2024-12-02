@@ -8,8 +8,15 @@ import ReactLink from "../../../common/react-link/ReactLink";
 const ProductCardBody = ({ product }: { product: Product }) => {
   return (
     <CardContent sx={{}}>
-      <Grid container spacing={2} sx={{ alignItems: "center" }}>
-        <Rating size="small" readOnly />
+      <Grid
+        container
+        spacing={1}
+        sx={{ alignItems: "center", justifyContent: "flex-start" }}
+      >
+        <Typography color="textSecondary" variant="caption">
+          {product.averageReview}
+        </Typography>
+        <Rating value={product.averageReview} size="small" readOnly />
         <Typography color="textSecondary" variant="caption">
           40 Sold
         </Typography>
@@ -22,16 +29,45 @@ const ProductCardBody = ({ product }: { product: Product }) => {
       >
         {product.name}
       </Typography>
-      <Typography
-        component="div"
-        sx={{ fontWeight: "bold" }}
-        gutterBottom
-        variant="h6"
-      >
-        <ReactLink to={`/products/item/${product._id}`}>
-          $ {product.price}
-        </ReactLink>
-      </Typography>
+      {product.discount ? (
+        <>
+          <Typography
+            color="textSecondary"
+            sx={{ textDecoration: "line-through" }}
+            variant="caption"
+          >
+            $ {product.price}
+          </Typography>
+          <Grid container>
+            <Typography
+              component="div"
+              sx={{ fontWeight: "bold", mr: 2 }}
+              gutterBottom
+              variant="h6"
+            >
+              $ {product.finalPrice}
+            </Typography>
+            <Typography
+              sx={{ fontWeight: "bold" }}
+              color="success"
+              variant="body2"
+            >
+              {product.discount}% OFF
+            </Typography>
+          </Grid>
+        </>
+      ) : (
+        <Typography
+          component="div"
+          sx={{ fontWeight: "bold" }}
+          gutterBottom
+          variant="h6"
+        >
+          <ReactLink to={`/products/item/${product._id}`}>
+            $ {product.price}
+          </ReactLink>
+        </Typography>
+      )}
     </CardContent>
   );
 };

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useGetCategories } from "../../../hooks/category";
+import { useGetCategoriesWitPagination } from "../../../hooks/category";
 import { List, ListItemButton, ListItemText } from "@mui/material";
 import LoadSpinner from "../../common/load-spinner/LoadSpinner";
 import BaseListItems from "../../common/base-list-items/BaseListItems";
@@ -11,7 +11,7 @@ const CategoryList = () => {
   const [categoriesAndLinks, setCategoriesAndLinks] = useState<
     CategoryAndLink[]
   >([]);
-  const { data: categories, isLoading } = useGetCategories({
+  const { data: categories, isLoading } = useGetCategoriesWitPagination({
     page: 1,
     limit: 50,
   });

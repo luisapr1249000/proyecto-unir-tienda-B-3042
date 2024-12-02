@@ -7,6 +7,7 @@ import ReactLink from "../../../components/common/react-link/ReactLink";
 import { toast } from "react-toastify";
 import { gridContainerCenter } from "../../../assets/css/mui-css-objects/gridCenter";
 import { gridBreakpoints } from "../../../assets/css/mui-css-objects/muiStyles";
+import GoogleAuthButton from "../../../components/auth/google-auth-button/GoogleAuthButton";
 
 const Login = () => {
   let { state } = useLocation();
@@ -18,11 +19,7 @@ const Login = () => {
     }
   }, []);
   return (
-    <Grid
-      container
-      spacing={2}
-      sx={{ ...gridContainerCenter, height: "calc(100vh)" }}
-    >
+    <Grid container spacing={3} sx={{ ...gridContainerCenter }}>
       <Grid
         component={Paper}
         elevation={2}
@@ -50,6 +47,15 @@ const Login = () => {
         <Divider sx={{ width: 1 }} />
         <Grid container size={{ xs: 12 }} sx={{}}>
           <LoginForm />
+        </Grid>
+        <Divider sx={{ width: 1 }}>
+          <Typography variant="caption" color="textSecondary">
+            Or Using
+          </Typography>
+        </Divider>
+
+        <Grid size={{ xs: 12 }} sx={{}}>
+          <GoogleAuthButton />
         </Grid>
         <Typography
           sx={{ color: "#00f" }}

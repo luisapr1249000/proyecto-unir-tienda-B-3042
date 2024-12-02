@@ -13,6 +13,21 @@ const userQuestionSchema = new Schema(
   { timestamps: true },
 );
 
+const productSpecification = new Schema(
+  {
+    dimensions: {
+      width: String,
+      depth: String,
+      height: String,
+    },
+    material: String,
+    finish: String,
+    assemblyRequired: Boolean,
+    weightCapacity: Number,
+  },
+  { _id: false },
+);
+
 export const productSchema = new Schema(
   {
     author: {
@@ -33,6 +48,8 @@ export const productSchema = new Schema(
       required: true,
       min: 0,
     },
+    discount: { type: Number, default: 0, min: 0 },
+    finalPrice: { type: Number, default: 0, min: 0 },
     quantity: {
       type: Number,
       required: true,
@@ -48,20 +65,9 @@ export const productSchema = new Schema(
     viewCount: { type: Number, default: 0 },
     isDeleted: { type: Boolean, default: false },
 
-    specifications: {
-      dimensions: {
-        width: String,
-        depth: String,
-        height: String,
-      },
-      material: String,
-      finish: String,
-      assemblyRequired: Boolean,
-      weightCapacity: Number,
-    },
+    specifications: productSpecification,
     brand: [String],
     images: [imageSchema],
-    discount: { type: Number, default: 0 },
     likes: { type: Number, default: 0 },
     dislikes: { type: Number, default: 0 },
     wishlistCount: { type: Number, default: 0 },
@@ -70,19 +76,9 @@ export const productSchema = new Schema(
     averageReview: { type: Number, default: 0 },
   },
   {
-    virtuals: {
-      finalPrince: {
-        get() {
-          return this.price * (1 - this.discount / 100);
-        },
-      },
-    },
-    toJSON: { virtuals: true },
-    toObject: { virtuals: true },
     timestamps: true,
   },
 );
-
 productSchema.index({ name: "text", description: "text" });
 productSchema.plugin(mongoosePaginate);
 export const Product = model<ProductDocument, PaginateModel<ProductDocument>>(

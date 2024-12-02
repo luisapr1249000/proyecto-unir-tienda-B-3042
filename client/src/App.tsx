@@ -30,11 +30,10 @@ function App() {
     {
       element: <BaseLayout />,
       path: "",
-      children: [],
+      children: [...productRoutes],
     },
     ...authRoutes,
     ...userRoutes,
-    ...productRoutes,
     ...categoryRoutes,
     ...commentsRoutes,
   ]);

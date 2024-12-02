@@ -50,3 +50,7 @@ export const getAverageReview = async (productId: string) => {
   );
   return total / totalReviews.length;
 };
+
+export const fixedProductPrice = (price: number) => {
+  price.toFixed(2);
+};

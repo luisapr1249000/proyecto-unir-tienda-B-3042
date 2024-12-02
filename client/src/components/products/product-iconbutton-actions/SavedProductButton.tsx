@@ -4,7 +4,6 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import { useMutation } from "@tanstack/react-query";
 import { toast } from "react-toastify";
-import { addProductToSavedProducts } from "../../../api/userProductActions.api";
 
 const SavedProductButton = ({
   productId,
@@ -15,20 +14,20 @@ const SavedProductButton = ({
   userId?: string;
   isAuth: boolean;
 }) => {
-  const { mutate, isPending } = useMutation({
-    mutationFn: addProductToSavedProducts,
-    onSuccess: () => {
-      toast("Product Added to your Cart");
-    },
-    onError: () => {
-      toast("The Product Could not be added to your cart");
-    },
-  });
+  // const { mutate, isPending } = useMutation({
+  //   mutationFn: addProductToSavedProducts,
+  //   onSuccess: () => {
+  //     toast("Product Added to your Cart");
+  //   },
+  //   onError: () => {
+  //     toast("The Product Could not be added to your cart");
+  //   },
+  // });
 
   const navigate = useNavigate();
   const handleClick = () => {
     if (!isAuth) navigate("/auth/login", { state: { loginRequired: true } });
-    mutate({ productId, userId });
+    // mutate({ productId, userId });
   };
   return (
     <IconButton onClick={handleClick}>

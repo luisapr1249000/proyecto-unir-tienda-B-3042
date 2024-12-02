@@ -4,7 +4,7 @@ import {
   basicString,
   emailString,
 } from "./abstract.validation";
-import { userSchema } from "./user.validation";
+import { userSchema } from "./user-schemas/user.validation";
 
 const passwordSchema = z.string().min(1);
 

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Grid from "@mui/material/Grid2";
 import {
   Button,
@@ -11,48 +11,100 @@ import {
 } from "@mui/material";
 import { FormikProps } from "formik";
 import { ProductInput } from "../../../types/product";
-import { useGetCategories } from "../../../hooks/category";
+import { useGetCategoriesWitPagination } from "../../../hooks/category";
 import { toast } from "react-toastify";
+import ProductDisplayCategories from "./ProductDisplayCategories";
+
+export type CategoryData = {
+  categoryId: string;
+  categoryName: string;
+};
 
 const ProductAddCategories = ({
   formik,
+  categoryNameList,
 }: {
   formik: FormikProps<ProductInput>;
+  isUpdating?: boolean;
+  categoryNameList?: string[];
 }) => {
-  const [selectedCategory, setSelectedCategory] = useState("");
+  const { data } = useGetCategoriesWitPagination({ page: 1, limit: 50 });
 
-  const handleAddCategories = (e: React.ChangeEvent<HTMLInputElement>) =>
-    setSelectedCategory(e.target.value);
+  const [selectedCategoryId, setSelectedCategoryId] = useState("");
+  const [selectedCategories, setSelectedCategories] = useState<CategoryData[]>(
+    []
+  );
+
+  useEffect(() => {
+    if (categoryNameList) {
+      const categories = data?.docs
+        .filter((category) => categoryNameList.includes(category.name))
+        .map((category) => ({
+          categoryId: category._id,
+          categoryName: category.name,
+        }));
+      setSelectedCategories(categories ?? []);
+    }
+  }, []);
+  const getCategoryById = (id: string) =>
+    data?.docs.find((category) => category._id === id);
+
+  const handleAddCategories = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const categoryId = e.target.value;
+    if (!categoryId) return;
+
+    const filteredCategory = getCategoryById(categoryId);
+    if (!filteredCategory) return;
+
+    const existedCategory = selectedCategories?.find(
+      (category) => category.categoryId === categoryId
+    );
+    if (existedCategory) {
+      const categoryObj: CategoryData = {
+        categoryId,
+        categoryName: existedCategory.categoryName,
+      };
+      setSelectedCategories((prev) => [...prev, categoryObj]);
+      setSelectedCategoryId(categoryId);
+    }
+    return;
+  };
 
   const handleAddCategory = () => {
-    if (selectedCategory.trim()) {
-      if (!formik.values.categories.includes(selectedCategory)) {
-        formik.setFieldValue("categories", [
-          ...formik.values.categories,
-          selectedCategory.trim(),
-        ]);
-        setSelectedCategory("");
-      } else {
-        toast.error("Category already added");
-      }
+    if (!selectedCategoryId.trim()) return;
+    const categoryExists =
+      formik.values.categories.includes(selectedCategoryId) ||
+      selectedCategories.filter(
+        (category) => category.categoryId === selectedCategoryId
+      );
+    if (!categoryExists) {
+      formik.setFieldValue("categories", [
+        ...formik.values.categories,
+        selectedCategoryId.trim(),
+      ]);
+      setSelectedCategoryId("");
+    } else {
+      toast.error("Category already added");
     }
   };
 
-  const { data } = useGetCategories({ page: 1, limit: 50 });
-
-  console.log(data);
-  console.log(formik.values.categories);
-  console.log(selectedCategory);
-
-  const handleDeleteCategory = (categoryToDelete: string) => {
+  const handleDeleteCategory = (
+    categoryNameToDelete: string,
+    categoryIdToDelete: string
+  ) => {
     const updatedCategories = formik.values.categories.filter(
-      (category) => category !== categoryToDelete
+      (category) => category !== categoryIdToDelete
     );
+    const updateCategoriesName = categoriesNames.filter(
+      (categoryName) => categoryName !== categoryNameToDelete
+    );
+    setCategoriesNames(updateCategoriesName);
     formik.setFieldValue("categories", updatedCategories);
   };
 
   const handleClearCategories = () => {
     formik.setFieldValue("categories", []);
+    setCategoriesNames([""]);
   };
   return (
     <Grid
@@ -67,7 +119,7 @@ const ProductAddCategories = ({
           name="categories"
           label="Categories"
           placeholder="categories"
-          value={selectedCategory}
+          value={selectedCategoryId}
           onChange={handleAddCategories}
           onBlur={formik.handleBlur}
           fullWidth
@@ -92,11 +144,13 @@ const ProductAddCategories = ({
           }
         >
           {data && data.docs.length > 0 ? (
-            data.docs.map((categories) => (
-              <MenuItem key={categories._id} value={categories.name}>
-                {categories.name}
-              </MenuItem>
-            ))
+            data.docs.map((category) => {
+              return (
+                <MenuItem divider key={category._id} value={category._id}>
+                  {category.name}
+                </MenuItem>
+              );
+            })
           ) : (
             <MenuItem disabled>Loading categories...</MenuItem>
           )}
@@ -116,7 +170,19 @@ const ProductAddCategories = ({
           </Button>
         )}
       </Grid>
-      {formik.values.categories.length >= 1 && (
+      {formik.values.categories.length > 0 && (
+        <>
+          {selectedCategories.map((category) => (
+            <ProductDisplayCategories
+              onDeleteCategory={() =>
+                handleDeleteCategory(category.categoryName, category.categoryId)
+              }
+              categories={category}
+            />
+          ))}
+        </>
+      )}
+      {/* {formik.values.categories.length > 0 && (
         <Grid spacing={1} container sx={{ mt: 2 }} size={{ xs: 12 }}>
           {formik.values.categories.map((category, key) => (
             <Chip
@@ -126,7 +192,7 @@ const ProductAddCategories = ({
             />
           ))}
         </Grid>
-      )}
+      )} */}
     </Grid>
   );
 };

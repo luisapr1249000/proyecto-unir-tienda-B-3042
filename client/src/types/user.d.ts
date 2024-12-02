@@ -4,12 +4,12 @@ import {
   addressDirectionInputSchema,
   userInputSchema,
   userSchema,
-} from "../validation-schemas/user.validation";
+} from "../validation-schemas/user-schemas/user.validation";
 import {
   userCartSchema,
   userSavedProductsSchema,
   userWishlistSchema,
-} from "../validation-schemas/product.validation";
+} from "../validation-schemas/user-schemas/user.product.actions.validation";
 
 export type User = z.infer<typeof userSchema>;
 export type UserInput = z.infer<typeof userInputSchema>;

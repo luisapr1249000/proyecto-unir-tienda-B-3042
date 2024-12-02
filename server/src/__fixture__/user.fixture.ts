@@ -28,7 +28,7 @@ export const createUserFixture = async (
     cart: [],
     isSeller: faker.datatype.boolean(),
     role: isAdmin ? "admin" : faker.helpers.arrayElement(["user", "admin"]),
-    addressDirections: hasAddresDirection ? createAddressFixture() : [],
+    addressDirections: hasAddresDirection ?? createAddressFixture(),
   });
   await user.save();
   return { user, password: authInfo.password };

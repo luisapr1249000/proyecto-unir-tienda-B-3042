@@ -24,11 +24,17 @@ export const createProductData = async (categoryId?: string) => {
     return uniqueCategoriesId;
   };
 
+  const price = parseFloat(faker.commerce.price({ min: 10, max: 1000 }));
+  const discount = faker.number.float({ min: 1, max: 99, fractionDigits: 2 });
+  const finalPrice = price * (1 - discount / 100);
+
   return {
     name: faker.commerce.productName(),
     description: faker.commerce.productDescription(),
-    price: parseFloat(faker.commerce.price({ min: 10, max: 1000 })),
-    quantity: faker.number.int({ min: 1, max: 100 }),
+    price: price,
+    discount: discount,
+    finalPrice: finalPrice.toFixed(2),
+    quantity: faker.number.int({ min: 1, max: 500 }),
     categories: categoryId
       ? [categoryId]
       : await generateUniqueCategories(randomCategoryNumber),

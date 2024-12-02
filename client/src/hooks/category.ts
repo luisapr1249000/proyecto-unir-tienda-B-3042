@@ -6,12 +6,12 @@ import {
 } from "../api/category.api";
 import { PaginationConfig } from "../types/paginationResult";
 import { Category } from "../types/category";
+import { mergePaginationOptions } from "../utils/api.utils";
 
-export const useGetCategories = ({
-  page,
-  limit = 20,
-  sort,
-}: PaginationConfig) => {
+export const useGetCategoriesWitPagination = (
+  paginationOptions: PaginationConfig = {}
+) => {
+  const { limit, page, sort } = mergePaginationOptions(paginationOptions);
   return useQuery({
     queryKey: ["categories", { page, limit, sort }],
     queryFn: () => getCategories({ page, limit, sort }),
@@ -20,23 +20,21 @@ export const useGetCategories = ({
   });
 };
 
-export const useGetCategoryById = ({ categoryId }: { categoryId: string }) => {
-  return useQuery({
+export const useGetCategoryById = ({ categoryId }: { categoryId: string }) =>
+  useQuery({
     queryKey: [`category ${categoryId}`],
     queryFn: () => getCategoryById({ categoryId }),
   });
-};
 
 export const useGetCategoryByName = ({
   categoryName,
 }: {
   categoryName: string;
-}) => {
-  console.log(categoryName);
-  return useQuery({
+}) =>
+  useQuery({
     queryKey: [`category ${categoryName}`],
-    queryFn: async () => await getCategoryByName({ categoryName }),
+    queryFn: () => getCategoryByName({ categoryName }),
     retry: false,
     refetchOnWindowFocus: false,
+    enabled: !!Boolean(categoryName),
   });
-};

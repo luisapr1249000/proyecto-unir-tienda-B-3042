@@ -6,13 +6,13 @@ import {
 } from "../../../types/product";
 import { useFormik } from "formik";
 import { toFormikValidationSchema } from "zod-formik-adapter";
-import { productUserQuestionSchema } from "../../../validation-schemas/product.validation";
 import Grid from "@mui/material/Grid2";
 import { TextField } from "@mui/material";
 import SubmitButton from "../../common/buttons/submit-button/SubmitButton";
 import { useMutation } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import { createUserQuestionForOneProduct } from "../../../api/product.api";
+import { productUserQuestionSchema } from "../../../validation-schemas/product-schemas/product.user.question.validation";
 
 const ProductAskQuestionForm = ({ productId }: ProductId) => {
   const { mutate } = useMutation({
@@ -28,7 +28,7 @@ const ProductAskQuestionForm = ({ productId }: ProductId) => {
   });
 
   return (
-    <Grid spacing={1} container component="form" onSubmit={formik.handleSubmit}>
+    <Grid spacing={3} container component="form" onSubmit={formik.handleSubmit}>
       <Grid size={{ xs: 12 }}>
         <TextField
           fullWidth

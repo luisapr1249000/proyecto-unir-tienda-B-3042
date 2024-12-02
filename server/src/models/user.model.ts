@@ -52,7 +52,7 @@ const addressDirectionSchema = new Schema(
       enum: ["home", "work"],
     },
   },
-  { timestamps: true },
+  { timestamps: true, _id: false },
 );
 
 export const imageSchema = new Schema({

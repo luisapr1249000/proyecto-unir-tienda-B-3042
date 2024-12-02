@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import Grid from "@mui/material/Grid2";
 import { useFormik } from "formik";
 import { toFormikValidationSchema } from "zod-formik-adapter";
-import { productInputSchema } from "../../../validation-schemas/product.validation";
+import { productInputSchema } from "../../../validation-schemas/product-schemas/product.validation";
 import {
   Card,
   Divider,

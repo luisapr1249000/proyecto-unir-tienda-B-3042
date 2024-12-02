@@ -5,7 +5,7 @@ import { CommentDocument } from "../types/comment";
 
 export const commentSchema = new Schema(
   {
-    content: String,
+    content: { type: String, required: true },
     product: { type: Schema.Types.ObjectId, ref: "Product" },
     author: { type: Schema.Types.ObjectId, ref: "User" },
     images: [imageSchema],

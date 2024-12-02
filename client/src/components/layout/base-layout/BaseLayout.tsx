@@ -3,23 +3,28 @@ import React from "react";
 import Header from "../header/header/Header";
 import { Footer } from "../footer/Footer";
 import SideMenu from "../side-menu/SideMenu";
-import { Toolbar } from "@mui/material";
+import { Box, Toolbar } from "@mui/material";
 import { Outlet } from "react-router-dom";
 
 const BaseLayout = () => {
   return (
-    <Grid container sx={{ display: "flex" }}>
+    <>
       <Header />
-      <SideMenu />
-      <Grid sx={{ flexGrow: 1, border: 1 }}>
-        <Toolbar />
-        <Grid container size={{ xs: 12 }} sx={{ border: 1 }}>
-          <Outlet />
+      <Grid
+        sx={{
+          display: "flex",
+          // minHeight: "calc(100vh)",
+        }}
+      >
+        <SideMenu />
+        <Grid component="main" sx={{ flexGrow: 1 }}>
+          <Grid sx={{}}>
+            <Outlet />
+          </Grid>
+          <Footer />
         </Grid>
-        <Toolbar />
       </Grid>
-      <Footer />
-    </Grid>
+    </>
   );
 };
 

@@ -14,6 +14,7 @@ import {
   ProductUserQuestionId,
 } from "../types/product";
 import { UserId } from "../types/user";
+import { mergePaginationOptions } from "../utils/api.utils";
 
 export const getProductsWithPagination = async ({
   page,
@@ -122,8 +123,19 @@ export const answerUserQuestionForOneProduct = async ({
 export const deleteUserQuestionForOneProduct = async ({
   productId,
   userQuestionId,
-}: ProductId & ProductUserQuestionId): Promise<Product> => {
+}: ProductId & ProductUserQuestionId) => {
   await api.delete<Product>(
     `/products/${productId}/questions/${userQuestionId}/answer`
   );
+};
+
+export const searchProductsWithPagination = async (
+  query: string,
+  paginationConfig: PaginationConfig = {}
+): Promise<PaginationResultProducts> => {
+  const { limit, page, sort } = mergePaginationOptions(paginationConfig);
+  const response = await api<PaginationResultProducts>(
+    `/products/search-product?query=${query}&page${page}&limit=${limit}&sort=${sort}`
+  );
+  return response.data;
 };

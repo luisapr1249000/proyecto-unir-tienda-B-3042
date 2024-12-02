@@ -1,7 +1,7 @@
 import React from "react";
 import Grid from "@mui/material/Grid2";
 import { Card, Divider, Typography } from "@mui/material";
-import { useGetCategories } from "../../../hooks/category";
+import { useGetCategoriesWitPagination } from "../../../hooks/category";
 import CategoryCard from "../../../components/categories/category-card/CategoryCard";
 
 const Categories = () => {
@@ -9,7 +9,7 @@ const Categories = () => {
     data: categories,
     isLoading,
     error,
-  } = useGetCategories({ page: 1, limit: 50 });
+  } = useGetCategoriesWitPagination({ page: 1, limit: 50 });
 
   return (
     <Grid

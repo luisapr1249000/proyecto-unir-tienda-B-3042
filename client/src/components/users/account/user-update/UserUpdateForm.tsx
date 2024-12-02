@@ -3,7 +3,7 @@ import React from "react";
 import Grid from "@mui/material/Grid2";
 import { useAuthUser } from "../../../../hooks/auth";
 import { toFormikValidationSchema } from "zod-formik-adapter";
-import { userInputSchema } from "../../../../validation-schemas/user.validation";
+import { userInputSchema } from "../../../../validation-schemas/user-schemas/user.validation";
 import { TextField } from "@mui/material";
 import SubmitButton from "../../../common/buttons/submit-button/SubmitButton";
 import { useMutation } from "@tanstack/react-query";
