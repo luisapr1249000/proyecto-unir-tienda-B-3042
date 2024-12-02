@@ -79,7 +79,6 @@ const userSchema = new Schema(
     },
     password: {
       type: String,
-      required: [true, "Password required"],
       select: false,
     },
     hasConfirmedEmail: { type: Boolean, default: false },
@@ -119,6 +118,7 @@ const userSchema = new Schema(
       type: addressDirectionSchema,
       select: false,
     },
+    googleId: String,
   },
   {
     timestamps: true,
@@ -134,9 +134,8 @@ userSchema.pre("save", async function (next) {
   if (!this.isModified("password")) {
     return next();
   }
-
   const salt = bcrypt.genSaltSync(10);
-  this.password = bcrypt.hashSync(this?.password, salt);
+  if (this.password) this.password = bcrypt.hashSync(this.password, salt);
   next();
 });
 

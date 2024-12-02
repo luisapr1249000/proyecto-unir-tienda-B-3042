@@ -39,7 +39,8 @@ export const userSchema = userInputSchema.extend({
   cart: z.array(mongooseObjectId).optional(),
   hasConfirmedEmail: z.boolean().default(false),
   avatar: imageSchema,
-  password: z.string(),
+  password: z.string().optional(),
+  googleId: z.string().optional(),
 });
 
 export const userSchemaComplete = abstractSchema.merge(userSchema);

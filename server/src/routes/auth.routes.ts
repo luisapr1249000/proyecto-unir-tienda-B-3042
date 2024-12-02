@@ -6,6 +6,7 @@ import {
   loginSchema,
   signupSchema,
 } from "../validation-schemas/auth.validation";
+import passport from "passport";
 
 const router = Router();
 
@@ -30,6 +31,22 @@ router.post("/auth/confirmation-email", authController.confirmationEmail);
 router.post(
   "/auth/resend-confirmation-email",
   authController.resendConfirmationEmail,
+);
+
+router.get(
+  "/auth/google/",
+  passport.authenticate("google", { scope: ["profile", "email"] }),
+);
+
+router.get(
+  "/auth/google/callback",
+  passport.authenticate("google", {
+    session: false,
+    failureRedirect: "http://localhost:3000/auth/login",
+  }),
+  (_req, res) => {
+    res.redirect("http://localhost:3000");
+  },
 );
 
 export { router as AuthRoutes };
