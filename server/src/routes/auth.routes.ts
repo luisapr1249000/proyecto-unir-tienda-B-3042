@@ -34,19 +34,20 @@ router.post(
 );
 
 router.get(
-  "/auth/google/",
+  "/auth/google",
   passport.authenticate("google", { scope: ["profile", "email"] }),
 );
 
+// Callback route after Google has authenticated the user
 router.get(
   "/auth/google/callback",
   passport.authenticate("google", {
     session: false,
-    failureRedirect: "http://localhost:3000/auth/login",
+    failureRedirect: "http://localhost:3000/auth/signup",
   }),
   (_req, res) => {
-    res.redirect("http://localhost:3000");
+    // Successful authentication, redirect home or wherever you want
+    res.redirect("/");
   },
 );
-
 export { router as AuthRoutes };

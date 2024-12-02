@@ -18,6 +18,7 @@ import { passportJwt } from "./auth/passport/passport.jwt";
 import { OrderRoutes } from "./routes/order.routes";
 import { UserProductActionsRoutes } from "./routes/userProductActions.routes";
 import { ReactionRoutes } from "./routes/reaction.routes";
+import { googlePassport } from "./auth/passport/google";
 
 const app: Application = express();
 
@@ -46,6 +47,7 @@ app.use(bodyParser.json());
 app.use(cookieParser());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(passportJwt.initialize());
+app.use(googlePassport.initialize());
 
 app.use("/api/v1", AuthRoutes);
 app.use("/api/v1", UserRoutes);

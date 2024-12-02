@@ -2,6 +2,7 @@ import { Strategy as GoogleStrategy } from "passport-google-oauth20";
 import { config } from "dotenv";
 import passport from "passport";
 import { User } from "../../models/user.model";
+import { generateUniqueUsername } from "../../utils/auth.utils";
 config();
 
 const googleStrategyOptions = {
@@ -17,16 +18,16 @@ passport.use(
       try {
         let existedUser = await User.findOne({
           googleId: profile.id,
-          email: profile.emails?.[0]?.value,
         });
         if (!existedUser) {
           existedUser = new User({
             googleId: profile.id,
             email: profile.emails?.[0]?.value,
+            avatar: profile.photos?.[0]?.value,
+            username: generateUniqueUsername(),
           });
           await existedUser.save();
         }
-
         return cb(null, existedUser);
       } catch (e) {
         return cb(e, false);
@@ -34,3 +35,5 @@ passport.use(
     },
   ),
 );
+
+export { passport as googlePassport };

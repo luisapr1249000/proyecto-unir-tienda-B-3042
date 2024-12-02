@@ -4,7 +4,7 @@ import { config } from "dotenv";
 import app from "./app";
 // import { createUserFixture } from "./__fixture__/user.fixture";
 // import { createCategoryFixture } from "./__fixture__/category.fixture";
-import { createProductFixture } from "./__fixture__/product.fixture";
+// import { createProductFixture } from "./__fixture__/product.fixture";
 
 config();
 mongoose.Promise = global.Promise;
@@ -19,11 +19,11 @@ mongoose.Promise = global.Promise;
 //     await createCategoryFixture();
 //   }
 // };
-const productSeeder = async () => {
-  for (let index = 0; index < 100; index++) {
-    await createProductFixture();
-  }
-};
+// const productSeeder = async () => {
+//   for (let index = 0; index < 100; index++) {
+//     await createProductFixture();
+//   }
+// };
 
 const connectDB = async () => {
   const DB_URI =
@@ -46,4 +46,4 @@ const connectDB = async () => {
 connectDB().catch(console.error);
 // userSeeder();
 // categorySeeder();
-productSeeder().catch(console.error);
+// productSeeder().catch(console.error);

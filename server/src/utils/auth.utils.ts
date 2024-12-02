@@ -4,6 +4,7 @@ import { UserJwt } from "../types/auth";
 import jwt, { JwtPayload } from "jsonwebtoken";
 
 import { config } from "dotenv";
+import { User } from "../types/user";
 config();
 
 export const setTokenCookie = (
@@ -63,7 +64,7 @@ export const extractAuthUserId = (req: Request): string => {
 };
 
 export const getUserIdFromAuth = (req: Request) => {
-  const userId = req.user?._id?.toString();
+  const userId = (req.user as User)._id.toString();
   if (!userId) {
     throw new Error("Authenticated user ID is missing.");
   }
@@ -73,4 +74,42 @@ export const getUserIdFromAuth = (req: Request) => {
 export const checkToken = (token: string): JwtPayload | string => {
   const decoded = jwt.verify(token, getKey()) as JwtPayload;
   return decoded || "";
+};
+
+export const generateUniqueUsername = () => {
+  const adjectives = [
+    "Quick",
+    "Lazy",
+    "Happy",
+    "Bright",
+    "Clever",
+    "Silly",
+    "Brave",
+    "Calm",
+    "Fierce",
+    "Gentle",
+  ];
+
+  const nouns = [
+    "Tiger",
+    "Eagle",
+    "Panda",
+    "Wolf",
+    "Dragon",
+    "Lion",
+    "Dolphin",
+    "Shark",
+    "Fox",
+    "Bear",
+  ];
+
+  const randomAdjective =
+    adjectives[Math.floor(Math.random() * adjectives.length)];
+  const randomNoun = nouns[Math.floor(Math.random() * nouns.length)];
+
+  const randomNumber = Math.floor(Math.random() * 1001);
+
+  const username = `${randomAdjective}${randomNoun}${randomNumber}`;
+
+  return username.length <= 24 ? username : username.substring(0, 24);
 };
