@@ -21,7 +21,7 @@ const ProductItemContent = ({ product }: { product: Product }) => (
       component="div"
       gutterBottom
       variant="h4"
-      sx={{ fontWeight: "bold", width: 0.8, border: 1 }}
+      sx={{ fontWeight: "bold", width: 0.8 }}
     >
       {product.name}
     </Typography>

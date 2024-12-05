@@ -17,8 +17,9 @@ const ProductItemCard = ({ product }: { product: Product }) => {
         position: "relative",
         display: "flex",
         justifyContent: "space-evenly",
+        borderRadius: 2,
       }}
-      size={{ xs: 10 }}
+      size={{ xs: 11 }}
     >
       <ProductItemImage product={product} />
       <Divider orientation="vertical" flexItem />

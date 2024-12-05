@@ -2,12 +2,12 @@ import { Request, Response } from "express";
 import { extractAuthUserId } from "../utils/auth.utils";
 import { handleError, handleObjectNotFound } from "../utils/error.utils";
 import { Product } from "../models/product.model";
-import { Comment } from "../models/comment.model";
+import Review from "../models/review.model";
 import { Image } from "../types/image";
 import { getAverageReview } from "../utils/product.utils";
 
-class CommentController {
-  public async createComment(req: Request, res: Response) {
+class ReviewController {
+  public async createReview(req: Request, res: Response) {
     try {
       const authUserId = extractAuthUserId(req);
       const { productId } = req.params;
@@ -15,13 +15,13 @@ class CommentController {
       if (!product) return handleObjectNotFound(res, "Product", true);
 
       const data = { ...req.body, author: authUserId, product: productId };
-      const comment = new Comment(data);
+      const review = new Review(data);
 
       product.commentCount += 1;
-      await comment.save();
+      await review.save();
       product.averageReview = await getAverageReview(product._id.toString());
       product.save();
-      return res.status(201).json(comment);
+      return res.status(201).json(review);
     } catch (e) {
       return handleError(res, e);
     }
@@ -44,29 +44,29 @@ class CommentController {
         } as Image;
         images.push(image);
       });
-      const comment = await Comment.findByIdAndUpdate(
+      const review = await Review.findByIdAndUpdate(
         commentId,
         {
           images: images,
         },
         { new: true },
       );
-      if (!comment) return handleObjectNotFound(res, "Comment");
+      if (!review) return handleObjectNotFound(res, "Review");
 
-      return res.status(200).json(comment);
+      return res.status(200).json(review);
     } catch (e) {
       return handleError(res, e);
     }
   }
 
-  public async updateComment(req: Request, res: Response) {
+  public async updateReview(req: Request, res: Response) {
     try {
       const authUserId = extractAuthUserId(req);
       const { productId, commentId } = req.params;
       const product = await Product.findById(productId);
       if (!product) return handleObjectNotFound(res, "Product", true);
 
-      const comment = await Comment.findOneAndUpdate(
+      const review = await Review.findOneAndUpdate(
         {
           _id: commentId,
           author: authUserId,
@@ -75,27 +75,27 @@ class CommentController {
         req.body,
         { new: true },
       );
-      if (!comment) return handleObjectNotFound(res, "Comment");
+      if (!review) return handleObjectNotFound(res, "Review");
 
-      return res.status(200).json(comment);
+      return res.status(200).json(review);
     } catch (e) {
       return handleError(res, e);
     }
   }
 
-  public async deleteComment(req: Request, res: Response) {
+  public async deleteReview(req: Request, res: Response) {
     try {
       const authUserId = extractAuthUserId(req);
       const { productId, commentId } = req.params;
       const product = await Product.findById(productId);
       if (!product) return handleObjectNotFound(res, "Product", true);
 
-      const comment = await Comment.findOneAndDelete({
+      const review = await Review.findOneAndDelete({
         _id: commentId,
         author: authUserId,
         product: productId,
       });
-      if (!comment) return handleObjectNotFound(res, "Comment");
+      if (!review) return handleObjectNotFound(res, "Review");
 
       product.commentCount -= 1;
       product.averageReview = await getAverageReview(product._id.toString());
@@ -106,7 +106,7 @@ class CommentController {
     }
   }
 
-  public async getAllComments(req: Request, res: Response) {
+  public async getAllReviews(req: Request, res: Response) {
     try {
       const options = {
         ...req.query,
@@ -117,9 +117,9 @@ class CommentController {
         isDeleted: false,
       };
 
-      const comments = await Comment.paginate(query, options);
+      const comments = await Review.paginate(query, options);
       const { docs } = comments;
-      if (docs.length <= 0) return handleObjectNotFound(res, "Comment", true);
+      if (docs.length <= 0) return handleObjectNotFound(res, "Review", true);
 
       return res.status(200).json(comments);
     } catch (e) {
@@ -127,7 +127,7 @@ class CommentController {
     }
   }
 
-  public async getCommentsFromProduct(req: Request, res: Response) {
+  public async getReviewsFromProduct(req: Request, res: Response) {
     try {
       const { productId } = req.params;
 
@@ -141,9 +141,9 @@ class CommentController {
         product: productId,
       };
 
-      const comments = await Comment.paginate(query, options);
+      const comments = await Review.paginate(query, options);
       const { docs } = comments;
-      if (docs.length <= 0) return handleObjectNotFound(res, "Comment", true);
+      if (docs.length <= 0) return handleObjectNotFound(res, "Review", true);
 
       return res.status(200).json(comments);
     } catch (e) {
@@ -151,7 +151,7 @@ class CommentController {
     }
   }
 
-  public async getUserComments(req: Request, res: Response) {
+  public async getUserReviews(req: Request, res: Response) {
     try {
       const { userId } = req.params;
 
@@ -165,9 +165,9 @@ class CommentController {
         author: userId,
       };
 
-      const comments = await Comment.paginate(query, options);
+      const comments = await Review.paginate(query, options);
       const { docs } = comments;
-      if (docs.length <= 0) return handleObjectNotFound(res, "Comment", true);
+      if (docs.length <= 0) return handleObjectNotFound(res, "Review", true);
 
       return res.status(200).json(comments);
     } catch (e) {
@@ -175,13 +175,13 @@ class CommentController {
     }
   }
 
-  public async getCommentById(req: Request, res: Response) {
+  public async getReviewById(req: Request, res: Response) {
     try {
       const { commentId } = req.params;
-      const comments = await Comment.findById(commentId)
+      const comments = await Review.findById(commentId)
         .populate("author")
         .populate("product");
-      if (!comments) return handleObjectNotFound(res, "Comment");
+      if (!comments) return handleObjectNotFound(res, "Review");
 
       return res.status(200).json(comments);
     } catch (e) {
@@ -190,4 +190,4 @@ class CommentController {
   }
 }
 
-export default new CommentController();
+export default new ReviewController();

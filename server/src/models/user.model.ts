@@ -3,12 +3,15 @@ import { PaginateModel, Schema, model } from "mongoose";
 import mongoosePaginate from "mongoose-paginate-v2";
 import { UserDocument } from "../types/user";
 
+export const imageSchema = new Schema({
+  originalName: String,
+  url: String,
+  contentType: String,
+  size: String,
+});
+
 const addressDirectionSchema = new Schema(
   {
-    author: {
-      type: Schema.Types.ObjectId,
-      ref: "User",
-    },
     pinCode: {
       type: String,
       required: true,
@@ -55,12 +58,29 @@ const addressDirectionSchema = new Schema(
   { timestamps: true, _id: false },
 );
 
-export const imageSchema = new Schema({
-  originalName: String,
-  url: String,
-  contentType: String,
-  size: String,
+const cartItem = new Schema({
+  quantity: {
+    type: Number,
+    required: true,
+    min: [1, "Quantity cannot be less than 1"],
+    default: 1,
+  },
+  productId: {
+    type: Schema.Types.ObjectId,
+    ref: "Product",
+    unique: true,
+  },
+  price: Number,
+  sellerId: { type: Schema.Types.ObjectId, ref: "User" },
 });
+
+const userCartSchema = new Schema(
+  {
+    items: { type: [cartItem], default: [] },
+    totalPrice: { type: Number, default: 0 },
+  },
+  { _id: false, timestamps: true },
+);
 
 const userSchema = new Schema(
   {
@@ -105,17 +125,11 @@ const userSchema = new Schema(
         select: false,
       },
     ],
-    cart: [
-      {
-        type: Schema.Types.ObjectId,
-        ref: "Product",
-        select: false,
-      },
-    ],
+    cart: { type: userCartSchema, default: () => ({}) },
     isSeller: { type: Boolean, default: false },
     role: { type: String, enum: ["user", "admin"], default: "user" },
     addressDirections: {
-      type: addressDirectionSchema,
+      type: [addressDirectionSchema],
       select: false,
     },
     googleId: String,

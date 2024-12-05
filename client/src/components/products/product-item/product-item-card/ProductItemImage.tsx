@@ -38,12 +38,13 @@ const ProductItemImage = ({ product }: { product: Product }) => {
   return (
     <Grid
       container
-      size={{ xs: 12, md: 4 }}
+      size={{ xs: 12, md: "grow" }}
       spacing={1.5}
       sx={{
         justifyContent: "center",
         alignContent: "center",
         p: 3,
+        bgcolor: "#eee",
       }}
     >
       {loadingImage && (

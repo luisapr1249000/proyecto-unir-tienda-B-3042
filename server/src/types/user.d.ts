@@ -1,15 +1,21 @@
 /* eslint-disable no-unused-vars */
 import { Document, PaginateModel, Types } from "mongoose";
 import {
+  cartItem,
   userInputSchema,
   userSchemaComplete,
 } from "../validation-schemas/user-schemas/user.validation";
 import { z } from "zod";
 import { AddressDirection } from "./addressDirectionSchema";
 
+export type UserCartItem = z.infer<typeof cartItem>;
+export type UserCart = {
+  totalPrice: string;
+  items: Types.Types<UserCartItem>;
+};
 export type UserInput = z.infer<typeof userInputSchema>;
 export type User = z.infer<typeof userSchemaComplete> & {
-  cart: Types.Array<Types.ObjectId>;
+  cart: UserCart;
   savedProducts: Types.Array<Types.ObjectId>;
   wishlist: Types.Array<Types.ObjectId>;
   addressDirections: Types.DocumentArray<AddressDirection>;

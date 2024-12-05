@@ -14,13 +14,22 @@ import CategoryList from "../../categories/category-list/CategoryList";
 import ReactLink from "../../common/react-link/ReactLink";
 import LisItemHomeButton from "../../common/buttons/home-button/LisItemHomeButton";
 
-const SideMenu = () => {
+const SideMenu = ({
+  handleOpen,
+  isTemporary,
+}: {
+  handleOpen: () => void;
+  isOpen: boolean;
+}) => {
   const drawerWidth = 250;
 
   return (
     <Drawer
-      variant="permanent"
+      open={isTemporary}
+      onClose={handleOpen}
+      variant={isTemporary ? "temporary" : "permanent"}
       sx={{
+        display: { xs: isTemporary ? "flex" : "none", md: "flex" },
         width: drawerWidth,
         flexShrink: 0,
         [`& .MuiDrawer-paper`]: {

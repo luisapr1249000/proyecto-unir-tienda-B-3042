@@ -7,11 +7,12 @@ import userRoutes from "./routes/user.routes";
 import productRoutes from "./routes/products.routes";
 import categoryRoutes from "./routes/category.routes";
 import { useServerStatus } from "./hooks/server.hook";
-import ServerDownMessage from "./components/common/server-down-message/ServerDownMessage";
-import LoadSpinner from "./components/common/load-spinner/LoadSpinner";
+// import ServerDownMessage from "./components/common/server-down-message/ServerDownMessage";
+// import LoadSpinner from "./components/common/load-spinner/LoadSpinner";
 import { useNavigatorOnLine } from "./hooks/navigatorOnLine.hooks";
 import { useEffect } from "react";
-import NetworkStatusIndicator from "./components/network/network-status-indicator/NetworkStatusIndicator";
+
+// import NetworkStatusIndicator from "./components/network/network-status-indicator/NetworkStatusIndicator";
 import NetworkOffline from "./components/network/network-offline/NetworkOffline";
 import commentsRoutes from "./routes/comments.routes";
 

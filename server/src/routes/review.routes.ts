@@ -1,6 +1,5 @@
 import { Router } from "express";
 import authMiddleware from "../middlewares/auth.middleware";
-import commentController from "../controllers/comment.controller";
 import {
   isAdmin,
   verifyUserOwnershipOrAdminRole,
@@ -11,8 +10,9 @@ import {
   validateSchemaBody,
   validPagination,
 } from "../middlewares/requestValidation.middleware";
-import { uploadImageComment } from "../config/multer/multer.comment";
+import { uploadImageReview } from "../config/multer/multer.review";
 import { PRODUCT_ID, PRODUCT_ID_AND_COMMENT_ID, USER_ID } from "../constants";
+import reviewController from "../controllers/review.controller";
 
 const router = Router();
 
@@ -21,26 +21,26 @@ router.get(
   authMiddleware,
   isAdmin,
   validPagination,
-  commentController.getAllComments,
+  reviewController.getAllReviews,
 );
 router.get(
   "/comments/user/:userId",
   isAdmin,
   validPagination,
   validateObjectIdParams(USER_ID),
-  commentController.getUserComments,
+  reviewController.getUserReviews,
 );
 
 router.get(
   "/products/:productId/comments/",
   validPagination,
   validateObjectIdParams(PRODUCT_ID),
-  commentController.getCommentsFromProduct,
+  reviewController.getReviewsFromProduct,
 );
 router.get(
   "/products/:productId/comments/:commentId",
   validateObjectIdParams(PRODUCT_ID_AND_COMMENT_ID),
-  commentController.getCommentById,
+  reviewController.getReviewById,
 );
 
 router.post(
@@ -48,15 +48,15 @@ router.post(
   authMiddleware,
   validateObjectIdParams(PRODUCT_ID),
   validateSchemaBody(commentInputSchema),
-  commentController.createComment,
+  reviewController.createReview,
 );
 
 router.post(
   "/products/:productId/comments/:commentId/image",
   authMiddleware,
   validateObjectIdParams(PRODUCT_ID),
-  uploadImageComment,
-  commentController.uploadImages,
+  uploadImageReview,
+  reviewController.uploadImages,
 );
 
 router.put(
@@ -65,7 +65,7 @@ router.put(
   verifyUserOwnershipOrAdminRole("commentId"),
   validateObjectIdParams(PRODUCT_ID_AND_COMMENT_ID),
   validateSchemaBody(commentInputSchema),
-  commentController.updateComment,
+  reviewController.updateReview,
 );
 
 router.delete(
@@ -73,7 +73,7 @@ router.delete(
   authMiddleware,
   verifyUserOwnershipOrAdminRole("commentId"),
   validateObjectIdParams(PRODUCT_ID_AND_COMMENT_ID),
-  commentController.deleteComment,
+  reviewController.deleteReview,
 );
 
-export { router as CommentRoutes };
+export { router as ReviewRoutes };

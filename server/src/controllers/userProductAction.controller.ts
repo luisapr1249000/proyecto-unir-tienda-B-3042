@@ -8,6 +8,7 @@ import {
 } from "../utils/error.utils";
 import { Product } from "../models/product.model";
 import { createObjectId } from "../utils/product.utils";
+import { extractAuthUserId } from "../utils/auth.utils";
 
 class UserProductActions {
   public async getUserCart(req: Request, res: Response) {
@@ -17,7 +18,7 @@ class UserProductActions {
       const user = await User.findById(userId).select("cart").populate("cart");
       if (!user) return handleObjectNotFound(res, "User");
 
-      if (isArrayEmptyOrUndefined(user?.cart))
+      if (isArrayEmptyOrUndefined(user.cart))
         return handleObjectNotFound(res, "Cart");
 
       return res.status(200).json(user);
@@ -90,29 +91,94 @@ class UserProductActions {
       return handleError(res, e);
     }
   }
-  public async toggleProductCart(req: Request, res: Response) {
+  public async addProductToCart(req: Request, res: Response) {
     try {
-      const { userId, productId } = req.params;
-      const product = await Product.findById(productId);
-      if (!product) return handleObjectNotFound(res, "Product");
+      const userId = extractAuthUserId(req);
+      const { productId } = req.params;
+      const { quantity, sellerId, price } = req.body;
 
-      const user = await User.findById(userId).select("wishlist");
+      const user = await User.findById(userId);
+      console.log(user);
       if (!user) return handleObjectNotFound(res, "User");
+      user.cart.items.map((item) => console.log(item));
+      // const existedProduct = user.cart.items.findIndex(
+      //   (product) => product.productId === productId!,
+      // );
+      // if (existedProduct === -1) {
+      // const cartObj = { quantity, productId, sellerId, price };
+      // user.cart.items.push(cartObj);
+      // }
+      // if (!user.cart.items[existedProduct]) {
+      //   return handleObjectNotFound(res, "User");
+      // }
 
-      const productExisted = user.wishlist.includes(createObjectId(productId));
-      if (productExisted) {
-        user.cart.pull(productId);
-      } else {
-        user.cart?.push(productId);
-      }
-      const userSaved = await user.save();
-      if (!userSaved) return handleBadSaved(res);
+      // user.cart.items[existedProduct].quantity = quantity;
 
-      return res.status(200).json(userSaved);
-    } catch (e) {
-      return handleError(res, e);
+      await user.save();
+
+      return res
+        .status(200)
+        .json({ message: "Product added to cart", cart: user });
+    } catch (error) {
+      return handleError(res, error);
     }
   }
+
+  public async removeProductFromCart(req: Request, res: Response) {
+    try {
+      const userId = extractAuthUserId(req);
+      const { productId } = req.params;
+      const { quantity } = req.body;
+
+      const user = await User.findById(userId).select("cart");
+      if (!user) return handleObjectNotFound(res, "User");
+
+      const existedProduct = user.cart.items.findIndex(
+        (product) => product.productId === productId,
+      );
+      if (existedProduct === -1) {
+        return handleObjectNotFound(res, "User");
+      }
+      if (!user.cart.items[existedProduct]) {
+        return handleObjectNotFound(res, "User");
+      }
+
+      const price = user.cart.items[existedProduct].price;
+      const finalPrice = quantity * (price ?? 0);
+      user.cart.items[existedProduct].quantity = quantity;
+      user.cart.totalPrice = finalPrice;
+
+      await user.save();
+
+      return res.status(204).send();
+    } catch (error) {
+      return handleError(res, error);
+    }
+  }
+
+  // public async toggleProductCart(req: Request, res: Response) {
+  //   try {
+  //     const { userId, productId } = req.params;
+  //     const product = await Product.findById(productId);
+  //     if (!product) return handleObjectNotFound(res, "Product");
+
+  //     const user = await User.findById(userId).select("wishlist");
+  //     if (!user) return handleObjectNotFound(res, "User");
+
+  //     const productExisted = user.wishlist.includes(createObjectId(productId));
+  //     if (productExisted) {
+  //       user.cart.pull(productId);
+  //     } else {
+  //       user.cart?.push(productId);
+  //     }
+  //     const userSaved = await user.save();
+  //     if (!userSaved) return handleBadSaved(res);
+
+  //     return res.status(200).json(userSaved);
+  //   } catch (e) {
+  //     return handleError(res, e);
+  //   }
+  // }
 
   public async toggleSavedProducts(req: Request, res: Response) {
     try {

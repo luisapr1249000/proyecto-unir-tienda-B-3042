@@ -10,6 +10,7 @@ import OutlinedFlagIcon from "@mui/icons-material/OutlinedFlag";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 
 import React, { useState } from "react";
+import DialogProductReport from "../dialog-product-report/DialogProductReport";
 
 const MoreOptionsButton = ({
   productId,
@@ -19,6 +20,7 @@ const MoreOptionsButton = ({
   isAuthor: boolean;
 }) => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const [openDialog, setOpenDialog] = useState(false);
   const open = Boolean(anchorEl);
   const handleClick = (event: React.MouseEvent<HTMLElement>) =>
     setAnchorEl(event.currentTarget);
@@ -39,8 +41,22 @@ const MoreOptionsButton = ({
     handleClose();
     console.log("delete it");
   };
+
+  const handleOpenDialog = () => {
+    handleClose();
+    setOpenDialog(true);
+  };
+
+  const handleCloseDialog = () => setOpenDialog(false);
+
   return (
     <Box>
+      <DialogProductReport
+        onCloseDialog={handleCloseDialog}
+        isDialogOpen={openDialog}
+        productId={productId}
+      />
+
       <IconButton size="small" onClick={handleClick}>
         <MoreVertIcon fontSize="inherit" />
       </IconButton>
@@ -51,7 +67,7 @@ const MoreOptionsButton = ({
         onClose={handleClose}
         onClick={handleClose}
       >
-        <MenuItem onClick={handleClose}>
+        <MenuItem onClick={handleOpenDialog}>
           <ListItemIcon>
             <OutlinedFlagIcon />
           </ListItemIcon>

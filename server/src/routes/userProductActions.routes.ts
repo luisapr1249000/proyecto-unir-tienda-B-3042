@@ -10,13 +10,22 @@ import { USER_ID, USER_ID_AND_PRODUCT_ID } from "../constants";
 
 const router = Router();
 // -------------------------------- cart ------------------
-router.get(
-  "/users/:userId/cart",
-  authMiddleware,
-  validateObjectIdParams(USER_ID),
-  isUserOwnerOrAdmin,
-  userProductActionController.getUserCart,
-);
+// router.get(
+//   "/users/:userId/cart",
+//   authMiddleware,
+//   validateObjectIdParams(USER_ID),
+//   isUserOwnerOrAdmin,
+//   userProductActionController.getUserCart,
+// );
+
+// router.post(
+// "/users/:userId/cart/:productId",
+// authMiddleware,
+// validateObjectIdParams(USER_ID_AND_PRODUCT_ID),
+// isUserOwnerOrAdmin,
+// checkProductExists,
+// userProductActionController.toggleProductCart,
+// );
 
 router.post(
   "/users/:userId/cart/:productId",
@@ -24,7 +33,16 @@ router.post(
   validateObjectIdParams(USER_ID_AND_PRODUCT_ID),
   isUserOwnerOrAdmin,
   checkProductExists,
-  userProductActionController.toggleProductCart,
+  userProductActionController.addProductToCart,
+);
+
+router.delete(
+  "/users/:userId/cart/:productId",
+  authMiddleware,
+  validateObjectIdParams(USER_ID_AND_PRODUCT_ID),
+  isUserOwnerOrAdmin,
+  checkProductExists,
+  userProductActionController.removeProductFromCart,
 );
 
 // -------------------------------- cart ------------------

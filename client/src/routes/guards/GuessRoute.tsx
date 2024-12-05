@@ -3,9 +3,9 @@ import { Navigate, Outlet } from "react-router-dom";
 import { useAuthUser } from "../../hooks/auth";
 
 const GuessRoute = () => {
-  const { data: user } = useAuthUser();
+  const { data: user, isSuccess } = useAuthUser();
   console.log("USER - GUESS :", user);
-  if (user) return <Navigate to="/" />;
+  if (isSuccess) return <Navigate to="/" />;
   return <Outlet />;
 };
 

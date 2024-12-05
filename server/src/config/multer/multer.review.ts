@@ -10,7 +10,7 @@ import {
 } from "../../utils/multer.utils";
 config();
 
-const s3CommentStorage = multer({
+const s3ReviewStorage = multer({
   storage: multerS3({
     s3: s3,
     bucket: process.env.AWS_S3_BUCKET_NAME as string,
@@ -28,4 +28,4 @@ const s3CommentStorage = multer({
   limits,
 });
 
-export const uploadImageComment = s3CommentStorage.array("file", 5);
+export const uploadImageReview = s3ReviewStorage.array("file", 5);

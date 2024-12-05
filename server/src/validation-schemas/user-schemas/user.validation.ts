@@ -30,13 +30,32 @@ export const userInputSchema = z.object({
   phoneNumber: phoneNumberSchema.optional(),
 });
 
+export const cartItem = z.object({
+  quantity: z
+    .number()
+    .min(1, { message: "Quantity cannot be less than 1" })
+    .default(1),
+  productId: z
+    .string()
+    .refine((val) => val.length > 0, {
+      message: "Product ID is required",
+    })
+    .optional(),
+  price: z.number().optional(), // Optional price
+  sellerId: mongooseObjectId,
+});
+
+export const userCartSchema = z.object({
+  items: z.array(cartItem).default([]),
+  totalPrice: z.number().default(0),
+});
+
 export const userSchema = userInputSchema.extend({
   isSeller: z.boolean(),
   role: z.enum(["user", "admin"]),
   lastLogin: z.date().optional(),
   savedProducts: z.array(mongooseObjectId).optional(),
   whislist: z.array(mongooseObjectId).optional(),
-  cart: z.array(mongooseObjectId).optional(),
   hasConfirmedEmail: z.boolean().default(false),
   avatar: imageSchema,
   password: z.string().optional(),

@@ -21,7 +21,7 @@ import { NavLink } from "react-router-dom";
 
 const CustomDrawer = ({ user }: { user: User }) => {
   const drawerWidth = 300;
-  const shortDrawerWidth = 50;
+  const shortDrawerWidth = "auto";
 
   const [open, setOpen] = useState(true);
   const handleOpen = () => setOpen((prev) => !prev);
@@ -41,17 +41,17 @@ const CustomDrawer = ({ user }: { user: User }) => {
     {
       label: "Cart",
       link: `account/${user?.username}/cart`,
-      icon: <ShoppingCartIcon />,
+      icon: <ShoppingCartIcon fontSize="small" />,
     },
     {
       label: "Wishlist",
       link: `account/${user?.username}/wishlist`,
-      icon: <LocalMallIcon />,
+      icon: <LocalMallIcon fontSize="small" />,
     },
     {
       label: "Saved Products",
       link: `account/${user?.username}/saved-products`,
-      icon: <BookmarkAddedIcon />,
+      icon: <BookmarkAddedIcon fontSize="small" />,
     },
   ];
   return (
@@ -113,26 +113,19 @@ const CustomDrawer = ({ user }: { user: User }) => {
           </ListItemButton>
         </ListItem>
       </List>
-      <List
-        component="nav"
-        disablePadding
-        sx={{
-          height: 0.3,
-          // border: 1,
-          flexDirection: "column",
-          justifyContent: "space-around",
-          display: "flex",
-        }}
-      >
+      <List component="nav" disablePadding>
         {listOptions.map((option) => (
-          <ListItem disablePadding={!open}>
+          <ListItem>
             <ListItemButton
+              alignItems="center"
               component={NavLink}
               to={`/${option.link}`}
               sx={{
-                display: "flex",
+                // display: "flex",
                 p: open ? 1 : undefined,
-                "&.active": { bgcolor: "info.light", boxShadow: 1 },
+                bgcolor: "inherit",
+                boxShadow: 1,
+                "&.active": { bgcolor: "primary.light", boxShadow: 1 },
               }}
             >
               <ListItemIcon

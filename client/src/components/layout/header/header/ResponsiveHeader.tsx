@@ -80,28 +80,7 @@ const ResponsiveHeader = ({ isSuccess, isLoading, authUser }) => {
       spacing={2}
     >
       <DrawerSearchbar />
-      <Grid container size={{ xs: 2, md: 1 }} sx={{ border: 1 }}>
-        <Grid container spacing={1}>
-          <IconButton
-            component={ReactLink}
-            to="/"
-            sx={{ ...responsiveDisplayIconButtons, mr: 2 }}
-          >
-            <MenuIcon />
-          </IconButton>
 
-          <Button
-            sx={{ ...responsiveDisplay }}
-            startIcon={<HomeIcon />}
-            variant="text"
-            color="inherit"
-            component={Link}
-            to="/"
-          >
-            Home
-          </Button>
-        </Grid>
-      </Grid>
       <Grid container>
         <Tooltip title="Search">
           <IconButton

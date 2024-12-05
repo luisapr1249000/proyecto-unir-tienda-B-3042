@@ -3,7 +3,7 @@ import { imageSchema } from "./user.model";
 import mongoosePaginate from "mongoose-paginate-v2";
 import { CommentDocument } from "../types/comment";
 
-export const commentSchema = new Schema(
+export const reviewSchema = new Schema(
   {
     content: { type: String, required: true },
     product: { type: Schema.Types.ObjectId, ref: "Product" },
@@ -13,8 +13,11 @@ export const commentSchema = new Schema(
   },
   { timestamps: true },
 );
-commentSchema.plugin(mongoosePaginate);
-export const Comment = model<CommentDocument, PaginateModel<CommentDocument>>(
-  "Comment",
-  commentSchema,
+reviewSchema.plugin(mongoosePaginate);
+
+const Review = model<CommentDocument, PaginateModel<CommentDocument>>(
+  "Review",
+  reviewSchema,
 );
+
+export default Review;

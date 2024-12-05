@@ -19,6 +19,7 @@ passport.use(
         let existedUser = await User.findOne({
           googleId: profile.id,
         });
+
         if (!existedUser) {
           existedUser = new User({
             googleId: profile.id,

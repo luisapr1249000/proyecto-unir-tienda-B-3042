@@ -1,70 +1,32 @@
-import { AppBar, Button, Toolbar, Typography } from "@mui/material";
-import SearchIcon from "@mui/icons-material/Search";
-
+import { AppBar, Avatar, IconButton, Toolbar } from "@mui/material";
 import Grid from "@mui/material/Grid2";
 import HeaderSearchBar from "../header-search-bar/HeaderSearchBar";
-import { useQuery } from "@tanstack/react-query";
 import HeaderAuth from "../header-auth/HeaderAuth";
 import HeaderAuthButtons from "../header-auth-buttons/HeaderAuthButtons";
-import IconButton from "@mui/material/IconButton";
-import MenuIcon from "@mui/icons-material/Menu";
-import HomeIcon from "@mui/icons-material/Home";
-import ReactLink from "../../../common/react-link/ReactLink";
-import { Link } from "react-router-dom";
 import SkeletonCircle from "../../../common/skeleton/SkeletonCircle";
 import { useAuthUser } from "../../../../hooks/auth";
-import { useEffect } from "react";
-import {
-  responsiveDisplay,
-  responsiveDisplayIconButtons,
-} from "../../../../assets/css/mui-css-objects/muiStyles";
-import { gridContainerCenter } from "../../../../assets/css/mui-css-objects/gridCenter";
-import ResponsiveHeader from "./ResponsiveHeader";
+import HeaderHomeButton from "../header-home-button/HeaderHomeButton";
+import { blue, grey } from "@mui/material/colors";
+import HeaderDrawerButton from "../header-drawer-button/HeaderDrawerButton";
 
-const Header = () => {
+const Header = ({ handleOpenDrawer }: { handleOpenDrawer: () => void }) => {
   const { data: authUser, isSuccess, isLoading } = useAuthUser();
   return (
     <AppBar
       position="sticky"
       sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}
+      color="inherit"
     >
-      <ResponsiveHeader
-        authUser={authUser}
-        isSuccess={isSuccess}
-        isLoading={isLoading}
-      />
       <Toolbar
         component={Grid}
         container
         sx={{
           justifyContent: "space-between",
           alignItems: "center",
-          display: { xs: "none", md: "flex" },
         }}
         spacing={2}
       >
-        <Grid size={{ xs: 2, md: 1 }} sx={{ border: 1 }}>
-          <Grid>
-            <IconButton
-              component={ReactLink}
-              to="/"
-              sx={{ ...responsiveDisplayIconButtons, mr: 2 }}
-            >
-              <MenuIcon />
-            </IconButton>
-
-            <Button
-              sx={{ ...responsiveDisplay }}
-              startIcon={<HomeIcon />}
-              variant="text"
-              color="inherit"
-              component={Link}
-              to="/"
-            >
-              Home
-            </Button>
-          </Grid>
-        </Grid>
+        <HeaderHomeButton handleClickDrawer={handleOpenDrawer} />
         <HeaderSearchBar />
 
         {isLoading && <SkeletonCircle />}

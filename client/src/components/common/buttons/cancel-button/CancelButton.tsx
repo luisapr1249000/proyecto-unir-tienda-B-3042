@@ -7,7 +7,6 @@ const CancelButton = ({
   onCancel,
 }: {
   fullWidth?: boolean;
-  isValid?: boolean;
   onCancel?: () => void;
 }) => {
   return (

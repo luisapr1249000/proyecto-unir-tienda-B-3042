@@ -23,7 +23,9 @@ import ProductIconButtonActions from "../../product-iconbutton-actions/ProductIc
 import { useState } from "react";
 import { formatDate } from "../../../../utils/util.dates";
 import ProductCardImage from "../product-card-image/ProductCardImage";
+import { useColorScheme } from "@mui/material/styles";
 const ProductCard = ({ product }: { product: Product }) => {
+  const { mode } = useColorScheme();
   return (
     <Card
       component={Grid}
@@ -31,7 +33,9 @@ const ProductCard = ({ product }: { product: Product }) => {
       sx={{
         position: "relative",
       }}
-      variant="outlined"
+      variant={mode === "dark" ? "elevation" : "outlined"}
+      // square
+      elevation={2}
     >
       <ProductCardImage product={product} />
       <ProductIconButtonActions product={product} />
