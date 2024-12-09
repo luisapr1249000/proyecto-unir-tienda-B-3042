@@ -9,7 +9,6 @@ import {
 import { Product } from "../models/product.model";
 import { createObjectId } from "../utils/product.utils";
 import { extractAuthUserId } from "../utils/auth.utils";
-import { Types } from "mongoose";
 import { UserCartItem } from "../types/user";
 
 class UserProductActions {

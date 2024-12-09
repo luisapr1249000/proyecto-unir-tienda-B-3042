@@ -59,7 +59,7 @@ export const checkRefreshTokenAndGenAccessToken = (refreshToken: string) => {
 };
 
 export const extractAuthUserId = (req: Request): string => {
-  const userId = req.user ? (req.user as { _id: string })._id : "";
+  const userId = req.user ? req.user._id : "";
   return userId ? userId.toString() : "";
 };
 

@@ -1,16 +1,11 @@
 import { Router } from "express";
 import productQuestiontController from "../controllers/productQuestiont.controller";
 import authMiddleware from "../middlewares/auth.middleware";
-import { verifyUserOwnershipOrAdminRole } from "../middlewares/checkUserOrAdmin.middleware";
 import {
   validateObjectIdParams,
   validateSchemaBody,
-  validPagination,
 } from "../middlewares/requestValidation.middleware";
-import { productInputSchema } from "../validation-schemas/product-schemas/product.validation";
-import { optionalAuth } from "../middlewares/optinalAuth.middleware";
-import { uploadImageProduct } from "../config/multer/multer.product";
-import { PRODUCT_ID, USER_ID } from "../constants";
+import { PRODUCT_ID } from "../constants";
 import {
   userQuestionInputAnswerSchema,
   userQuestionInputSchema,
@@ -20,6 +15,7 @@ const router = Router();
 
 router.post(
   "/products/:productId/questions/",
+  validateObjectIdParams(PRODUCT_ID),
   authMiddleware,
   validateSchemaBody(userQuestionInputSchema),
   productQuestiontController.createUserQuestion,
@@ -27,6 +23,7 @@ router.post(
 
 router.put(
   "/products/:productId/questions/:userQuestionId/",
+  validateObjectIdParams([...PRODUCT_ID, "userQuestionId"]),
   authMiddleware,
   validateSchemaBody(userQuestionInputSchema),
   productQuestiontController.updateUserQuestion,
@@ -34,6 +31,7 @@ router.put(
 
 router.put(
   "/products/:productId/questions/:userQuestionId/answer",
+  validateObjectIdParams([...PRODUCT_ID, "userQuestionId"]),
   authMiddleware,
   validateSchemaBody(userQuestionInputAnswerSchema),
   productQuestiontController.createAnswerForQuestion,
@@ -41,6 +39,7 @@ router.put(
 
 router.delete(
   "/products/:productId/questions/:userQuestionId/",
+  validateObjectIdParams([...PRODUCT_ID, "userQuestionId"]),
   authMiddleware,
   productQuestiontController.deleteUserQuestion,
 );

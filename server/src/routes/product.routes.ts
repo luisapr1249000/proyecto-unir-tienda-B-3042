@@ -66,7 +66,7 @@ router.get(
 router.get(
   "/products/category/:categoryId",
   validPagination,
-  // validateObjectIdParams(["categoryId"]),
+  validateObjectIdParams(["categoryId"]),
   optionalAuth,
   productController.getProductsByCategoryWithPagination,
 );

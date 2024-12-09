@@ -178,12 +178,12 @@ class ReviewController {
   public async getReviewById(req: Request, res: Response) {
     try {
       const { reviewId } = req.params;
-      const reviewId = await Review.findById(reviewId)
+      const review = await Review.findById(reviewId)
         .populate("author")
         .populate("product");
-      if (!reviewId) return handleObjectNotFound(res, "Review");
+      if (!review) return handleObjectNotFound(res, "Review");
 
-      return res.status(200).json(reviewId);
+      return res.status(200).json(review);
     } catch (e) {
       return handleError(res, e);
     }

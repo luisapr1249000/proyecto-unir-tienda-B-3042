@@ -7,7 +7,7 @@
     "build": "tsc",
     "start": "nodemon ./dist/index.js",
     "prettier": "npx prettier . --write",
-    "eslint": "npx eslint ./src"
+    "lint": "npx eslint ./src"
   },
   "keywords": [],
   "author": "",
