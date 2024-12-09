@@ -4,7 +4,7 @@ import {
   isAdmin,
   verifyUserOwnershipOrAdminRole,
 } from "../middlewares/checkUserOrAdmin.middleware";
-import { commentInputSchema } from "../validation-schemas/comment.validation";
+import { reviewInputSchema } from "../validation-schemas/review.validation";
 import {
   validateObjectIdParams,
   validateSchemaBody,
@@ -17,14 +17,14 @@ import reviewController from "../controllers/review.controller";
 const router = Router();
 
 router.get(
-  "/comments/",
+  "/reviews/",
   authMiddleware,
   isAdmin,
   validPagination,
   reviewController.getAllReviews,
 );
 router.get(
-  "/comments/user/:userId",
+  "/reviews/user/:userId",
   isAdmin,
   validPagination,
   validateObjectIdParams(USER_ID),
@@ -32,27 +32,27 @@ router.get(
 );
 
 router.get(
-  "/products/:productId/comments/",
+  "/products/:productId/reviews/",
   validPagination,
   validateObjectIdParams(PRODUCT_ID),
   reviewController.getReviewsFromProduct,
 );
 router.get(
-  "/products/:productId/comments/:commentId",
+  "/products/:productId/reviews/:reviewId",
   validateObjectIdParams(PRODUCT_ID_AND_COMMENT_ID),
   reviewController.getReviewById,
 );
 
 router.post(
-  "/products/:productId/comments/",
+  "/products/:productId/reviews/",
   authMiddleware,
   validateObjectIdParams(PRODUCT_ID),
-  validateSchemaBody(commentInputSchema),
+  validateSchemaBody(reviewInputSchema),
   reviewController.createReview,
 );
 
 router.post(
-  "/products/:productId/comments/:commentId/image",
+  "/products/:productId/reviews/:reviewId/image",
   authMiddleware,
   validateObjectIdParams(PRODUCT_ID),
   uploadImageReview,
@@ -60,18 +60,18 @@ router.post(
 );
 
 router.put(
-  "/products/:productId/comments/:commentId",
+  "/products/:productId/reviews/:reviewId",
   authMiddleware,
-  verifyUserOwnershipOrAdminRole("commentId"),
+  verifyUserOwnershipOrAdminRole("reviewId"),
   validateObjectIdParams(PRODUCT_ID_AND_COMMENT_ID),
-  validateSchemaBody(commentInputSchema),
+  validateSchemaBody(reviewInputSchema),
   reviewController.updateReview,
 );
 
 router.delete(
-  "/products/:productId/comments/:commentId",
+  "/products/:productId/reviews/:reviewId",
   authMiddleware,
-  verifyUserOwnershipOrAdminRole("commentId"),
+  verifyUserOwnershipOrAdminRole("reviewId"),
   validateObjectIdParams(PRODUCT_ID_AND_COMMENT_ID),
   reviewController.deleteReview,
 );

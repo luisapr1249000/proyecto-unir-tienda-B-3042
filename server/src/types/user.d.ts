@@ -10,8 +10,8 @@ import { AddressDirection } from "./addressDirectionSchema";
 
 export type UserCartItem = z.infer<typeof cartItem>;
 export type UserCart = {
-  totalPrice: string;
-  items: Types.Types<UserCartItem>;
+  totalPrice: number;
+  items: Types.DocumentArray<UserCartItem>;
 };
 export type UserInput = z.infer<typeof userInputSchema>;
 export type User = z.infer<typeof userSchemaComplete> & {

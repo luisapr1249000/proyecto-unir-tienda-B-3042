@@ -29,7 +29,7 @@ class ReviewController {
 
   public async uploadImages(req: Request, res: Response) {
     try {
-      const { commentId } = req.params;
+      const { reviewId } = req.params;
       if (!req.files || req.files.length === 0)
         return handleObjectNotFound(res, "Product");
 
@@ -45,7 +45,7 @@ class ReviewController {
         images.push(image);
       });
       const review = await Review.findByIdAndUpdate(
-        commentId,
+        reviewId,
         {
           images: images,
         },
@@ -62,13 +62,13 @@ class ReviewController {
   public async updateReview(req: Request, res: Response) {
     try {
       const authUserId = extractAuthUserId(req);
-      const { productId, commentId } = req.params;
+      const { productId, reviewId } = req.params;
       const product = await Product.findById(productId);
       if (!product) return handleObjectNotFound(res, "Product", true);
 
       const review = await Review.findOneAndUpdate(
         {
-          _id: commentId,
+          _id: reviewId,
           author: authUserId,
           product: productId,
         },
@@ -86,12 +86,12 @@ class ReviewController {
   public async deleteReview(req: Request, res: Response) {
     try {
       const authUserId = extractAuthUserId(req);
-      const { productId, commentId } = req.params;
+      const { productId, reviewId } = req.params;
       const product = await Product.findById(productId);
       if (!product) return handleObjectNotFound(res, "Product", true);
 
       const review = await Review.findOneAndDelete({
-        _id: commentId,
+        _id: reviewId,
         author: authUserId,
         product: productId,
       });
@@ -117,11 +117,11 @@ class ReviewController {
         isDeleted: false,
       };
 
-      const comments = await Review.paginate(query, options);
-      const { docs } = comments;
+      const reviewId = await Review.paginate(query, options);
+      const { docs } = reviewId;
       if (docs.length <= 0) return handleObjectNotFound(res, "Review", true);
 
-      return res.status(200).json(comments);
+      return res.status(200).json(reviewId);
     } catch (e) {
       return handleError(res, e);
     }
@@ -141,11 +141,11 @@ class ReviewController {
         product: productId,
       };
 
-      const comments = await Review.paginate(query, options);
-      const { docs } = comments;
+      const reviewId = await Review.paginate(query, options);
+      const { docs } = reviewId;
       if (docs.length <= 0) return handleObjectNotFound(res, "Review", true);
 
-      return res.status(200).json(comments);
+      return res.status(200).json(reviewId);
     } catch (e) {
       return handleError(res, e);
     }
@@ -165,11 +165,11 @@ class ReviewController {
         author: userId,
       };
 
-      const comments = await Review.paginate(query, options);
-      const { docs } = comments;
+      const reviewId = await Review.paginate(query, options);
+      const { docs } = reviewId;
       if (docs.length <= 0) return handleObjectNotFound(res, "Review", true);
 
-      return res.status(200).json(comments);
+      return res.status(200).json(reviewId);
     } catch (e) {
       return handleError(res, e);
     }
@@ -177,13 +177,13 @@ class ReviewController {
 
   public async getReviewById(req: Request, res: Response) {
     try {
-      const { commentId } = req.params;
-      const comments = await Review.findById(commentId)
+      const { reviewId } = req.params;
+      const reviewId = await Review.findById(reviewId)
         .populate("author")
         .populate("product");
-      if (!comments) return handleObjectNotFound(res, "Review");
+      if (!reviewId) return handleObjectNotFound(res, "Review");
 
-      return res.status(200).json(comments);
+      return res.status(200).json(reviewId);
     } catch (e) {
       return handleError(res, e);
     }

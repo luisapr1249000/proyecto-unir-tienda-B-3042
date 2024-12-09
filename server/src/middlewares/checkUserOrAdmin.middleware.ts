@@ -1,9 +1,9 @@
 import { Request, Response, NextFunction } from "express";
-import { Comment } from "../models/comment.model";
 import { Product } from "../models/product.model";
 import { handleError, handleNotPermissions } from "../utils/error.utils";
 import { User } from "../models/user.model";
 import { Order } from "../models/orders.model";
+import Review from "../models/review.model";
 
 export const isAdmin = (req: Request, res: Response, next: NextFunction) => {
   const authUserRole = req.user?.role;
@@ -63,8 +63,8 @@ const getResourceOwnerId = async (resource: string, resourceId: string) => {
       return user?._id.toString();
     }
 
-    case "commentId": {
-      const comment = await Comment.findById(resourceId);
+    case "reviewId": {
+      const comment = await Review.findById(resourceId);
       return comment?.author;
     }
 

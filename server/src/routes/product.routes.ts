@@ -11,10 +11,6 @@ import { productInputSchema } from "../validation-schemas/product-schemas/produc
 import { optionalAuth } from "../middlewares/optinalAuth.middleware";
 import { uploadImageProduct } from "../config/multer/multer.product";
 import { PRODUCT_ID, USER_ID } from "../constants";
-import {
-  userQuestionInputAnswerSchema,
-  userQuestionInputSchema,
-} from "../validation-schemas/product-schemas/product.user.question.validation";
 
 const router = Router();
 router.get("/products/search-product", productController.searchProducts);
@@ -73,33 +69,6 @@ router.get(
   // validateObjectIdParams(["categoryId"]),
   optionalAuth,
   productController.getProductsByCategoryWithPagination,
-);
-
-router.post(
-  "/products/:productId/questions/",
-  authMiddleware,
-  validateSchemaBody(userQuestionInputSchema),
-  productController.createUserQuestion,
-);
-
-router.put(
-  "/products/:productId/questions/:userQuestionId/",
-  authMiddleware,
-  validateSchemaBody(userQuestionInputSchema),
-  productController.updateUserQuestion,
-);
-
-router.put(
-  "/products/:productId/questions/:userQuestionId/answer",
-  authMiddleware,
-  validateSchemaBody(userQuestionInputAnswerSchema),
-  productController.createAnswerForQuestion,
-);
-
-router.delete(
-  "/products/:productId/questions/:userQuestionId/",
-  authMiddleware,
-  productController.deleteUserQuestion,
 );
 
 export { router as ProductRoutes };

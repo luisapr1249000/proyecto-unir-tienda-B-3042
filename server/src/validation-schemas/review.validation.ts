@@ -8,7 +8,7 @@ import {
 } from "./abstract.validation";
 import { imageSchema } from "./image.schema";
 
-const commentContentField = createValidStringField({
+const reviewContentField = createValidStringField({
   fieldName: "content",
   maxLength: 200,
 });
@@ -18,13 +18,13 @@ const reviewField = createNonNegativeNumberField({
   maxValue: 5,
 });
 
-export const commentInputSchema = z.object({
-  content: commentContentField,
+export const reviewInputSchema = z.object({
+  content: reviewContentField,
   review: reviewField,
   image: z.array(imageSchema).optional().default([]),
 });
 
-export const commentSchema = abstractSchema
-  .merge(commentInputSchema)
+export const reviewSchema = abstractSchema
+  .merge(reviewInputSchema)
   .merge(authorObjIdSchema)
   .merge(productObjIdSchema);

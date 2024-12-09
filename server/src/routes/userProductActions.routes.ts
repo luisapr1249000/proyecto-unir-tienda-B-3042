@@ -10,61 +10,24 @@ import { USER_ID, USER_ID_AND_PRODUCT_ID } from "../constants";
 
 const router = Router();
 // -------------------------------- cart ------------------
-// router.get(
-//   "/users/:userId/cart",
-//   authMiddleware,
-//   validateObjectIdParams(USER_ID),
-//   isUserOwnerOrAdmin,
-//   userProductActionController.getUserCart,
-// );
-
-// router.post(
-// "/users/:userId/cart/:productId",
-// authMiddleware,
-// validateObjectIdParams(USER_ID_AND_PRODUCT_ID),
-// isUserOwnerOrAdmin,
-// checkProductExists,
-// userProductActionController.toggleProductCart,
-// );
-
-router.post(
-  "/users/:userId/cart/:productId",
-  authMiddleware,
-  validateObjectIdParams(USER_ID_AND_PRODUCT_ID),
-  isUserOwnerOrAdmin,
-  checkProductExists,
-  userProductActionController.addProductToCart,
-);
-
-router.delete(
-  "/users/:userId/cart/:productId",
-  authMiddleware,
-  validateObjectIdParams(USER_ID_AND_PRODUCT_ID),
-  isUserOwnerOrAdmin,
-  checkProductExists,
-  userProductActionController.removeProductFromCart,
-);
-
-// -------------------------------- cart ------------------
-// -------------------------------- saved products ------------------
 router.get(
-  "/users/:userId/saved-products",
+  "/users/:userId/cart",
   authMiddleware,
   validateObjectIdParams(USER_ID),
   isUserOwnerOrAdmin,
-  userProductActionController.getUseSavedProducts,
+  userProductActionController.getUserCart,
 );
 
 router.post(
-  "/users/:userId/saved-products/:productId",
+  "/users/:userId/cart/:productId",
   authMiddleware,
   validateObjectIdParams(USER_ID_AND_PRODUCT_ID),
   isUserOwnerOrAdmin,
   checkProductExists,
-  userProductActionController.toggleSavedProducts,
+  userProductActionController.toggleProductCart,
 );
 
-// -------------------------------- saved products ------------------
+// -------------------------------- cart ------------------
 // -------------------------------- wishlist ------------------
 router.get(
   "/users/:userId/wishlist",
@@ -81,10 +44,5 @@ router.post(
   checkProductExists,
   userProductActionController.toggleProductWishlist,
 );
-
-// -------------------------------- end toggle cart ------------------
-// -------------------------------- toggle saved products ------------------
-
-// -------------------------------- end toggle saved products ------------------
 
 export { router as UserProductActionsRoutes };

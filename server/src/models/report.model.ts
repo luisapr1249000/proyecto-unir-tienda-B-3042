@@ -1,9 +1,12 @@
 import { model, Schema } from "mongoose";
-import { ProductReport } from "../types/productReport";
 
-const productReportSchema = new Schema(
+const reportSchema = new Schema(
   {
-    reportedPost: { type: Schema.Types.ObjectId, ref: "Post", required: false },
+    reportedProduct: {
+      type: Schema.Types.ObjectId,
+      ref: "Product",
+      required: false,
+    },
     reportedReview: {
       type: Schema.Types.ObjectId,
       ref: "Review",
@@ -27,6 +30,6 @@ const productReportSchema = new Schema(
   { timestamps: true },
 );
 
-productReportSchema.index({ reportedPost: 1, reporter: 1 }, { unique: true });
-const ProductReport = model("Product Report", productReportSchema);
-export default ProductReport;
+reportSchema.index({ reportedPost: 1, reporter: 1 }, { unique: true });
+const Report = model("Product Report", reportSchema);
+export default Report;

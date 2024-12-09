@@ -1,8 +1,8 @@
 import { Types } from "mongoose";
 import Reaction from "../models/reaction.model";
 import ViewedProduct from "../models/viewedProduct.model";
-import { Comment } from "../models/comment.model";
 import { Response } from "express";
+import Review from "../models/review.model";
 
 export const hasNotViewedRecently = async (
   userId: string,
@@ -26,7 +26,7 @@ export const hasReacted = async (productId: string, userId: string) => {
 };
 
 export const getCommentCountFromProduct = (productId: string) =>
-  Comment.countDocuments({ product: productId });
+  Review.countDocuments({ product: productId });
 
 export const createObjectId = (productId?: string) =>
   new Types.ObjectId(productId);
@@ -38,8 +38,8 @@ export const checkIfModelSaved = <T>(object: T, res: Response) => {
 };
 
 export const getTotalProductCommentReviews = async (productId: string) => {
-  const comments = await Comment.find({ productId });
-  return comments.map((comment) => comment.review);
+  const reviews = await Review.find({ productId });
+  return reviews.map((comment) => comment.review);
 };
 
 export const getAverageReview = async (productId: string) => {

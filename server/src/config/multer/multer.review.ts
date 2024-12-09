@@ -18,9 +18,9 @@ const s3ReviewStorage = multer({
       cb(null, { fieldname: file.fieldname });
     },
     key: function (req: Request, file, cb) {
-      const { commentId } = req.params;
+      const { reviewId } = req.params;
       const uniqueFileName = generateUniqueFileName(file.originalname);
-      const fullPath = `public/products/${commentId}/${uniqueFileName}`;
+      const fullPath = `public/products/${reviewId}/${uniqueFileName}`;
       cb(null, fullPath);
     },
   }),

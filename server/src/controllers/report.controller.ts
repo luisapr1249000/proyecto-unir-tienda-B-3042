@@ -1,21 +1,26 @@
 import { Request, Response } from "express";
 import { handleError, handleObjectNotFound } from "../utils/error.utils";
-import ProductReport from "../models/productReport.model";
+import Report from "../models/report.model";
 import { extractAuthUserId } from "../utils/auth.utils";
+import { createObjectId } from "../utils/product.utils";
 
-class ProductReportController {
+class Reportcontroller {
   public async createReport(req: Request, res: Response) {
     try {
       const userId = extractAuthUserId(req);
       const { reason } = req.body;
-      const { productId } = req.params;
-      const productReport = new ProductReport({
+      const { objectId, reportType } = req.params;
+      const report = new Report({
         reason,
-        reportedPost: productId,
         reporter: userId,
       });
-      await productReport.save();
-      return res.status(201).json(productReport);
+      if (reportType === "product") {
+        report.reportedProduct = createObjectId(objectId);
+      } else {
+        report.reportedReview = createObjectId(objectId);
+      }
+      await report.save();
+      return res.status(201).json(report);
     } catch (e) {
       return handleError(res, e);
     }
@@ -24,9 +29,9 @@ class ProductReportController {
   public async updateReport(req: Request, res: Response) {
     try {
       const { resolution } = req.body;
-      const { productId, reportedId } = req.params;
-      const reportedPost = await ProductReport.findOneAndUpdate(
-        { reportedPost: productId, _id: reportedId },
+      const { reportedId } = req.params;
+      const reportedPost = await Report.findByIdAndUpdate(
+        reportedId,
         { resolution, resolved: true },
         { new: true },
       );
@@ -41,11 +46,8 @@ class ProductReportController {
 
   public async deleteReport(req: Request, res: Response) {
     try {
-      const { productId, reportedId } = req.params;
-      const reportedPost = await ProductReport.findOneAndDelete({
-        reportedPost: productId,
-        _id: reportedId,
-      });
+      const { reportedId } = req.params;
+      const reportedPost = await Report.findByIdAndUpdate(reportedId);
       if (!reportedPost) {
         return handleObjectNotFound(res, "Product");
       }
@@ -55,10 +57,10 @@ class ProductReportController {
     }
   }
 
-  public async getReportedProductById(req: Request, res: Response) {
+  public async getReportById(req: Request, res: Response) {
     try {
       const { reportedId } = req.params;
-      const reportedPost = await ProductReport.findById(reportedId);
+      const reportedPost = await Report.findById(reportedId);
       if (!reportedPost) {
         return handleObjectNotFound(res, "Product");
       }
@@ -68,10 +70,25 @@ class ProductReportController {
     }
   }
 
-  public async getReportedProductstByUser(req: Request, res: Response) {
+  public async getReportsByUser(req: Request, res: Response) {
     try {
       const { userId } = req.params;
-      const reportedPost = await ProductReport.find({ reporter: userId });
+      const reports = await Report.find({ reporter: userId });
+      if (!reports || reports.length === 0) {
+        return handleObjectNotFound(res, "Product");
+      }
+      return res.status(200).json(reports);
+    } catch (e) {
+      return handleError(res, e);
+    }
+  }
+
+  public async getReportsFromProduct(req: Request, res: Response) {
+    try {
+      const { productId } = req.params;
+      const reportedPost = await Report.find({
+        reportedPost: productId,
+      });
       if (!reportedPost || reportedPost.length === 0) {
         return handleObjectNotFound(res, "Product");
       }
@@ -81,11 +98,11 @@ class ProductReportController {
     }
   }
 
-  public async getReportsFromProduct(req: Request, res: Response) {
+  public async getReportsFromReview(req: Request, res: Response) {
     try {
-      const { productId } = req.params;
-      const reportedPost = await ProductReport.find({
-        reportedPost: productId,
+      const { reviewId } = req.params;
+      const reportedPost = await Report.find({
+        reportedReview: reviewId,
       });
       if (!reportedPost || reportedPost.length === 0) {
         return handleObjectNotFound(res, "Product");
@@ -97,4 +114,4 @@ class ProductReportController {
   }
 }
 
-export default new ProductReportController();
+export default new Reportcontroller();

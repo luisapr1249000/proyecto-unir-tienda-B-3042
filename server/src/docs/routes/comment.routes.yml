@@ -120,7 +120,7 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/InternalServerError"
-  /products/{productId}/comments/{commentId}:
+  /products/{productId}/comments/{reviewId}:
     get:
       tags:
         - Comment
@@ -134,7 +134,7 @@ paths:
           schema:
             type: string
 
-        - name: commentId
+        - name: reviewId
           in: path
           required: true
           description: "The ID of the comment to retrieve."
@@ -176,7 +176,7 @@ paths:
           schema:
             type: string
 
-        - name: commentId
+        - name: reviewId
           in: path
           required: true
           description: "The ID of the comment to update."
@@ -242,7 +242,7 @@ paths:
           schema:
             type: string
 
-        - name: commentId
+        - name: reviewId
           in: path
           required: true
           description: "The ID of the comment to delete."

@@ -1,7 +1,7 @@
 import { PaginateModel, Schema, model } from "mongoose";
 import { imageSchema } from "./user.model";
 import mongoosePaginate from "mongoose-paginate-v2";
-import { CommentDocument } from "../types/comment";
+import { ReviewDocument } from "../types/review";
 
 export const reviewSchema = new Schema(
   {
@@ -15,7 +15,7 @@ export const reviewSchema = new Schema(
 );
 reviewSchema.plugin(mongoosePaginate);
 
-const Review = model<CommentDocument, PaginateModel<CommentDocument>>(
+const Review = model<ReviewDocument, PaginateModel<ReviewDocument>>(
   "Review",
   reviewSchema,
 );

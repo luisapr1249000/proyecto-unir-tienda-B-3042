@@ -55,7 +55,7 @@ const addressDirectionSchema = new Schema(
       enum: ["home", "work"],
     },
   },
-  { timestamps: true, _id: false },
+  { timestamps: true },
 );
 
 const cartItem = new Schema({
@@ -72,14 +72,15 @@ const cartItem = new Schema({
   },
   price: Number,
   sellerId: { type: Schema.Types.ObjectId, ref: "User" },
+  addedAt: { type: Date, default: new Date() },
 });
 
 const userCartSchema = new Schema(
   {
-    items: { type: [cartItem], default: [] },
+    items: [cartItem],
     totalPrice: { type: Number, default: 0 },
   },
-  { _id: false, timestamps: true },
+  { _id: false },
 );
 
 const userSchema = new Schema(
@@ -125,7 +126,7 @@ const userSchema = new Schema(
         select: false,
       },
     ],
-    cart: { type: userCartSchema, default: () => ({}) },
+    cart: { type: userCartSchema, default: {}, select: false },
     isSeller: { type: Boolean, default: false },
     role: { type: String, enum: ["user", "admin"], default: "user" },
     addressDirections: {
