@@ -32,16 +32,16 @@ export const isUserOwnerOrAdmin = (
 export const verifyUserOwnershipOrAdminRole = (resource: string) => {
   return async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const authUserId = req.user?._id;
-      const authUserRole = req.user?.role;
-      if (!authUserId || !authUserRole) {
+      if (!req.user) {
         return handleNotPermissions(res);
       }
-      const resourceId = req.params[resource];
+      const authUserId = req.user._id;
+      const authUserRole = req.user.role;
       if (authUserRole === "admin") {
         next();
       }
 
+      const resourceId = req.params[resource];
       const resourceOwnerId = await getResourceOwnerId(
         resource,
         resourceId ?? "",
@@ -64,8 +64,8 @@ const getResourceOwnerId = async (resource: string, resourceId: string) => {
     }
 
     case "reviewId": {
-      const comment = await Review.findById(resourceId);
-      return comment?.author;
+      const review = await Review.findById(resourceId);
+      return review?.author;
     }
 
     case "productId": {

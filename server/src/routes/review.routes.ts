@@ -62,8 +62,8 @@ router.post(
 router.put(
   "/products/:productId/reviews/:reviewId",
   authMiddleware,
-  verifyUserOwnershipOrAdminRole("reviewId"),
   validateObjectIdParams(PRODUCT_ID_AND_COMMENT_ID),
+  verifyUserOwnershipOrAdminRole("reviewId"),
   validateSchemaBody(reviewInputSchema),
   reviewController.updateReview,
 );
@@ -71,8 +71,8 @@ router.put(
 router.delete(
   "/products/:productId/reviews/:reviewId",
   authMiddleware,
-  verifyUserOwnershipOrAdminRole("reviewId"),
   validateObjectIdParams(PRODUCT_ID_AND_COMMENT_ID),
+  verifyUserOwnershipOrAdminRole("reviewId"),
   reviewController.deleteReview,
 );
 

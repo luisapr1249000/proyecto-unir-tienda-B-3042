@@ -6,8 +6,8 @@ import { handleError, handleObjectNotFound } from "../utils/error.utils";
 class UserController {
   public async updateUser(req: Request, res: Response) {
     try {
-      const authUserId = extractAuthUserId(req);
-      const userUpdated = await User.findByIdAndUpdate(authUserId, req.body, {
+      const { userId } = req.query;
+      const userUpdated = await User.findByIdAndUpdate(userId, req.body, {
         new: true,
       });
       if (!userUpdated) return handleObjectNotFound(res, "User");
@@ -62,7 +62,7 @@ class UserController {
     try {
       const users = await User.paginate({}, { ...req.query });
       const { docs } = users;
-      if (docs.length <= 0) return handleObjectNotFound(res, "User", true);
+      if (docs.length === 0) return handleObjectNotFound(res, "User", true);
 
       return res.status(200).json(users);
     } catch (e) {
@@ -76,6 +76,22 @@ class UserController {
       const user = await User.findOne({ username: username });
       if (!user) return handleObjectNotFound(res, "User");
 
+      return res.status(200).json(user);
+    } catch (e) {
+      return handleError(res, e);
+    }
+  }
+
+  public async changeUserRole(req: Request, res: Response) {
+    try {
+      const { userId } = req.params;
+      const { role } = req.body;
+      const user = await User.findByIdAndUpdate(
+        userId,
+        { role },
+        { new: true },
+      );
+      if (!user) return handleObjectNotFound(res, "User");
       return res.status(200).json(user);
     } catch (e) {
       return handleError(res, e);

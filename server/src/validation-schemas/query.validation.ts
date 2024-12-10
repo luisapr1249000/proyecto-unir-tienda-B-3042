@@ -21,3 +21,13 @@ export const searchSchema = paginationCoerceSchema.extend({
   isPost: z.coerce.boolean().optional(),
   isComment: z.coerce.boolean().optional(),
 });
+
+export const productPriceSortSchema = z
+  .object({
+    minPrice: z.coerce.number().min(1).default(1),
+    maxPrice: z.coerce.number().nonnegative().default(Infinity),
+  })
+  .refine((data) => data.minPrice <= data.maxPrice, {
+    message: "minPrice must be less than or equal to maxPrice",
+    path: ["minPrice"],
+  });

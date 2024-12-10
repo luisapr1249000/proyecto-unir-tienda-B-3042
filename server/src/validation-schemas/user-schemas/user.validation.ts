@@ -46,9 +46,11 @@ export const userCartSchema = z.object({
   totalPrice: z.number().default(0),
 });
 
+export const userRoleSchema = z.enum(["user", "admin"]);
+
 export const userSchema = userInputSchema.extend({
   isSeller: z.boolean(),
-  role: z.enum(["user", "admin"]),
+  role: userRoleSchema,
   lastLogin: z.date().optional(),
   savedProducts: z.array(objectIdValidator).optional(),
   whislist: z.array(objectIdValidator).optional(),

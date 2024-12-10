@@ -130,7 +130,11 @@ const userSchema = new Schema(
     ],
     cart: { type: userCartSchema, default: {}, select: false },
     isSeller: { type: Boolean, default: false },
-    role: { type: String, enum: ["user", "admin"], default: "user" },
+    role: {
+      type: String,
+      enum: ["user", "admin"],
+      default: "user",
+    },
     addressDirections: {
       type: [addressDirectionSchema],
       select: false,

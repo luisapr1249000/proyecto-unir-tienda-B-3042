@@ -11,12 +11,14 @@ import { productInputSchema } from "../validation-schemas/product-schemas/produc
 import { optionalAuth } from "../middlewares/optinalAuth.middleware";
 import { uploadImageProduct } from "../config/multer/multer.product";
 import { PRODUCT_ID, USER_ID } from "../constants";
+import { validatePriceQuery } from "../middlewares/validatePriceQuery.middleware";
 
 const router = Router();
 router.get("/products/search-product", productController.searchProducts);
 
 router.get(
   "/products",
+  validatePriceQuery,
   validPagination,
   optionalAuth,
   productController.getProductsWithPagination,
@@ -40,6 +42,7 @@ router.put(
   "/products/:productId",
   authMiddleware,
   validateObjectIdParams(PRODUCT_ID),
+  verifyUserOwnershipOrAdminRole("productId"),
   validateSchemaBody(productInputSchema),
   productController.updateProduct,
 );
@@ -53,6 +56,7 @@ router.delete(
 router.get(
   "/products/author/:userId",
   validPagination,
+  validatePriceQuery,
   validateObjectIdParams(USER_ID),
   optionalAuth,
   productController.getProductsByAuthorWithPagination,
@@ -65,6 +69,7 @@ router.get(
 );
 router.get(
   "/products/category/:categoryId",
+  validatePriceQuery,
   validPagination,
   validateObjectIdParams(["categoryId"]),
   optionalAuth,

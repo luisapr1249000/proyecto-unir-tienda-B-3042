@@ -9,17 +9,21 @@ import { Product } from "../models/product.model";
 import ViewedProduct from "../models/viewedProduct.model";
 import { hasNotViewedRecently, hasReacted } from "../utils/product.utils";
 import { Image } from "../types/image";
+import { getDefaultPaginationOptions } from "../utils/query.utils";
+
 class ProductController {
   public async createProduct(req: Request, res: Response) {
     try {
       const authUserId = extractAuthUserId(req);
       const price = parseFloat(req.body.price);
       const discount = parseFloat(req.body.discount);
-      const finalPrice = discount ? price * (1 - discount / 100) : price;
+      const finalPrice = Number(
+        (discount ? price * (1 - discount / 100) : price).toFixed(2),
+      );
       const product = new Product({
         ...req.body,
         author: authUserId,
-        finalPrice: finalPrice.toFixed(2),
+        finalPrice: finalPrice,
       });
       const savedProduct = await product.save();
       if (!savedProduct) return handleBadSaved(res);
@@ -67,8 +71,10 @@ class ProductController {
       const { productId } = req.params;
       const price = parseFloat(req.body.price);
       const discount = parseFloat(req.body.discount);
-      const finalPrice = discount ? price * (1 - discount / 100) : price;
-      const updates = { ...req.body, finalPrice: finalPrice.toFixed(2) };
+      const finalPrice = Number(
+        (discount ? price * (1 - discount / 100) : price).toFixed(2),
+      );
+      const updates = { ...req.body, finalPrice: finalPrice };
       const product = await Product.findByIdAndUpdate(productId, updates, {
         new: true,
       });
@@ -94,11 +100,20 @@ class ProductController {
 
   public async getProductsWithPagination(req: Request, res: Response) {
     try {
+      const { minPrice = 1, maxPrice = Infinity } = req.query;
+      const { limit, page, sort } = {
+        ...getDefaultPaginationOptions(),
+        ...req.query,
+      };
+      const paginationOptions = {
+        limit,
+        page,
+        sort,
+        populate: ["author", "categories"],
+      };
+      const productQuery = { finalPrice: { $gte: minPrice, $lte: maxPrice } };
       const userAuth = extractAuthUserId(req);
-      const products = await Product.paginate(
-        {},
-        { ...req.query, populate: ["author", "categories"] },
-      );
+      const products = await Product.paginate(productQuery, paginationOptions);
       if (products.docs.length === 0)
         return handleObjectNotFound(res, "Product", true);
 
@@ -170,13 +185,20 @@ class ProductController {
   public async getProductsByAuthorWithPagination(req: Request, res: Response) {
     try {
       const { userId } = req.params;
+      const { limit, page, sort } = {
+        ...getDefaultPaginationOptions(),
+        ...req.query,
+      };
+      const paginationOptions = {
+        limit,
+        page,
+        sort,
+        populate: ["author", "categories"],
+      };
       const query = {
         author: userId,
       };
-      const products = await Product.paginate(query, {
-        ...req.query,
-        populate: ["author", "categories"],
-      });
+      const products = await Product.paginate(query, paginationOptions);
       if (products.docs.length === 0)
         return handleObjectNotFound(res, "Product", true);
 
@@ -190,14 +212,25 @@ class ProductController {
     res: Response,
   ) {
     try {
+      const { minPrice = 1, maxPrice = Infinity } = req.query;
       const { categoryId } = req.params;
+      const { limit, page, sort } = {
+        ...getDefaultPaginationOptions(),
+        ...req.query,
+      };
+
       const query = {
         categories: categoryId,
+        finalPrice: { $gte: minPrice, $lte: maxPrice },
       };
-      const products = await Product.paginate(query, {
-        ...req.query,
-        populate: ["author"],
-      });
+      const paginationOptions = {
+        limit,
+        page,
+        sort,
+        populate: ["author", "categories"],
+      };
+
+      const products = await Product.paginate(query, paginationOptions);
       if (products.docs.length === 0)
         return handleObjectNotFound(res, "Product", true);
 
@@ -209,15 +242,25 @@ class ProductController {
 
   public async searchProducts(req: Request, res: Response) {
     try {
+      const { minPrice = 1, maxPrice = Infinity } = req.query;
+
+      const { limit, page, sort } = {
+        ...getDefaultPaginationOptions(),
+        ...req.query,
+      };
+
       const { query } = req.query as { query: string };
       const myQuery = {
         $text: { $search: query },
+        finalPrice: { $gte: minPrice, $lte: maxPrice },
       };
-
-      const productResults = await Product.paginate(myQuery, {
-        ...req.query,
+      const paginationOptions = {
+        limit,
+        page,
+        sort,
         populate: ["author", "categories"],
-      });
+      };
+      const productResults = await Product.paginate(myQuery, paginationOptions);
       if (productResults.docs.length === 0)
         return handleObjectNotFound(res, "Product", true);
 
