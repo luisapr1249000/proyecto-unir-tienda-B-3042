@@ -19,7 +19,7 @@ const generateUniqueCategoriesForProduct = async (
   return uniqueCategoriesId;
 };
 
-export const createProductInput = async () => {
+export const createProductInputFixture = async () => {
   const price = parseFloat(faker.commerce.price({ min: 10, max: 1000 }));
   const discount = faker.number.float({ min: 1, max: 99, fractionDigits: 2 });
   let finalPrice = price * (1 - discount / 100);
@@ -51,7 +51,7 @@ export const createProductInput = async () => {
 };
 
 const createProductImageInput = () => {
-  const randomImagesNumber = faker.number.int({ min: 1, max: 8 });
+  const randomImagesNumber = faker.number.int({ min: 1, max: 5 });
   const images = [...Array(randomImagesNumber).keys()].map((_) => ({
     originalName: faker.system.fileName(),
     url: faker.image.url(),
@@ -61,15 +61,16 @@ const createProductImageInput = () => {
   return images;
 };
 
-export const createProduct = () => {
+export const generateProductFixture = async () => {
+  const data = await createProductInputFixture();
   return {
-    ...createProductInput(),
+    ...data,
     images: createProductImageInput(),
   };
 };
 
 export const createProductFixture = async (userId?: string) => {
-  const data = await createProduct();
+  const data = generateProductFixture();
   const user = userId ? userId : await getOrCreateUser();
   const product = new Product({
     author: user,

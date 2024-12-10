@@ -5,23 +5,22 @@ import { getOrCreateUser } from "./user.fixture";
 export const getTotalCategoriesCount = async () =>
   await Category.countDocuments().exec();
 
-export const createCategoryInputData = () => {
+export const generateCategoryInputFixture = () => {
   return {
-    name: faker.commerce.department(),
+    name: faker.lorem.sentence({ min: 1, max: 20 }),
     description: faker.lorem.sentence(),
   };
 };
 
-export const createCategoryFixture = async (userId?: string) => {
-  const user = userId ? userId : await getOrCreateUser();
-  const category = new Category({
-    author: user,
-    ...createCategoryInputData(),
-  });
+export const generateCategoryFixture = async () => ({
+  ...generateCategoryInputFixture(),
+  author: await getOrCreateUser(),
+});
 
+export const createCategoryFixture = async () => {
+  const category = new Category(generateCategoryFixture());
   await category.save();
   console.log("Category fixture created:", category);
-
   return category;
 };
 
@@ -33,11 +32,10 @@ export const getRandomNumber = (randomNumber: number) => {
 };
 
 export const getOrCreateCategory = async () => {
-  const userId = await getOrCreateUser();
   const skip = getRandomNumber(await getTotalCategoriesCount());
   let category = await Category.findOne().skip(skip);
   if (!category) {
-    const newCategory = await createCategoryFixture(userId);
+    const newCategory = await createCategoryFixture();
     category = newCategory;
   }
   return category._id.toString();

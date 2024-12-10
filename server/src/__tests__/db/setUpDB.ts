@@ -2,7 +2,7 @@ import { connect, disconnect } from "mongoose";
 import { config } from "dotenv";
 config();
 
-const DB = process.env.MONGO_URI_TEST as string;
+const DB = process.env.MONGO_URI_DEV as string;
 
 export const setUpDBForTest = async () => {
   try {

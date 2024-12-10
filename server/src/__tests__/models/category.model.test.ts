@@ -1,12 +1,12 @@
 import {
-  createCategoryInputData,
+  generateCategoryFixture,
+  generateCategoryInputFixture,
   getOrCreateCategory,
 } from "../../__fixture__/category.fixture";
-import { getOrCreateUser } from "../../__fixture__/user.fixture";
 import { Category } from "../../models/category.model";
 import { disconnectDB, setUpDBForTest } from "../db/setUpDB";
 
-describe("User Model Tests", () => {
+describe("Category Model Tests", () => {
   beforeAll(async () => {
     await setUpDBForTest();
   });
@@ -15,9 +15,8 @@ describe("User Model Tests", () => {
   });
 
   it("should Create a category", async () => {
-    const categoryInput = createCategoryInputData();
-    const userId = await getOrCreateUser();
-    const category = new Category({ ...categoryInput, author: userId });
+    const categoryInput = await generateCategoryFixture();
+    const category = new Category(categoryInput);
     const categorySaved = await category.save();
 
     expect(categorySaved).toBeDefined();
@@ -35,7 +34,7 @@ describe("User Model Tests", () => {
 
   it("should update a category", async () => {
     const categoryId = await getOrCreateCategory();
-    const categoryInput = createCategoryInputData();
+    const categoryInput = generateCategoryInputFixture();
     await Category.findByIdAndUpdate(categoryId, categoryInput);
     const fetchedUpdatedCategory = await Category.findById(categoryId);
     expect(fetchedUpdatedCategory).toBeDefined();

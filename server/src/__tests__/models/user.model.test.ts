@@ -1,6 +1,6 @@
 import {
-  createUserDataInput,
-  createUserInput,
+  generateUserDataInputFixture,
+  generateUserFixture,
   getOrCreateUser,
 } from "../../__fixture__/user.fixture";
 import { User } from "../../models/user.model";
@@ -15,7 +15,7 @@ describe("User Model Tests", () => {
   });
 
   it("should Create a User", async () => {
-    const userInput = createUserInput();
+    const userInput = generateUserFixture();
     const user = new User(userInput);
     const userSaved = await user.save();
 
@@ -36,7 +36,7 @@ describe("User Model Tests", () => {
 
   it("should update a user", async () => {
     const userId = await getOrCreateUser();
-    const userDataInput = createUserDataInput();
+    const userDataInput = generateUserDataInputFixture();
     await User.findByIdAndUpdate(userId, userDataInput);
     const fetchedUpdatedUser = await User.findById(userId);
     expect(fetchedUpdatedUser).toBeDefined();

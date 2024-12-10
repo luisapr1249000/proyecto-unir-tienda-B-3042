@@ -1,12 +1,12 @@
 import {
-  createProduct,
-  createProductInput,
+  generateProductFixture,
   getOrCreateProduct,
 } from "../../__fixture__/product.fixture";
+import { getOrCreateUser } from "../../__fixture__/user.fixture";
 import { Product } from "../../models/product.model";
 import { disconnectDB, setUpDBForTest } from "../db/setUpDB";
 
-describe("User Model Tests", () => {
+describe("Product Model Tests", () => {
   beforeAll(async () => {
     await setUpDBForTest();
   });
@@ -15,8 +15,11 @@ describe("User Model Tests", () => {
   });
 
   it("should create a product", async () => {
-    const productInput = createProduct();
-    const product = new Product(productInput);
+    const productInput = await generateProductFixture();
+    const product = new Product({
+      ...productInput,
+      author: await getOrCreateUser(),
+    });
     const productSaved = await product.save();
 
     expect(productSaved).toBeDefined();
@@ -34,7 +37,7 @@ describe("User Model Tests", () => {
   });
 
   it("should update a product", async () => {
-    const productInput = await createProductInput();
+    const productInput = await generateProductFixture();
     const productId = await getOrCreateProduct();
     await Product.findByIdAndUpdate(productId, productInput);
     const fetchedUpdatedProduct = await Product.findById(productId);

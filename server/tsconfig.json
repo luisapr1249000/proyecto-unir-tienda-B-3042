@@ -9,33 +9,24 @@
     "skipLibCheck": true,
     "removeComments": true,
 
-    // Strict mode
     "strict": true,
     "alwaysStrict": true,
     "noImplicitAny": true,
     "strictNullChecks": true,
     "useUnknownInCatchVariables": true,
 
-    // No unused code
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "allowUnusedLabels": false,
     "allowUnreachableCode": false,
 
-    // Others (5)
     "noUncheckedIndexedAccess": true,
     "noFallthroughCasesInSwitch": true,
     "exactOptionalPropertyTypes": true,
     "forceConsistentCasingInFileNames": true
   },
   "include": ["src/**/*.ts"],
-  "exclude": [
-    "./coverage",
-    "./dist",
-    "./src/__tests__",
-    "jest.config.js",
-    "./src/__fixture__/"
-  ],
+  "exclude": ["./coverage", "./dist"],
   "ts-node": {
     "transpileOnly": true,
     "files": true

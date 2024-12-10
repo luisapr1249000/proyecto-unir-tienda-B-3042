@@ -6,27 +6,7 @@ import { createAddressFixture } from "./addressDirection.fixture";
 export const getTotalUsersCount = async () =>
   await User.countDocuments().exec();
 
-export const createUserFixture = async (
-  isAdmin = false,
-  hasAddresDirection = false,
-) => {
-  const authInfo = createUserInput();
-  const user = new User({
-    ...authInfo,
-    ...createUserDataInput(),
-    lastLogin: faker.date.recent(),
-    savedProducts: [],
-    wishlist: [],
-    cart: [],
-    isSeller: faker.datatype.boolean(),
-    role: isAdmin ? "admin" : faker.helpers.arrayElement(["user", "admin"]),
-    addressDirections: hasAddresDirection ?? createAddressFixture(),
-  });
-  await user.save();
-  return { user, password: authInfo.password };
-};
-
-export const createUserInput = () => {
+export const generateUserFixture = () => {
   return {
     username: faker.internet.username(),
     email: faker.internet.email().toLowerCase(),
@@ -34,7 +14,7 @@ export const createUserInput = () => {
   };
 };
 
-export const createUserDataInput = () => {
+export const generateUserDataInputFixture = () => {
   return {
     firstName: faker.person.firstName(),
     lastName: faker.person.lastName(),
@@ -47,6 +27,26 @@ export const createUserDataInput = () => {
     },
     phoneNumber: "1234567890",
   };
+};
+
+export const createUserFixture = async (
+  isAdmin = false,
+  hasAddresDirection = false,
+) => {
+  const authInfo = generateUserFixture();
+  const user = new User({
+    ...authInfo,
+    ...generateUserDataInputFixture(),
+    lastLogin: faker.date.recent(),
+    savedProducts: [],
+    wishlist: [],
+    cart: [],
+    isSeller: faker.datatype.boolean(),
+    role: isAdmin ? "admin" : faker.helpers.arrayElement(["user", "admin"]),
+    addressDirections: hasAddresDirection ?? createAddressFixture(),
+  });
+  await user.save();
+  return { user, password: authInfo.password };
 };
 
 export const getOrCreateUser = async () => {
