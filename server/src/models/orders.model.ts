@@ -17,13 +17,14 @@ const orderItemSchema = new Schema(
       type: Number,
       required: true,
     },
+    seller: { type: Schema.Types.ObjectId, ref: "User", required: true },
   },
   { timestamps: true },
 );
 
 const orderSchema = new Schema(
   {
-    customerId: {
+    customer: {
       type: Schema.Types.ObjectId,
       ref: "User",
     },

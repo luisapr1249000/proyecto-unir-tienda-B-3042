@@ -2,7 +2,7 @@ import { z } from "zod";
 import {
   abstractSchema,
   createValidStringField,
-  mongooseObjectId,
+  objectIdValidator,
 } from "../abstract.validation";
 
 const userQuestionInputField = createValidStringField({
@@ -21,7 +21,7 @@ export const userQuestionInputAnswerSchema = z.object({
   answer: userQuestionInputAnswerField,
 });
 export const userQuestionOtherValues = z.object({
-  user: mongooseObjectId,
+  user: objectIdValidator,
   isAnswered: z.boolean().default(false),
 });
 

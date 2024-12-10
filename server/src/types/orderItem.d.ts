@@ -1,9 +1,9 @@
 import { z } from "zod";
+import { Document } from "mongoose";
 import {
   orderItemInputSchema,
   orderItemSchema,
-} from "../validation-schemas/orderItem.validation";
-import { Document } from "mongoose";
+} from "../validation-schemas/order.validation";
 
 export type OrderItemInput = z.infer<typeof orderItemInputSchema>;
 export type OrderItem = z.infer<typeof orderItemSchema>;

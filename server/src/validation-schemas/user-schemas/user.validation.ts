@@ -3,9 +3,10 @@ import {
   abstractSchema,
   createValidStringField,
   emailSchema,
-  mongooseObjectId,
+  objectIdValidator,
   noSpacesAndOnlyDotSchema,
   phoneNumberSchema,
+  mongooseObjectId,
 } from "../abstract.validation";
 import { imageSchema } from "../image.schema";
 
@@ -35,12 +36,7 @@ export const cartItem = z.object({
     .number()
     .min(1, { message: "Quantity cannot be less than 1" })
     .default(1),
-  productId: z
-    .string()
-    .refine((val) => val.length > 0, {
-      message: "Product ID is required",
-    })
-    .optional(),
+  productId: mongooseObjectId,
   price: z.number().optional(), // Optional price
   sellerId: mongooseObjectId,
 });
@@ -54,8 +50,8 @@ export const userSchema = userInputSchema.extend({
   isSeller: z.boolean(),
   role: z.enum(["user", "admin"]),
   lastLogin: z.date().optional(),
-  savedProducts: z.array(mongooseObjectId).optional(),
-  whislist: z.array(mongooseObjectId).optional(),
+  savedProducts: z.array(objectIdValidator).optional(),
+  whislist: z.array(objectIdValidator).optional(),
   hasConfirmedEmail: z.boolean().default(false),
   avatar: imageSchema,
   password: z.string().optional(),

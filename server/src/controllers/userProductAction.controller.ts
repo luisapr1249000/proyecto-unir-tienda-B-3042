@@ -102,7 +102,7 @@ class UserProductActions {
           quantity: productQuantity,
           sellerId: product.author,
           price: product.price,
-          productId: product._id.toString(),
+          productId: product._id,
         };
         user.cart.items.push(cartItem);
       }

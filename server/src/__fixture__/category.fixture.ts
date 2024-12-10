@@ -5,7 +5,7 @@ import { getOrCreateUser } from "./user.fixture";
 export const getTotalCategoriesCount = async () =>
   await Category.countDocuments().exec();
 
-export const createCategoryData = () => {
+export const createCategoryInputData = () => {
   return {
     name: faker.commerce.department(),
     description: faker.lorem.sentence(),
@@ -16,7 +16,7 @@ export const createCategoryFixture = async (userId?: string) => {
   const user = userId ? userId : await getOrCreateUser();
   const category = new Category({
     author: user,
-    ...createCategoryData(),
+    ...createCategoryInputData(),
   });
 
   await category.save();

@@ -10,18 +10,10 @@ export const createUserFixture = async (
   isAdmin = false,
   hasAddresDirection = false,
 ) => {
-  const authInfo = createUserData();
+  const authInfo = createUserInput();
   const user = new User({
     ...authInfo,
-    firstName: faker.person.firstName(),
-    lastName: faker.person.lastName(),
-    bio: faker.lorem.sentence(),
-    avatar: {
-      originalName: faker.system.commonFileName(),
-      url: faker.image.avatar(),
-      contentType: "image/png",
-      size: faker.helpers.rangeToNumber({ min: 10000, max: 500000 }).toString(),
-    },
+    ...createUserDataInput(),
     lastLogin: faker.date.recent(),
     savedProducts: [],
     wishlist: [],
@@ -34,11 +26,26 @@ export const createUserFixture = async (
   return { user, password: authInfo.password };
 };
 
-export const createUserData = () => {
+export const createUserInput = () => {
   return {
     username: faker.internet.username(),
     email: faker.internet.email().toLowerCase(),
     password: "12345678",
+  };
+};
+
+export const createUserDataInput = () => {
+  return {
+    firstName: faker.person.firstName(),
+    lastName: faker.person.lastName(),
+    bio: faker.lorem.sentence(),
+    avatar: {
+      originalName: faker.system.commonFileName(),
+      url: faker.image.avatar(),
+      contentType: "image/png",
+      size: faker.helpers.rangeToNumber({ min: 10000, max: 500000 }).toString(),
+    },
+    phoneNumber: "1234567890",
   };
 };
 

@@ -1,9 +1,9 @@
 import { z } from "zod";
-import { abstractSchema, mongooseObjectId } from "./abstract.validation";
+import { abstractSchema, objectIdValidator } from "./abstract.validation";
 
 export const commonProperties = z.object({
-  reportedPost: mongooseObjectId,
-  reporter: mongooseObjectId,
+  reportedPost: objectIdValidator,
+  reporter: objectIdValidator,
 });
 
 // Input schema

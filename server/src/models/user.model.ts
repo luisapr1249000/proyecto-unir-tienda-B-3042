@@ -58,22 +58,24 @@ const addressDirectionSchema = new Schema(
   { timestamps: true },
 );
 
-const cartItem = new Schema({
-  quantity: {
-    type: Number,
-    required: true,
-    min: [1, "Quantity cannot be less than 1"],
-    default: 1,
+const cartItem = new Schema(
+  {
+    quantity: {
+      type: Number,
+      required: true,
+      min: [1, "Quantity cannot be less than 1"],
+      default: 1,
+    },
+    product: {
+      type: Schema.Types.ObjectId,
+      ref: "Product",
+      unique: true,
+    },
+    price: Number,
+    seller: { type: Schema.Types.ObjectId, ref: "User" },
   },
-  productId: {
-    type: Schema.Types.ObjectId,
-    ref: "Product",
-    unique: true,
-  },
-  price: Number,
-  sellerId: { type: Schema.Types.ObjectId, ref: "User" },
-  addedAt: { type: Date, default: new Date() },
-});
+  { timestamps: true },
+);
 
 const userCartSchema = new Schema(
   {

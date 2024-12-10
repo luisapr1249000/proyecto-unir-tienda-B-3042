@@ -2,20 +2,55 @@ import { Request, Response } from "express";
 import { extractAuthUserId } from "../utils/auth.utils";
 import { Order } from "../models/orders.model";
 import { handleError, handleObjectNotFound } from "../utils/error.utils";
+import { startSession } from "mongoose";
+import { Product } from "../models/product.model";
+import { OrderItemInput } from "../types/orderItem";
 
 class OrderController {
   public async createOrder(req: Request, res: Response) {
+    const session = await startSession();
+    session.startTransaction();
+
     try {
       const authUserId = extractAuthUserId(req);
-      const { totalPrice, orderItems } = req.body;
+      const { totalPrice, items } = req.body;
+      const orderItems: OrderItemInput[] = [];
+      for (const item of items) {
+        const product = await Product.findById(item.productId).session(session);
+        if (!product) {
+          throw new Error(`Product with ID ${item.productId} not found`);
+        }
+
+        if (product.quantity < item.quantity) {
+          throw new Error(`Insufficient quantity for product: ${product.name}`);
+        }
+
+        const order: OrderItemInput = {
+          price: product.finalPrice,
+          product: product._id,
+          quantity: item.quantity,
+          seller: product.author,
+        };
+        product.quantity -= item.quantity;
+        await product.save({ session });
+
+        orderItems.push(order);
+      }
       const order = new Order({
         customerId: authUserId,
         totalPrice,
-        orderItems: orderItems,
+        orderItems,
       });
-      await order.save();
+      await order.save({ session });
+      await session.commitTransaction();
+      session.endSession();
       return res.status(201).json(order);
     } catch (e) {
+      if (session) {
+        await session.abortTransaction();
+        session.endSession();
+      }
+
       return handleError(res, e);
     }
   }
