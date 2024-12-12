@@ -1,11 +1,17 @@
-import { useQuery } from "@tanstack/react-query";
-import { getUserById, getUserByUsername } from "../api/user.api";
+import { keepPreviousData, useQuery } from "@tanstack/react-query";
+import {
+  getUserById,
+  getUserByUsername,
+  getUsersWithPagination,
+} from "../api/user.api";
 import { UserId } from "../types/user";
 import {
   getUserCart,
   getUserSavedProducts,
   getUserWishlist,
 } from "../api/userProductActions.api";
+import { mergePaginationOptions } from "../utils/api.utils";
+import { PaginationConfig } from "../types/paginationResult";
 
 export const useGetUser = ({
   queryKey,
@@ -42,3 +48,14 @@ export const useGetUserSavedProducts = ({ userId }: UserId) =>
     queryFn: () => getUserSavedProducts({ userId }),
     refetchOnWindowFocus: false,
   });
+
+export const userGetUsersWithPagination = (
+  paginationOptions: PaginationConfig = {}
+) => {
+  const { limit, page, sort } = mergePaginationOptions(paginationOptions);
+  return useQuery({
+    queryKey: ["users", page, sort, limit],
+    queryFn: () => getUsersWithPagination({ limit, page, sort }),
+    placeholderData: keepPreviousData,
+  });
+};

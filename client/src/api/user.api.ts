@@ -1,4 +1,8 @@
 import { api } from "../config/axios.config";
+import {
+  PaginationConfig,
+  PaginationResultUsers,
+} from "../types/paginationResult";
 import { User, UserInput } from "../types/user";
 
 export const getUserByUsername = async (username: string): Promise<User> => {
@@ -18,3 +22,15 @@ export const updateUser = async (data: UserInput): Promise<User> => {
 
 export const deleteUser = async (userId: string) =>
   await api.delete(`/users/${userId}`);
+
+export const getUsersWithPagination = async ({
+  limit,
+  page,
+  sort,
+}: PaginationConfig): Promise<PaginationResultUsers> => {
+  const response = await api<PaginationResultUsers>(
+    `/users?page=${page}&limit=${limit}&sort=${sort}`
+  );
+
+  return response.data;
+};

@@ -1,7 +1,7 @@
 import { Category, CategoryId } from "./category";
 import { Comment, CommentId } from "./comment";
 import { Product, ProductId } from "./product";
-import { UserId } from "./user";
+import { User, UserId } from "./user";
 
 export type PaginationConfig = {
   page?: number;

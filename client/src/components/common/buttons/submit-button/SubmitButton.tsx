@@ -1,11 +1,10 @@
-import React from "react";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import { Button, Typography } from "@mui/material";
 
 const SubmitButton = ({ fullWidth = false, isValid = false }) => {
   return (
     <Button
-      variant="outlined"
+      variant="contained"
       fullWidth={fullWidth}
       disabled={!isValid}
       endIcon={<ArrowForwardIcon fontSize="inherit" />}

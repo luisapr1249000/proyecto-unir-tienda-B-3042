@@ -23,6 +23,7 @@ export const useGetProductsWithPagination = ({
   return useQuery({
     queryKey: queryKey,
     queryFn: () => getProductsWithPagination({ page, limit, sort }),
+    placeholderData: keepPreviousData,
   });
 };
 

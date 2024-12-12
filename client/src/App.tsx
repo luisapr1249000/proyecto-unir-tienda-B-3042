@@ -15,6 +15,7 @@ import { useEffect } from "react";
 // import NetworkStatusIndicator from "./components/network/network-status-indicator/NetworkStatusIndicator";
 import NetworkOffline from "./components/network/network-offline/NetworkOffline";
 import commentsRoutes from "./routes/comments.routes";
+import adminRoutes from "./routes/admin.routes";
 
 function App() {
   const isOnline = useNavigatorOnLine();
@@ -33,6 +34,7 @@ function App() {
       path: "",
       children: [...productRoutes],
     },
+    ...adminRoutes,
     ...authRoutes,
     ...userRoutes,
     ...categoryRoutes,

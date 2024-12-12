@@ -19,7 +19,7 @@ const SideMenu = ({
   isTemporary,
 }: {
   handleOpen: () => void;
-  isOpen: boolean;
+  isTemporary: boolean;
 }) => {
   const drawerWidth = 250;
 

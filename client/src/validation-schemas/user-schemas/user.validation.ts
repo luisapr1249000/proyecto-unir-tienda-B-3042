@@ -36,5 +36,6 @@ export const userInfo = z.object({
   whislist: z.array(z.string()).optional(),
   cart: z.array(z.string()).optional(),
   avatar: imageSchema.optional(),
+  hasConfirmedEmail: z.boolean(),
 });
 export const userSchema = abstractSchema.merge(userInputSchema).merge(userInfo);

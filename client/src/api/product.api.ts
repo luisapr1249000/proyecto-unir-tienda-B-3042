@@ -22,7 +22,7 @@ export const getProductsWithPagination = async ({
   sort,
 }: PaginationConfig): Promise<PaginationResultProducts> => {
   const response = await api<PaginationResultProducts>(
-    `/products?page${page}&limit=${limit}&sort=${sort}`
+    `/products?page=${page}&limit=${limit}&sort=${sort}`
   );
   return response.data;
 };
