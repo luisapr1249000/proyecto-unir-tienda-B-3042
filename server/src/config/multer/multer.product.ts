@@ -1,6 +1,5 @@
 import multer from "multer";
 import multerS3 from "multer-s3";
-import { config } from "dotenv";
 import { Request } from "express";
 import { s3 } from "./multer.config";
 import {
@@ -8,13 +7,12 @@ import {
   fileFilter,
   limits,
 } from "../../utils/multer.utils";
-
-config();
+import { env } from "../envConfig";
 
 const s3ProductStorage = multer({
   storage: multerS3({
     s3: s3,
-    bucket: process.env.AWS_S3_BUCKET_NAME as string,
+    bucket: env.AWS_S3_BUCKET_NAME as string,
     metadata: (_req, file, cb) => {
       cb(null, { fieldname: file.fieldname });
     },

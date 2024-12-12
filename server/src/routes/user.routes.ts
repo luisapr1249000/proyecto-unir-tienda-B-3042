@@ -1,10 +1,10 @@
 import { Router } from "express";
 import userController from "../controllers/user.controller";
-import authMiddleware from "../middlewares/auth.middleware";
 import {
+  authMiddleware,
   isAdmin,
   verifyUserOwnershipOrAdminRole,
-} from "../middlewares/checkUserOrAdmin.middleware";
+} from "../middlewares/auth.middleware";
 import {
   validateObjectIdParams,
   validateSchemaBody,

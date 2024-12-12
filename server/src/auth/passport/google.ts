@@ -1,14 +1,13 @@
 import { Strategy as GoogleStrategy } from "passport-google-oauth20";
-import { config } from "dotenv";
 import passport from "passport";
 import { User } from "../../models/user.model";
 import { generateUniqueUsername } from "../../utils/auth.utils";
-config();
+import { env } from "../../config/envConfig";
 
 const googleStrategyOptions = {
-  clientID: process.env.GOOGLE_CLIENT_ID as string,
-  clientSecret: process.env.GOOGLE_SECRETE_KEY as string,
-  callbackURL: process.env.GOOGLE_CALLBACK as string,
+  clientID: env.GOOGLE_CLIENT_ID,
+  clientSecret: env.GOOGLE_SECRET_KEY,
+  callbackURL: env.GOOGLE_CALLBACK,
 };
 
 passport.use(

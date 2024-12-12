@@ -1,7 +1,6 @@
 import { Types } from "mongoose";
 import Reaction from "../models/reaction.model";
 import ViewedProduct from "../models/viewedProduct.model";
-import { Response } from "express";
 import Review from "../models/review.model";
 
 export const hasNotViewedRecently = async (
@@ -30,12 +29,6 @@ export const getCommentCountFromProduct = (productId: string) =>
 
 export const createObjectId = (productId?: string) =>
   new Types.ObjectId(productId);
-
-export const checkIfModelSaved = <T>(object: T, res: Response) => {
-  if (!object) {
-    return res.status(400).json({ message: "Something went Bad" });
-  }
-};
 
 export const getTotalProductCommentReviews = async (productId: string) => {
   const reviews = await Review.find({ productId });

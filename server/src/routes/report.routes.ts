@@ -1,19 +1,21 @@
 import { Router } from "express";
 import reportController from "../controllers/report.controller";
-import authMiddleware from "../middlewares/auth.middleware";
 import {
+  authMiddleware,
   isAdmin,
   isUserOwnerOrAdmin,
-} from "../middlewares/checkUserOrAdmin.middleware";
-import { checkReportType } from "../middlewares/report.middleware";
-import { validateObjectIdParams } from "../middlewares/requestValidation.middleware";
+} from "../middlewares/auth.middleware";
+import {
+  validateObjectIdParams,
+  validateReportType,
+} from "../middlewares/requestValidation.middleware";
 
 const router = Router();
 
 router.post(
   "/report/:objectId/:reportType",
   authMiddleware,
-  checkReportType,
+  validateReportType,
   validateObjectIdParams(["objectId"]),
   reportController.createReport,
 );

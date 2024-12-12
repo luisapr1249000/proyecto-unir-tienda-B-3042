@@ -21,6 +21,7 @@ export const useGetProductsWithPagination = ({
   sort,
 }: PaginationOptionAndQueryKey) => {
   return useQuery({
+    refetchOnWindowFocus: false,
     queryKey: queryKey,
     queryFn: () => getProductsWithPagination({ page, limit, sort }),
     placeholderData: keepPreviousData,
@@ -35,6 +36,7 @@ export const useGetProductsByAuthorWithPagination = ({
   sort,
 }: PaginationOptionUserIdAndQueryKey) => {
   return useQuery({
+    refetchOnWindowFocus: false,
     queryKey: queryKey,
     queryFn: () =>
       getProductstByAuthorWithPagination({ userId, page, limit, sort }),

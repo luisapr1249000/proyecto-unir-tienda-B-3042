@@ -1,6 +1,8 @@
 import { Router } from "express";
-import authMiddleware from "../middlewares/auth.middleware";
-import { isUserOwnerOrAdmin } from "../middlewares/checkUserOrAdmin.middleware";
+import {
+  authMiddleware,
+  isUserOwnerOrAdmin,
+} from "../middlewares/auth.middleware";
 import {
   validateObjectIdParams,
   checkProductExists,

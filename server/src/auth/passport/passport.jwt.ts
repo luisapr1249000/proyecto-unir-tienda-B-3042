@@ -1,10 +1,9 @@
 import { Strategy as JwtStrategy } from "passport-jwt";
 import passport from "passport";
 import { Request } from "express";
-import { config } from "dotenv";
 import { User } from "../../models/user.model";
-config();
-const key = process.env.ACCESS_TOKEN_SECRET as string;
+import { env } from "../../config/envConfig";
+const key = env.ACCESS_TOKEN_SECRET;
 
 const cookieExtractor = (req: Request) => {
   if (req && req.cookies) {
@@ -28,5 +27,4 @@ passport.use(
   }),
 );
 
-export const authMiddleware = passport.authenticate("jwt", { session: false });
 export { passport as passportJwt };

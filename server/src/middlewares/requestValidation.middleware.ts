@@ -3,9 +3,11 @@ import { handleBadRequest, handleObjectNotFound } from "../utils/error.utils";
 import { objectIdValidator } from "../validation-schemas/abstract.validation";
 import {
   paginationCoerceSchema,
+  productPriceSortSchema,
   usernameParamSchema,
 } from "../validation-schemas/query.validation";
 import { Product } from "../models/product.model";
+import { reportTypeSchema } from "../validation-schemas/report.validation";
 
 export const validateSchemaBody = (schema: Zod.Schema) => {
   return (req: Request, res: Response, next: NextFunction) => {
@@ -64,5 +66,27 @@ export const checkProductExists = async (
   if (!product) {
     return handleObjectNotFound(res, "Product");
   }
+  next();
+};
+
+export const validatePriceQuery = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  const { minPrice, maxPrice } = req.query;
+  const { success } = productPriceSortSchema.safeParse({ minPrice, maxPrice });
+  if (!success) return res.status(400).json({ messge: "Bad Request" });
+  next();
+};
+
+export const validateReportType = (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  const { reportType } = req.params;
+  const { success } = reportTypeSchema.safeParse(reportType);
+  if (!success) return res.status(400).json({ message: "Bad Report Type" });
   next();
 };

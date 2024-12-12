@@ -1,10 +1,10 @@
 import { Router } from "express";
-import authMiddleware from "../middlewares/auth.middleware";
 import {
+  authMiddleware,
   isAdmin,
   isUserOwnerOrAdmin,
   verifyUserOwnershipOrAdminRole,
-} from "../middlewares/checkUserOrAdmin.middleware";
+} from "../middlewares/auth.middleware";
 import orderController from "../controllers/order.controller";
 import orderItemController from "../controllers/orderItem.controller";
 import {

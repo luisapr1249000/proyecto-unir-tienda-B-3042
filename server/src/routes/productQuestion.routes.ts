@@ -1,6 +1,6 @@
 import { Router } from "express";
 import productQuestiontController from "../controllers/productQuestiont.controller";
-import authMiddleware from "../middlewares/auth.middleware";
+import { authMiddleware } from "../middlewares/auth.middleware";
 import {
   validateObjectIdParams,
   validateSchemaBody,

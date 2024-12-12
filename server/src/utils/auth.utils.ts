@@ -2,10 +2,8 @@ import { CookieOptions, Request, Response } from "express";
 import { DEFAULT_COOKIES_DAY } from "../constants";
 import { UserJwt } from "../types/auth";
 import jwt, { JwtPayload } from "jsonwebtoken";
-
-import { config } from "dotenv";
 import { User } from "../types/user";
-config();
+import { env } from "../config/envConfig";
 
 export const setTokenCookie = (
   res: Response,
@@ -15,7 +13,7 @@ export const setTokenCookie = (
 ) => {
   const opts = {
     httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
+    secure: env.NODE_ENV === "production",
     maxAge: maxAge,
     path: "/",
     sameSite: "strict",

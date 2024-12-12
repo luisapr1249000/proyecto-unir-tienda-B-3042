@@ -1,13 +1,12 @@
 import { Router } from "express";
 import categoryController from "../controllers/category.controller";
-import authMiddleware from "../middlewares/auth.middleware";
+import { authMiddleware, isAdmin } from "../middlewares/auth.middleware";
 import {
   validateObjectIdParams,
   validateSchemaBody,
   validPagination,
 } from "../middlewares/requestValidation.middleware";
 import { categoryInputSchema } from "../validation-schemas/category.validation";
-import { isAdmin } from "../middlewares/checkUserOrAdmin.middleware";
 
 const router = Router();
 router.get(

@@ -155,7 +155,7 @@ const LoginForm = () => {
         </>
       )}
 
-      <Grid container size={{ xs: 12 }}>
+      <Grid sx={{ mt: 2 }} container size={{ xs: 12 }}>
         <SubmitButton fullWidth isValid={formik.isValid} />
       </Grid>
     </Grid>

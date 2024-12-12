@@ -1,9 +1,9 @@
 import { Router } from "express";
-import authMiddleware from "../middlewares/auth.middleware";
 import {
+  authMiddleware,
   isAdmin,
   verifyUserOwnershipOrAdminRole,
-} from "../middlewares/checkUserOrAdmin.middleware";
+} from "../middlewares/auth.middleware";
 import { reviewInputSchema } from "../validation-schemas/review.validation";
 import {
   validateObjectIdParams,

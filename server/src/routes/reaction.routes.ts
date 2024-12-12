@@ -1,5 +1,5 @@
 import { Router } from "express";
-import authMiddleware from "../middlewares/auth.middleware";
+import { authMiddleware } from "../middlewares/auth.middleware";
 import reactionController from "../controllers/reaction.controller";
 import { validateSchemaBody } from "../middlewares/requestValidation.middleware";
 import { reactionSchema } from "../validation-schemas/product-schemas/product.validation";

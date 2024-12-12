@@ -21,16 +21,15 @@ import {
   GridActionsCellItem,
   GridColDef,
   GridRowId,
+  GridToolbar,
 } from "@mui/x-data-grid";
 import { Link as ReactLink } from "react-router-dom";
-import ConfirmDeleteObject from "../../../common/confirm-delete-object/ConfirmDeleteObject";
-import DialogAlertWarning from "../../../common/dialogs/dialog-alert/DialogAlertWarning";
 import DialogConfirmAction from "../../../common/confirm-delete-object/ConfirmDeleteObject";
 
 const AdminUserTable = () => {
   const [openDrag, setOpenDrag] = useState(false);
   const [paginationModel, setPaginationModel] = useState({
-    pageSize: 25,
+    pageSize: 10,
     page: 1,
   });
 
@@ -146,7 +145,6 @@ const AdminUserTable = () => {
 
   return (
     <>
-      {/* <DialogAlertWarning /> */}
       <DialogConfirmAction
         object="User"
         onDeleteObject={() => {}}
@@ -154,6 +152,10 @@ const AdminUserTable = () => {
         open={openDrag}
       />
       <DataGrid
+        sx={{ p: 3 }}
+        disableColumnFilter
+        disableColumnSelector
+        disableDensitySelector
         loading={isFetching}
         pagination
         paginationMode="server"
@@ -163,6 +165,14 @@ const AdminUserTable = () => {
         rows={formattedUserData}
         columns={columns}
         rowCount={users.totalDocs}
+        slots={{ toolbar: GridToolbar }}
+        slotProps={{
+          loadingOverlay: {
+            variant: "skeleton",
+            noRowsVariant: "skeleton",
+          },
+          toolbar: { showQuickFilter: true },
+        }}
       />
     </>
   );

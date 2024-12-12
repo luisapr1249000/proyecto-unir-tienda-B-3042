@@ -1,12 +1,11 @@
 /* eslint-disable no-console */
 import mongoose, { connect } from "mongoose";
-import { config } from "dotenv";
 import app from "./app";
 // import { createUserFixture } from "./__fixture__/user.fixture";
 // import { createCategoryFixture } from "./__fixture__/category.fixture";
 // import { createProductFixture } from "./__fixture__/product.fixture";
+import { env } from "./config/envConfig";
 
-config();
 mongoose.Promise = global.Promise;
 
 // const userSeeder = async () => {
@@ -27,10 +26,8 @@ mongoose.Promise = global.Promise;
 
 const connectDB = async () => {
   const DB_URI =
-    process.env.NODE_ENV === "prod"
-      ? process.env.MONGO_URI_PROD
-      : process.env.MONGO_URI_DEV;
-  const PORT = process.env.PORT || 8000;
+    env.NODE_ENV === "prod" ? env.MONGO_URI_PROD : env.MONGO_URI_DEV;
+  const PORT = env.PORT || 8000;
 
   try {
     await connect(DB_URI as string);

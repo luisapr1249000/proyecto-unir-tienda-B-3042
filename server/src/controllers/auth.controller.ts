@@ -12,9 +12,7 @@ import {
 import { handleError, handleObjectNotFound } from "../utils/error.utils";
 import { DEFAULT_COOKIES_DAY } from "../constants";
 import { createNodemailMessage } from "../utils/nodemail.utils";
-import { config } from "dotenv";
 import { transporter } from "../config/nodemail/nodemail.config";
-config();
 
 class AuthController {
   public async signup(req: Request, res: Response) {

@@ -57,5 +57,6 @@ export const userGetUsersWithPagination = (
     queryKey: ["users", page, sort, limit],
     queryFn: () => getUsersWithPagination({ limit, page, sort }),
     placeholderData: keepPreviousData,
+    refetchOnWindowFocus: false,
   });
 };

@@ -1,4 +1,4 @@
-import { Avatar, Tooltip, Typography } from "@mui/material";
+import { Avatar, Link, Rating, Tooltip, Typography } from "@mui/material";
 import { useState } from "react";
 import { useGetProductsWithPagination } from "../../../../hooks/products.hooks";
 import LoadSpinner from "../../../common/load-spinner/LoadSpinner";
@@ -7,18 +7,18 @@ import {
   GridActionsCellItem,
   GridColDef,
   GridRowId,
+  GridToolbar,
 } from "@mui/x-data-grid";
-import ConfirmDeleteObject from "../../../common/confirm-delete-object/ConfirmDeleteObject";
 import { red } from "@mui/material/colors";
 import ClearIcon from "@mui/icons-material/Clear";
 import EditIcon from "@mui/icons-material/Edit";
-import SecurityIcon from "@mui/icons-material/Security";
 import DialogConfirmAction from "../../../common/confirm-delete-object/ConfirmDeleteObject";
+import { Link as ReactLink } from "react-router-dom";
 
 const AdminProductTable = () => {
   const [openDialog, setOpenDialog] = useState(false);
   const [paginationModel, setPaginationModel] = useState({
-    pageSize: 25,
+    pageSize: 10,
     page: 1,
   });
 
@@ -26,6 +26,7 @@ const AdminProductTable = () => {
     data: products,
     isLoading,
     error,
+    isFetching,
   } = useGetProductsWithPagination({
     queryKey: [
       "products-admin",
@@ -46,15 +47,30 @@ const AdminProductTable = () => {
   if (!products) return <Typography>Users not found</Typography>;
 
   const columns: GridColDef[] = [
-    { field: "id", headerName: "Id", width: 200 },
-    { field: "productName", headerName: "Product Name", width: 200 },
+    {
+      field: "id",
+      headerName: "ID",
+      width: 0.4,
+
+      renderCell: (params) => (
+        <Link to={`/products/item/${params.id}`} component={ReactLink}>
+          {params.id}
+        </Link>
+      ),
+    },
+    { field: "productName", headerName: "Product Name" },
     {
       field: "productFinalPrice",
       headerName: "Product Final Price",
       width: 200,
     },
     { field: "productQuantity", headerName: "Product Quantity", width: 150 },
-    { field: "averageReview", headerName: "Average Review", width: 150 },
+    {
+      field: "averageReview",
+      headerName: "Average Review",
+      width: 150,
+      renderCell: (params) => <Rating readOnly value={params.value} />,
+    },
     {
       field: "actions",
       headerName: "Actions",
@@ -83,12 +99,7 @@ const AdminProductTable = () => {
           label="Delete"
         />,
         <GridActionsCellItem
-          label="Grant Permissions"
-          icon={<SecurityIcon />}
-          showInMenu
-        />,
-        <GridActionsCellItem
-          label="Edit User Information"
+          label="Edit Product Information"
           icon={<EditIcon />}
           showInMenu
         />,
@@ -113,16 +124,33 @@ const AdminProductTable = () => {
         onDeleteObject={() => {}}
       />
       <DataGrid
-        loading={isLoading}
+        sx={{
+          p: 3,
+          width: 1,
+          "& .MuiDataGrid-columnHeader": {
+            bgcolor: "divider",
+          },
+        }}
+        disableColumnFilter
+        disableColumnSelector
+        disableDensitySelector
+        loading={isFetching}
         rows={formattedProductData}
         columns={columns}
         pagination
         paginationMode="server"
-        checkboxSelection
         paginationModel={paginationModel}
         onPaginationModelChange={setPaginationModel}
         pageSizeOptions={[5, 10, 25, 50]}
         rowCount={products.totalDocs}
+        slots={{ toolbar: GridToolbar }}
+        slotProps={{
+          loadingOverlay: {
+            variant: "skeleton",
+            noRowsVariant: "skeleton",
+          },
+          toolbar: { showQuickFilter: true },
+        }}
       />
     </>
   );

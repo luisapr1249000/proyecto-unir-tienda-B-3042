@@ -1,6 +1,6 @@
 import { Router } from "express";
 import addressDirectionController from "../controllers/addressDirection.controller";
-import authMiddleware from "../middlewares/auth.middleware";
+import { authMiddleware } from "../middlewares/auth.middleware";
 import {
   validateObjectIdParams,
   validateSchemaBody,
