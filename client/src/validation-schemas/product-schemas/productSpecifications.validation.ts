@@ -27,6 +27,6 @@ export const specificationsSchema = z.object({
     .optional(),
   material: specificationMaterial.optional(),
   finish: specificationFinish.optional(),
-  assemblyRequired: z.boolean().optional().default(false),
+  assemblyRequired: z.boolean().optional(),
   weightCapacity: z.number().optional(),
 });

@@ -7,10 +7,11 @@ const DisplayImagePreview = ({
   onDeleteFile,
   files,
 }: {
-  onDeleteFile: () => void;
+  onDeleteFile: (index: number) => void;
   files: File[];
 }) => {
   const [previews, setPreviews] = useState<string[]>();
+  console.log("files from display image preview: ", files);
   useEffect(() => {
     if (files) {
       const previewUrls = files.map((file) => URL.createObjectURL(file));
@@ -20,26 +21,47 @@ const DisplayImagePreview = ({
           URL.revokeObjectURL(preview);
         });
     }
-  }, []);
+  }, [files]);
 
+  // console.log("previews", previews);
   return (
-    <Grid sx={{ position: "relative" }}>
-      {previews?.map((preview) => (
-        <Box
-          component={Paper}
-          elevation={2}
-          key={preview}
-          sx={{ height: 200, width: 200 }}
-        >
-          <IconButtonDelete onDelete={onDeleteFile} />
-          <Box
-            component="img"
-            sx={{ objectFit: "cover", height: 1, width: 1 }}
-            src={preview}
-          />
-        </Box>
-      ))}
-    </Grid>
+    previews?.length > 0 && (
+      <Paper
+        component={Grid}
+        elevation={4}
+        container
+        spacing={3}
+        size={{ xs: 12 }}
+        sx={{
+          justifyContent: "center",
+          alignItems: "center",
+          p: 3,
+          flexDirection: { xs: "column", md: "row" },
+        }}
+      >
+        {previews?.map((preview, index) => (
+          <Paper
+            component={Grid}
+            size={{ xs: "grow" }}
+            elevation={2}
+            key={preview}
+            sx={{
+              height: { xs: 200, md: 150 },
+              width: { xs: 1, md: 150 },
+              objectFit: "contained",
+              position: "relative",
+            }}
+          >
+            <IconButtonDelete onDelete={() => onDeleteFile(index)} />
+            <Box
+              component="img"
+              sx={{ objectFit: "cover", height: 1, width: 1 }}
+              src={preview}
+            />
+          </Paper>
+        ))}
+      </Paper>
+    )
   );
 };
 

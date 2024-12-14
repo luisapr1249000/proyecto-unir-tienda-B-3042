@@ -151,15 +151,26 @@ const userSchema = new Schema(
   },
 );
 
-userSchema.pre("save", async function (next) {
-  if (!this.isModified("password")) {
-    return next();
-  }
-  const salt = bcrypt.genSaltSync(10);
-  if (this.password) this.password = bcrypt.hashSync(this.password, salt);
-  next();
-});
+// userSchema.pre("save", async function (next) {
+//   if (!this.isModified("password")) {
+//     return next();
+//   }
+//   const salt = bcrypt.genSaltSync(10);
+//   if (this.password) this.password = bcrypt.hashSync(this.password, salt);
+//   next();
+// });
 
+userSchema.methods.comparePasswords = function (
+  candidatePassword: string,
+): boolean {
+  return this.password
+    ? bcrypt.compareSync(candidatePassword, this.password)
+    : false;
+};
+
+userSchema.methods.hashPassword = function (password: string): string {
+  return bcrypt.hashSync(password, 10);
+};
 userSchema.methods.toJSON = function () {
   const obj = this.toObject();
   delete obj.password;

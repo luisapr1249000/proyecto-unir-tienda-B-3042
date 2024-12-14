@@ -7,7 +7,7 @@ import ProductsSearchResults from "../pages/products/product-search-results/Prod
 
 const productRoutes: RouteObject[] = [
   {
-    path: "product-create",
+    path: "products/create",
     element: <ProductCreatePage />,
   },
   {

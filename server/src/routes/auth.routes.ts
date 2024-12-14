@@ -4,6 +4,7 @@ import { authMiddleware } from "../middlewares/auth.middleware";
 import { validateSchemaBody } from "../middlewares/requestValidation.middleware";
 import {
   loginSchema,
+  passwordChangeSchema,
   signupSchema,
 } from "../validation-schemas/auth.validation";
 import passport from "passport";
@@ -22,9 +23,15 @@ router.post(
 );
 router.post("/auth/logout", authMiddleware, authController.logout);
 router.get("/auth/user/me", authMiddleware, authController.getAuthUser);
+router.get("/auth/token/validate", authController.validateToken);
 router.get("/auth/token/refresh", authController.refreshToken);
-
 router.post("/auth/reset-password", authController.resetPassword);
+router.post(
+  "/auth/change-password",
+  authMiddleware,
+  validateSchemaBody(passwordChangeSchema),
+  authController.changePassword,
+);
 router.post("/auth/resend-reset-password", authController.resendResetPassword);
 
 router.post("/auth/confirmation-email", authController.confirmationEmail);

@@ -30,7 +30,7 @@ export const createPayload = (id: string, username: string): UserJwt => {
 };
 
 export const getKey = () => {
-  const key = process.env.ACCESS_TOKEN_SECRET;
+  const key = env.ACCESS_TOKEN_SECRET;
   if (!key) {
     throw new Error("Missing environment variable: ACCESS_TOKEN_SECRET");
   }
@@ -69,9 +69,12 @@ export const getUserIdFromAuth = (req: Request) => {
   return userId;
 };
 
-export const checkToken = (token: string): JwtPayload | string => {
-  const decoded = jwt.verify(token, getKey()) as JwtPayload;
-  return decoded || "";
+export const verifyToken = (token: string): JwtPayload | string => {
+  const decoded = jwt.verify(token, getKey());
+  if (!decoded || !decoded.sub) {
+    return "";
+  }
+  return decoded;
 };
 
 export const generateUniqueUsername = () => {

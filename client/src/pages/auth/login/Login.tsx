@@ -1,13 +1,14 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import Grid from "@mui/material/Grid2";
 import { Divider, Paper, Typography } from "@mui/material";
-import { Link, useLocation } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import LoginForm from "../../../components/auth/loginForm/LoginForm";
 import ReactLink from "../../../components/common/react-link/ReactLink";
 import { toast } from "react-toastify";
 import { gridContainerCenter } from "../../../assets/css/mui-css-objects/gridCenter";
 import { gridBreakpoints } from "../../../assets/css/mui-css-objects/muiStyles";
 import GoogleAuthButton from "../../../components/auth/google-auth-button/GoogleAuthButton";
+import { Link } from "../../../components/common/react-link/Link";
 
 const Login = () => {
   let { state } = useLocation();
@@ -34,14 +35,9 @@ const Login = () => {
           <Divider sx={{ width: 1 }} />
           <Typography component="div" variant="body2">
             Dont you have an account yet?{" "}
-            <Typography
-              sx={{ color: "#00f" }}
-              to="/auth/signup"
-              component={ReactLink}
-              variant="body2"
-            >
+            <Link underline="hover" href="/auth/signup" variant="body2">
               Sign up here!
-            </Typography>
+            </Link>
           </Typography>
         </Grid>
         <Divider sx={{ width: 1 }} />
@@ -57,14 +53,13 @@ const Login = () => {
         <Grid size={{ xs: 12 }} sx={{}}>
           <GoogleAuthButton />
         </Grid>
-        <Typography
-          sx={{ color: "#00f" }}
+        <Link
+          underline="hover"
+          href="/auth/request-reset-password"
           variant="body2"
-          component={ReactLink}
-          to="/auth/reset-password"
         >
-          Forgot Password?
-        </Typography>
+          Forgot Password
+        </Link>
       </Grid>
     </Grid>
   );

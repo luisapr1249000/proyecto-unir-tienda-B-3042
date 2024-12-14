@@ -1,10 +1,10 @@
 import React from "react";
 import Grid from "@mui/material/Grid2";
 import { Divider, Paper, Typography } from "@mui/material";
-import { Link } from "react-router-dom";
-import SendMailResetPasswordForm from "../../../components/auth/send-mail/SendMailResetPasswordForm";
+import ResetPasswordRequestForm from "../../../components/auth/reset-password/ResetPasswordRequestForm";
+import { Link } from "../../../components/common/react-link/Link";
 
-const ResetPasswordConfirmation = () => {
+const ResetPasswordRequest = () => {
   return (
     <Grid
       container
@@ -22,20 +22,25 @@ const ResetPasswordConfirmation = () => {
         size={{ xs: 4 }}
         sx={{ p: 3 }}
       >
+        {/* <Link underline="hover">rfre</Link> */}
+
         <Grid direction="column" container size={{ xs: 12 }} sx={{}}>
           <Typography gutterBottom variant="h4">
             Forgot Password?
           </Typography>
           <Divider sx={{ width: 1 }} />
           <Typography gutterBottom variant="body2">
-            Already have an account? <Link to="/auth/login">Login Here</Link>
+            Already have an account?{" "}
+            <Link underline="hover" href="/auth/login">
+              Login Here
+            </Link>
           </Typography>
         </Grid>
         <Divider sx={{ width: 1 }} />
-        <SendMailResetPasswordForm />
+        <ResetPasswordRequestForm />
       </Grid>
     </Grid>
   );
 };
 
-export default ResetPasswordConfirmation;
+export default ResetPasswordRequest;

@@ -43,6 +43,11 @@ const HeaderAuth = () => {
       icon: <PermIdentityIcon />,
     },
     {
+      label: "Post Product",
+      link: `/products/create`,
+      icon: <PermIdentityIcon />,
+    },
+    {
       label: "Account",
       link: `/account/${authUser?.username}/update`,
       icon: <SettingsIcon />,

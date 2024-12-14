@@ -12,6 +12,9 @@ import UserAccountCart from "../pages/user-account/user-account-cart/UserAccount
 import UserAccountSavedProducts from "../pages/user-account/user-account-saved-products/UserAccountSavedProducts";
 import { createLoadable } from "../utils/utils.loadable";
 import GridLoadingSkeleton from "../components/common/load-spinner/GridLoadingSkeleton";
+import UserDelete from "../pages/user-account/user-edit-account/UserEditAccount";
+import UserEditAccount from "../pages/user-account/user-edit-account/UserEditAccount";
+import UserDeleteAccount from "../pages/user-account/user-delete-account/UserDeleteAccount";
 
 const loadableOptions = { fallback: <GridLoadingSkeleton /> };
 
@@ -46,6 +49,8 @@ const userRoutes: RouteObject[] = [
             children: [
               { element: <UserAccountUpdate />, index: true },
               { element: <UserAccountUpdate />, path: "update" },
+              { element: <UserEditAccount />, path: "edit-account" },
+              { element: <UserDeleteAccount />, path: "delete-account" },
               {
                 element: <UserAccountGeneralInformation />,
                 path: "general-information",

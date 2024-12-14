@@ -3,7 +3,7 @@ import { handleError, handleNotPermissions } from "../utils/error.utils";
 import { NextFunction, Request, Response } from "express";
 import { User } from "../models/user.model";
 import { User as UserModel } from "../types/user";
-import { checkToken } from "../utils/auth.utils";
+import { verifyToken } from "../utils/auth.utils";
 import { getResourceOwnerId } from "../utils/resource.utils";
 
 export const authMiddleware = passport.authenticate("jwt", { session: false });
@@ -66,7 +66,7 @@ export const optionalAuth = async (
   try {
     const token = req.cookies["refreshToken"];
     if (token) {
-      const decoded = checkToken(token);
+      const decoded = verifyToken(token);
       const user = await User.findById(decoded.sub);
       if (user) {
         req.user = user as UserModel;

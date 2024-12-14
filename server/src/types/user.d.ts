@@ -22,8 +22,11 @@ export type User = z.infer<typeof userSchemaComplete> & {
 };
 export type UserDocument = Document &
   User & {
-    comparePasswords: (candidatePassword: string) => boolean;
-    hashPassword: (newPassword: string) => void;
+    comparePasswords: (
+      candidatePassword: string,
+      currentPassword?: string,
+    ) => boolean;
+    hashPassword: (newPassword: string) => string;
   };
 
 export type UserPagination = PaginateModel<UserDocument>;

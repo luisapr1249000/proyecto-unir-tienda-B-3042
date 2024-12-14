@@ -41,16 +41,16 @@ class ProductController {
         return handleObjectNotFound(res, "Product");
       }
       const images: Image[] = [];
-      (req.files as Express.Multer.File[]).map((file) => {
-        const fileName = file.location.split("/").pop();
-        const image = {
+      for (const file of req.files as Express.Multer.File[]) {
+        const fileName = file.location.split("/").pop() as string;
+        const image: Image = {
           url: file.location,
           originalName: fileName,
           contentType: file.mimetype,
           size: file.size,
-        } as Image;
+        };
         images.push(image);
-      });
+      }
       const product = await Product.findByIdAndUpdate(
         productId,
         {
@@ -112,25 +112,11 @@ class ProductController {
         populate: ["author", "categories"],
       };
       const productQuery = { finalPrice: { $gte: minPrice, $lte: maxPrice } };
-      const userAuth = extractAuthUserId(req);
       const products = await Product.paginate(productQuery, paginationOptions);
       if (products.docs.length === 0)
         return handleObjectNotFound(res, "Product", true);
 
-      if (!userAuth) return res.status(200).json(products);
-
-      const productsReaction = products.docs.map(async (product) => {
-        const hasReactedObj = await hasReacted(
-          product._id.toString(),
-          userAuth,
-        );
-
-        return { product, hasReactedObj };
-      });
-
-      const productsWithReactions = await Promise.all(productsReaction);
-
-      return res.status(200).json(productsWithReactions);
+      return res.status(200).json(products);
     } catch (e) {
       return handleError(res, e);
     }

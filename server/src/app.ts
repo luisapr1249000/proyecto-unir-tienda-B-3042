@@ -20,7 +20,7 @@ import { UserProductActionsRoutes } from "./routes/userProductActions.routes";
 import { ReactionRoutes } from "./routes/reaction.routes";
 import { googlePassport } from "./auth/passport/google";
 import { ReportRoutes } from "./routes/report.routes";
-import expressListRoutes from "express-list-routes";
+// import expressListRoutes from "express-list-routes";
 
 const app: Application = express();
 
@@ -68,6 +68,6 @@ app.get("/api/v1/health", (_req, res) => {
   res.status(200).json({ status: "OK" });
 });
 
-expressListRoutes(app);
+// expressListRoutes(app);
 
 export default app;

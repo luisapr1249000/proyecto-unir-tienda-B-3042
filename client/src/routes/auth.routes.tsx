@@ -11,6 +11,7 @@ import {
 } from "../utils/utils.loadable";
 import pMinDelay from "p-min-delay";
 import AuthLayout from "../components/auth/AuthLayout";
+import ResetPassword from "../pages/auth/reset-password/ResetPassword";
 
 const SignupLoadable = createLoadableComponent(
   () => import("../pages/auth/signup/Signup")
@@ -21,10 +22,7 @@ const LoginLoadable = createLoadableComponent(
 );
 
 const ResetPasswordConfirmationLoadable = createLoadableComponent(
-  () =>
-    import(
-      "../pages/auth/reset-password-confirmation/ResetPasswordConfirmation"
-    )
+  () => import("../pages/auth/reset-password/ResetPasswordRequest")
 );
 
 const SendMailConfirmationLoadable = createLoadableComponent(
@@ -47,7 +45,7 @@ const authRoutes: RouteObject[] = [
             element: <LoginLoadable />,
           },
           {
-            path: "/auth/reset-password",
+            path: "/auth/request-reset-password/",
             element: <ResetPasswordConfirmationLoadable />,
           },
           {
@@ -57,6 +55,10 @@ const authRoutes: RouteObject[] = [
         ],
       },
     ],
+  },
+  {
+    path: "/auth/reset-password/:token",
+    element: <ResetPassword />,
   },
 ];
 

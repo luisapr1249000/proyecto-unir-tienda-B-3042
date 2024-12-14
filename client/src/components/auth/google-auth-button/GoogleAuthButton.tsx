@@ -14,7 +14,8 @@ const GoogleAuthButton = () => {
       onClick={handleClick}
       color="inherit"
       variant="contained"
-      sx={{ boxShadow: 1, borderRadius: 1.5 }}
+      // sx={{ boxShadow: 1, borderRadius: 1.5 }}
+      // size="small"
     >
       Google
     </Button>

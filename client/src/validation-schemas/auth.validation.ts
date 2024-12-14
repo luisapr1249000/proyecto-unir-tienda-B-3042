@@ -26,7 +26,16 @@ export const loginSchema = z.object({
   password: passwordSchema,
 });
 
-export const resetPasswordSchema = z.object({ newPassword: basicString });
+export const resetPasswordSchema = z
+  .object({
+    password: passwordSchema,
+    confirmPassword: passwordSchema,
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: "Password dont match",
+    path: ["confirmPassword"],
+  });
+
 export const emailSchema = z.object({ email: emailString });
 
 export const signupResponse = z.object({

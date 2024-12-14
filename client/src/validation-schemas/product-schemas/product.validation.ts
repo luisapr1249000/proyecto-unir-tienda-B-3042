@@ -38,9 +38,12 @@ export const productInputSchema = z.object({
     .nonnegative("Price must be non-negative")
     .multipleOf(0.01),
   quantity: quantityField,
-  images: z.array(imageSchema).default([]),
   specifications: specificationsSchema.optional(),
   discount: z.number().nonnegative().multipleOf(0.01).optional(),
+});
+
+export const productUpdateInput = productInputSchema.extend({
+  images: z.array(imageSchema).optional(),
 });
 
 const likesField = createNonNegativeNumberField({ fieldName: "Likes" });
@@ -68,6 +71,7 @@ export const otherProductProps = z.object({
   averageReview: averageReviewField,
   viewCount: viewCountField,
   userQuestions: z.array(userQuestionSchema).optional(),
+  images: z.array(imageSchema).default([]),
   finalPrice: z.coerce.number().nonnegative().multipleOf(0.01),
 });
 

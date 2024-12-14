@@ -19,19 +19,26 @@ import {
 import ProductAddCategories from "../product-create/ProductAddCategory";
 import ProductAddImagen from "../product-create/ProductAddImagen";
 import SubmitButton from "../../common/buttons/submit-button/SubmitButton";
+import GridDivider from "../../common/grid-divider/GridDivider";
+import ProductSpecificationsForm from "../product-create/ProductSpecificationsForm";
+import { useGetCategoriesWitPagination } from "../../../hooks/category";
 
 const ProductUpdateForm = ({ product }: ProductProp) => {
-  const [categoriesId, setCategoriesId] = useState(
-    product.categories.map((category) => category._id)
-  );
+  const { data: categories, isLoading } = useGetCategoriesWitPagination({
+    page: 1,
+    limit: 50,
+  });
+
   const [categoriesName, setCategoriesName] = useState(
     product.categories.map((category) => category.name)
   );
-  //   const categoriesName = ;
+  const handleSetCategories = (categories: string[]) => {
+    formik.setFieldValue("categories", categories);
+  };
   const initialValues = {
     name: product.name,
     description: product.description,
-    categories: categoriesId,
+    categories: categoriesName,
     price: product.price,
     quantity: product.quantity,
     images: product.images,
@@ -49,7 +56,7 @@ const ProductUpdateForm = ({ product }: ProductProp) => {
     discount: product.discount,
   };
 
-  const formik = useFormik<ProductInput>({
+  const formik = useFormik<ProductUpdateInput>({
     initialValues,
     enableReinitialize: true,
     validationSchema: toFormikValidationSchema(productInputSchema),
@@ -57,10 +64,10 @@ const ProductUpdateForm = ({ product }: ProductProp) => {
       console.log(values);
     },
   });
+  if (!categories) return <Typography>Categories not load</Typography>;
 
-  console.log(formik.values.categories);
   return (
-    <Grid container spacing={4} component="form" onSubmit={formik.handleSubmit}>
+    <Grid container spacing={3} component="form" onSubmit={formik.handleSubmit}>
       <Grid size={{ xs: 12 }}>
         <TextField
           required
@@ -164,32 +171,6 @@ const ProductUpdateForm = ({ product }: ProductProp) => {
           }
         />
       </Grid>
-      <Grid size={{ xs: 12 }}>
-        <TextField
-          name="discount"
-          label="discount"
-          placeholder="Product discount"
-          type="number"
-          value={formik.values.discount}
-          onChange={formik.handleChange}
-          onBlur={formik.handleBlur}
-          fullWidth
-          error={formik.touched.discount && Boolean(formik.errors.discount)}
-          helperText={
-            formik.touched.discount && Boolean(formik.errors.discount)
-              ? formik.errors.discount
-              : undefined
-          }
-          slotProps={{
-            inputLabel: { shrink: true },
-            input: {
-              startAdornment: (
-                <InputAdornment position="start">$</InputAdornment>
-              ),
-            },
-          }}
-        />
-      </Grid>
 
       <Grid size={{ xs: 12 }}>
         <TextField
@@ -224,157 +205,23 @@ const ProductUpdateForm = ({ product }: ProductProp) => {
         />
       </Grid>
 
-      <ProductAddCategories categoryNameList={categoriesName} formik={formik} />
-      <ProductAddImagen />
-
-      <Divider sx={{ width: 1 }}>
+      <ProductAddCategories
+        categoryNameList={product?.categories.map((category) => category.name)}
+        categories={categories}
+        handleSetCategories={handleSetCategories}
+      />
+      <GridDivider>
+        <Typography color="textSecondary" variant="caption">
+          Attach Images
+        </Typography>
+      </GridDivider>
+      <ProductAddImagen isSuccessSubmit={false} />
+      <GridDivider>
         <Typography color="textSecondary" variant="caption">
           Optional Fields
         </Typography>
-      </Divider>
-      <Grid
-        container
-        size={{ xs: 12 }}
-        sx={{ justifyContent: "space-around", alignItems: "center" }}
-      >
-        <Grid
-          container
-          component={Card}
-          sx={{ p: 3 }}
-          variant="outlined"
-          size={{ xs: 6 }}
-        >
-          <Grid>
-            <Typography variant="body2" color="textSecondary">
-              Dimensions
-            </Typography>
-          </Grid>
-
-          <Grid size={{ xs: 12 }}>
-            <TextField
-              name="specifications.dimensions.width"
-              label="Width"
-              placeholder="Width (cm)"
-              value={formik.values.specifications?.dimensions?.width}
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-              fullWidth
-              error={
-                formik.touched.specifications?.dimensions?.width &&
-                Boolean(formik.errors.specifications?.dimensions?.width)
-              }
-              helperText={
-                formik.touched.specifications?.dimensions.width &&
-                formik.errors.specifications?.dimensions?.width
-              }
-              slotProps={{
-                inputLabel: { shrink: true },
-              }}
-              focused={
-                formik.touched.specifications?.dimensions?.width &&
-                Boolean(!formik.errors.specifications?.dimensions?.width)
-                  ? true
-                  : undefined
-              }
-              color={
-                formik.touched.specifications?.dimensions?.width &&
-                Boolean(!formik.errors.specifications?.dimensions?.width)
-                  ? "success"
-                  : undefined
-              }
-            />
-          </Grid>
-          <Grid size={{ xs: 12 }}>
-            <TextField
-              name="specifications.dimensions.depth"
-              label="Depth"
-              placeholder="Depth (cm)"
-              value={formik.values.specifications?.dimensions?.depth}
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-              fullWidth
-              slotProps={{
-                inputLabel: { shrink: true },
-              }}
-            />
-          </Grid>
-          <Grid size={{ xs: 12 }}>
-            <TextField
-              name="specifications.dimensions.height"
-              label="Height"
-              placeholder="Height (cm)"
-              value={formik.values.specifications?.dimensions?.height}
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-              fullWidth
-              slotProps={{
-                inputLabel: { shrink: true },
-              }}
-            />
-          </Grid>
-        </Grid>
-        <Grid
-          size={{ xs: 6 }}
-          container
-          component={Card}
-          sx={{ p: 3 }}
-          variant="outlined"
-        >
-          <Grid>
-            <Typography variant="body2" color="textSecondary">
-              Other Specifications
-            </Typography>
-          </Grid>
-          <Grid size={{ xs: 12 }}>
-            <TextField
-              name="specifications.material"
-              label="Material"
-              placeholder="Material"
-              value={formik.values.specifications?.material}
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-              fullWidth
-              slotProps={{
-                inputLabel: { shrink: true },
-              }}
-            />
-          </Grid>
-
-          <Grid size={{ xs: 12 }}>
-            <TextField
-              name="specifications.finish"
-              label="Finish"
-              placeholder="Finish"
-              value={formik.values.specifications?.finish}
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-              fullWidth
-              slotProps={{
-                inputLabel: { shrink: true },
-              }}
-            />
-          </Grid>
-
-          <Grid size={{ xs: 12 }}>
-            <TextField
-              name="specifications.weightCapacity"
-              label="Weight Capacity"
-              placeholder="Weight Capacity (kg)"
-              type="number"
-              value={formik.values.specifications?.weightCapacity}
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-              fullWidth
-              slotProps={{
-                inputLabel: { shrink: true },
-              }}
-            />
-          </Grid>
-        </Grid>
-        <Grid size={{ xs: 12 }}>
-          <SubmitButton fullWidth isValid={formik.isValid} />
-        </Grid>
-      </Grid>
+      </GridDivider>
+      <ProductSpecificationsForm formik={formik} />
     </Grid>
   );
 };

@@ -25,3 +25,10 @@ export const getAuthUser = async (): Promise<User> => {
 export const logout = async () => {
   await api.post("/auth/logout", {});
 };
+
+export const verifyToken = async (token: string) => {
+  const response = await api<{ isValidToken: boolean }>(
+    `/auth/token/verify?token=${token}`
+  );
+  return response.data;
+};

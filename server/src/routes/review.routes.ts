@@ -11,7 +11,7 @@ import {
   validPagination,
 } from "../middlewares/requestValidation.middleware";
 import { uploadImageReview } from "../config/multer/multer.review";
-import { PRODUCT_ID, PRODUCT_ID_AND_COMMENT_ID, USER_ID } from "../constants";
+import { PRODUCT_ID, PRODUCT_ID_AND_REVIEW_ID, USER_ID } from "../constants";
 import reviewController from "../controllers/review.controller";
 
 const router = Router();
@@ -39,7 +39,7 @@ router.get(
 );
 router.get(
   "/products/:productId/reviews/:reviewId",
-  validateObjectIdParams(PRODUCT_ID_AND_COMMENT_ID),
+  validateObjectIdParams(PRODUCT_ID_AND_REVIEW_ID),
   reviewController.getReviewById,
 );
 
@@ -62,7 +62,7 @@ router.post(
 router.put(
   "/products/:productId/reviews/:reviewId",
   authMiddleware,
-  validateObjectIdParams(PRODUCT_ID_AND_COMMENT_ID),
+  validateObjectIdParams(PRODUCT_ID_AND_REVIEW_ID),
   verifyUserOwnershipOrAdminRole("reviewId"),
   validateSchemaBody(reviewInputSchema),
   reviewController.updateReview,
@@ -71,7 +71,7 @@ router.put(
 router.delete(
   "/products/:productId/reviews/:reviewId",
   authMiddleware,
-  validateObjectIdParams(PRODUCT_ID_AND_COMMENT_ID),
+  validateObjectIdParams(PRODUCT_ID_AND_REVIEW_ID),
   verifyUserOwnershipOrAdminRole("reviewId"),
   reviewController.deleteReview,
 );

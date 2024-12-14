@@ -9,8 +9,10 @@ import {
 import {
   Product,
   ProductId,
+  ProductInput,
   ProductQuestionContent,
   ProductQuestionContentAnswer,
+  ProductUpdateInput,
   ProductUserQuestionId,
 } from "../types/product";
 import { UserId } from "../types/user";
@@ -137,5 +139,26 @@ export const searchProductsWithPagination = async (
   const response = await api<PaginationResultProducts>(
     `/products/search-product?query=${query}&page${page}&limit=${limit}&sort=${sort}`
   );
+  return response.data;
+};
+
+export const createProduct = async (product: ProductInput) => {
+  const response = await api.post<Product>(`/products`, product);
+  return response.data;
+};
+
+export const updateProduct = async (product: ProductUpdateInput) => {
+  const response = await api.put<Product>(`/products`, product);
+  return response.data;
+};
+
+export const deleteProduct = async (productId: ProductId) => {
+  await api.delete(`/products/${productId}`);
+};
+
+export const uploadImage = async (files: File[]) => {
+  const formData = new FormData();
+  files.forEach((file) => formData.append("file", file));
+  const response = await api.post<Product>(`/products/images`, formData);
   return response.data;
 };

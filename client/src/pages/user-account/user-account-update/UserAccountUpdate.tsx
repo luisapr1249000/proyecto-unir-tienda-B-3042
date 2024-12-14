@@ -16,17 +16,17 @@ const UserAccountUpdate = () => {
 
   return (
     <Grid
-      container
+      // container
       sx={{
         // height: "calc(100vh)",
-        justifyContent: "center",
-        alignItems: "center",
-        p: 3,
+        // justifyContent: "center",
+        // alignItems: "center",
+        p: 1.5,
       }}
     >
       <Grid
-        component={Card}
-        variant="outlined"
+        // component={Card}
+        // variant="outlined"
         spacing={2}
         container
         sx={{ p: 3 }}

@@ -18,11 +18,16 @@ import LocalMallIcon from "@mui/icons-material/LocalMall";
 import KeyboardBackspaceIcon from "@mui/icons-material/KeyboardBackspace";
 import { User } from "../../../types/user";
 import MailIcon from "@mui/icons-material/Mail";
-import { NavLink } from "react-router-dom";
-import { ListItemLink } from "../react-link/Link";
+import { ListItemLink } from "../../common/react-link/Link";
 
-const CustomDrawer = ({ user }: { user: User }) => {
-  const drawerWidth = 350;
+const UserMenuDrawer = ({
+  isDrawOpen,
+  user,
+}: {
+  isDrawOpen: boolean;
+  user: User;
+}) => {
+  const drawerWidth = 340;
   const shortDrawerWidth = 60;
 
   const [open, setOpen] = useState(true);
@@ -31,6 +36,18 @@ const CustomDrawer = ({ user }: { user: User }) => {
     {
       label: "Actualiza tu informacion",
       link: `/account/${user.username}/update`,
+      description: "something i used to have. ",
+      icon: <MailIcon fontSize="small" />,
+    },
+    {
+      label: "Account Security",
+      link: `/account/${user.username}/edit-account`,
+      description: "something i used to have. ",
+      icon: <MailIcon fontSize="small" />,
+    },
+    {
+      label: "Delete Account",
+      link: `/account/${user.username}/delete-account`,
       description: "something i used to have. ",
       icon: <MailIcon fontSize="small" />,
     },
@@ -59,6 +76,7 @@ const CustomDrawer = ({ user }: { user: User }) => {
   return (
     <Drawer
       sx={{
+        display: { xs: "none", md: "block" },
         flexShrink: 0,
         whiteSpace: "nowrap",
         boxSizing: "border-box",
@@ -82,7 +100,10 @@ const CustomDrawer = ({ user }: { user: User }) => {
         elevation={4}
         sx={{ p: open ? 3 : 0, m: open ? 3 : 0, height: "calc(100vh)" }}
       >
-        <ListItem disableGutters sx={{ my: 3 }}>
+        <ListItem
+          disableGutters
+          sx={{ my: 3, display: { xs: "none", md: "block" } }}
+        >
           <ListItemButton
             sx={{ justifyContent: open ? "initial" : "center" }}
             onClick={handleOpen}
@@ -101,8 +122,14 @@ const CustomDrawer = ({ user }: { user: User }) => {
             />
           </ListItemButton>
         </ListItem>
+
         {listOptions.map((option) => (
-          <ListItemLink to={option.link} divider={open} disableGutters>
+          <ListItemLink
+            key={option.label}
+            to={option.link}
+            divider={open}
+            disableGutters
+          >
             <ListItemButton
               sx={{ justifyContent: open ? "initial" : "center" }}
             >
@@ -127,4 +154,4 @@ const CustomDrawer = ({ user }: { user: User }) => {
   );
 };
 
-export default CustomDrawer;
+export default UserMenuDrawer;

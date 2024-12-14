@@ -26,11 +26,7 @@ const CategoryList = () => {
     }
   }, [categories]);
   return (
-    <List
-      component={isLoading ? Grid : "div"}
-      container
-      sx={{ height: 1, justifyContent: "center", alignItems: "center" }}
-    >
+    <List sx={{ height: 1, justifyContent: "center", alignItems: "center" }}>
       {isLoading ? (
         <LoadSpinner />
       ) : (
@@ -40,7 +36,11 @@ const CategoryList = () => {
           </ListItemButton>
           <List>
             {categoriesAndLinks.map((category) => (
-              <BaseListItems label={category.name} link={category.link} />
+              <BaseListItems
+                key={category.name}
+                label={category.name}
+                link={category.link}
+              />
             ))}
           </List>
         </>
