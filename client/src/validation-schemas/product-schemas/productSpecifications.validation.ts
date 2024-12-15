@@ -1,18 +1,21 @@
 import { z } from "zod";
-import { createValidStringField } from "../abstract.validation";
+import {
+  createPositiveNumberField,
+  createValidStringField,
+} from "../../utils/zod.utils";
 
-const specificationsWidth = createValidStringField({
+const specificationsWidth = createPositiveNumberField({
   fieldName: "specification width",
-  maxLength: 10,
+});
+const specificationsDepth = createPositiveNumberField({
+  fieldName: "specification depth",
+});
+const specificationsHeight = createPositiveNumberField({
+  fieldName: "specification height",
 });
 
-const specificationsDepth = createValidStringField({
-  fieldName: "specification width",
-  maxLength: 10,
-});
-const specificationsHeight = createValidStringField({
-  fieldName: "specification width",
-  maxLength: 10,
+const weightCapacity = createPositiveNumberField({
+  fieldName: "weight capacity",
 });
 
 const specificationMaterial = createValidStringField({ fieldName: "material" });
@@ -28,5 +31,5 @@ export const specificationsSchema = z.object({
   material: specificationMaterial.optional(),
   finish: specificationFinish.optional(),
   assemblyRequired: z.boolean().optional(),
-  weightCapacity: z.number().optional(),
+  weightCapacity: weightCapacity.optional(),
 });

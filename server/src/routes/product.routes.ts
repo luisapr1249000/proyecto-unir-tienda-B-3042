@@ -40,6 +40,13 @@ router.post(
   productController.uploadImages,
 );
 
+router.delete(
+  "/products/:productId/images",
+  authMiddleware,
+  validateObjectIdParams(PRODUCT_ID),
+  productController.deleteImagesFromProduct,
+);
+
 router.put(
   "/products/:productId",
   authMiddleware,

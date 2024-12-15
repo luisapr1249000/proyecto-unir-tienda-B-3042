@@ -2,6 +2,7 @@ import { Box, Card, Paper } from "@mui/material";
 import Grid from "@mui/material/Grid2";
 import React, { useEffect, useState } from "react";
 import IconButtonDelete from "../buttons/iconbutton-delete/IconButtonDelete";
+import { set } from "zod";
 
 const DisplayImagePreview = ({
   onDeleteFile,
@@ -10,22 +11,30 @@ const DisplayImagePreview = ({
   onDeleteFile: (index: number) => void;
   files: File[];
 }) => {
-  const [previews, setPreviews] = useState<string[]>();
-  console.log("files from display image preview: ", files);
+  const [previews, setPreviews] = useState<string[]>([]);
   useEffect(() => {
-    if (files) {
+    if (files.length === 0) {
+      setPreviews([]);
+      return;
+    }
+    if (files && files.length > 0) {
       const previewUrls = files.map((file) => URL.createObjectURL(file));
       setPreviews(previewUrls);
-      return () =>
+
+      return () => {
         previewUrls.forEach((preview) => {
           URL.revokeObjectURL(preview);
         });
+      };
     }
   }, [files]);
 
-  // console.log("previews", previews);
+  console.log("previews", previews);
   return (
-    previews?.length > 0 && (
+    files &&
+    files.length > 0 &&
+    previews &&
+    previews.length > 0 && (
       <Paper
         component={Grid}
         elevation={4}

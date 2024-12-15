@@ -1,17 +1,20 @@
 import { z } from "zod";
-import {
-  abstractSchema,
-  basicString,
-  createValidStringField,
-  emailString,
-} from "../abstract.validation";
+import { abstractSchema } from "../abstract.validation";
 import { imageSchema } from "../image.validation";
+import {
+  basicStringField,
+  createValidStringField,
+  emailStringField,
+  noSpacesField,
+} from "../../utils/zod.utils";
 
 const firstNameField = createValidStringField({
   fieldName: "First Name",
+  maxLength: 50,
 }).optional();
 const lastNameField = createValidStringField({
   fieldName: "Last Name",
+  maxLength: 50,
 }).optional();
 
 const biographyField = createValidStringField({
@@ -20,12 +23,12 @@ const biographyField = createValidStringField({
 }).optional();
 
 export const userInputSchema = z.object({
-  username: basicString,
-  email: emailString,
+  username: noSpacesField,
+  email: emailStringField,
   firstName: firstNameField,
   lastName: lastNameField,
   bio: biographyField,
-  phoneNumber: basicString.optional(),
+  phoneNumber: basicStringField.optional(),
 });
 
 export const userInfo = z.object({
@@ -38,6 +41,8 @@ export const userInfo = z.object({
   avatar: imageSchema.optional(),
   hasConfirmedEmail: z.boolean(),
 });
+
+console.log(11);
 export const userSchema = abstractSchema.merge(userInputSchema).merge(userInfo);
 
 export const passwordChangeSchema = z

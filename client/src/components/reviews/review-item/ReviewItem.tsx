@@ -1,16 +1,16 @@
 import { Card, CardContent, CardHeader, Typography } from "@mui/material";
 import React from "react";
-import { Comment } from "../../../types/comment";
+import { ReviewProps } from "../../../types/review";
 
-const CommentItem = ({ comment }: { comment: Comment }) => {
+const ReviewItem = ({ review }: ReviewProps) => {
   return (
     <Card>
       <CardHeader />
       <CardContent>
-        <Typography>{comment.content}</Typography>
+        <Typography>{review.content}</Typography>
       </CardContent>
     </Card>
   );
 };
 
-export default CommentItem;
+export default ReviewItem;

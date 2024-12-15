@@ -162,3 +162,15 @@ export const uploadImage = async (files: File[]) => {
   const response = await api.post<Product>(`/products/images`, formData);
   return response.data;
 };
+
+export const deleteImagesFromProduct = async (
+  productId: ProductId,
+  images: string[]
+) => {
+  const queryString = images
+    .map((image) => `deletedImages[]=${image}`)
+    .join("&");
+  await api.delete(
+    `/products/${productId}/images?deletedImages=${queryString}`
+  );
+};

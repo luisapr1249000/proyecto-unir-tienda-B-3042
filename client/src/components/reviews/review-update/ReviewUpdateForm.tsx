@@ -1,26 +1,25 @@
 import React from "react";
-import { Comment } from "../../../types/comment";
 import { ProductId } from "../../../types/product";
 import Grid from "@mui/material/Grid2";
-import { CommentInput } from "../../../types/comment";
 import { useFormik } from "formik";
 import { toFormikValidationSchema } from "zod-formik-adapter";
-import { commentInputSchema } from "../../../validation-schemas/comment.validation";
 import { TextField } from "@mui/material";
-import CommentRatingField from "../comment-create/CommentRatingField";
+import { Review } from "../../../types/review";
+import { reviewInputSchema } from "../../../validation-schemas/review.validation";
+import ReviewRatingField from "../review-create/ReviewRatingField";
 
-const CommentUpdateForm = ({
-  comment,
+const ReviewUpdateForm = ({
+  review,
   productId,
-}: { comment: Comment } & ProductId) => {
+}: { review: Review } & ProductId) => {
   const initialValues = {
-    content: comment ? comment.content : "",
-    review: comment ? comment.review : 1,
-  } as CommentInput;
+    content: review ? review.content : "",
+    review: review ? review.review : 1,
+  };
   const formik = useFormik({
     initialValues,
     enableReinitialize: true,
-    validationSchema: toFormikValidationSchema(commentInputSchema),
+    validationSchema: toFormikValidationSchema(reviewInputSchema),
     onSubmit: (values) => console.log(values, productId),
   });
 
@@ -29,7 +28,7 @@ const CommentUpdateForm = ({
   };
   return (
     <Grid container spacing={3} component="form" onSubmit={formik.handleSubmit}>
-      <CommentRatingField
+      <ReviewRatingField
         onChangeRating={onChangeRating}
         value={formik.values.review}
       />
@@ -39,8 +38,8 @@ const CommentUpdateForm = ({
           required
           id="content"
           name="content"
-          label="Comment Content"
-          placeholder="Comment Content"
+          label="Review Content"
+          placeholder="Review Content"
           value={formik.values.content}
           onChange={formik.handleChange}
           onBlur={formik.handleBlur}
@@ -69,4 +68,4 @@ const CommentUpdateForm = ({
   );
 };
 
-export default CommentUpdateForm;
+export default ReviewUpdateForm;

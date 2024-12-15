@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Grid from "@mui/material/Grid2";
 import { useFormik } from "formik";
 import { toFormikValidationSchema } from "zod-formik-adapter";
@@ -22,6 +22,7 @@ import SubmitButton from "../../common/buttons/submit-button/SubmitButton";
 import GridDivider from "../../common/grid-divider/GridDivider";
 import ProductSpecificationsForm from "../product-create/ProductSpecificationsForm";
 import { useGetCategoriesWitPagination } from "../../../hooks/category";
+import ProductUpdateImages from "./ProductUpdateImages";
 
 const ProductUpdateForm = ({ product }: ProductProp) => {
   const { data: categories, isLoading } = useGetCategoriesWitPagination({
@@ -29,9 +30,7 @@ const ProductUpdateForm = ({ product }: ProductProp) => {
     limit: 50,
   });
 
-  const [categoriesName, setCategoriesName] = useState(
-    product.categories.map((category) => category.name)
-  );
+  const [categoriesName, setCategoriesName] = useState([""]);
   const handleSetCategories = (categories: string[]) => {
     formik.setFieldValue("categories", categories);
   };
@@ -41,7 +40,6 @@ const ProductUpdateForm = ({ product }: ProductProp) => {
     categories: categoriesName,
     price: product.price,
     quantity: product.quantity,
-    images: product.images,
     specifications: {
       dimensions: {
         width: product.specifications?.dimensions?.width,
@@ -56,7 +54,7 @@ const ProductUpdateForm = ({ product }: ProductProp) => {
     discount: product.discount,
   };
 
-  const formik = useFormik<ProductUpdateInput>({
+  const formik = useFormik<ProductInput>({
     initialValues,
     enableReinitialize: true,
     validationSchema: toFormikValidationSchema(productInputSchema),
@@ -64,8 +62,16 @@ const ProductUpdateForm = ({ product }: ProductProp) => {
       console.log(values);
     },
   });
+
+  useEffect(() => {
+    if (product && product.categories && product.categories.length > 0) {
+      setCategoriesName(product.categories.map((category) => category.name));
+    }
+  }, []);
   if (!categories) return <Typography>Categories not load</Typography>;
 
+  console.log(formik.values.specifications);
+  console.log(formik.errors.specifications);
   return (
     <Grid container spacing={3} component="form" onSubmit={formik.handleSubmit}>
       <Grid size={{ xs: 12 }}>
@@ -206,7 +212,7 @@ const ProductUpdateForm = ({ product }: ProductProp) => {
       </Grid>
 
       <ProductAddCategories
-        categoryNameList={product?.categories.map((category) => category.name)}
+        categoryNameList={categoriesName}
         categories={categories}
         handleSetCategories={handleSetCategories}
       />
@@ -215,13 +221,19 @@ const ProductUpdateForm = ({ product }: ProductProp) => {
           Attach Images
         </Typography>
       </GridDivider>
-      <ProductAddImagen isSuccessSubmit={false} />
+      <ProductUpdateImages
+        imgUrls={product.images.map((image) => image.url)}
+        isSuccessSubmit={false}
+      />
       <GridDivider>
         <Typography color="textSecondary" variant="caption">
           Optional Fields
         </Typography>
       </GridDivider>
       <ProductSpecificationsForm formik={formik} />
+      <Grid>
+        <SubmitButton isValid={formik.isValid} />
+      </Grid>
     </Grid>
   );
 };

@@ -13,7 +13,6 @@ import {
 
 export type Product = z.infer<typeof productSchema>;
 export type ProductInput = z.infer<typeof productInputSchema>;
-export type ProductUpdateInput = z.infer<typeof productUpdateInput>;
 
 export type ProductId = { productId: string };
 

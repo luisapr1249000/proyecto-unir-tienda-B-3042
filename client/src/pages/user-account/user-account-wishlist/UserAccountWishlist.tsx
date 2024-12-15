@@ -14,6 +14,7 @@ const UserAccountWishlist = () => {
   const { data, isLoading, error, refetch } = useGetUserWishlist({
     userId: context._id,
   });
+  console.log(data);
 
   if (isLoading) return <GridLoadingSkeleton />;
   if (error)

@@ -3,7 +3,7 @@ import React from "react";
 import Rating from "@mui/material/Rating";
 import Typography from "@mui/material/Typography";
 
-const CommentRatingField = ({
+const ReviewRatingField = ({
   onChangeRating,
   value,
 }: {
@@ -28,4 +28,4 @@ const CommentRatingField = ({
   );
 };
 
-export default CommentRatingField;
+export default ReviewRatingField;

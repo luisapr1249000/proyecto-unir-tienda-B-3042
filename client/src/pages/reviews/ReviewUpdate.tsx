@@ -7,11 +7,11 @@ import { useParams } from "react-router-dom";
 import { useGetProductById } from "../../hooks/products.hooks";
 import LoadSpinner from "../../components/common/load-spinner/LoadSpinner";
 import ObjectNotFound from "../../components/common/object-not-found/ObjectNotFound";
-import CommentUpdateForm from "../../components/comments/comment-update/CommentUpdateForm";
-import { useGetCommentById } from "../../hooks/comments.hooks";
+import ReviewUpdateForm from "../../components/reviews/review-update/ReviewUpdateForm";
+import { useGetReviewById } from "../../hooks/review.hooks";
 
-const CommentUpdate = () => {
-  const { productId, commentId } = useParams();
+const ReviewUpdate = () => {
+  const { productId, reviewId } = useParams();
   const {
     data: product,
     isLoading: isLoadingProduct,
@@ -20,24 +20,24 @@ const CommentUpdate = () => {
   } = useGetProductById({ productId: productId ?? "" });
 
   const {
-    data: comment,
-    isLoading: isLoadingComment,
-    error: commentError,
-  } = useGetCommentById({
-    commentId: commentId ?? "",
+    data: review,
+    isLoading: isLoadingReview,
+    error: reviewError,
+  } = useGetReviewById({
+    reviewId: reviewId ?? "",
     productId: productId ?? "",
   });
-  if (isLoadingProduct || isLoadingComment) return <LoadSpinner isBackdrop />;
-  if (productError || !product || !comment || commentError)
+  if (isLoadingProduct || isLoadingReview) return <LoadSpinner isBackdrop />;
+  if (productError || !product || !review || reviewError)
     return <ObjectNotFound object="Product" onReload={refetch} />;
 
   return (
     <Grid sx={{ ...gridContainerCenter }}>
       <Grid component={Card} variant="outlined">
-        <CommentUpdateForm comment={comment} productId={product._id} />
+        <ReviewUpdateForm review={review} productId={product._id} />
       </Grid>
     </Grid>
   );
 };
 
-export default CommentUpdate;
+export default ReviewUpdate;

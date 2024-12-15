@@ -14,8 +14,8 @@ import { useEffect } from "react";
 
 // import NetworkStatusIndicator from "./components/network/network-status-indicator/NetworkStatusIndicator";
 import NetworkOffline from "./components/network/network-offline/NetworkOffline";
-import commentsRoutes from "./routes/comments.routes";
 import adminRoutes from "./routes/admin.routes";
+import reviewsRoutes from "./routes/review.routes";
 
 function App() {
   const isOnline = useNavigatorOnLine();
@@ -38,7 +38,7 @@ function App() {
     ...authRoutes,
     ...userRoutes,
     ...categoryRoutes,
-    ...commentsRoutes,
+    ...reviewsRoutes,
   ]);
 
   if (!isOnline) return <NetworkOffline />;

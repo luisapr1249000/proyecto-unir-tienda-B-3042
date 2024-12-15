@@ -1,15 +1,8 @@
-import React, { useEffect, useState } from "react";
 import Grid from "@mui/material/Grid2";
 import { useFormik } from "formik";
 import { toFormikValidationSchema } from "zod-formik-adapter";
 import { productInputSchema } from "../../../validation-schemas/product-schemas/product.validation";
-import {
-  Button,
-  Card,
-  InputAdornment,
-  TextField,
-  Typography,
-} from "@mui/material";
+import { InputAdornment, TextField, Typography } from "@mui/material";
 import SubmitButton from "../../common/buttons/submit-button/SubmitButton";
 import ProductAddCategories from "./ProductAddCategory";
 import { useGetCategoriesWitPagination } from "../../../hooks/category";
@@ -36,7 +29,7 @@ const ProductCreateForm = () => {
       },
     });
 
-  const { data: categories, isLoading } = useGetCategoriesWitPagination({
+  const { data: categories } = useGetCategoriesWitPagination({
     page: 1,
     limit: 50,
   });
@@ -49,9 +42,9 @@ const ProductCreateForm = () => {
     quantity: 0,
     specifications: {
       dimensions: {
-        width: "",
-        depth: "",
-        height: "",
+        width: 0,
+        depth: 0,
+        height: 0,
       },
       material: "",
       finish: "",

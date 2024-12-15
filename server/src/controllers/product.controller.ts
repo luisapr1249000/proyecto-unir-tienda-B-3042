@@ -7,9 +7,13 @@ import {
 } from "../utils/error.utils";
 import { Product } from "../models/product.model";
 import ViewedProduct from "../models/viewedProduct.model";
-import { hasNotViewedRecently, hasReacted } from "../utils/product.utils";
+import { hasNotViewedRecently } from "../utils/product.utils";
 import { Image } from "../types/image";
 import { getDefaultPaginationOptions } from "../utils/query.utils";
+import {
+  deleteS3Objects,
+  deleteSingleS3Object,
+} from "../config/multer/multer.config";
 
 class ProductController {
   public async createProduct(req: Request, res: Response) {
@@ -59,6 +63,31 @@ class ProductController {
         { new: true },
       );
       if (!product) return handleObjectNotFound(res, "Product", true);
+
+      return res.status(200).json(product);
+    } catch (e) {
+      return handleError(res, e);
+    }
+  }
+
+  public async deleteImagesFromProduct(req: Request, res: Response) {
+    try {
+      const { deletedImages } = req.query as { deletedImages: string[] };
+      if (!deletedImages) return res.status(204).json(deletedImages);
+
+      const { productId } = req.params;
+      const product = await Product.findByIdAndUpdate(productId, {
+        images: { $pull: { url: { $in: deletedImages } } },
+      });
+      if (!product) return handleObjectNotFound(res, "Product", true);
+
+      if (deletedImages.length > 1) {
+        await deleteS3Objects(deletedImages);
+      } else {
+        const image = deletedImages[0];
+        if (!image) return res.status(204).json(deletedImages);
+        deleteSingleS3Object(image);
+      }
 
       return res.status(200).json(product);
     } catch (e) {

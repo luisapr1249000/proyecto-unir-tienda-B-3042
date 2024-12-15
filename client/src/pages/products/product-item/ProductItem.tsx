@@ -7,7 +7,7 @@ import ProductItemCard from "../../../components/products/product-item/product-i
 import ObjectNotFound from "../../../components/common/object-not-found/ObjectNotFound";
 import ProductAskQuestionForm from "../../../components/products/product-questions/ProductAskQuestionForm";
 import ProductQuesionSection from "../../../components/products/product-questions/ProductQuesionSection";
-import ProductItemComments from "../../../components/products/product-item/ProductItemComments";
+import ProductItemReviews from "../../../components/products/product-item/ProductItemReview";
 import ProductItemSkeleton from "../../../components/products/product-item/ProductItemSkeleton";
 import ProductSpecificationts from "../../../components/products/product-specificationts/ProductSpecificationts";
 
@@ -58,11 +58,11 @@ const ProductItem = () => {
           </Grid>
           <Card size={{ xs: 11 }} component={Grid} variant="outlined">
             <CardContent>
-              <Typography>Comment & Reviews</Typography>
+              <Typography>Reviews</Typography>
             </CardContent>
             <Divider />
             <CardContent>
-              <ProductItemComments productId={product._id} />
+              <ProductItemReviews productId={product._id} />
             </CardContent>
           </Card>
         </>

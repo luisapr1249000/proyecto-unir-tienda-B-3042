@@ -8,12 +8,15 @@ import GridLoadingSkeleton from "../../../components/common/load-spinner/GridLoa
 import { useGetUserCart } from "../../../hooks/user";
 import { User } from "../../../types/user";
 import GridObjectNotFound from "../../../components/common/object-not-found/GridObjectNotFound";
+import UserAccountCartNoItems from "./UserAccountCartNoItems";
 
 const UserAccountCart = () => {
   const context = useOutletContext<User>();
   const { data, isLoading, error, refetch } = useGetUserCart({
     userId: context._id,
   });
+
+  console.log(data);
 
   if (isLoading) return <GridLoadingSkeleton />;
   if (error)
@@ -35,9 +38,10 @@ const UserAccountCart = () => {
           <Typography variant="h4">User's Wishlist</Typography>
           <Divider sx={{ flexGrow: 1 }} />
         </Grid>
-        {data?.cart.map((product) => (
+        {/* {data.cart.map((product) => (
           <ProductCard product={product} />
-        ))}
+        ))} */}
+        <UserAccountCartNoItems />
       </Grid>
     </Grid>
   );

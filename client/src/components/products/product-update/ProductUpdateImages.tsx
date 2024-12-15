@@ -1,16 +1,21 @@
 import React, { useEffect, useState } from "react";
 import ButtonInputFile from "../../common/buttons/button-input-file/ButtonInputFile";
-import DisplayImagePreview from "../../common/display-image-preview/DisplayImagePreview";
 import { uploadImage } from "../../../api/product.api";
 import { useMutation } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
+import DisplayImageUpdatePreview from "../../common/display-image-preview/DisplayImageUpdatePreview";
 
-const ProductAddImagen = ({
-  isSuccessSubmit,
+const ProductUpdateImages = ({
+  imgUrls,
 }: {
+  imgUrls: string[];
   isSuccessSubmit: boolean;
 }) => {
+  const [existedImages, setExistedImages] = useState<string[]>(imgUrls);
+  const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
+  const [deletedImages, setDeletedImages] = useState<string[]>();
+
   const { mutate: uploadImageMutation } = useMutation({
     mutationFn: uploadImage,
     onSuccess: () => {
@@ -24,7 +29,6 @@ const ProductAddImagen = ({
   });
 
   const navigate = useNavigate();
-  const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const MAX_IMAGES = 5;
@@ -45,10 +49,31 @@ const ProductAddImagen = ({
     });
   };
 
+  const handleDeleteExistedImage = (fileIndex: number) => {
+    setExistedImages((changedFiles) => {
+      if (!changedFiles) return [];
+      return changedFiles.filter((_, index) => index !== fileIndex);
+    });
+
+    setDeletedImages((changedFiles) => {
+      if (!changedFiles) return [];
+      return changedFiles.filter((_, index) => index === fileIndex);
+    });
+  };
+
+  // useEffect(() => {
+  //   if (isSuccessSubmit) {
+  //     uploadImageMutation(selectedFiles);
+  //   }
+  // }, [isSuccessSubmit]);
+
+  // console.log("selectedFiles: ", selectedFiles);
   return (
     <>
       <ButtonInputFile onChange={handleChange} multiple />
-      <DisplayImagePreview
+      <DisplayImageUpdatePreview
+        onDeleteExistedImage={handleDeleteExistedImage}
+        existedImages={existedImages}
         files={selectedFiles}
         onDeleteFile={handleDeleteAttachedImage}
       />
@@ -56,4 +81,4 @@ const ProductAddImagen = ({
   );
 };
 
-export default ProductAddImagen;
+export default ProductUpdateImages;

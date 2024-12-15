@@ -39,20 +39,20 @@ const ProductAddCategories = ({
     setSelectedCategories(typeof value === "string" ? value.split(",") : value);
   };
   useEffect(() => {
-    if (categoryNameList) {
+    if (categoryNameList && categoryNameList.length > 0) {
       const categoriesNames = categories.docs
         .filter((category) => categoryNameList.includes(category.name))
         .map((category) => category.name);
-      setSelectedCategories(categoriesNames ?? []);
+      setSelectedCategories(categoriesNames);
     }
 
-    if (selectedCategories) {
+    if (selectedCategories && selectedCategories.length > 0) {
       const categoriesId = categories.docs
         .filter((category) => selectedCategories.includes(category.name))
         .map((category) => category._id);
       handleSetCategories(categoriesId);
     }
-  }, [selectedCategories]);
+  }, [categoryNameList]);
 
   return (
     <Grid

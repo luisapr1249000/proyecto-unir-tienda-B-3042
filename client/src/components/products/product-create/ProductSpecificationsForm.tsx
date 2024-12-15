@@ -12,6 +12,7 @@ const ProductSpecificationsForm = ({ formik }: { formik: any }) => {
   return (
     <Grid
       container
+      spacing={3}
       size={{ xs: 12 }}
       sx={{ justifyContent: "space-around", alignItems: "stretch" }}
     >
@@ -30,6 +31,17 @@ const ProductSpecificationsForm = ({ formik }: { formik: any }) => {
 
         <Grid size={{ xs: 12 }}>
           <TextField
+            type="number"
+            error={
+              formik.touched.specifications?.dimensions?.width &&
+              Boolean(formik.errors.specifications?.dimensions?.width)
+            }
+            helperText={
+              formik.touched.specifications?.dimensions?.width &&
+              Boolean(formik.errors.specifications?.dimensions?.width)
+                ? formik.errors.specifications?.dimensions?.width
+                : undefined
+            }
             name="specifications.dimensions.width"
             label="Width"
             placeholder="Width (cm)"
@@ -41,7 +53,18 @@ const ProductSpecificationsForm = ({ formik }: { formik: any }) => {
         </Grid>
         <Grid size={{ xs: 12 }}>
           <TextField
+            type="number"
             name="specifications.dimensions.depth"
+            error={
+              formik.touched.specifications?.dimensions?.depth &&
+              Boolean(formik.errors.specifications?.dimensions?.depth)
+            }
+            helperText={
+              formik.touched.specifications?.dimensions?.depth &&
+              Boolean(formik.errors.specifications?.dimensions?.depth)
+                ? formik.errors.specifications?.dimensions?.depth
+                : undefined
+            }
             label="Depth"
             placeholder="Depth (cm)"
             value={formik.values.specifications?.dimensions?.depth}
@@ -55,6 +78,17 @@ const ProductSpecificationsForm = ({ formik }: { formik: any }) => {
         </Grid>
         <Grid size={{ xs: 12 }}>
           <TextField
+            type="number"
+            error={
+              formik.touched.specifications?.dimensions?.height &&
+              Boolean(formik.errors.specifications?.dimensions?.height)
+            }
+            helperText={
+              formik.touched.specifications?.dimensions?.height &&
+              Boolean(formik.errors.specifications?.dimensions?.height)
+                ? formik.errors.specifications?.dimensions?.height
+                : undefined
+            }
             name="specifications.dimensions.height"
             label="Height"
             placeholder="Height (cm)"

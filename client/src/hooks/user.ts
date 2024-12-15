@@ -30,7 +30,7 @@ export const useGetUser = ({
 
 export const useGetUserCart = ({ userId }: UserId) =>
   useQuery({
-    queryKey: [`user-${userId}-cart`],
+    queryKey: [`user-cart`, userId],
     queryFn: () => getUserCart({ userId }),
     refetchOnWindowFocus: false,
   });

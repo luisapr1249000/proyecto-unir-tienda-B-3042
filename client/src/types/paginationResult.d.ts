@@ -1,5 +1,5 @@
 import { Category, CategoryId } from "./category";
-import { Comment, CommentId } from "./comment";
+import { Review, ReviewId } from "./review";
 import { Product, ProductId } from "./product";
 import { User, UserId } from "./user";
 
@@ -16,9 +16,9 @@ export type PaginationOptionsCategoryName = PaginationConfig & {
 
 export type PaginationOptionsUserId = PaginationConfig & UserId;
 export type PaginationOptionsProductId = PaginationConfig & ProductId;
-export type PaginationOptionsCommentId = PaginationConfig & CommentId;
-export type PaginationOptionsProductIdAndCommentId = PaginationConfig &
-  CommentId &
+export type PaginationOptionsReviewId = PaginationConfig & ReviewId;
+export type PaginationOptionsProductIdAndReviewId = PaginationConfig &
+  ReviewId &
   ProductId;
 export type PaginationResult = {
   hasNextPage: boolean;
@@ -41,8 +41,8 @@ export type PaginationResultProducts = PaginationResult & {
   docs: Product[];
 };
 
-export type PaginationResultComments = PaginationResult & {
-  docs: Comment[];
+export type PaginationResultReviews = PaginationResult & {
+  docs: Review[];
 };
 
 export type PaginationResultUsers = PaginationResult & {
@@ -64,5 +64,5 @@ export type PaginationOptionCategoryNameAndQueryKey =
 export type PaginationOptionProductIddAndQueryKey =
   PaginationOptionAndQueryKey & ProductId;
 
-export type PaginationOptionCommentIdAndQueryKey = PaginationOptionAndQueryKey &
-  CommentId;
+export type PaginationOptionReviewIdAndQueryKey = PaginationOptionAndQueryKey &
+  ReviewId;

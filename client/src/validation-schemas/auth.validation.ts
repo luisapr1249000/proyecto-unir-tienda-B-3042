@@ -1,19 +1,18 @@
 import { z } from "zod";
-import {
-  AlphanumericAndDotsRegex,
-  basicString,
-  emailString,
-} from "./abstract.validation";
 import { userSchema } from "./user-schemas/user.validation";
-
-const passwordSchema = z.string().min(1);
+import {
+  basicStringField,
+  emailStringField,
+  noSpacesField,
+  passwordStringField,
+} from "../utils/zod.utils";
 
 export const signupSchema = z
   .object({
-    username: basicString.regex(AlphanumericAndDotsRegex),
-    email: emailString,
-    password: passwordSchema,
-    confirmPassword: passwordSchema,
+    username: noSpacesField.max(30, "Max 30 characters"),
+    email: emailStringField,
+    password: passwordStringField,
+    confirmPassword: passwordStringField,
   })
   .refine((data) => data.password === data.confirmPassword, {
     message: "Password dont match",
@@ -22,25 +21,25 @@ export const signupSchema = z
 
 export const loginSchema = z.object({
   rememberMe: z.boolean().default(false),
-  loginValue: basicString,
-  password: passwordSchema,
+  loginValue: basicStringField,
+  password: basicStringField,
 });
 
 export const resetPasswordSchema = z
   .object({
-    password: passwordSchema,
-    confirmPassword: passwordSchema,
+    password: passwordStringField,
+    confirmPassword: passwordStringField,
   })
   .refine((data) => data.password === data.confirmPassword, {
     message: "Password dont match",
     path: ["confirmPassword"],
   });
 
-export const emailSchema = z.object({ email: emailString });
+export const emailSchema = z.object({ email: emailStringField });
 
 export const signupResponse = z.object({
   userSaved: userSchema,
-  accessToken: basicString,
+  accessToken: basicStringField,
 });
 
-export const loginResponse = z.object({ userId: basicString });
+export const loginResponse = z.object({ userId: basicStringField });

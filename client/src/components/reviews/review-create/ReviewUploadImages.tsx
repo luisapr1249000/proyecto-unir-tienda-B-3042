@@ -1,29 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import ButtonInputFile from "../../common/buttons/button-input-file/ButtonInputFile";
 import DisplayImagePreview from "../../common/display-image-preview/DisplayImagePreview";
-import { uploadImage } from "../../../api/product.api";
-import { useMutation } from "@tanstack/react-query";
 import { toast } from "react-toastify";
-import { useNavigate } from "react-router-dom";
 
-const ProductAddImagen = ({
-  isSuccessSubmit,
-}: {
-  isSuccessSubmit: boolean;
-}) => {
-  const { mutate: uploadImageMutation } = useMutation({
-    mutationFn: uploadImage,
-    onSuccess: () => {
-      console.log("success");
-      navigate("/products");
-    },
-    onError: (error) => {
-      console.log("error: ", error);
-      toast.error(error.message);
-    },
-  });
-
-  const navigate = useNavigate();
+const ReviewUploadImages = () => {
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -39,12 +19,14 @@ const ProductAddImagen = ({
   };
 
   const handleDeleteAttachedImage = (fileIndex: number) => {
+    console.log(fileIndex);
     setSelectedFiles((changedFiles) => {
       if (!changedFiles) return [];
       return changedFiles.filter((_, index) => index !== fileIndex);
     });
   };
 
+  console.log(selectedFiles);
   return (
     <>
       <ButtonInputFile onChange={handleChange} multiple />
@@ -56,4 +38,4 @@ const ProductAddImagen = ({
   );
 };
 
-export default ProductAddImagen;
+export default ReviewUploadImages;

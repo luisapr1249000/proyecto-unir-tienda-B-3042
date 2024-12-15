@@ -1,9 +1,9 @@
 import { z } from "zod";
+import { abstractSchema } from "../abstract.validation";
 import {
-  abstractSchema,
-  basicString,
+  basicStringField,
   createValidStringField,
-} from "../abstract.validation";
+} from "../../utils/zod.utils";
 const userQuestionInputField = createValidStringField({
   fieldName: "User Question Content",
   maxLength: 150,
@@ -24,7 +24,7 @@ export const productQuestionOptionalAnswer = z.object({
 });
 
 export const userQuestionOtherValues = z.object({
-  user: basicString,
+  user: basicStringField,
   isAnswered: z.boolean().default(false),
 });
 
