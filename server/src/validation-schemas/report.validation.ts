@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { abstractSchema, objectIdValidator } from "./abstract.validation";
+import { abstractSchema, createMongooseObjectId } from "../utils/zod.utils";
 
 export const reportTypeSchema = z.object({
   reportType: z.enum(["product", "comment"]),
@@ -16,11 +16,11 @@ export const reportInputSchema = z.object({
 });
 
 export const reportProps = z.object({
-  reporter: objectIdValidator,
-  reportedProduct: objectIdValidator.optional(),
-  reportedReview: objectIdValidator.optional(),
+  reporter: createMongooseObjectId(),
+  reportedProduct: createMongooseObjectId().optional(),
+  reportedReview: createMongooseObjectId().optional(),
 });
 
-export const reportSchema = abstractSchema
+export const reportSchema = abstractSchema()
   .merge(reportInputSchema)
   .merge(reportProps);

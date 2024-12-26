@@ -1,14 +1,14 @@
 import { z } from "zod";
+import { imageSchema } from "../image.schema";
 import {
   abstractSchema,
+  createEmailField,
+  createMongooseObjectId,
+  createNoWhitespaceString,
+  createPositiveIntegerField,
   createValidStringField,
-  emailSchema,
-  objectIdValidator,
-  noSpacesAndOnlyDotSchema,
   phoneNumberSchema,
-  mongooseObjectId,
-} from "../abstract.validation";
-import { imageSchema } from "../image.schema";
+} from "../../utils/zod.utils";
 
 const firstNameField = createValidStringField({
   fieldName: "First Name",
@@ -23,27 +23,26 @@ const biographyField = createValidStringField({
 }).optional();
 
 export const userInputSchema = z.object({
-  username: noSpacesAndOnlyDotSchema,
-  email: emailSchema,
+  username: createNoWhitespaceString("Username", 25),
+  email: createEmailField(),
   firstName: firstNameField,
   lastName: lastNameField,
   bio: biographyField,
-  phoneNumber: phoneNumberSchema.optional(),
+  phoneNumber: phoneNumberSchema().optional(),
 });
 
 export const cartItem = z.object({
-  quantity: z
-    .number()
+  productId: createMongooseObjectId(),
+  sellerId: createMongooseObjectId(),
+  quantity: createPositiveIntegerField({ fieldName: "quantity" })
     .min(1, { message: "Quantity cannot be less than 1" })
     .default(1),
-  productId: mongooseObjectId,
-  price: z.number().optional(), // Optional price
-  sellerId: mongooseObjectId,
+  price: z.number().optional(),
 });
 
 export const userCartSchema = z.object({
   items: z.array(cartItem).default([]),
-  totalPrice: z.number().default(0),
+  totalPrice: z.number().positive().default(0),
 });
 
 export const userRoleSchema = z.enum(["user", "admin"]);
@@ -51,13 +50,12 @@ export const userRoleSchema = z.enum(["user", "admin"]);
 export const userSchema = userInputSchema.extend({
   isSeller: z.boolean(),
   role: userRoleSchema,
-  lastLogin: z.date().optional(),
-  savedProducts: z.array(objectIdValidator).optional(),
-  whislist: z.array(objectIdValidator).optional(),
+  lastLogin: z.date(),
+  whislist: z.array(createMongooseObjectId()).optional(),
   hasConfirmedEmail: z.boolean().default(false),
   avatar: imageSchema,
   password: z.string().optional(),
   googleId: z.string().optional(),
 });
 
-export const userSchemaComplete = abstractSchema.merge(userSchema);
+export const userSchemaComplete = abstractSchema().merge(userSchema);

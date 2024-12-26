@@ -1,21 +1,21 @@
 import { z } from "zod";
 import {
   abstractSchema,
-  authorObjIdSchema,
+  authorSchema,
+  createNoWhitespaceString,
   createValidStringField,
-  noSpacesAndOnlyDotSchema,
-} from "./abstract.validation";
+} from "../utils/zod.utils";
 
 const categoryDescriptionField = createValidStringField({
   fieldName: "Category Description",
-  maxLength: 100,
+  maxLength: 200,
 });
 
 export const categoryInputSchema = z.object({
-  name: noSpacesAndOnlyDotSchema,
+  name: createNoWhitespaceString("Category Name", 50),
   description: categoryDescriptionField.optional(),
 });
 
-export const categorySchema = abstractSchema
+export const categorySchema = abstractSchema()
   .merge(categoryInputSchema)
-  .merge(authorObjIdSchema);
+  .merge(authorSchema());

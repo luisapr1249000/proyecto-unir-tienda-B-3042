@@ -1,18 +1,27 @@
 import { z } from "zod";
-import { emailSchema, noSpacesAndOnlyDotSchema } from "./abstract.validation";
+import {
+  createBasicString,
+  createEmailField,
+  createNoWhitespaceString,
+  createPasswordSchema,
+} from "../utils/zod.utils";
 
-const passwordValidaton = z.string().min(8, "Password required");
-
-export const signupSchema = z.object({
-  username: noSpacesAndOnlyDotSchema,
-  email: emailSchema,
-  password: passwordValidaton,
-});
+export const signupSchema = z
+  .object({
+    username: createNoWhitespaceString("Username", 25),
+    email: createEmailField(),
+    password: createPasswordSchema(),
+    confirmPassword: z.string().min(1, "Confirmation password is required"),
+  })
+  .refine(({ password, confirmPassword }) => password === confirmPassword, {
+    path: ["confirmPassword"],
+    message: "Passwords do not match",
+  });
 
 export const loginSchema = z.object({
   rememberMe: z.coerce.boolean().optional(),
-  loginValue: noSpacesAndOnlyDotSchema,
-  password: passwordValidaton,
+  loginValue: createNoWhitespaceString("Username or Email", 100),
+  password: z.string().min(1, "Password is required"),
 });
 
 export const jwtSchema = z.object({
@@ -22,15 +31,14 @@ export const jwtSchema = z.object({
 
 export const passwordChangeSchema = z
   .object({
-    currentPassword: z.string().min(1, "Current password is required"),
-    newPassword: z
-      .string()
-      .min(8, "Password must be at least 8 characters long"),
-    // .regex(/[A-Z]/, "Password must include at least one uppercase letter")
-    // .regex(/[0-9]/, "Password must include at least one number"),
+    currentPassword: createBasicString().min(1, "Current password is required"),
+    newPassword: createPasswordSchema(),
     confirmPassword: z.string().min(1, "Confirmation password is required"),
   })
-  .refine((data) => data.newPassword === data.confirmPassword, {
-    path: ["confirmPassword"], // This specifies the field that will receive the error
-    message: "Passwords must match",
-  });
+  .refine(
+    ({ newPassword, confirmPassword }) => newPassword === confirmPassword,
+    {
+      path: ["confirmPassword"],
+      message: "Passwords do not match",
+    },
+  );

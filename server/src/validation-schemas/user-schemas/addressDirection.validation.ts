@@ -1,10 +1,15 @@
 import { z } from "zod";
 import {
   abstractSchema,
-  authorObjIdSchema,
   createValidStringField,
   phoneNumberSchema,
-} from "../abstract.validation";
+} from "../../utils/zod.utils";
+// import {
+//   abstractSchema,
+//   authorObjIdSchema,
+//   createValidStringField,
+//   phoneNumberSchema,
+// } from "../abstract.validation";
 
 export const pinCodeField = createValidStringField({
   fieldName: "pin Code",
@@ -39,7 +44,7 @@ export const landmarkField = createValidStringField({
 });
 
 export const addressDirectionInputSchema = z.object({
-  mobileNumber: phoneNumberSchema.optional(),
+  mobileNumber: phoneNumberSchema().optional(),
   pinCode: pinCodeField,
   locality: localityField,
   addressLine1: addressLine1Field,
@@ -47,10 +52,10 @@ export const addressDirectionInputSchema = z.object({
   cityDistrictTown: cityDistrictTownField,
   state: stateField,
   landmark: landmarkField,
-  alternatePhone: phoneNumberSchema.optional(),
+  alternatePhone: phoneNumberSchema().optional(),
   addressType: z.enum(["home", "work"]),
 });
 
-export const addressDirectionSchema = abstractSchema
-  .merge(addressDirectionInputSchema)
-  .merge(authorObjIdSchema);
+export const addressDirectionSchema = abstractSchema().merge(
+  addressDirectionInputSchema,
+);

@@ -1,18 +1,14 @@
 import { z } from "zod";
-import {
-  abstractSchema,
-  mongooseObjectId,
-  objectIdValidator,
-} from "./abstract.validation";
+import { abstractSchema, createMongooseObjectId } from "../utils/zod.utils";
 
 export const orderItemInputSchema = z.object({
   quantity: z.coerce.number(),
   price: z.coerce.number(),
-  product: mongooseObjectId,
-  seller: mongooseObjectId,
+  product: createMongooseObjectId(),
+  seller: createMongooseObjectId(),
 });
 
-export const orderItemSchema = abstractSchema.merge(orderItemInputSchema);
+export const orderItemSchema = abstractSchema().merge(orderItemInputSchema);
 
 export const orderInputSchema = z.object({
   totalPrice: z.coerce.number(),
@@ -20,12 +16,12 @@ export const orderInputSchema = z.object({
 });
 
 export const orderSchema = z.object({
-  customId: objectIdValidator,
+  customId: createMongooseObjectId(),
   status: z
     .enum(["pending", "processing", "shipped", "delivered"])
     .default("pending"),
 });
 
-export const orderSchemaComplete = abstractSchema
+export const orderSchemaComplete = abstractSchema()
   .merge(orderSchema)
   .merge(orderInputSchema);

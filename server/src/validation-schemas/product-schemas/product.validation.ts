@@ -1,14 +1,15 @@
 import { z } from "zod";
-import {
-  abstractSchema,
-  authorObjIdSchema,
-  createNonNegativeNumberField,
-  createValidStringField,
-  objectIdValidator,
-} from "../abstract.validation";
+
 import { specificationsSchema } from "./productSpecifications.validation";
 import { imageSchema } from "../image.schema";
 import { userQuestionSchema } from "./product.user.question.validation";
+import {
+  abstractSchema,
+  authorSchema,
+  createMongooseObjectId,
+  createPositiveIntegerField,
+  createValidStringField,
+} from "../../utils/zod.utils";
 
 // -------------------------------------------------------
 const productNameField = createValidStringField({
@@ -20,13 +21,13 @@ const productDescriptionField = createValidStringField({
   maxLength: 500,
 });
 
-const quantityField = createNonNegativeNumberField({ fieldName: "Quantity" });
+const quantityField = createPositiveIntegerField({ fieldName: "Quantity" });
 
 export const productInputSchema = z.object({
   name: productNameField,
   description: productDescriptionField,
   categories: z
-    .array(objectIdValidator)
+    .array(createMongooseObjectId())
     .refine((items) => new Set(items).size === items.length, {
       message: "All categories must be unique",
     }),
@@ -40,18 +41,18 @@ export const productInputSchema = z.object({
   discount: z.coerce.number().nonnegative().multipleOf(0.01).optional(),
 });
 
-const likesField = createNonNegativeNumberField({ fieldName: "Likes" });
-const dislikesField = createNonNegativeNumberField({ fieldName: "Dislikes" });
-const wishlistCountField = createNonNegativeNumberField({
+const likesField = createPositiveIntegerField({ fieldName: "Likes" });
+const dislikesField = createPositiveIntegerField({ fieldName: "Dislikes" });
+const wishlistCountField = createPositiveIntegerField({
   fieldName: "Wishlist Count",
 });
-const commentCountField = createNonNegativeNumberField({
+const commentCountField = createPositiveIntegerField({
   fieldName: "Comment Count",
 });
-const averageReviewField = createNonNegativeNumberField({
+const averageReviewField = createPositiveIntegerField({
   fieldName: "Avaregate Review",
 });
-const viewCountField = createNonNegativeNumberField({
+const viewCountField = createPositiveIntegerField({
   fieldName: "View Count",
 });
 
@@ -66,9 +67,9 @@ export const otherProps = z.object({
   finalPrice: z.number().nonnegative().multipleOf(0.01),
 });
 
-export const productSchema = abstractSchema
+export const productSchema = abstractSchema()
   .merge(productInputSchema)
-  .merge(authorObjIdSchema)
+  .merge(authorSchema())
   .merge(otherProps);
 
 export const reactionSchema = z.object({

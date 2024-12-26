@@ -1,9 +1,9 @@
 import { z } from "zod";
-import { abstractSchema, objectIdValidator } from "./abstract.validation";
+import { abstractSchema, createMongooseObjectId } from "../utils/zod.utils";
 
 export const commonProperties = z.object({
-  reportedPost: objectIdValidator,
-  reporter: objectIdValidator,
+  reportedPost: createMongooseObjectId(),
+  reporter: createMongooseObjectId(),
 });
 
 // Input schema
@@ -17,7 +17,7 @@ export const resolutionInputSchema = z.object({
   resolved: z.boolean().default(false),
 });
 
-export const productReportSchema = abstractSchema
+export const productReportSchema = abstractSchema()
   .merge(reportInputSchema)
   .merge(resolutionInputSchema)
   .merge(commonProperties);

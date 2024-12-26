@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { createNonNegativeNumberField } from "./abstract.validation";
+import { createPositiveIntegerField } from "../utils/zod.utils";
 
 export const usernameParamSchema = z.object({
   username: z.string().min(1),
@@ -7,8 +7,8 @@ export const usernameParamSchema = z.object({
 
 export const sortSchema = z.coerce.string().min(1).default("-createdAt");
 
-const pageField = createNonNegativeNumberField({ fieldName: "page" });
-const limitField = createNonNegativeNumberField({ fieldName: "limit" });
+const pageField = createPositiveIntegerField({ fieldName: "page" });
+const limitField = createPositiveIntegerField({ fieldName: "limit" });
 
 export const paginationCoerceSchema = z.object({
   page: pageField.min(1).default(1),

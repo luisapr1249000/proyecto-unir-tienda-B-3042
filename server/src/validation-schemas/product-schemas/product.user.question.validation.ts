@@ -1,9 +1,9 @@
 import { z } from "zod";
 import {
   abstractSchema,
+  createMongooseObjectId,
   createValidStringField,
-  objectIdValidator,
-} from "../abstract.validation";
+} from "../../utils/zod.utils";
 
 const userQuestionInputField = createValidStringField({
   fieldName: "User Question Content",
@@ -21,11 +21,11 @@ export const userQuestionInputAnswerSchema = z.object({
   answer: userQuestionInputAnswerField,
 });
 export const userQuestionOtherValues = z.object({
-  user: objectIdValidator,
+  user: createMongooseObjectId(),
   isAnswered: z.boolean().default(false),
 });
 
-export const userQuestionSchema = abstractSchema
+export const userQuestionSchema = abstractSchema()
   .merge(userQuestionInputSchema)
   .merge(userQuestionInputAnswerSchema)
   .merge(userQuestionOtherValues);

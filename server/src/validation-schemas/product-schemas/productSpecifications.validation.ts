@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { createValidStringField } from "../abstract.validation";
+import { createValidStringField } from "../../utils/zod.utils";
 
 const specificationsWidth = createValidStringField({
   fieldName: "specification width",
@@ -17,6 +17,7 @@ const specificationsHeight = createValidStringField({
 
 const specificationMaterial = createValidStringField({ fieldName: "material" });
 const specificationFinish = createValidStringField({ fieldName: "finish" });
+
 export const specificationsSchema = z.object({
   dimensions: z
     .object({
