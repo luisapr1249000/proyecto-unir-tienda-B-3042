@@ -3,11 +3,10 @@ import app from "../../app";
 import { disconnectDB, setUpDBForTest } from "../db/setUpDB";
 import { loginAndGetCookies } from "../helpers/auth.helper";
 import {
-  createEndpoint,
   NON_EXISTED_OBJECT_ID,
   NON_VALID_OBJECT_ID,
 } from "../constants/constants";
-import { createUserFixture } from "../../__fixtures__/user.fixture";
+import { createEndpoint } from "../helpers/endpoints.helper";
 
 describe("User Routes", () => {
   let userId = "";
@@ -127,7 +126,7 @@ describe("User Routes", () => {
       NON_EXISTED_OBJECT_ID,
     );
 
-    it("should retrieve user successfully by ID", async () => {
+    it("should return 200 and retrieve user successfully by ID", async () => {
       const response = await request(app).get(userIdEnpoint);
 
       expect(response.status).toBe(200);
@@ -155,15 +154,14 @@ describe("User Routes", () => {
     const usernameEndpoint = createEndpoint("users", username);
     const nonexistedUsernameEndpoint = createEndpoint("users", "__fw");
 
-    it("should retrieve user successfully by username", async () => {
+    it("should return 200 and retrieve user successfully by username", async () => {
       const response = await request(app).get(usernameEndpoint);
 
       expect(response.status).toBe(200);
     });
 
     it("should return 404 if user does not exist", async () => {
-      const nonExistentUsername = "nonExistentUser123";
-      const response = await request(app).get(nonExistentUsername);
+      const response = await request(app).get(nonexistedUsernameEndpoint);
 
       expect(response.status).toBe(404);
       expect(response.body.message).toBe("User not found");
@@ -174,7 +172,7 @@ describe("User Routes", () => {
     const userEndpointQuery = (page: number | string) =>
       `${userEndpoint}/?page=${page}`;
 
-    it("should retrieve paginated list of users", async () => {
+    it("should return 200 and retrieve paginated list of users", async () => {
       const response = await request(app).get(userEndpoint);
 
       expect(response.status).toBe(200);

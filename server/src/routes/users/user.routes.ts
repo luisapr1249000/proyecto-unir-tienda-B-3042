@@ -1,21 +1,21 @@
 import { Router } from "express";
-import userController from "../controllers/user.controller";
+import userController from "../../controllers/users/user.controller";
 import {
   authMiddleware,
   isAdmin,
   verifyUserOwnershipOrAdminRole,
-} from "../middlewares/auth.middleware";
+} from "../../middlewares/auth.middleware";
 import {
   validateObjectIdParams,
   validateSchemaBody,
   validPagination,
   validUsername,
-} from "../middlewares/requestValidation.middleware";
+} from "../../middlewares/requestValidation.middleware";
 import {
   userInputSchema,
   userRoleSchema,
-} from "../validation-schemas/user-schemas/user.validation";
-import { USER_ID } from "../constants";
+} from "../../validation-schemas/user-schemas/user.validation";
+import { USER_ID } from "../../constants";
 
 const router = Router();
 

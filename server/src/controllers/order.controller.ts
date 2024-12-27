@@ -14,15 +14,20 @@ class OrderController {
     try {
       const authUserId = extractAuthUserId(req);
       const { totalPrice, items } = req.body;
+      let totalPriceCalculated = 0;
       const orderItems: OrderItemInput[] = [];
       for (const item of items) {
         const product = await Product.findById(item.productId).session(session);
         if (!product) {
-          throw new Error(`Product with ID ${item.productId} not found`);
+          return res.status(400).json({
+            message: `Product with ID ${item.productId} not found`,
+          });
         }
 
         if (product.quantity < item.quantity) {
-          throw new Error(`Insufficient quantity for product: ${product.name}`);
+          return res.status(400).json({
+            message: `Insufficient quantity for product: ${product.name}`,
+          });
         }
 
         const order: OrderItemInput = {
@@ -31,10 +36,16 @@ class OrderController {
           quantity: item.quantity,
           seller: product.author,
         };
+        totalPriceCalculated += order.price * order.quantity;
         product.quantity -= item.quantity;
         await product.save({ session });
 
         orderItems.push(order);
+      }
+      if (totalPriceCalculated.toFixed(2) !== totalPrice.toFixed(2)) {
+        return res.status(400).json({
+          message: "Total price does not match the total price of the items",
+        });
       }
       const order = new Order({
         customerId: authUserId,
@@ -110,6 +121,56 @@ class OrderController {
         return handleObjectNotFound(res, "Order");
       }
       return res.status(200).json(orders);
+    } catch (e) {
+      return handleError(res, e);
+    }
+  }
+
+  // -------------------------------- orderItem ------------------
+  public async updateOrderItem(req: Request, res: Response) {
+    try {
+      const { orderId } = req.params;
+      const { orderItemId } = req.params;
+      const { quantity, price } = req.body;
+
+      const order = await Order.findById(orderId);
+      if (!order) {
+        return handleObjectNotFound(res, "Order");
+      }
+
+      const itemToUpdate = order.orderItems.id(orderItemId);
+      if (!itemToUpdate) {
+        return handleObjectNotFound(res, "Order");
+      }
+
+      if (quantity !== undefined) itemToUpdate.quantity = quantity;
+      if (price !== undefined) itemToUpdate.price = price;
+
+      await order.save();
+      res.status(200).json(order);
+    } catch (e) {
+      return handleError(res, e);
+    }
+  }
+
+  public async deleteOrderItem(req: Request, res: Response) {
+    try {
+      const { orderId } = req.params;
+      const { orderItemId } = req.params;
+
+      const order = await Order.findById(orderId);
+      if (!order) {
+        return handleObjectNotFound(res, "Order");
+      }
+
+      const itemToDelete = order.orderItems.id(orderItemId);
+      if (!itemToDelete) {
+        return handleObjectNotFound(res, "Order");
+      }
+
+      itemToDelete.deleteOne();
+      await order.save();
+      res.status(200).json(order);
     } catch (e) {
       return handleError(res, e);
     }

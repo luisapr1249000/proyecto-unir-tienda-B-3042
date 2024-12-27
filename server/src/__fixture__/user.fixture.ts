@@ -29,10 +29,7 @@ export const generateUserDataInputFixture = () => {
   };
 };
 
-export const createUserFixture = async (
-  isAdmin = false,
-  hasAddresDirection = false,
-) => {
+export const createUserFixture = async (isAdmin = false) => {
   const authInfo = generateUserFixture();
   const user = new User({
     ...authInfo,
@@ -43,7 +40,7 @@ export const createUserFixture = async (
     cart: [],
     isSeller: faker.datatype.boolean(),
     role: isAdmin ? "admin" : faker.helpers.arrayElement(["user", "admin"]),
-    addressDirections: hasAddresDirection ?? createAddressFixture(),
+    addressDirections: createAddressFixture(),
   });
   await user.save();
   return { user, password: authInfo.password };

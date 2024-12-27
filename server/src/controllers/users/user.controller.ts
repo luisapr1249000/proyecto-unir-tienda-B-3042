@@ -1,7 +1,7 @@
-import { User } from "../models/user.model";
+import { User } from "../../models/user.model";
 import { Request, Response } from "express";
-import { extractAuthUserId } from "../utils/auth.utils";
-import { handleError, handleObjectNotFound } from "../utils/error.utils";
+import { extractAuthUserId } from "../../utils/auth.utils";
+import { handleError, handleObjectNotFound } from "../../utils/error.utils";
 
 class UserController {
   public async updateUser(req: Request, res: Response) {

@@ -30,7 +30,7 @@ class ProductQuestionController {
 
   public async updateUserQuestion(req: Request, res: Response) {
     try {
-      // const userAuth = extractAuthUserId(req);
+      const userAuth = extractAuthUserId(req);
       const { questionContent } = req.body;
       const { productId, userQuestionId } = req.params;
       const product =
@@ -39,6 +39,9 @@ class ProductQuestionController {
 
       const productQuestion = product.userQuestions.id(userQuestionId);
       if (!productQuestion) return handleObjectNotFound(res, "Product");
+
+      if (productQuestion.user.toString() !== userAuth)
+        return handleObjectNotFound(res, "Product");
 
       productQuestion.content = questionContent;
 
@@ -52,7 +55,6 @@ class ProductQuestionController {
 
   public async createAnswerForQuestion(req: Request, res: Response) {
     try {
-      // const userAuth = extractAuthUserId(req);
       const { answerContent } = req.body;
       const { productId, userQuestionId } = req.params;
       const query = { _id: productId };

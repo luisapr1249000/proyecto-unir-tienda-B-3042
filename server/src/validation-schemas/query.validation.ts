@@ -1,33 +1,48 @@
 import { z } from "zod";
-import { createPositiveIntegerField } from "../utils/zod.utils";
+import {
+  createPositiveIntegerField,
+  createPostiveNumberField,
+  createValidStringField,
+} from "../utils/zod.utils";
 
 export const usernameParamSchema = z.object({
   username: z.string().min(1),
 });
 
-export const sortSchema = z.coerce.string().min(1).default("-createdAt");
+export const sortSchema = createValidStringField({
+  fieldName: "sort",
+  maxLength: 30,
+});
 
 const pageField = createPositiveIntegerField({ fieldName: "page" });
-const limitField = createPositiveIntegerField({ fieldName: "limit" });
+const limitField = createPositiveIntegerField({
+  fieldName: "limit",
+  minValue: 10,
+});
 
 export const paginationCoerceSchema = z.object({
-  page: pageField.min(1).default(1),
-  limit: limitField.min(10).default(10),
+  page: pageField,
+  limit: limitField,
   sort: sortSchema,
 });
 
-export const searchSchema = paginationCoerceSchema.extend({
-  searchQuery: z.string().min(1, "Search required"),
-  isPost: z.coerce.boolean().optional(),
-  isComment: z.coerce.boolean().optional(),
+const minPriceField = createPostiveNumberField({
+  fieldName: "minPrice",
+  multipleOf: 0.01,
 });
-
 export const productPriceSortSchema = z
   .object({
-    minPrice: z.coerce.number().min(1).default(1),
-    maxPrice: z.coerce.number().nonnegative().default(Infinity),
+    minPrice: minPriceField.optional(),
+    maxPrice: z.coerce.number().nonnegative().optional(),
   })
-  .refine((data) => data.minPrice <= data.maxPrice, {
-    message: "minPrice must be less than or equal to maxPrice",
-    path: ["minPrice"],
-  });
+  .refine(
+    (data) => {
+      return data.minPrice && data.maxPrice
+        ? data.minPrice <= data.maxPrice
+        : true;
+    },
+    {
+      message: "minPrice must be less than or equal to maxPrice",
+      path: ["minPrice"],
+    },
+  );

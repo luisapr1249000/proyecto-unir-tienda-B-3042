@@ -4,12 +4,6 @@ import {
   createValidStringField,
   phoneNumberSchema,
 } from "../../utils/zod.utils";
-// import {
-//   abstractSchema,
-//   authorObjIdSchema,
-//   createValidStringField,
-//   phoneNumberSchema,
-// } from "../abstract.validation";
 
 export const pinCodeField = createValidStringField({
   fieldName: "pin Code",

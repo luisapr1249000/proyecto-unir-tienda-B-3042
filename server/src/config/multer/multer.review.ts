@@ -12,7 +12,7 @@ import { env } from "../envConfig";
 const s3ReviewStorage = multer({
   storage: multerS3({
     s3: s3,
-    bucket: env.AWS_S3_BUCKET_NAME as string,
+    bucket: env.AWS_S3_BUCKET_NAME,
     metadata: (_req, file, cb) => {
       cb(null, { fieldname: file.fieldname });
     },

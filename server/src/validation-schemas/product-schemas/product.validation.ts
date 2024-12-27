@@ -8,6 +8,7 @@ import {
   authorSchema,
   createMongooseObjectId,
   createPositiveIntegerField,
+  createPostiveNumberField,
   createValidStringField,
 } from "../../utils/zod.utils";
 
@@ -22,6 +23,20 @@ const productDescriptionField = createValidStringField({
 });
 
 const quantityField = createPositiveIntegerField({ fieldName: "Quantity" });
+const priceField = createPostiveNumberField({
+  fieldName: "Price",
+  multipleOf: 0.01,
+});
+
+const discountField = createPostiveNumberField({
+  fieldName: "Discount",
+  multipleOf: 0.01,
+});
+
+const finalPriceField = createPostiveNumberField({
+  fieldName: "Final Price",
+  multipleOf: 0.01,
+});
 
 export const productInputSchema = z.object({
   name: productNameField,
@@ -31,14 +46,11 @@ export const productInputSchema = z.object({
     .refine((items) => new Set(items).size === items.length, {
       message: "All categories must be unique",
     }),
-  price: z.coerce
-    .number()
-    .nonnegative("The Price must be positive")
-    .multipleOf(0.01),
+  price: priceField,
   quantity: quantityField,
-  images: z.array(imageSchema).default([]),
-  specifications: specificationsSchema.default({}),
-  discount: z.coerce.number().nonnegative().multipleOf(0.01).optional(),
+  images: z.array(imageSchema),
+  specifications: specificationsSchema,
+  discount: discountField,
 });
 
 const likesField = createPositiveIntegerField({ fieldName: "Likes" });
@@ -64,7 +76,7 @@ export const otherProps = z.object({
   averageReview: averageReviewField,
   viewCount: viewCountField,
   userQuestions: z.array(userQuestionSchema),
-  finalPrice: z.number().nonnegative().multipleOf(0.01),
+  finalPrice: finalPriceField,
 });
 
 export const productSchema = abstractSchema()

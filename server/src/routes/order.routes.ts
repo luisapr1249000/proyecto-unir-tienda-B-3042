@@ -6,7 +6,6 @@ import {
   verifyUserOwnershipOrAdminRole,
 } from "../middlewares/auth.middleware";
 import orderController from "../controllers/order.controller";
-import orderItemController from "../controllers/orderItem.controller";
 import {
   validateObjectIdParams,
   validateSchemaBody,
@@ -47,20 +46,21 @@ router.delete(
   orderController.deleteOrder,
 );
 
+// -------------------------------- orderItem ------------------
 router.put(
   "/orders/:orderId/orderItem/:orderItem",
   authMiddleware,
   isAdmin,
   validateObjectIdParams(["orderId", "orderItemId"]),
   validateSchemaBody(orderItemInputSchema),
-  orderItemController.updateOrderItem,
+  orderController.updateOrderItem,
 );
 router.delete(
   "/orders/:orderId/orderItem/:orderItem",
   authMiddleware,
   validateObjectIdParams(["orderId", "orderItemId"]),
   isAdmin,
-  orderItemController.deleteOrderItem,
+  orderController.deleteOrderItem,
 );
 
 export { router as OrderRoutes };

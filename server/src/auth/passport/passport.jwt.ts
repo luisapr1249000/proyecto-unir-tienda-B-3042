@@ -7,7 +7,7 @@ const key = env.ACCESS_TOKEN_SECRET;
 
 const cookieExtractor = (req: Request) => {
   if (req && req.cookies) {
-    return req.cookies["accessToken"] || null;
+    return req.cookies["accessToken"] ?? null;
   }
   return null;
 };

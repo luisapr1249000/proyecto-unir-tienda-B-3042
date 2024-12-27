@@ -94,5 +94,5 @@ export const getOrCreateProduct = async () => {
     product = await createProductFixture();
   }
 
-  return product._id.toString();
+  return product;
 };

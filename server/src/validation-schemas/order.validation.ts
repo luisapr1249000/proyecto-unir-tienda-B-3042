@@ -1,9 +1,24 @@
 import { z } from "zod";
-import { abstractSchema, createMongooseObjectId } from "../utils/zod.utils";
+import {
+  abstractSchema,
+  createMongooseObjectId,
+  createPositiveIntegerField,
+  createPostiveNumberField,
+} from "../utils/zod.utils";
+
+const quantityField = createPositiveIntegerField({ fieldName: "quantity" });
+const priceField = createPostiveNumberField({
+  fieldName: "price",
+  multipleOf: 0.01,
+});
+const finalPriceField = createPostiveNumberField({
+  fieldName: "finalPrice",
+  multipleOf: 0.01,
+});
 
 export const orderItemInputSchema = z.object({
-  quantity: z.coerce.number(),
-  price: z.coerce.number(),
+  quantity: quantityField,
+  price: priceField,
   product: createMongooseObjectId(),
   seller: createMongooseObjectId(),
 });
@@ -11,17 +26,17 @@ export const orderItemInputSchema = z.object({
 export const orderItemSchema = abstractSchema().merge(orderItemInputSchema);
 
 export const orderInputSchema = z.object({
-  totalPrice: z.coerce.number(),
+  finalPrice: finalPriceField,
   orderItems: z.array(orderItemSchema),
 });
 
-export const orderSchema = z.object({
-  customId: createMongooseObjectId(),
+export const orderPropsSchema = z.object({
+  customer: createMongooseObjectId(),
   status: z
     .enum(["pending", "processing", "shipped", "delivered"])
     .default("pending"),
 });
 
-export const orderSchemaComplete = abstractSchema()
-  .merge(orderSchema)
+export const orderSchema = abstractSchema()
+  .merge(orderPropsSchema)
   .merge(orderInputSchema);

@@ -30,7 +30,8 @@ export const abstractSchema = () =>
 
 export const createBasicString = () => z.string().trim();
 
-export const createBasicNumber = () => z.coerce.number().finite();
+export const createBasicNumber = () =>
+  z.coerce.number().finite("Value must be a finite number");
 
 export const createValidStringField = ({
   fieldName,
@@ -52,16 +53,24 @@ export const createPostiveNumberField = ({
   fieldName,
   minValue = 1,
   maxValue,
+  multipleOf,
 }: {
   fieldName: string;
-  minValue: number;
+  minValue?: number;
   maxValue?: number;
+  multipleOf?: number;
 }) => {
   let field = createBasicNumber()
     .min(minValue, `${fieldName} must be at least ${minValue}`)
     .nonnegative("Value must be a positive number");
   if (maxValue) {
     field = field.max(maxValue);
+  }
+  if (multipleOf) {
+    field = field.multipleOf(
+      multipleOf,
+      'Just enter a number with two decimal places, for example "10.00"',
+    );
   }
   return field;
 };

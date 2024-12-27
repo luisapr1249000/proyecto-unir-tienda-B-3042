@@ -19,7 +19,7 @@ const envSchema = z.object({
   AWS_S3_BUCKET_REGION: z.string().min(1),
   AWS_S3_BUCKET_NAME: z.string().min(1),
 
-  EMAIL_STMP_HOST: z.string().min(1),
+  EMAIL_SMTP_HOST: z.string().min(1),
   EMAIL_SMTP_PORT: z.string().min(1),
   EMAIL_USERNAME: z.string().min(1),
   EMAIL_PASSWORD: z.string().min(1),

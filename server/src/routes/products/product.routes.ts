@@ -1,19 +1,19 @@
 import { Router } from "express";
-import productController from "../controllers/product.controller";
+import productController from "../../controllers/products/product.controller";
 import {
   authMiddleware,
   optionalAuth,
   verifyUserOwnershipOrAdminRole,
-} from "../middlewares/auth.middleware";
+} from "../../middlewares/auth.middleware";
 import {
   validateObjectIdParams,
   validatePriceQuery,
   validateSchemaBody,
   validPagination,
-} from "../middlewares/requestValidation.middleware";
-import { productInputSchema } from "../validation-schemas/product-schemas/product.validation";
-import { uploadImageProduct } from "../config/multer/multer.product";
-import { CATEGORY_ID, PRODUCT_ID, USER_ID } from "../constants";
+} from "../../middlewares/requestValidation.middleware";
+import { productInputSchema } from "../../validation-schemas/product-schemas/product.validation";
+import { uploadImageProduct } from "../../config/multer/multer.product";
+import { CATEGORY_ID, PRODUCT_ID, USER_ID } from "../../constants";
 
 const router = Router();
 router.get("/products/search-product", productController.searchProducts);

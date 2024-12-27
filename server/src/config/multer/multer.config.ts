@@ -7,10 +7,10 @@ import {
 import { env } from "../envConfig";
 
 export const s3 = new S3Client({
-  region: env.AWS_S3_BUCKET_REGION as string,
+  region: env.AWS_S3_BUCKET_REGION,
   credentials: {
-    accessKeyId: env.AWS_ACCESS_KEY_ID as string,
-    secretAccessKey: env.AWS_SECRET_ACCESS_KEY as string,
+    accessKeyId: env.AWS_ACCESS_KEY_ID,
+    secretAccessKey: env.AWS_SECRET_ACCESS_KEY,
   },
 });
 

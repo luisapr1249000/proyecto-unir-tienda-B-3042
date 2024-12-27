@@ -1,19 +1,19 @@
 import { Request, Response } from "express";
-import { extractAuthUserId } from "../utils/auth.utils";
+import { extractAuthUserId } from "../../utils/auth.utils";
 import {
   handleBadSaved,
   handleError,
   handleObjectNotFound,
-} from "../utils/error.utils";
-import { Product } from "../models/product.model";
-import ViewedProduct from "../models/viewedProduct.model";
-import { hasNotViewedRecently } from "../utils/product.utils";
-import { Image } from "../types/image";
-import { getDefaultPaginationOptions } from "../utils/query.utils";
+} from "../../utils/error.utils";
+import { Product } from "../../models/product.model";
+import ViewedProduct from "../../models/viewedProduct.model";
+import { hasNotViewedRecently } from "../../utils/product.utils";
+import { Image } from "../../types/image";
+import { getDefaultPaginationOptions } from "../../utils/query.utils";
 import {
   deleteS3Objects,
   deleteSingleS3Object,
-} from "../config/multer/multer.config";
+} from "../../config/multer/multer.config";
 
 class ProductController {
   public async createProduct(req: Request, res: Response) {
@@ -142,7 +142,7 @@ class ProductController {
       };
       const productQuery = { finalPrice: { $gte: minPrice, $lte: maxPrice } };
       const products = await Product.paginate(productQuery, paginationOptions);
-      if (products.docs.length === 0)
+      if (!products || products.docs.length === 0)
         return handleObjectNotFound(res, "Product", true);
 
       return res.status(200).json(products);

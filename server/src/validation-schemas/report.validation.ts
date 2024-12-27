@@ -1,5 +1,14 @@
 import { z } from "zod";
-import { abstractSchema, createMongooseObjectId } from "../utils/zod.utils";
+import {
+  abstractSchema,
+  createMongooseObjectId,
+  createValidStringField,
+} from "../utils/zod.utils";
+
+const problemDescriptionField = createValidStringField({
+  fieldName: "Problem Description",
+  maxLength: 200,
+});
 
 export const reportedTypeSchema = z.object({
   reportedType: z.enum(["product", "comment"]),
@@ -12,7 +21,7 @@ export const reportInputSchema = z.object({
     "Misleading Information",
     "Other",
   ]),
-  problemDescription: z.string().min(1).optional(),
+  problemDescription: problemDescriptionField.optional(),
 });
 
 export const reportProps = z.object({
