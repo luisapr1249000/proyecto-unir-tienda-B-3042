@@ -8,6 +8,7 @@ export const imageSchema = new Schema({
   url: String,
   contentType: String,
   size: String,
+  createdAt: { type: Date, default: Date.now },
 });
 
 const addressDirectionSchema = new Schema(
@@ -81,6 +82,7 @@ const userCartSchema = new Schema(
   {
     items: [cartItem],
     totalPrice: { type: Number, default: 0 },
+    totalItems: { type: Number, default: 0 },
   },
   { _id: false },
 );

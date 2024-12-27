@@ -7,6 +7,7 @@ import {
   validPagination,
 } from "../middlewares/requestValidation.middleware";
 import { categoryInputSchema } from "../validation-schemas/category.validation";
+import { CATEGORY_ID } from "../constants";
 
 const router = Router();
 router.get(
@@ -42,7 +43,7 @@ router.put(
   "/categories/:categoryId",
   authMiddleware,
   isAdmin,
-  validateObjectIdParams(["categoryId"]),
+  validateObjectIdParams(CATEGORY_ID),
   validateSchemaBody(categoryInputSchema),
   categoryController.updateCategory,
 );
@@ -50,7 +51,7 @@ router.delete(
   "/categories/:categoryId",
   authMiddleware,
   isAdmin,
-  validateObjectIdParams(["categoryId"]),
+  validateObjectIdParams(CATEGORY_ID),
   categoryController.deleteCategory,
 );
 

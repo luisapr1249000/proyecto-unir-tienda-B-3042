@@ -32,8 +32,8 @@ export const userInputSchema = z.object({
 });
 
 export const cartItem = z.object({
-  productId: createMongooseObjectId(),
-  sellerId: createMongooseObjectId(),
+  product: createMongooseObjectId(),
+  seller: createMongooseObjectId(),
   quantity: createPositiveIntegerField({ fieldName: "quantity" })
     .min(1, { message: "Quantity cannot be less than 1" })
     .default(1),
@@ -43,6 +43,7 @@ export const cartItem = z.object({
 export const userCartSchema = z.object({
   items: z.array(cartItem).default([]),
   totalPrice: z.number().positive().default(0),
+  totalItems: z.number().positive().default(0),
 });
 
 export const userRoleSchema = z.enum(["user", "admin"]);

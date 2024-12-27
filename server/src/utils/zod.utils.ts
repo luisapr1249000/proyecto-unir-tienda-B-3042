@@ -8,6 +8,14 @@ import {
 import { Types } from "mongoose";
 import validator from "validator";
 
+export const objectIdValidator = z
+  .string()
+  .min(1)
+  .refine((value) => Types.ObjectId.isValid(value), {
+    message: "Invalid ObjectId format",
+    path: ["value"],
+  });
+
 export const createMongooseObjectId = () =>
   z.instanceof(Types.ObjectId).refine((id) => Types.ObjectId.isValid(id), {
     message: "Invalid ObjectId format",

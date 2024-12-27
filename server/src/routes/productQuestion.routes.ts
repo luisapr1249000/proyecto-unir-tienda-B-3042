@@ -5,7 +5,7 @@ import {
   validateObjectIdParams,
   validateSchemaBody,
 } from "../middlewares/requestValidation.middleware";
-import { PRODUCT_ID } from "../constants";
+import { PRODUCT_ID, PRODUCT_ID_AND_QUESTION_ID } from "../constants";
 import {
   userQuestionInputAnswerSchema,
   userQuestionInputSchema,
@@ -23,7 +23,7 @@ router.post(
 
 router.put(
   "/products/:productId/questions/:userQuestionId/",
-  validateObjectIdParams([...PRODUCT_ID, "userQuestionId"]),
+  validateObjectIdParams(PRODUCT_ID_AND_QUESTION_ID),
   authMiddleware,
   validateSchemaBody(userQuestionInputSchema),
   productQuestiontController.updateUserQuestion,
@@ -31,7 +31,7 @@ router.put(
 
 router.put(
   "/products/:productId/questions/:userQuestionId/answer",
-  validateObjectIdParams([...PRODUCT_ID, "userQuestionId"]),
+  validateObjectIdParams(PRODUCT_ID_AND_QUESTION_ID),
   authMiddleware,
   validateSchemaBody(userQuestionInputAnswerSchema),
   productQuestiontController.createAnswerForQuestion,
@@ -39,7 +39,7 @@ router.put(
 
 router.delete(
   "/products/:productId/questions/:userQuestionId/",
-  validateObjectIdParams([...PRODUCT_ID, "userQuestionId"]),
+  validateObjectIdParams(PRODUCT_ID_AND_QUESTION_ID),
   authMiddleware,
   productQuestiontController.deleteUserQuestion,
 );

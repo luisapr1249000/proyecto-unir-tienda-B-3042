@@ -7,52 +7,60 @@ import {
 } from "../middlewares/auth.middleware";
 import {
   validateObjectIdParams,
-  validateReportType,
+  validateSchemaBody,
 } from "../middlewares/requestValidation.middleware";
+import { reportedTypeSchema } from "../validation-schemas/report.validation";
+import {
+  PRODUCT_ID,
+  REPORTED_ID,
+  REPORTED_OBJECT_ID,
+  REVIEW_ID,
+  USER_ID,
+} from "../constants";
 
 const router = Router();
 
 router.post(
   "/report/:objectId/:reportType",
   authMiddleware,
-  validateReportType,
-  validateObjectIdParams(["objectId"]),
+  validateSchemaBody(reportedTypeSchema),
+  validateObjectIdParams(REPORTED_OBJECT_ID),
   reportController.createReport,
 );
 router.get(
   "/report/:reportId",
-  validateObjectIdParams(["reportId"]),
+  validateObjectIdParams(REPORTED_ID),
   isAdmin,
   reportController.getReportById,
 );
 router.put(
   "/report/:reportId",
-  validateObjectIdParams(["reportId"]),
+  validateObjectIdParams(REPORTED_ID),
   authMiddleware,
   reportController.updateReport,
 );
 router.delete(
   "/report/:reportId",
-  validateObjectIdParams(["reportId"]),
+  validateObjectIdParams(REPORTED_ID),
   authMiddleware,
   reportController.deleteReport,
 );
 
 router.get(
   "/report/products/:productId",
-  validateObjectIdParams(["productId"]),
+  validateObjectIdParams(PRODUCT_ID),
   isAdmin,
   reportController.getReportsFromProduct,
 );
 router.get(
   "/report/reviews/:reviewId",
-  validateObjectIdParams(["reviewId"]),
+  validateObjectIdParams(REVIEW_ID),
   isAdmin,
   reportController.getReportsFromReview,
 );
 router.get(
   "/report/users/:userId",
-  validateObjectIdParams(["userId"]),
+  validateObjectIdParams(USER_ID),
   isUserOwnerOrAdmin,
   reportController.getReportsByUser,
 );

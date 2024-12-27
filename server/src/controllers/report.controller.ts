@@ -112,6 +112,36 @@ class Reportcontroller {
       return handleError(res, e);
     }
   }
+
+  public async getReportedReviews(_req: Request, res: Response) {
+    try {
+      const query = {
+        reportedReview: { $ne: null, $exists: true },
+      };
+      const reportedReviews = await Report.find(query);
+      if (!reportedReviews || reportedReviews.length === 0) {
+        return handleObjectNotFound(res, "Review");
+      }
+      return res.status(200).json(reportedReviews);
+    } catch (e) {
+      return handleError(res, e);
+    }
+  }
+
+  public async getReportedProducts(_req: Request, res: Response) {
+    try {
+      const query = {
+        reportedProduct: { $ne: null, $exists: true },
+      };
+      const reportedProducts = await Report.find(query);
+      if (!reportedProducts || reportedProducts.length === 0) {
+        return handleObjectNotFound(res, "Product");
+      }
+      return res.status(200).json(reportedProducts);
+    } catch (e) {
+      return handleError(res, e);
+    }
+  }
 }
 
 export default new Reportcontroller();

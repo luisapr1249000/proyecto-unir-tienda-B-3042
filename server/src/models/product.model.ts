@@ -70,7 +70,7 @@ export const productSchema = new Schema(
     likes: { type: Number, default: 0 },
     dislikes: { type: Number, default: 0 },
     wishlistCount: { type: Number, default: 0 },
-    commentCount: { type: Number, default: 0 },
+    reviewCount: { type: Number, default: 0 },
     userQuestions: { type: [userQuestionSchema], select: false },
     averageReview: { type: Number, default: 0 },
   },

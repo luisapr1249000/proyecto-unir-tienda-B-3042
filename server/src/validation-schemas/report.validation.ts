@@ -1,8 +1,8 @@
 import { z } from "zod";
 import { abstractSchema, createMongooseObjectId } from "../utils/zod.utils";
 
-export const reportTypeSchema = z.object({
-  reportType: z.enum(["product", "comment"]),
+export const reportedTypeSchema = z.object({
+  reportedType: z.enum(["product", "comment"]),
 });
 
 export const reportInputSchema = z.object({

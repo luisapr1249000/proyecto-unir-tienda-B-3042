@@ -17,7 +17,7 @@ class ReviewController {
       const data = { ...req.body, author: authUserId, product: productId };
       const review = new Review(data);
 
-      product.commentCount += 1;
+      product.reviewCount += 1;
       await review.save();
       product.averageReview = await getAverageReview(product._id.toString());
       product.save();
@@ -97,7 +97,7 @@ class ReviewController {
       });
       if (!review) return handleObjectNotFound(res, "Review");
 
-      product.commentCount -= 1;
+      product.reviewCount -= 1;
       product.averageReview = await getAverageReview(product._id.toString());
       product.save();
       return res.status(204).send();

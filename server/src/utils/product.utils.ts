@@ -30,13 +30,13 @@ export const getCommentCountFromProduct = (productId: string) =>
 export const createObjectId = (productId?: string) =>
   new Types.ObjectId(productId);
 
-export const getTotalProductCommentReviews = async (productId: string) => {
+export const getTotalReviewsFromProduct = async (productId: string) => {
   const reviews = await Review.find({ productId });
-  return reviews.map((comment) => comment.review);
+  return reviews.map((review) => review.review);
 };
 
 export const getAverageReview = async (productId: string) => {
-  const totalReviews = await getTotalProductCommentReviews(productId);
+  const totalReviews = await getTotalReviewsFromProduct(productId);
   const total = totalReviews.reduce(
     (accumulator, currentValue) => accumulator + currentValue,
     0,

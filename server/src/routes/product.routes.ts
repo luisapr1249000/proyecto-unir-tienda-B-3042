@@ -13,7 +13,7 @@ import {
 } from "../middlewares/requestValidation.middleware";
 import { productInputSchema } from "../validation-schemas/product-schemas/product.validation";
 import { uploadImageProduct } from "../config/multer/multer.product";
-import { PRODUCT_ID, USER_ID } from "../constants";
+import { CATEGORY_ID, PRODUCT_ID, USER_ID } from "../constants";
 
 const router = Router();
 router.get("/products/search-product", productController.searchProducts);
@@ -80,7 +80,7 @@ router.get(
   "/products/category/:categoryId",
   validatePriceQuery,
   validPagination,
-  validateObjectIdParams(["categoryId"]),
+  validateObjectIdParams(CATEGORY_ID),
   optionalAuth,
   productController.getProductsByCategoryWithPagination,
 );

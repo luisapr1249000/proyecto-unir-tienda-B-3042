@@ -46,8 +46,8 @@ const dislikesField = createPositiveIntegerField({ fieldName: "Dislikes" });
 const wishlistCountField = createPositiveIntegerField({
   fieldName: "Wishlist Count",
 });
-const commentCountField = createPositiveIntegerField({
-  fieldName: "Comment Count",
+const reviewCountField = createPositiveIntegerField({
+  fieldName: "review Count",
 });
 const averageReviewField = createPositiveIntegerField({
   fieldName: "Avaregate Review",
@@ -60,7 +60,7 @@ export const otherProps = z.object({
   likes: likesField,
   dislikes: dislikesField,
   wishlistCount: wishlistCountField,
-  commentCount: commentCountField,
+  reviewCount: reviewCountField,
   averageReview: averageReviewField,
   viewCount: viewCountField,
   userQuestions: z.array(userQuestionSchema),

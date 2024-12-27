@@ -6,6 +6,7 @@ import {
   validateSchemaBody,
 } from "../middlewares/requestValidation.middleware";
 import { addressDirectionInputSchema } from "../validation-schemas/user-schemas/addressDirection.validation";
+import { ADDRESS_DIRECTION_ID } from "../constants";
 
 const router = Router();
 
@@ -18,14 +19,14 @@ router.post(
 router.put(
   "/users/address-direction/:addressDirectionId",
   authMiddleware,
-  validateObjectIdParams(["addressDirectionId"]),
+  validateObjectIdParams(ADDRESS_DIRECTION_ID),
   validateSchemaBody(addressDirectionInputSchema),
   addressDirectionController.updateAddressDirection,
 );
 router.delete(
   "/users/address-direction/:addressDirectionId",
   authMiddleware,
-  validateObjectIdParams(["addressDirectionId"]),
+  validateObjectIdParams(ADDRESS_DIRECTION_ID),
   addressDirectionController.deleteAddressDirection,
 );
 

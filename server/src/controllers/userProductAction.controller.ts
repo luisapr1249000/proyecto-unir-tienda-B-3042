@@ -94,15 +94,15 @@ class UserProductActions {
       if (!user) return handleObjectNotFound(res, "User");
 
       const productIndex = user.cart.items?.findIndex(
-        (item) => item.productId?.toString() === productId,
+        (item) => item.product?.toString() === productId,
       );
 
       if (productIndex === -1) {
         const cartItem: UserCartItem = {
           quantity: productQuantity,
-          sellerId: product.author,
+          seller: product.author,
           price: product.price,
-          productId: product._id,
+          product: product._id,
         };
         user.cart.items.push(cartItem);
       }
