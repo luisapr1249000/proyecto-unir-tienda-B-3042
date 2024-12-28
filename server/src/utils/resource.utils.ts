@@ -25,7 +25,7 @@ export const getResourceOwnerId = async (
 
     case "orderId": {
       const order = await Order.findById(resourceId);
-      return order?.customId;
+      return order?.customer;
     }
   }
 };

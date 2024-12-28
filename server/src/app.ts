@@ -10,16 +10,16 @@ import options from "./docs/docs.configuration";
 // import { rateLimit } from "express-rate-limit";
 import { AuthRoutes } from "./routes/auth.routes";
 import { UserRoutes } from "./routes/users/user.routes";
-import { AddressDirectionRoutes } from "./routes/addressDirection.routes";
 import { CategoryRoutes } from "./routes/category.routes";
 import { ProductRoutes } from "./routes/products/product.routes";
 import { ReviewRoutes } from "./routes/review.routes";
 import { passportJwt } from "./auth/passport/passport.jwt";
 import { OrderRoutes } from "./routes/order.routes";
-import { UserProductActionsRoutes } from "./routes/userProductActions.routes";
 import { ReactionRoutes } from "./routes/reaction.routes";
 import { googlePassport } from "./auth/passport/google";
 import { ReportRoutes } from "./routes/report.routes";
+import { UserProductActionsRoutes } from "./routes/users/userProductActions.routes";
+import { AddressDirectionRoutes } from "./routes/users/addressDirection.routes";
 // import expressListRoutes from "express-list-routes";
 
 const app: Application = express();

@@ -1,15 +1,15 @@
 import { Router } from "express";
-import productQuestiontController from "../controllers/productQuestiont.controller";
-import { authMiddleware } from "../middlewares/auth.middleware";
+import { authMiddleware } from "../../middlewares/auth.middleware";
 import {
   validateObjectIdParams,
   validateSchemaBody,
-} from "../middlewares/requestValidation.middleware";
-import { PRODUCT_ID, PRODUCT_ID_AND_QUESTION_ID } from "../constants";
+} from "../../middlewares/requestValidation.middleware";
+import { PRODUCT_ID, PRODUCT_ID_AND_QUESTION_ID } from "../../constants";
 import {
   userQuestionInputAnswerSchema,
   userQuestionInputSchema,
-} from "../validation-schemas/product-schemas/product.user.question.validation";
+} from "../../validation-schemas/product-schemas/product.user.question.validation";
+import productQuestiontController from "../../controllers/products/productQuestiont.controller";
 
 const router = Router();
 

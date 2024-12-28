@@ -1,11 +1,11 @@
 import { Request, Response } from "express";
-import { extractAuthUserId } from "../utils/auth.utils";
+import { extractAuthUserId } from "../../utils/auth.utils";
 import {
   handleBadSaved,
   handleError,
   handleObjectNotFound,
-} from "../utils/error.utils";
-import { Product } from "../models/product.model";
+} from "../../utils/error.utils";
+import { Product } from "../../models/product.model";
 
 class ProductQuestionController {
   public async createUserQuestion(req: Request, res: Response) {

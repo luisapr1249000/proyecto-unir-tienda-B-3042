@@ -1,12 +1,12 @@
 import { Router } from "express";
-import addressDirectionController from "../controllers/addressDirection.controller";
-import { authMiddleware } from "../middlewares/auth.middleware";
+import addressDirectionController from "../../controllers/users/addressDirection.controller";
+import { authMiddleware } from "../../middlewares/auth.middleware";
 import {
   validateObjectIdParams,
   validateSchemaBody,
-} from "../middlewares/requestValidation.middleware";
-import { addressDirectionInputSchema } from "../validation-schemas/user-schemas/addressDirection.validation";
-import { ADDRESS_DIRECTION_ID } from "../constants";
+} from "../../middlewares/requestValidation.middleware";
+import { addressDirectionInputSchema } from "../../validation-schemas/user-schemas/addressDirection.validation";
+import { ADDRESS_DIRECTION_ID } from "../../constants";
 
 const router = Router();
 

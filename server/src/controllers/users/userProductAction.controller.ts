@@ -1,15 +1,15 @@
-import { User } from "../models/user.model";
+import { User } from "../../models/user.model";
 import { Request, Response } from "express";
 import {
   handleBadSaved,
   handleError,
   handleObjectNotFound,
   isArrayEmptyOrUndefined,
-} from "../utils/error.utils";
-import { Product } from "../models/product.model";
-import { createObjectId } from "../utils/product.utils";
-import { extractAuthUserId } from "../utils/auth.utils";
-import { UserCartItem } from "../types/user";
+} from "../../utils/error.utils";
+import { Product } from "../../models/product.model";
+import { extractAuthUserId } from "../../utils/auth.utils";
+import { UserCartItem } from "../../types/user";
+import { createObjectId } from "../../utils/product.utils";
 
 class UserProductActions {
   public async getUserCart(req: Request, res: Response) {

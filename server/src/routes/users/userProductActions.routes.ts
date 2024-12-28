@@ -2,13 +2,13 @@ import { Router } from "express";
 import {
   authMiddleware,
   isUserOwnerOrAdmin,
-} from "../middlewares/auth.middleware";
+} from "../../middlewares/auth.middleware";
 import {
   validateObjectIdParams,
   checkProductExists,
-} from "../middlewares/requestValidation.middleware";
-import userProductActionController from "../controllers/userProductAction.controller";
-import { USER_ID, USER_ID_AND_PRODUCT_ID } from "../constants";
+} from "../../middlewares/requestValidation.middleware";
+import userProductActionController from "../../controllers/users/userProductAction.controller";
+import { USER_ID, USER_ID_AND_PRODUCT_ID } from "../../constants";
 
 const router = Router();
 // -------------------------------- cart ------------------

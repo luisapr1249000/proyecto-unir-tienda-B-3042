@@ -3,9 +3,9 @@ import {
   handleBadSaved,
   handleError,
   handleObjectNotFound,
-} from "../utils/error.utils";
-import { extractAuthUserId } from "../utils/auth.utils";
-import { User } from "../models/user.model";
+} from "../../utils/error.utils";
+import { extractAuthUserId } from "../../utils/auth.utils";
+import { User } from "../../models/user.model";
 
 class AddressDirectionController {
   public async createAddressDirection(req: Request, res: Response) {

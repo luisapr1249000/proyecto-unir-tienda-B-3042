@@ -5,7 +5,7 @@ import { env } from "./config/envConfig";
 
 mongoose.Promise = global.Promise;
 
-const connectDB = async () => {
+const connectAndStartServer = async () => {
   const DB_URI =
     env.NODE_ENV === "prod" ? env.MONGO_URI_PROD : env.MONGO_URI_DEV;
   const PORT = env.PORT || 8000;
@@ -21,4 +21,4 @@ const connectDB = async () => {
     process.exit(1);
   }
 };
-connectDB().catch(console.error);
+connectAndStartServer().catch(console.error);
