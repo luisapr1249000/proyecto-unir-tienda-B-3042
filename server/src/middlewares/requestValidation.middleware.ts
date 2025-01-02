@@ -1,5 +1,9 @@
 import { NextFunction, Request, Response } from "express";
-import { handleBadRequest, handleObjectNotFound } from "../utils/error.utils";
+import {
+  handleBadRequest,
+  handleNotPermissions,
+  handleObjectNotFound,
+} from "../utils/error.utils";
 import {
   paginationCoerceSchema,
   productPriceSortSchema,
@@ -7,6 +11,16 @@ import {
 } from "../validation-schemas/query.validation";
 import { Product } from "../models/product.model";
 import { objectIdValidator } from "../utils/zod.utils";
+import { userRoleSchema } from "../validation-schemas/user-schemas/user.validation";
+import { getDefaultPaginationOptions } from "../utils/query.utils";
+
+export const validRole = (req: Request, res: Response, next: NextFunction) => {
+  const { success, error } = userRoleSchema.safeParse(req.body);
+  if (!success) {
+    return handleBadRequest(res, error);
+  }
+  next();
+};
 
 export const validateSchemaBody = (schema: Zod.Schema) => {
   return (req: Request, res: Response, next: NextFunction) => {
@@ -37,7 +51,8 @@ export const validPagination = (
   res: Response,
   next: NextFunction,
 ) => {
-  const paginationResult = paginationCoerceSchema.safeParse(req.query);
+  const defaultPagination = { ...getDefaultPaginationOptions(), ...req.query };
+  const paginationResult = paginationCoerceSchema.safeParse(defaultPagination);
   if (!paginationResult.success) {
     return handleBadRequest(res, paginationResult.error);
   }
@@ -77,4 +92,17 @@ export const validatePriceQuery = async (
   const { success } = productPriceSortSchema.safeParse({ minPrice, maxPrice });
   if (!success) return res.status(400).json({ messge: "Bad Request" });
   next();
+};
+
+export const isSellerOrAdmin = (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  const authUserRole = req.user?.role;
+  const isSeller = req.user?.isSeller;
+  if (authUserRole === "admin" || isSeller) {
+    next();
+  }
+  return handleNotPermissions(res);
 };

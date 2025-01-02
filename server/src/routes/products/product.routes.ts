@@ -6,6 +6,7 @@ import {
   verifyUserOwnershipOrAdminRole,
 } from "../../middlewares/auth.middleware";
 import {
+  isSellerOrAdmin,
   validateObjectIdParams,
   validatePriceQuery,
   validateSchemaBody,
@@ -28,6 +29,7 @@ router.get(
 router.post(
   "/products",
   authMiddleware,
+  isSellerOrAdmin,
   validateSchemaBody(productInputSchema),
   productController.createProduct,
 );

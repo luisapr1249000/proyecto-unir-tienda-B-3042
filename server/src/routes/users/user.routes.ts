@@ -9,12 +9,10 @@ import {
   validateObjectIdParams,
   validateSchemaBody,
   validPagination,
+  validRole,
   validUsername,
 } from "../../middlewares/requestValidation.middleware";
-import {
-  userInputSchema,
-  userRoleSchema,
-} from "../../validation-schemas/user-schemas/user.validation";
+import { userInputSchema } from "../../validation-schemas/user-schemas/user.validation";
 import { USER_ID } from "../../constants";
 
 const router = Router();
@@ -40,12 +38,12 @@ router.get(
   userController.getUserById,
 );
 
-router.post(
+router.put(
   "/users/:userId/role",
   validateObjectIdParams(USER_ID),
-  validateSchemaBody(userRoleSchema),
   authMiddleware,
   isAdmin,
+  validRole,
   userController.changeUserRole,
 );
 

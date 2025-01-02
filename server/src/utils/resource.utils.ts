@@ -10,6 +10,7 @@ export const getResourceOwnerId = async (
   switch (resource) {
     case "userId": {
       const user = await User.findById(resourceId);
+      console.log(user?._id.toString());
       return user?._id.toString();
     }
 

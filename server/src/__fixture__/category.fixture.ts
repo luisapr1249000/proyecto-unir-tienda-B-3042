@@ -14,7 +14,7 @@ export const generateCategoryInputFixture = () => {
 
 export const generateCategoryFixture = async () => ({
   ...generateCategoryInputFixture(),
-  author: await getOrCreateUser(),
+  author: (await getOrCreateUser())._id.toString(),
 });
 
 export const createCategoryFixture = async () => {
@@ -38,5 +38,5 @@ export const getOrCreateCategory = async () => {
     const newCategory = await createCategoryFixture();
     category = newCategory;
   }
-  return category._id.toString();
+  return category;
 };

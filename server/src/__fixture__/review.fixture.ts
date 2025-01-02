@@ -15,7 +15,7 @@ export const generateReviewInputFixture = () => ({
 
 export const generateReviewFixture = async () => ({
   ...generateReviewInputFixture(),
-  product: await getOrCreateProduct(),
+  product: (await getOrCreateProduct())._id.toString(),
   author: await getOrCreateUser(),
 });
 
@@ -36,5 +36,5 @@ export const getOrCreateReview = async () => {
   if (!review) {
     review = await createReviewFixture();
   }
-  return review._id.toString();
+  return review;
 };

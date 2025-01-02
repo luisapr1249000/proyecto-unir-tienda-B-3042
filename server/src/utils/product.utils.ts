@@ -1,5 +1,4 @@
 import { Types } from "mongoose";
-import Reaction from "../models/reaction.model";
 import ViewedProduct from "../models/viewedProduct.model";
 import Review from "../models/review.model";
 
@@ -14,14 +13,6 @@ export const hasNotViewedRecently = async (
     timestamp: { $gte: oneHourAgo },
   });
   return !recentViewed;
-};
-
-export const hasReacted = async (productId: string, userId: string) => {
-  const hasReacted = await Reaction.findOne({ productId, userId });
-  return {
-    hasReacted: hasReacted ? true : false,
-    reactStatus: hasReacted ? hasReacted.type : null,
-  };
 };
 
 export const getCommentCountFromProduct = (productId: string) =>

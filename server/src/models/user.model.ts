@@ -15,19 +15,16 @@ const addressDirectionSchema = new Schema(
   {
     pinCode: {
       type: String,
-      required: true,
       trim: true,
     },
     locality: {
       type: String,
-      required: true,
       trim: true,
       minlength: 10,
       maxlength: 100,
     },
     addressLine1: {
       type: String,
-      required: true,
       trim: true,
       minlength: 10,
       maxlength: 100,
@@ -63,7 +60,6 @@ const cartItem = new Schema(
   {
     quantity: {
       type: Number,
-      required: true,
       min: [1, "Quantity cannot be less than 1"],
       default: 1,
     },
@@ -130,7 +126,7 @@ const userSchema = new Schema(
         select: false,
       },
     ],
-    cart: { type: userCartSchema, default: {}, select: false },
+    cart: { type: userCartSchema, select: false },
     isSeller: { type: Boolean, default: false },
     role: {
       type: String,
@@ -153,14 +149,14 @@ const userSchema = new Schema(
   },
 );
 
-// userSchema.pre("save", async function (next) {
-//   if (!this.isModified("password")) {
-//     return next();
-//   }
-//   const salt = bcrypt.genSaltSync(10);
-//   if (this.password) this.password = bcrypt.hashSync(this.password, salt);
-//   next();
-// });
+userSchema.pre("save", async function (next) {
+  if (!this.isModified("password")) {
+    return next();
+  }
+  const salt = bcrypt.genSaltSync(10);
+  if (this.password) this.password = bcrypt.hashSync(this.password, salt);
+  next();
+});
 
 userSchema.methods.comparePasswords = function (
   candidatePassword: string,

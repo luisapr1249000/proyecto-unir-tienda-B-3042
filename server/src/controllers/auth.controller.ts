@@ -33,8 +33,7 @@ class AuthController {
       if (existingUser)
         return res.status(400).json({ message: "User already exists." });
 
-      const user = new User({ email, username });
-      user.password = user.hashPassword(password);
+      const user = new User({ email, username, password });
       const userSaved = await user.save();
       if (!userSaved)
         return res.status(400).json({ message: "Something went bad." });
@@ -62,7 +61,6 @@ class AuthController {
       }).select("+password");
 
       if (!user) return res.status(404).json({ message: "User not found" });
-
       const isMatch = user.comparePasswords(password);
       if (!isMatch)
         return res.status(400).json({ message: "Invalid credentials" });
@@ -71,8 +69,6 @@ class AuthController {
 
       const accessToken = genAccessToken(payload);
       const refreshToken = genRefreshToken(payload);
-
-      // console.log(accessToken, "\n", refreshToken);
 
       setTokenCookie(
         res,
@@ -184,8 +180,7 @@ class AuthController {
       if (!decoded) return handleObjectNotFound(res, "User");
       const user = await User.findById(decoded.sub).select("+password");
       if (!user) return handleObjectNotFound(res, "User");
-      const hash = user.hashPassword(newPassword);
-      user.password = hash;
+      user.password = newPassword;
       await user.save();
       return res.status(200).json(user);
     } catch (e) {
@@ -233,8 +228,7 @@ class AuthController {
       if (!isMatch)
         return res.status(400).send("Current password is incorrect");
 
-      const hashedPassword = user.hashPassword(newPassword);
-      user.password = hashedPassword;
+      user.password = newPassword;
       await user.save();
       return res.status(200).json({ message: "Password updated successfully" });
     } catch (e) {

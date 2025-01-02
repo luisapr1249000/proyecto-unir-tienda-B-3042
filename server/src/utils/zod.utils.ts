@@ -141,3 +141,10 @@ export const createNoWhitespaceString = (field: string, maxLength = 35) =>
 
 export const phoneNumberSchema = () =>
   z.string().trim().min(1).refine(validator.isMobilePhone);
+
+export const validateZodSchema = (schema: z.ZodTypeAny, data: unknown) => {
+  const result = schema.safeParse(data);
+  if (!result.success) {
+    throw new Error("Validation failed");
+  }
+};

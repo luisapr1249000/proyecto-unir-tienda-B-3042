@@ -6,11 +6,21 @@ import { handleError, handleObjectNotFound } from "../../utils/error.utils";
 class UserController {
   public async updateUser(req: Request, res: Response) {
     try {
-      const { userId } = req.query;
+      const { userId } = req.params;
+      const usernameTaken = await User.findOne({ username: req.body.username });
+      const emailTaken = await User.findOne({ email: req.body.email });
+      if (usernameTaken) {
+        return res.status(400).json({ message: "Username already taken" });
+      }
+      if (emailTaken) {
+        return res.status(400).json({ message: "Email already taken" });
+      }
       const userUpdated = await User.findByIdAndUpdate(userId, req.body, {
         new: true,
       });
-      if (!userUpdated) return handleObjectNotFound(res, "User");
+      if (!userUpdated) {
+        return handleObjectNotFound(res, "User");
+      }
 
       return res.status(200).json(userUpdated);
     } catch (e) {
@@ -94,6 +104,7 @@ class UserController {
       if (!user) return handleObjectNotFound(res, "User");
       return res.status(200).json(user);
     } catch (e) {
+      console.log("se ha producido un error en el cambio de rol de usuario");
       return handleError(res, e);
     }
   }

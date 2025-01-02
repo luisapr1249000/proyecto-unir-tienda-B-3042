@@ -83,7 +83,3 @@ export const productSchema = abstractSchema()
   .merge(productInputSchema)
   .merge(authorSchema())
   .merge(otherProps);
-
-export const reactionSchema = z.object({
-  interactionType: z.enum(["like", "dislike"]),
-});

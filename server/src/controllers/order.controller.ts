@@ -126,7 +126,7 @@ class OrderController {
     }
   }
 
-  // -------------------------------- orderItem ------------------
+  // -------------------------------- orderItem --------------------------------
   public async updateOrderItem(req: Request, res: Response) {
     try {
       const { orderId } = req.params;

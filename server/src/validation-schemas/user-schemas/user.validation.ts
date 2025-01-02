@@ -46,11 +46,11 @@ export const userCartSchema = z.object({
   totalItems: z.number().positive().default(0),
 });
 
-export const userRoleSchema = z.enum(["user", "admin"]);
+export const userRoleField = z.enum(["user", "admin"]);
 
 export const userSchema = userInputSchema.extend({
   isSeller: z.boolean(),
-  role: userRoleSchema,
+  role: userRoleField,
   lastLogin: z.date(),
   whislist: z.array(createMongooseObjectId()).optional(),
   hasConfirmedEmail: z.boolean().default(false),
@@ -59,4 +59,5 @@ export const userSchema = userInputSchema.extend({
   googleId: z.string().optional(),
 });
 
+export const userRoleSchema = userSchema.pick({ role: true });
 export const userSchemaComplete = abstractSchema().merge(userSchema);

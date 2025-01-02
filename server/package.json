@@ -8,7 +8,7 @@
     "start": "nodemon ./dist/index.js",
     "prettier": "npx prettier . --write",
     "lint": "npx eslint ./src",
-    "test": "jest --coverage"
+    "test": "jest"
   },
   "keywords": [],
   "author": "",

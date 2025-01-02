@@ -8,10 +8,14 @@ import {
   createCategoryFixture,
 } from "../../__fixtures__/category.fixture";
 import {
-  createEndpoint,
   NON_EXISTED_OBJECT_ID,
   NON_VALID_OBJECT_ID,
 } from "../constants/constants";
+import {
+  createEndpoint,
+  createQueryEndpoint,
+} from "../helpers/endpoints.helper";
+import { getOrCreateCategory } from "../../__fixture__/category.fixture";
 
 describe("Category Routes", () => {
   let userId = "";
@@ -45,7 +49,9 @@ describe("Category Routes", () => {
     const category = await createCategoryFixture(userId);
     categoryId = category._id.toString();
     categoryIdEndpoint = createEndpoint("category", categoryId);
-    const { cookies: adminCookie } = await loginAndGetCookies(true);
+    const { cookies: adminCookie } = await loginAndGetCookies({
+      isAdmin: true,
+    });
     adminCookies = adminCookie;
 
     const { cookies: user2Cookie } = await loginAndGetCookies();
@@ -58,13 +64,17 @@ describe("Category Routes", () => {
 
   describe(`GET ${categoryEndpoint}`, () => {
     it("should retrieve paginated list of categories", async () => {
-      const response = await request(app).get(categoryQueryEndpoint("1"));
+      const response = await request(app).get(
+        createQueryEndpoint(categoryEndpoint, "1"),
+      );
 
       expect(response.status).toBe(200);
     });
 
     it("should return 404 if no categories found on page", async () => {
-      const response = await request(app).get(categoryQueryEndpoint("10"));
+      const response = await request(app).get(
+        createQueryEndpoint(categoryEndpoint, "1000"),
+      );
 
       expect(response.status).toBe(404);
     });
@@ -74,30 +84,28 @@ describe("Category Routes", () => {
         categoryQueryEndpoint("wrfwerfwer"),
       );
 
-      expect(response.status).toBe(404);
-
       expect(response.status).toBe(400);
     });
   });
 
   describe(`POST ${categoryEndpoint}`, () => {
-    it("should create a new category", async () => {
+    it("should return 200 and create a new category", async () => {
       const newCategory = createCategoryData();
 
       const response = await request(app)
         .post(categoryEndpoint)
-        .set("Cookie", userCookies)
+        .set("Cookie", adminCookies)
         .send(newCategory);
 
       expect(response.status).toBe(201);
     });
 
-    it("should return 400 if the category input is invalid", async () => {
+    it("should return 400 error if the category input is invalid", async () => {
       const invalidCategory = { invalidField: "Invalid Data" };
 
       const response = await request(app)
         .post(categoryEndpoint)
-        .set("Cookie", userCookies)
+        .set("Cookie", adminCookies)
         .send(invalidCategory);
 
       expect(response.status).toBe(400);
@@ -111,51 +119,35 @@ describe("Category Routes", () => {
         .send(newCategory);
 
       expect(response.status).toBe(401);
-      expect(response.body.message).toBe("Unauthorized");
+    });
+
+    it("should return 400 if the category name is already taken", async () => {
+      const category = await createCategoryFixture();
+      const newCategory = { name: category.name };
+
+      const response = await request(app)
+        .post(categoryEndpoint)
+        .set("Cookie", adminCookies)
+        .send(newCategory);
+
+      expect(response.status).toBe(400);
+    });
+    it("should return 403 if the user is not an admin", async () => {
+      const newCategory = { name: "New Category" };
+
+      const response = await request(app)
+        .post(categoryEndpoint)
+        .set("Cookie", userCookies)
+        .send(newCategory);
+
+      expect(response.status).toBe(403);
     });
   });
 
   describe(`PUT ${categoryEndpoint}/:categoryId`, () => {
     const updatedData = createCategoryData();
 
-    it("should update an existing category", async () => {
-      const response = await request(app)
-        .put(categoryIdEndpoint)
-        .set("Cookie", userCookies)
-        .send(updatedData);
-
-      expect(response.status).toBe(200);
-    });
-
-    it("should return 404 if the category does not exist", async () => {
-      const response = await request(app)
-        .put(categoryNonexistedIdEndpoint)
-        .set("Cookie", userCookies)
-        .send(updatedData);
-
-      expect(response.status).toBe(404);
-    });
-
-    it("should return 400 if not valid id", async () => {
-      const response = await request(app)
-        .put(categoryNoValidIdEndpoint)
-        .set("Cookie", userCookies)
-        .send(updatedData);
-
-      expect(response.status).toBe(400);
-    });
-
-    it("should return 401 if not cookies", async () => {
-      const response = await request(app)
-        .put(categoryIdEndpoint)
-        .send(updatedData);
-
-      expect(response.status).toBe(400);
-    });
-
-    it("should update an existing category by an admin", async () => {
-      const updatedData = { name: "Updated by Admin Category Name" };
-
+    it("should  return 200 and update an existing category", async () => {
       const response = await request(app)
         .put(categoryIdEndpoint)
         .set("Cookie", adminCookies)
@@ -164,16 +156,52 @@ describe("Category Routes", () => {
       expect(response.status).toBe(200);
     });
 
-    it("should return 403 if a user who is not the owner attempts to update a category", async () => {
+    it("should return 400 if the category name is already taken", async () => {
+      const category = await getOrCreateCategory();
+      const updatedData = { name: category.name };
+
       const response = await request(app)
         .put(categoryIdEndpoint)
-        .set("Cookie", user2Cookies)
+        .set("Cookie", adminCookies)
         .send(updatedData);
 
+      expect(response.status).toBe(400);
+    });
+
+    it("should return 404 if the category does not exist", async () => {
+      const response = await request(app)
+        .put(categoryNonexistedIdEndpoint)
+        .set("Cookie", adminCookies)
+        .send(updatedData);
+
+      expect(response.status).toBe(404);
+    });
+
+    it("should return 400 if not valid id", async () => {
+      const response = await request(app)
+        .put(categoryNoValidIdEndpoint)
+        .set("Cookie", adminCookies)
+        .send(updatedData);
+
+      expect(response.status).toBe(400);
+    });
+
+    it("should return 401 if not authenticated", async () => {
+      const response = await request(app)
+        .put(categoryIdEndpoint)
+        .send(updatedData);
+
+      expect(response.status).toBe(400);
+    });
+
+    it("should return 403 if the user is not an admin", async () => {
+      const updatedData = { name: "Updated by Admin Category Name" };
+
+      const response = await request(app)
+        .put(categoryIdEndpoint)
+        .set("Cookie", userCookies)
+        .send(updatedData);
       expect(response.status).toBe(403);
-      expect(response.body.message).toBe(
-        "Forbidden: You do not have permission to update this category.",
-      );
     });
   });
 

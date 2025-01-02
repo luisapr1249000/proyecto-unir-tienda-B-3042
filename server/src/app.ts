@@ -15,7 +15,6 @@ import { ProductRoutes } from "./routes/products/product.routes";
 import { ReviewRoutes } from "./routes/review.routes";
 import { passportJwt } from "./auth/passport/passport.jwt";
 import { OrderRoutes } from "./routes/order.routes";
-import { ReactionRoutes } from "./routes/reaction.routes";
 import { googlePassport } from "./auth/passport/google";
 import { ReportRoutes } from "./routes/report.routes";
 import { UserProductActionsRoutes } from "./routes/users/userProductActions.routes";
@@ -60,7 +59,6 @@ app.use("/api/v1", CategoryRoutes);
 app.use("/api/v1", ProductRoutes);
 app.use("/api/v1", ReviewRoutes);
 app.use("/api/v1", OrderRoutes);
-app.use("/app/v1", ReactionRoutes);
 
 app.use("/api/v1/docs/", swaggerUiExpress.serve, swaggerUiExpress.setup(specs));
 

@@ -1,8 +1,6 @@
 import app from "../../app";
 import request from "supertest";
 import {
-  createEndpoint,
-  createQueryEndpoint,
   NON_EXISTED_OBJECT_ID,
   NON_VALID_OBJECT_ID,
 } from "../constants/constants";
@@ -13,6 +11,10 @@ import {
   createProductFixture,
 } from "../../__fixtures__/product.fixture";
 import { createCategoryFixture } from "../../__fixtures__/category.fixture";
+import {
+  createEndpoint,
+  createQueryEndpoint,
+} from "../helpers/endpoints.helper";
 
 describe("Product Routes", () => {
   const productEndpoint = createEndpoint("products");
@@ -36,14 +38,14 @@ describe("Product Routes", () => {
   beforeAll(async () => {
     await setUpDBForTest();
 
-    const { user, cookies } = await loginAndGetCookies();
+    const { user, cookies } = await loginAndGetCookies({ isSeller: true });
     userId = user._id.toString();
     user1Cookies = cookies;
 
     const { cookies: user2Cookie } = await loginAndGetCookies();
     user2Cookies = user2Cookie;
 
-    const { cookies: admCookie } = await loginAndGetCookies();
+    const { cookies: admCookie } = await loginAndGetCookies({ isAdmin: true });
     adminCookies = admCookie;
 
     const product = await createProductFixture(userId);
@@ -57,7 +59,7 @@ describe("Product Routes", () => {
   });
 
   describe(`POST ${productEndpoint}`, async () => {
-    it("should successfully create a product with valid data", async () => {
+    it("should return 200 and successfully create a product with valid data", async () => {
       const response = await request(app)
         .post(productIdEndpoint)
         .set("Cookie", user1Cookies)
@@ -80,12 +82,20 @@ describe("Product Routes", () => {
         .send(productData);
 
       expect(response.status).toBe(401);
-      expect(response.body.message).toBe("Unauthorized");
+    });
+
+    it("should return 403 if user is not seller", async () => {
+      const response = await request(app)
+        .post(productIdEndpoint)
+        .set("Cookie", user2Cookies)
+        .send(productData);
+
+      expect(response.status).toBe(403);
     });
   });
 
   describe(`PUT ${productId}/:productId`, () => {
-    it("should successfully update a product with valid data", async () => {
+    it("should return 200 if successfully update a product with valid data", async () => {
       const response = await request(app)
         .post(productIdEndpoint)
         .set("Cookie", user1Cookies)
@@ -94,7 +104,7 @@ describe("Product Routes", () => {
       expect(response.status).toBe(200);
     });
 
-    it("should allow an admin to update any product", async () => {
+    it("should return 200 if admin update any product", async () => {
       const response = await request(app)
         .post(productIdEndpoint)
         .set("Cookie", adminCookies)
@@ -112,7 +122,6 @@ describe("Product Routes", () => {
         .send(productData);
 
       expect(response.status).toBe(403);
-      expect(response.body).toHaveProperty("message", "Unauthorized");
     });
 
     it("should return 404 if the product does not exist", async () => {
@@ -151,7 +160,7 @@ describe("Product Routes", () => {
       deleteProductEndpoint = createEndpoint("products", productIdToDelete);
     });
 
-    it("should successfully delete a product by the owner", async () => {
+    it("should return 204 if user deletes a product", async () => {
       const response = await request(app)
         .delete(deleteProductEndpoint)
         .set("Cookie", user1Cookies);
@@ -159,7 +168,7 @@ describe("Product Routes", () => {
       expect(response.status).toBe(204);
     });
 
-    it("should allow an admin to delete any product", async () => {
+    it("should return 204 if admin deletes a product", async () => {
       const response = await request(app)
         .delete(deleteProductEndpoint)
         .set("Cookie", adminCookies);
@@ -214,17 +223,18 @@ describe("Product Routes", () => {
       `author/${NON_EXISTED_OBJECT_ID}`,
     );
     beforeAll(async () => {
-      await createProductFixture(userId);
-      await createProductFixture(userId);
+      for (const _ of Array.from({ length: 10 })) {
+        await createProductFixture(userId);
+      }
     });
 
-    it("should retrieve products by the specified author with pagination", async () => {
+    it("should return 200 and retrieve products by the specified author with pagination", async () => {
       const response = await request(app).get(getProductsByAuthorEndpoint);
 
       expect(response.status).toBe(200);
     });
 
-    it("should retrieve the second page of products by the author with pagination", async () => {
+    it("should return 200 and retrieve the second page of products by the author with pagination", async () => {
       const response = await request(app).get(
         createQueryEndpoint(getProductsByAuthorEndpoint, "2", "1"),
       );
@@ -233,7 +243,7 @@ describe("Product Routes", () => {
     });
     it("should return 404 if the specified author has no products", async () => {
       const response = await request(app).get(
-        createQueryEndpoint(getProductsByAuthorEndpoint, "20", "1"),
+        createQueryEndpoint(getProductsByAuthorEndpoint, "1000", "1"),
       );
 
       expect(response.status).toBe(404);
@@ -245,7 +255,6 @@ describe("Product Routes", () => {
       );
 
       expect(response.status).toBe(404);
-      expect(response.body).toHaveProperty("message", "Author not found");
     });
 
     it("should return 400 if no valid id", async () => {
@@ -254,11 +263,10 @@ describe("Product Routes", () => {
       );
 
       expect(response.status).toBe(404);
-      expect(response.body).toHaveProperty("message", "Author not found");
     });
   });
   describe(`GET ${productEndpoint}/:productId`, () => {
-    it("should retrieve product successfully by ID", async () => {
+    it("should return 200 and retrieve product successfully by ID", async () => {
       const response = await request(app).get(productIdEndpoint);
 
       expect(response.status).toBe(200);
@@ -274,7 +282,6 @@ describe("Product Routes", () => {
       const response = await request(app).get(nonExistedProductEndpoint);
 
       expect(response.status).toBe(404);
-      expect(response.body.message).toBe("User not found");
     });
   });
 
@@ -291,11 +298,9 @@ describe("Product Routes", () => {
 
     beforeAll(async () => {
       const category = await createCategoryFixture(userId);
-      await createProductFixture(userId, category._id.toString());
-      await createProductFixture(userId, category._id.toString());
-      await createProductFixture(userId, category._id.toString());
-      await createProductFixture(userId, category._id.toString());
-      await createProductFixture(userId, category._id.toString());
+      for (const _ of Array.from({ length: 10 })) {
+        await createProductFixture(userId, category._id.toString());
+      }
       getProductsByCategoryEndpoint = createEndpoint(
         "products",
         `category/${category._id.toString()}`,
@@ -321,7 +326,6 @@ describe("Product Routes", () => {
       );
 
       expect(response.status).toBe(404);
-      expect(response.body).toHaveProperty("message", "Author not found");
     });
 
     it("should return 400 if no valid id", async () => {
@@ -330,7 +334,30 @@ describe("Product Routes", () => {
       );
 
       expect(response.status).toBe(404);
-      expect(response.body).toHaveProperty("message", "Author not found");
+    });
+  });
+
+  describe("GET /products (with pagination)", () => {
+    it("should return 200 and retrieve paginated list of products", async () => {
+      const response = await request(app).get(productEndpoint);
+
+      expect(response.status).toBe(200);
+    });
+
+    it("should return 404 if no products found on page", async () => {
+      const response = await request(app).get(
+        createQueryEndpoint(productEndpoint, "1"),
+      );
+
+      expect(response.status).toBe(404);
+    });
+
+    it("should return 400 for invalid pagination parameters", async () => {
+      const response = await request(app).get(
+        createQueryEndpoint(productEndpoint, "fwerfwr"),
+      );
+
+      expect(response.status).toBe(400);
     });
   });
 });

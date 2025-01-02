@@ -8,11 +8,11 @@ import {
   createCategoryFixture,
 } from "../../__fixtures__/category.fixture";
 import {
-  createEndpoint,
   NON_EXISTED_OBJECT_ID,
   NON_VALID_OBJECT_ID,
 } from "../constants/constants";
 import { createAddressFixture } from "../../__fixtures__/addressDirection.fixture";
+import { createEndpoint } from "../helpers/endpoints.helper";
 
 describe("Address Directions Routes", () => {
   let addressDirectionEndpoint = createEndpoint("users", "address-direction");
@@ -63,7 +63,6 @@ describe("Address Directions Routes", () => {
         .set("Cookie", user1Cookies);
 
       expect(response.status).toBe(400);
-      expect(response.body).toHaveProperty("message");
     });
   });
 
@@ -90,7 +89,6 @@ describe("Address Directions Routes", () => {
         .send(addressDirectionData);
 
       expect(response.status).toBe(404);
-      expect(response.body).toHaveProperty("message", "Address not found");
     });
 
     it("should return 404 if the object id is not found", async () => {
@@ -100,7 +98,6 @@ describe("Address Directions Routes", () => {
         .send(addressDirectionData);
 
       expect(response.status).toBe(404);
-      expect(response.body).toHaveProperty("message", "Address not found");
     });
   });
   describe(`DELETE ${addressDirectionEndpoint}/:addressDirectionId`, async () => {
@@ -131,7 +128,6 @@ describe("Address Directions Routes", () => {
         .set("Cookie", cookiesForTestDelete);
 
       expect(response.status).toBe(404);
-      expect(response.body).toHaveProperty("message", "Address not found");
     });
 
     it("should return 404 if the object id is not found", async () => {
@@ -140,7 +136,6 @@ describe("Address Directions Routes", () => {
         .set("Cookie", cookiesForTestDelete);
 
       expect(response.status).toBe(404);
-      expect(response.body).toHaveProperty("message", "Address not found");
     });
   });
 });

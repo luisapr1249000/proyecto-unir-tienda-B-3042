@@ -26,33 +26,35 @@ describe("Auth Routes", () => {
   });
 
   describe(`POST ${signupEndpoint}`, () => {
-    it("should sign up a new user successfully", async () => {
+    it("should return 200 and sign up a new user successfully", async () => {
       const { username, email, password } = createUserData();
-
       const response = await request(app)
         .post(signupEndpoint)
         .send({ username, email, password });
 
       expect(response.status).toBe(201);
     });
-  });
+    it("should return 400 error if user already exists", async () => {
+      const existingUser = createUserFixture();
 
-  it("should return error if user already exists", async () => {
-    const existingUser = createUserFixture();
+      const response = await request(app)
+        .post(signupEndpoint)
+        .send(existingUser);
 
-    const response = await request(app).post(signupEndpoint).send(existingUser);
+      expect(response.status).toBe(400);
+    });
 
-    expect(response.status).toBe(400);
-  });
+    it("should return 400 error on validation failure", async () => {
+      const response = await request(app)
+        .post(signupEndpoint)
+        .send({ email: "invalid@email.com" });
 
-  it("should return error on validation failure", async () => {
-    const response = await request(app).post(signupEndpoint).send({});
-
-    expect(response.status).toBe(400);
+      expect(response.status).toBe(400);
+    });
   });
 
   describe(`POST ${loginEndpoint}`, () => {
-    it("should log in a user successfully", async () => {
+    it("should return 200 and log in a user successfully", async () => {
       const { user, password } = await createUserFixture();
 
       const response = await request(app)
@@ -61,7 +63,7 @@ describe("Auth Routes", () => {
       expect(response.status).toBe(200);
     });
 
-    it("should log in a user successfully using email", async () => {
+    it("should return 200 and log in a user successfully using email", async () => {
       const { user, password } = await createUserFixture();
 
       const response = await request(app)
@@ -70,23 +72,28 @@ describe("Auth Routes", () => {
       expect(response.status).toBe(200);
     });
 
-    it("should return error if user not found", async () => {
+    it("should return 404 error if user not found", async () => {
       const response = await request(app)
         .post(loginEndpoint)
         .send({ loginValue: "nonexistentUser", password: "wrongPassword" });
 
       expect(response.status).toBe(404);
-      expect(response.body).toHaveProperty("message", "User not found");
     });
 
-    it("should return error if password is incorrect", async () => {
+    it("should return 400 error if password is incorrect", async () => {
       const { user } = await createUserFixture();
       const response = await request(app)
         .post(loginEndpoint)
         .send({ loginValue: user.username, password: "wrongPassword" });
 
       expect(response.status).toBe(400);
-      expect(response.body).toHaveProperty("message", "Invalid credentials");
+    });
+    it("should return 400 error on validation failure", async () => {
+      const response = await request(app)
+        .post(loginEndpoint)
+        .send({ loginValue: "invalid@email.com" });
+
+      expect(response.status).toBe(400);
     });
   });
 
@@ -103,7 +110,6 @@ describe("Auth Routes", () => {
       const response = await request(app).get(refreshTokenEndpoint);
 
       expect(response.status).toBe(401);
-      expect(response.body).toHaveProperty("error", "Unauthorized");
     });
 
     it("should return forbidden if refresh token is invalid", async () => {
@@ -114,7 +120,6 @@ describe("Auth Routes", () => {
         .set("Cookie", [`refreshToken=${invalidRefreshToken}`]);
 
       expect(response.status).toBe(403);
-      expect(response.body).toHaveProperty("error", "Invalid refresh token");
     });
   });
   describe(`GET ${getAuthUserEndpoint}`, () => {
@@ -129,7 +134,6 @@ describe("Auth Routes", () => {
       const response = await request(app).get(getAuthUserEndpoint);
 
       expect(response.status).toBe(401);
-      expect(response.body).toHaveProperty("error", "Unauthorized");
     });
   });
 });

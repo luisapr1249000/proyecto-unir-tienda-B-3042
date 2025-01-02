@@ -35,7 +35,10 @@ class CategoryController {
   public async getCategoryByName(req: Request, res: Response) {
     try {
       const { categoryName } = req.params;
-      const category = await Category.findOne({ name: categoryName });
+      const query = {
+        name: categoryName,
+      };
+      const category = await Category.findOne(query);
       if (!category) return handleObjectNotFound(res, "Category");
 
       return res.status(200).json(category);
@@ -47,11 +50,9 @@ class CategoryController {
   public async updateCategory(req: Request, res: Response) {
     try {
       const { categoryId } = req.params;
-      const category = await Category.findOneAndUpdate(
-        { _id: categoryId },
-        req.body,
-        { new: true },
-      );
+      const category = await Category.findByIdAndUpdate(categoryId, req.body, {
+        new: true,
+      });
       if (!category) return handleObjectNotFound(res, "Category");
 
       return res.status(200).json(category);
@@ -63,11 +64,8 @@ class CategoryController {
   public async deleteCategory(req: Request, res: Response) {
     try {
       const { categoryId } = req.params;
-      const category = await Category.findOneAndDelete({
-        _id: categoryId,
-      });
+      const category = await Category.findByIdAndDelete(categoryId);
       if (!category) return handleObjectNotFound(res, "Category");
-
       return res.status(204);
     } catch (e) {
       return handleError(res, e);
@@ -76,10 +74,11 @@ class CategoryController {
 
   public async getCategoriesWithPagination(req: Request, res: Response) {
     try {
-      const categories = await Category.paginate(
-        {},
-        { ...req.query, populate: "author" },
-      );
+      const options = {
+        ...req.query,
+        populate: "author",
+      };
+      const categories = await Category.paginate({}, options);
       const { docs } = categories;
       if (docs.length <= 0) return handleObjectNotFound(res, "Categories");
 

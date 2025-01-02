@@ -29,33 +29,47 @@ export const generateUserDataInputFixture = () => {
   };
 };
 
-export const createUserFixture = async (isAdmin = false) => {
+export const createUserFixture = async (isAdmin = false, isSeller = false) => {
   const authInfo = generateUserFixture();
   const user = new User({
     ...authInfo,
     ...generateUserDataInputFixture(),
     lastLogin: faker.date.recent(),
-    savedProducts: [],
     wishlist: [],
-    cart: [],
-    isSeller: faker.datatype.boolean(),
-    role: isAdmin ? "admin" : faker.helpers.arrayElement(["user", "admin"]),
-    addressDirections: createAddressFixture(),
+    cart: {},
+    isSeller: isSeller,
+    role: isAdmin ? "admin" : "user",
+    addressDirections: [createAddressFixture()],
   });
   await user.save();
   return { user, password: authInfo.password };
 };
 
-export const getOrCreateUser = async () => {
+export const getOrCreateUser = async ({
+  isAdmin = false,
+  isSeller = false,
+}: {
+  isAdmin?: boolean;
+  isSeller?: boolean;
+} = {}) => {
   const random = faker.number.int({
     min: 0,
     max: await getTotalUsersCount(),
   });
 
-  let user = await User.findOne().skip(random).exec();
+  let user = await User.findOne().skip(random).select("+password");
+
+  if (isAdmin) {
+    user = await User.findOne({ role: "admin" }).select("+password");
+  }
+
+  if (isSeller) {
+    user = await User.findOne({ isSeller: true }).select("+password");
+  }
+
   if (!user) {
     const newUser = await createUserFixture();
     user = newUser.user;
   }
-  return user._id.toString();
+  return user;
 };

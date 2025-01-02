@@ -71,7 +71,7 @@ export const generateProductFixture = async () => {
 
 export const createProductFixture = async (userId?: string) => {
   const data = generateProductFixture();
-  const user = userId ? userId : await getOrCreateUser();
+  const user = userId ? userId : (await getOrCreateUser())._id.toString();
   const product = new Product({
     author: user,
     ...data,

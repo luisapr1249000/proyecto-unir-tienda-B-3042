@@ -37,19 +37,18 @@ export const verifyUserOwnershipOrAdminRole = (resource: string) => {
       if (!req.user) {
         return handleNotPermissions(res);
       }
-      const authUserId = req.user._id;
+      const authUserId = req.user._id.toString();
       const authUserRole = req.user.role;
       if (authUserRole === "admin") {
-        next();
+        return next();
       }
 
       const resourceId = req.params[resource];
-      const resourceOwnerId = await getResourceOwnerId(
-        resource,
-        resourceId ?? "",
-      );
+      if (!resourceId) return handleNotPermissions(res);
+
+      const resourceOwnerId = await getResourceOwnerId(resource, resourceId);
       if (resourceOwnerId === authUserId) {
-        next();
+        return next();
       }
       return handleNotPermissions(res);
     } catch (e) {

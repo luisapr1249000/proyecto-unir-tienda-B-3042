@@ -7,6 +7,4 @@ export const createQueryEndpoint = (
   fullUrl: string,
   page: string,
   limit = "10",
-) => {
-  return `${fullUrl}?page={${page}&limit=${limit}}`;
-};
+) => `${fullUrl}?page=${page}&limit=${limit}`;

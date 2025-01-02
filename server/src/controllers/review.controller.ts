@@ -34,23 +34,20 @@ class ReviewController {
         return handleObjectNotFound(res, "Product");
 
       const images: Image[] = [];
-      (req.files as Express.Multer.File[]).map((file) => {
-        const fileName = file.location.split("/").pop();
-        const image = {
+      for (const file of req.files as Express.Multer.File[]) {
+        const fileName = file.location.split("/").pop() as string;
+        const image: Image = {
           url: file.location,
           originalName: fileName,
           contentType: file.mimetype,
           size: file.size,
-        } as Image;
+        };
         images.push(image);
+      }
+      const newData = { images: images };
+      const review = await Review.findByIdAndUpdate(reviewId, newData, {
+        new: true,
       });
-      const review = await Review.findByIdAndUpdate(
-        reviewId,
-        {
-          images: images,
-        },
-        { new: true },
-      );
       if (!review) return handleObjectNotFound(res, "Review");
 
       return res.status(200).json(review);
@@ -61,20 +58,16 @@ class ReviewController {
 
   public async updateReview(req: Request, res: Response) {
     try {
-      const authUserId = extractAuthUserId(req);
       const { productId, reviewId } = req.params;
       const product = await Product.findById(productId);
       if (!product) return handleObjectNotFound(res, "Product", true);
-
-      const review = await Review.findOneAndUpdate(
-        {
-          _id: reviewId,
-          author: authUserId,
-          product: productId,
-        },
-        req.body,
-        { new: true },
-      );
+      const query = {
+        _id: reviewId,
+        product: productId,
+      };
+      const review = await Review.findOneAndUpdate(query, req.body, {
+        new: true,
+      });
       if (!review) return handleObjectNotFound(res, "Review");
 
       return res.status(200).json(review);
@@ -85,16 +78,15 @@ class ReviewController {
 
   public async deleteReview(req: Request, res: Response) {
     try {
-      const authUserId = extractAuthUserId(req);
       const { productId, reviewId } = req.params;
       const product = await Product.findById(productId);
       if (!product) return handleObjectNotFound(res, "Product", true);
 
-      const review = await Review.findOneAndDelete({
+      const query = {
         _id: reviewId,
-        author: authUserId,
         product: productId,
-      });
+      };
+      const review = await Review.findOneAndDelete(query);
       if (!review) return handleObjectNotFound(res, "Review");
 
       product.reviewCount -= 1;
@@ -119,7 +111,8 @@ class ReviewController {
 
       const reviewId = await Review.paginate(query, options);
       const { docs } = reviewId;
-      if (docs.length <= 0) return handleObjectNotFound(res, "Review", true);
+      if (docs.length === 0 || !docs)
+        return handleObjectNotFound(res, "Review", true);
 
       return res.status(200).json(reviewId);
     } catch (e) {
@@ -143,7 +136,8 @@ class ReviewController {
 
       const reviewId = await Review.paginate(query, options);
       const { docs } = reviewId;
-      if (docs.length <= 0) return handleObjectNotFound(res, "Review", true);
+      if (docs.length === 0 || !docs)
+        return handleObjectNotFound(res, "Review", true);
 
       return res.status(200).json(reviewId);
     } catch (e) {
@@ -167,7 +161,8 @@ class ReviewController {
 
       const reviewId = await Review.paginate(query, options);
       const { docs } = reviewId;
-      if (docs.length <= 0) return handleObjectNotFound(res, "Review", true);
+      if (docs.length === 0 || !docs)
+        return handleObjectNotFound(res, "Review", true);
 
       return res.status(200).json(reviewId);
     } catch (e) {
