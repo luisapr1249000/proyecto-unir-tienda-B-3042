@@ -1,6 +1,6 @@
 import { z } from "zod";
 import {
-  createPositiveIntegerField,
+  createPostiveNumberField,
   createValidStringField,
 } from "../../utils/zod.utils";
 
@@ -21,7 +21,7 @@ const specificationsHeight = createValidStringField({
 const specificationMaterial = createValidStringField({ fieldName: "material" });
 const specificationFinish = createValidStringField({ fieldName: "finish" });
 
-const weightCapacityField = createPositiveIntegerField({
+const weightCapacityField = createPostiveNumberField({
   fieldName: "weight capacity",
 });
 

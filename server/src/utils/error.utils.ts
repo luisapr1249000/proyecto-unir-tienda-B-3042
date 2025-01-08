@@ -19,6 +19,7 @@ export const handleObjectNotFound = (
   objectType:
     | "User"
     | "Product"
+    | "Product Question"
     | "Review"
     | "Category"
     | "Address"

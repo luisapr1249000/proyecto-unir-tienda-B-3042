@@ -2,16 +2,17 @@ import { faker } from "@faker-js/faker";
 import { getOrCreateCategory } from "./category.fixture";
 import { getOrCreateUser } from "./user.fixture";
 import { Product } from "../models/product.model";
+import { twoDigitsFixed } from "../utils/utils";
+import { Category } from "../models/category.model";
 
-export const getTotalProductCount = async () =>
-  await Product.countDocuments().exec();
+export const getTotalProductCount = async () => await Product.countDocuments();
 
 const generateUniqueCategoriesForProduct = async (
   randomCategoryNumber: number,
 ) => {
   const uniqueCategories = [...Array(randomCategoryNumber).keys()].map(
     async () => {
-      return await getOrCreateCategory();
+      return (await getOrCreateCategory())._id.toString();
     },
   );
   const categoriesId = await Promise.all(uniqueCategories);
@@ -37,14 +38,14 @@ export const createProductInputFixture = async () => {
     categories: await generateUniqueCategoriesForProduct(randomCategoryNumber),
     specifications: {
       dimensions: {
-        width: faker.number.float({ min: 10, max: 200 }).toString(),
-        depth: faker.number.float({ min: 10, max: 200 }).toString(),
-        height: faker.number.float({ min: 10, max: 200 }).toString(),
+        width: twoDigitsFixed(faker.number.float({ min: 10, max: 200 })),
+        depth: twoDigitsFixed(faker.number.float({ min: 10, max: 200 })),
+        height: twoDigitsFixed(faker.number.float({ min: 10, max: 200 })),
       },
       material: faker.commerce.productMaterial(),
       finish: faker.vehicle.color(),
       assemblyRequired: faker.datatype.boolean(),
-      weightCapacity: faker.number.float({ min: 10, max: 500 }),
+      weightCapacity: twoDigitsFixed(faker.number.float({ min: 10, max: 500 })),
     },
     brand: [faker.company.name()],
   };
@@ -70,7 +71,7 @@ export const generateProductFixture = async () => {
 };
 
 export const createProductFixture = async (userId?: string) => {
-  const data = generateProductFixture();
+  const data = await generateProductFixture();
   const user = userId ? userId : (await getOrCreateUser())._id.toString();
   const product = new Product({
     author: user,
@@ -89,10 +90,30 @@ export const getOrCreateProduct = async () => {
     max: await getTotalProductCount(),
   });
 
-  let product = await Product.findOne().skip(random).exec();
+  let product = await Product.findOne()
+    .skip(random)
+    .select("+productQuestions");
   if (!product) {
     product = await createProductFixture();
   }
+
+  return product;
+};
+
+export const createProductByCategoryFixture = async (
+  categoryId: string,
+  userId?: string,
+) => {
+  const { categories: _categories, ...data } = await generateProductFixture();
+  const category = await Category.findById(categoryId);
+  const product = new Product({
+    author: userId,
+    ...data,
+    categories: [category],
+  });
+
+  await product.save();
+  console.log("Product fixture created:", product);
 
   return product;
 };

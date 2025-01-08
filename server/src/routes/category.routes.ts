@@ -4,6 +4,7 @@ import { authMiddleware, isAdmin } from "../middlewares/auth.middleware";
 import {
   validateObjectIdParams,
   validateSchemaBody,
+  validCategoryName,
   validPagination,
 } from "../middlewares/requestValidation.middleware";
 import { categoryInputSchema } from "../validation-schemas/category.validation";
@@ -22,6 +23,7 @@ router.get(
 
 router.get(
   "/categories/:categoryId",
+  validateObjectIdParams(CATEGORY_ID),
   validPagination,
   categoryController.getCategoryById,
 );
@@ -29,13 +31,14 @@ router.get(
 router.get(
   "/categories/name/:categoryName",
   validPagination,
+  validCategoryName,
   categoryController.getCategoryByName,
 );
 
 router.post(
   "/categories",
-  isAdmin,
   authMiddleware,
+  isAdmin,
   validateSchemaBody(categoryInputSchema),
   categoryController.createCategory,
 );

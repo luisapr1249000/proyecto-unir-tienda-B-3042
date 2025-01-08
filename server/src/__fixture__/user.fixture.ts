@@ -3,16 +3,17 @@ import { faker } from "@faker-js/faker";
 import { User } from "../models/user.model";
 import { createAddressFixture } from "./addressDirection.fixture";
 
+const randomNumber = () => String(Math.floor(Math.random() * 1e20));
+
 export const getTotalUsersCount = async () =>
   await User.countDocuments().exec();
 
-export const generateUserFixture = () => {
-  return {
-    username: faker.internet.username(),
-    email: faker.internet.email().toLowerCase(),
-    password: "12345678",
-  };
-};
+export const generateUserFixture = () => ({
+  username: randomNumber(),
+  email: randomNumber() + faker.internet.email().toLowerCase(),
+  password: "12345678Aa$",
+  confirmPassword: "12345678Aa$",
+});
 
 export const generateUserDataInputFixture = () => {
   return {

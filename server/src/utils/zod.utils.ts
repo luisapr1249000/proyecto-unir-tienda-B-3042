@@ -8,13 +8,14 @@ import {
 import { Types } from "mongoose";
 import validator from "validator";
 
-export const objectIdValidator = z
-  .string()
-  .min(1)
-  .refine((value) => Types.ObjectId.isValid(value), {
-    message: "Invalid ObjectId format",
-    path: ["value"],
-  });
+export const objectIdValidator = (fieldName: string) =>
+  z
+    .string()
+    .min(1, { message: `${fieldName} is required` })
+    .refine((value) => Types.ObjectId.isValid(value), {
+      message: "Invalid ObjectId format",
+      path: ["value"],
+    });
 
 export const createMongooseObjectId = () =>
   z.instanceof(Types.ObjectId).refine((id) => Types.ObjectId.isValid(id), {
@@ -31,7 +32,7 @@ export const abstractSchema = () =>
 export const createBasicString = () => z.string().trim();
 
 export const createBasicNumber = () =>
-  z.coerce.number().finite("Value must be a finite number");
+  z.coerce.number().finite({ message: "Value must be a finite number" });
 
 export const createValidStringField = ({
   fieldName,
@@ -43,11 +44,10 @@ export const createValidStringField = ({
   maxLength?: number;
 }) =>
   createBasicString()
-    .min(minLength, `${fieldName} required`)
-    .max(
-      maxLength,
-      `${fieldName} must be no more than ${maxLength} characters`,
-    );
+    .min(minLength, { message: `${fieldName} required -----` })
+    .max(maxLength, {
+      message: `${fieldName} must be no more than ${maxLength} characters`,
+    });
 
 export const createPostiveNumberField = ({
   fieldName,

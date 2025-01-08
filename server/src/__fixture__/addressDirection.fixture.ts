@@ -9,4 +9,5 @@ export const createAddressFixture = () => ({
   state: faker.location.state(),
   alternatePhone: faker.phone.number(),
   addressType: faker.helpers.arrayElement(["home", "work"]),
+  landmark: faker.location.streetAddress(),
 });

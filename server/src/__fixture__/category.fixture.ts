@@ -1,35 +1,38 @@
 import { faker } from "@faker-js/faker";
 import { Category } from "../models/category.model";
 import { getOrCreateUser } from "./user.fixture";
+import { generateUniqueValue, replaceWhitespace } from "../utils/utils";
 
 export const getTotalCategoriesCount = async () =>
   await Category.countDocuments().exec();
 
-export const generateCategoryInputFixture = () => {
+export const generateCategoryFixture = () => {
+  const categoryName = faker.lorem.sentence({ min: 2, max: 3 });
+  const categoryNameFormated = generateUniqueValue(
+    replaceWhitespace(categoryName),
+  );
+
   return {
-    name: faker.lorem.sentence({ min: 1, max: 20 }),
+    name: categoryNameFormated,
     description: faker.lorem.sentence(),
   };
 };
 
-export const generateCategoryFixture = async () => ({
-  ...generateCategoryInputFixture(),
-  author: (await getOrCreateUser())._id.toString(),
-});
-
-export const createCategoryFixture = async () => {
-  const category = new Category(generateCategoryFixture());
+export const createCategoryFixture = async (userId?: string) => {
+  const category = new Category({
+    ...generateCategoryFixture(),
+    author: userId ? userId : await getOrCreateUser(),
+  });
   await category.save();
-  console.log("Category fixture created:", category);
+  // console.log("Category fixture created:", category);
   return category;
 };
 
-export const getRandomNumber = (randomNumber: number) => {
-  return faker.number.int({
+export const getRandomNumber = (randomNumber: number) =>
+  faker.number.int({
     min: 1,
     max: randomNumber - 1,
   });
-};
 
 export const getOrCreateCategory = async () => {
   const skip = getRandomNumber(await getTotalCategoriesCount());

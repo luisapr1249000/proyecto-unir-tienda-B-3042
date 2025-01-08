@@ -1,19 +1,19 @@
 import request from "supertest";
-import app from "../../app";
-import { disconnectDB, setUpDBForTest } from "../db/setUpDB";
-import { loginAndGetCookies } from "../helpers/auth.helper";
+import app from "../../../app";
+import { disconnectDB, setUpDBForTest } from "../../db/setUpDB";
+import { loginAndGetCookies } from "../../helpers/auth.helper";
 import {
   NON_EXISTED_OBJECT_ID,
   NON_VALID_OBJECT_ID,
-} from "../constants/constants";
+} from "../../constants/constants";
 import {
   createEndpoint,
   createQueryEndpoint,
-} from "../helpers/endpoints.helper";
+} from "../../helpers/endpoints.helper";
 import {
   generateUserFixture,
   getOrCreateUser,
-} from "../../__fixture__/user.fixture";
+} from "../../../__fixture__/user.fixture";
 
 describe("User Routes", () => {
   let userId = "";
@@ -27,15 +27,19 @@ describe("User Routes", () => {
     try {
       await setUpDBForTest();
 
-      const { cookies: adminCookie } = await loginAndGetCookies({
-        isAdmin: true,
-      });
+      const { user: userAdmin, cookies: adminCookie } =
+        await loginAndGetCookies({
+          isAdmin: true,
+        });
+      console.log("USER ADMIN ----> ", userAdmin);
       adminCookies = adminCookie;
 
-      const { user, cookies } = await loginAndGetCookies();
-      const { cookies: cookie2 } = await loginAndGetCookies();
+      const { user: user1, cookies } = await loginAndGetCookies();
+      console.log("USER 1 ----> ", user1);
+      const { user: user2, cookies: cookie2 } = await loginAndGetCookies();
+      console.log("USER 2 ----> ", user2);
 
-      userId = user._id.toString();
+      userId = user1._id.toString();
       userCookies = cookies;
       user2Cookies = cookie2;
 
@@ -54,7 +58,7 @@ describe("User Routes", () => {
     }
   });
 
-  describe.skip(`PUT ${userEndpoint}/:userId`, () => {
+  describe(`PUT ${userEndpoint}/:userId`, () => {
     it("should return 200 and update a user successfully", async () => {
       const { email, username } = generateUserFixture();
       const updateData = { firstName: "updatedUser", email, username };
@@ -137,7 +141,7 @@ describe("User Routes", () => {
     });
   });
 
-  describe.skip(`PUT ${userEndpoint}/:userId/role`, () => {
+  describe(`PUT ${userEndpoint}/:userId/role`, () => {
     it("should return 200 and update a user successfully if the user is an admin", async () => {
       const data = { role: "admin" };
       const response = await request(app)
@@ -195,7 +199,7 @@ describe("User Routes", () => {
       const data = { role: "someRandomValue" };
       const response = await request(app)
         .put(roleEndpoint)
-        .set("Cookie", userCookies)
+        .set("Cookie", adminCookies)
         .send(data);
       // console.log("value is not 'admin' or 'user'", response);
 
@@ -203,7 +207,7 @@ describe("User Routes", () => {
     });
   });
 
-  describe.skip(`DELETE ${userEndpoint}/:userId`, () => {
+  describe(`DELETE ${userEndpoint}/:userId`, () => {
     let userIdToDelete = "";
     let userCookiesToDelet = "";
     let userDeleteEndpoint = "";
@@ -245,7 +249,7 @@ describe("User Routes", () => {
     it("should return 403 if a non-admin attempts to delete another user", async () => {
       const response = await request(app)
         .delete(userDeleteEndpoint)
-        .set("Cookie", userCookies);
+        .set("Cookie", user2Cookies);
 
       expect(response.status).toBe(403);
     });
@@ -297,7 +301,7 @@ describe("User Routes", () => {
       );
 
       const response = await request(app).get(usernameEndpoint);
-      console.log("response ---> ", response);
+      // console.log("response ---> ", response);
       expect(response.status).toBe(200);
     });
 
@@ -318,7 +322,7 @@ describe("User Routes", () => {
       const route = createQueryEndpoint(userEndpoint, "1000");
 
       const response = await request(app).get(route);
-      console.log("response ---> ", response);
+      // console.log("response ---> ", response);
       expect(response.status).toBe(404);
     });
 

@@ -9,17 +9,20 @@ import { z } from "zod";
 import { AddressDirection } from "./addressDirectionSchema";
 
 export type UserCartItem = z.infer<typeof cartItem>;
-export type UserCart = {
+
+export interface UserCart {
   totalPrice: number;
   items: Types.DocumentArray<UserCartItem>;
-};
+}
+
 export type UserInput = z.infer<typeof userInputSchema>;
+
 export type User = z.infer<typeof userSchemaComplete> & {
   cart: UserCart;
-  savedProducts: Types.Array<Types.ObjectId>;
   wishlist: Types.Array<Types.ObjectId>;
   addressDirections: Types.DocumentArray<AddressDirection>;
 };
+
 export type UserDocument = Document &
   User & {
     comparePasswords: (candidatePassword: string) => boolean;

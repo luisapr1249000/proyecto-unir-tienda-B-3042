@@ -10,23 +10,22 @@ export const getResourceOwnerId = async (
   switch (resource) {
     case "userId": {
       const user = await User.findById(resourceId);
-      console.log(user?._id.toString());
       return user?._id.toString();
     }
 
     case "reviewId": {
       const review = await Review.findById(resourceId);
-      return review?.author;
+      return review?.author.toString();
     }
 
     case "productId": {
       const product = await Product.findById(resourceId);
-      return product?.author;
+      return product?.author.toString();
     }
 
     case "orderId": {
       const order = await Order.findById(resourceId);
-      return order?.customer;
+      return order?.customer.toString();
     }
   }
 };

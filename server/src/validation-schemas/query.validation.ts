@@ -5,8 +5,22 @@ import {
   createValidStringField,
 } from "../utils/zod.utils";
 
+const usernameField = createValidStringField({
+  fieldName: "username",
+  maxLength: 50,
+});
+
 export const usernameParamSchema = z.object({
-  username: z.string().min(1),
+  username: usernameField,
+});
+
+export const categoryName = createValidStringField({
+  fieldName: "categoryName",
+  maxLength: 50,
+});
+
+export const categoryNameSchema = z.object({
+  categoryName: categoryName,
 });
 
 export const sortSchema = createValidStringField({

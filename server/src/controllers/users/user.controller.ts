@@ -7,8 +7,10 @@ class UserController {
   public async updateUser(req: Request, res: Response) {
     try {
       const { userId } = req.params;
-      const usernameTaken = await User.findOne({ username: req.body.username });
-      const emailTaken = await User.findOne({ email: req.body.email });
+      const [usernameTaken, emailTaken] = await Promise.all([
+        User.findOne({ username: req.body.username }),
+        User.findOne({ email: req.body.email }),
+      ]);
       if (usernameTaken) {
         return res.status(400).json({ message: "Username already taken" });
       }

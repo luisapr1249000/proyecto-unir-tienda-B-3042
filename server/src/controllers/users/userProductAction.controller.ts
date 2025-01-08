@@ -46,6 +46,7 @@ class UserProductActions {
   public async toggleProductWishlist(req: Request, res: Response) {
     try {
       const { userId, productId } = req.params;
+
       const product = await Product.findById(productId);
       if (!product) {
         return handleObjectNotFound(res, "Product");
@@ -59,11 +60,13 @@ class UserProductActions {
         user.wishlist.pull(productId);
         product.wishlistCount -= 1;
       } else {
-        user.wishlist?.push(productId);
+        user.wishlist.push(productId);
         product.wishlistCount += 1;
       }
-      const productSaved = await product.save();
-      const userSaved = await user.save();
+      const [productSaved, userSaved] = await Promise.all([
+        product.save(),
+        user.save(),
+      ]);
       if (!userSaved || !productSaved) return handleBadSaved(res);
 
       return res.status(200).json(userSaved);
@@ -97,7 +100,7 @@ class UserProductActions {
         (item) => item.product?.toString() === productId,
       );
 
-      if (productIndex === -1) {
+      if (productIndex === -1 && productQuantity > 0) {
         const cartItem: UserCartItem = {
           quantity: productQuantity,
           seller: product.author,

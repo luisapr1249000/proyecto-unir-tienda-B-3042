@@ -20,3 +20,20 @@ export const loginAndGetCookies = async ({
   const cookies = response.headers["set-cookie"] ?? "no cookies";
   return { user, cookies };
 };
+
+export const usersAndCookies = async () => {
+  const { user: user1, cookies } = await loginAndGetCookies({ isSeller: true });
+  const { user: user2, cookies: cookie2 } = await loginAndGetCookies();
+  const { user: adminUser, cookies: adminCookie } = await loginAndGetCookies({
+    isAdmin: true,
+  });
+
+  return {
+    userSeller: user1,
+    sellerCookies: cookies,
+    user: user2,
+    userCookies: cookie2,
+    adminUser: adminUser,
+    adminCookies: adminCookie,
+  };
+};

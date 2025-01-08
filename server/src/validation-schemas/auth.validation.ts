@@ -4,6 +4,7 @@ import {
   createEmailField,
   createNoWhitespaceString,
   createPasswordSchema,
+  createValidStringField,
 } from "../utils/zod.utils";
 
 export const signupSchema = z
@@ -20,7 +21,10 @@ export const signupSchema = z
 
 export const loginSchema = z.object({
   rememberMe: z.coerce.boolean().optional(),
-  loginValue: createNoWhitespaceString("Username or Email", 100),
+  loginValue: createValidStringField({
+    fieldName: "Login value",
+    maxLength: 100,
+  }),
   password: z.string().min(1, "Password is required"),
 });
 

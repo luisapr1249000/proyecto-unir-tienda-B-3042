@@ -1,6 +1,9 @@
 import { Router } from "express";
 import addressDirectionController from "../../controllers/users/addressDirection.controller";
-import { authMiddleware } from "../../middlewares/auth.middleware";
+import {
+  authMiddleware,
+  verifyUserOwnershipOrAdminRole,
+} from "../../middlewares/auth.middleware";
 import {
   validateObjectIdParams,
   validateSchemaBody,
@@ -11,21 +14,25 @@ import { ADDRESS_DIRECTION_ID } from "../../constants";
 const router = Router();
 
 router.post(
-  "/users/address-direction",
+  "/users/:userId/address-direction",
   authMiddleware,
+  verifyUserOwnershipOrAdminRole("userId"),
   validateSchemaBody(addressDirectionInputSchema),
   addressDirectionController.createAddressDirection,
 );
 router.put(
-  "/users/address-direction/:addressDirectionId",
+  "/users/:userId/address-direction/:addressDirectionId",
   authMiddleware,
+  verifyUserOwnershipOrAdminRole("userId"),
+
   validateObjectIdParams(ADDRESS_DIRECTION_ID),
   validateSchemaBody(addressDirectionInputSchema),
   addressDirectionController.updateAddressDirection,
 );
 router.delete(
-  "/users/address-direction/:addressDirectionId",
+  "/users/:userId/address-direction/:addressDirectionId",
   authMiddleware,
+  verifyUserOwnershipOrAdminRole("userId"),
   validateObjectIdParams(ADDRESS_DIRECTION_ID),
   addressDirectionController.deleteAddressDirection,
 );

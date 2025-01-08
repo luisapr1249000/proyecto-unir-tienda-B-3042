@@ -11,6 +11,13 @@ class CategoryController {
   public async createCategory(req: Request, res: Response) {
     try {
       const authUserId = extractAuthUserId(req);
+      const existedCategory = await Category.findOne({ name: req.body.name });
+      if (existedCategory) {
+        return res
+          .status(400)
+          .json({ message: "Category name already exists" });
+      }
+
       const category = new Category({ ...req.body, author: authUserId });
       const categorySaved = await category.save();
       if (!categorySaved) return handleBadSaved(res);
@@ -50,12 +57,18 @@ class CategoryController {
   public async updateCategory(req: Request, res: Response) {
     try {
       const { categoryId } = req.params;
+      const existedCategory = await Category.findOne({ name: req.body.name });
+      if (existedCategory) {
+        return res
+          .status(400)
+          .json({ message: "Category name already exists" });
+      }
       const category = await Category.findByIdAndUpdate(categoryId, req.body, {
         new: true,
       });
       if (!category) return handleObjectNotFound(res, "Category");
 
-      return res.status(200).json(category);
+      return res.status(200).json(existedCategory);
     } catch (e) {
       return handleError(res, e);
     }
@@ -66,7 +79,7 @@ class CategoryController {
       const { categoryId } = req.params;
       const category = await Category.findByIdAndDelete(categoryId);
       if (!category) return handleObjectNotFound(res, "Category");
-      return res.status(204);
+      return res.status(204).send();
     } catch (e) {
       return handleError(res, e);
     }

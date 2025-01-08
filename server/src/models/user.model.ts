@@ -47,6 +47,10 @@ const addressDirectionSchema = new Schema(
       type: String,
       trim: true,
     },
+    landmark: {
+      type: String,
+      trim: true,
+    },
     addressType: {
       type: String,
       required: true,

@@ -19,6 +19,7 @@ import { googlePassport } from "./auth/passport/google";
 import { ReportRoutes } from "./routes/report.routes";
 import { UserProductActionsRoutes } from "./routes/users/userProductActions.routes";
 import { AddressDirectionRoutes } from "./routes/users/addressDirection.routes";
+import { productQuestiontsRoutes } from "./routes/products/productQuestions.routes";
 // import expressListRoutes from "express-list-routes";
 
 const app: Application = express();
@@ -59,6 +60,7 @@ app.use("/api/v1", CategoryRoutes);
 app.use("/api/v1", ProductRoutes);
 app.use("/api/v1", ReviewRoutes);
 app.use("/api/v1", OrderRoutes);
+app.use("/api/v1", productQuestiontsRoutes);
 
 app.use("/api/v1/docs/", swaggerUiExpress.serve, swaggerUiExpress.setup(specs));
 

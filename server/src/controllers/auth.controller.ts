@@ -30,6 +30,7 @@ class AuthController {
       const existingUser = await User.findOne({
         $or: [{ username }, { email }],
       });
+
       if (existingUser)
         return res.status(400).json({ message: "User already exists." });
 
@@ -135,6 +136,7 @@ class AuthController {
   public async confirmationEmail(req: Request, res: Response) {
     try {
       const { token } = req.query;
+      if (!token) return handleNotPermissions(res);
       const decoded = verifyToken(token as string);
       if (!decoded) return handleObjectNotFound(res, "User");
       const user = await User.findById(decoded.sub);
@@ -175,6 +177,7 @@ class AuthController {
   public async resetPassword(req: Request, res: Response) {
     try {
       const { token } = req.query;
+      if (!token) return handleNotPermissions(res);
       const { newPassword } = req.body;
       const decoded = verifyToken(token as string);
       if (!decoded) return handleObjectNotFound(res, "User");
@@ -239,7 +242,9 @@ class AuthController {
   public async validateToken(req: Request, res: Response) {
     try {
       const { token } = req.query;
+      if (!token) return handleNotPermissions(res);
       const decoded = verifyToken(token as string);
+      if (!decoded) return handleNotPermissions(res);
       const userId = await User.findById(decoded.sub);
       if (!userId) return handleNotPermissions(res);
       return res.status(200).json({ isValidToken: true });

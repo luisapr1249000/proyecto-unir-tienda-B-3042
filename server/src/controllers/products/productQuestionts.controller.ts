@@ -7,22 +7,22 @@ import {
 } from "../../utils/error.utils";
 import { Product } from "../../models/product.model";
 
-class ProductQuestionController {
+class ProductQuestionsController {
   public async createUserQuestion(req: Request, res: Response) {
     try {
       const userAuth = extractAuthUserId(req);
-      const { questionContent } = req.body;
+      const { content } = req.body;
       const { productId } = req.params;
-      const questionObject = { content: questionContent, user: userAuth };
+      const questionObject = { content, user: userAuth };
       const product =
-        await Product.findById(productId).select("+userQuestions");
+        await Product.findById(productId).select("+productQuestions");
       if (!product) return handleObjectNotFound(res, "Product");
 
-      product.userQuestions.push(questionObject);
+      product.productQuestions.push(questionObject);
 
       const savedProduct = await product.save();
       if (!savedProduct) return handleBadSaved(res);
-      return res.status(200).json(savedProduct);
+      return res.status(201).json(savedProduct);
     } catch (e) {
       return handleError(res, e);
     }
@@ -31,19 +31,19 @@ class ProductQuestionController {
   public async updateUserQuestion(req: Request, res: Response) {
     try {
       const userAuth = extractAuthUserId(req);
-      const { questionContent } = req.body;
-      const { productId, userQuestionId } = req.params;
+      const { content } = req.body;
+      const { productId, productQuestionId } = req.params;
       const product =
-        await Product.findById(productId).select("+userQuestions");
+        await Product.findById(productId).select("+productQuestions");
       if (!product) return handleObjectNotFound(res, "Product");
 
-      const productQuestion = product.userQuestions.id(userQuestionId);
+      const productQuestion = product.productQuestions.id(productQuestionId);
       if (!productQuestion) return handleObjectNotFound(res, "Product");
 
       if (productQuestion.user.toString() !== userAuth)
         return handleObjectNotFound(res, "Product");
 
-      productQuestion.content = questionContent;
+      productQuestion.content = content;
 
       const savedProduct = await product.save();
       if (!savedProduct) return handleBadSaved(res);
@@ -53,18 +53,19 @@ class ProductQuestionController {
     }
   }
 
-  public async createAnswerForQuestion(req: Request, res: Response) {
+  public async createOrUpdateAnswerQuestion(req: Request, res: Response) {
     try {
-      const { answerContent } = req.body;
-      const { productId, userQuestionId } = req.params;
-      const query = { _id: productId };
-      const product = await Product.findOne(query).select("+userQuestions");
+      const { answer } = req.body;
+      const { productId, productQuestionId } = req.params;
+      const product =
+        await Product.findById(productId).select("+productQuestions");
       if (!product) return handleObjectNotFound(res, "Product");
 
-      const productQuestion = product.userQuestions.id(userQuestionId);
-      if (!productQuestion) return handleObjectNotFound(res, "Product");
+      const productQuestion = product.productQuestions.id(productQuestionId);
+      if (!productQuestion)
+        return handleObjectNotFound(res, "Product Question");
 
-      productQuestion.answer = answerContent;
+      productQuestion.answer = answer;
       productQuestion.isAnswered = true;
 
       const savedProduct = await product.save();
@@ -77,12 +78,12 @@ class ProductQuestionController {
 
   public async deleteUserQuestion(req: Request, res: Response) {
     try {
-      const { productId, userQuestionId } = req.params;
-      const query = { _id: productId };
-      const product = await Product.findOne(query).select("+userQuestions");
+      const { productId, productQuestionId } = req.params;
+      const product =
+        await Product.findById(productId).select("+productQuestions");
       if (!product) return handleObjectNotFound(res, "Product");
 
-      const productQuestion = product.userQuestions.id(userQuestionId);
+      const productQuestion = product.productQuestions.id(productQuestionId);
       if (!productQuestion) return handleObjectNotFound(res, "Product");
 
       productQuestion.deleteOne();
@@ -96,4 +97,4 @@ class ProductQuestionController {
   }
 }
 
-export default new ProductQuestionController();
+export default new ProductQuestionsController();

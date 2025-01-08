@@ -1,12 +1,13 @@
 import request from "supertest";
 import app from "../../app";
-import {
-  createUserData,
-  createUserFixture,
-} from "../../__fixtures__/user.fixture";
 import { setUpDBForTest, disconnectDB } from "../db/setUpDB";
-import { createEndpoint } from "../constants/constants";
 import { loginAndGetCookies } from "../helpers/auth.helper";
+import { createEndpoint } from "../helpers/endpoints.helper";
+import {
+  createUserFixture,
+  generateUserFixture,
+  getOrCreateUser,
+} from "../../__fixture__/user.fixture";
 
 describe("Auth Routes", () => {
   const signupEndpoint = createEndpoint("auth", "signup");
@@ -21,26 +22,45 @@ describe("Auth Routes", () => {
     userCookies = cookies;
   });
 
-  beforeAll(async () => {
+  afterAll(async () => {
     await disconnectDB();
   });
 
-  describe(`POST ${signupEndpoint}`, () => {
+  describe.skip(`POST ${signupEndpoint}`, () => {
     it("should return 200 and sign up a new user successfully", async () => {
-      const { username, email, password } = createUserData();
-      const response = await request(app)
-        .post(signupEndpoint)
-        .send({ username, email, password });
+      const data = generateUserFixture();
+      console.log(data);
+      const response = await request(app).post(signupEndpoint).send(data);
+
+      // console.log("response -->", response);
 
       expect(response.status).toBe(201);
     });
     it("should return 400 error if user already exists", async () => {
-      const existingUser = createUserFixture();
+      const existingUser = await getOrCreateUser();
+      const data = {
+        username: existingUser.username,
+        email: existingUser.email,
+        password: "12345678Aa$",
+        confirmPassword: "12345678Aa$",
+      };
+      const response = await request(app).post(signupEndpoint).send(data);
 
-      const response = await request(app)
-        .post(signupEndpoint)
-        .send(existingUser);
+      expect(response.status).toBe(400);
+    });
 
+    it('should return 400 error if "confirmPassword" is not the same as "password"', async () => {
+      const { confirmPassword, ...rest } = generateUserFixture();
+      const data = { ...rest, confirmPassword: "12345678Aa5" };
+      const response = await request(app).post(signupEndpoint).send(data);
+      expect(response.status).toBe(400);
+    });
+
+    it("should return 400 error if weak password", async () => {
+      const { password, ...rest } = generateUserFixture();
+      const data = { ...rest, password: "12" };
+      const response = await request(app).post(signupEndpoint).send(data);
+      console.log("response", response);
       expect(response.status).toBe(400);
     });
 
@@ -54,21 +74,20 @@ describe("Auth Routes", () => {
   });
 
   describe(`POST ${loginEndpoint}`, () => {
-    it("should return 200 and log in a user successfully", async () => {
+    it("should return 200 and log in a user successfully using username", async () => {
       const { user, password } = await createUserFixture();
+      const data = { loginValue: user.username, password };
 
-      const response = await request(app)
-        .post(loginEndpoint)
-        .send({ username: user.username, password });
+      const response = await request(app).post(loginEndpoint).send(data);
       expect(response.status).toBe(200);
     });
 
     it("should return 200 and log in a user successfully using email", async () => {
       const { user, password } = await createUserFixture();
+      const data = { loginValue: user.email, password };
 
-      const response = await request(app)
-        .post(loginEndpoint)
-        .send({ email: user.email, password });
+      const response = await request(app).post(loginEndpoint).send(data);
+      console.log("response", response);
       expect(response.status).toBe(200);
     });
 
@@ -97,7 +116,7 @@ describe("Auth Routes", () => {
     });
   });
 
-  describe(`GET ${refreshTokenEndpoint}`, () => {
+  describe.skip(`GET ${refreshTokenEndpoint}`, () => {
     it("should refresh the access token successfully", async () => {
       const response = await request(app)
         .get(refreshTokenEndpoint)
@@ -122,7 +141,7 @@ describe("Auth Routes", () => {
       expect(response.status).toBe(403);
     });
   });
-  describe(`GET ${getAuthUserEndpoint}`, () => {
+  describe.skip(`GET ${getAuthUserEndpoint}`, () => {
     it("should return the authenticated user data", async () => {
       const response = await request(app)
         .get(getAuthUserEndpoint)

@@ -46,7 +46,6 @@ export const addressDirectionInputSchema = z.object({
   cityDistrictTown: cityDistrictTownField,
   state: stateField,
   landmark: landmarkField,
-  alternatePhone: phoneNumberSchema().optional(),
   addressType: z.enum(["home", "work"]),
 });
 

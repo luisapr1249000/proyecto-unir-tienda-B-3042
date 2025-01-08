@@ -5,6 +5,7 @@ import {
   handleObjectNotFound,
 } from "../utils/error.utils";
 import {
+  categoryName as categoryNameSchema,
   paginationCoerceSchema,
   productPriceSortSchema,
   usernameParamSchema,
@@ -12,7 +13,7 @@ import {
 import { Product } from "../models/product.model";
 import { objectIdValidator } from "../utils/zod.utils";
 import { userRoleSchema } from "../validation-schemas/user-schemas/user.validation";
-import { getDefaultPaginationOptions } from "../utils/query.utils";
+import { getDefaultPaginationOptions } from "../utils/utils";
 
 export const validRole = (req: Request, res: Response, next: NextFunction) => {
   const { success, error } = userRoleSchema.safeParse(req.body);
@@ -35,9 +36,9 @@ export const validateSchemaBody = (schema: Zod.Schema) => {
 export const validateObjectIdParams = (paramNames: string[]) => {
   return (req: Request, res: Response, next: NextFunction) => {
     for (const paramName of paramNames) {
-      const paramValue = req.params[paramName];
+      const paramValue = req.params[paramName] ?? "";
 
-      const result = objectIdValidator.safeParse(paramValue);
+      const result = objectIdValidator(paramValue).safeParse(paramValue);
       if (!result.success) {
         return handleBadRequest(res, result.error);
       }
@@ -99,10 +100,24 @@ export const isSellerOrAdmin = (
   res: Response,
   next: NextFunction,
 ) => {
-  const authUserRole = req.user?.role;
-  const isSeller = req.user?.isSeller;
-  if (authUserRole === "admin" || isSeller) {
-    next();
+  if (!req.user) return handleNotPermissions(res);
+  const authUserRole = req.user.role;
+  const isSeller = req.user.isSeller;
+  if (authUserRole !== "admin" && !isSeller) {
+    return handleNotPermissions(res);
   }
-  return handleNotPermissions(res);
+  next();
+};
+
+export const validCategoryName = (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  const { categoryName } = req.params;
+  const result = categoryNameSchema.safeParse(categoryName);
+  if (!result.success) {
+    return handleBadRequest(res, result.error);
+  }
+  next();
 };

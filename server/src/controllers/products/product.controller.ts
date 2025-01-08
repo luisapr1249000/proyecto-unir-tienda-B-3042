@@ -9,11 +9,11 @@ import { Product } from "../../models/product.model";
 import ViewedProduct from "../../models/viewedProduct.model";
 import { hasNotViewedRecently } from "../../utils/product.utils";
 import { Image } from "../../types/image";
-import { getDefaultPaginationOptions } from "../../utils/query.utils";
 import {
   deleteS3Objects,
   deleteSingleS3Object,
 } from "../../config/multer/multer.config";
+import { getDefaultPaginationOptions } from "../../utils/utils";
 
 class ProductController {
   public async createProduct(req: Request, res: Response) {
@@ -121,7 +121,7 @@ class ProductController {
       const product = await Product.findByIdAndDelete(productId);
       if (!product) return handleObjectNotFound(res, "Product", true);
 
-      return res.status(204).json(product);
+      return res.status(204).send();
     } catch (e) {
       return handleError(res, e);
     }

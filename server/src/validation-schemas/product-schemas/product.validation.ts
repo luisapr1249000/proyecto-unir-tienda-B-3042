@@ -2,14 +2,13 @@ import { z } from "zod";
 
 import { specificationsSchema } from "./productSpecifications.validation";
 import { imageSchema } from "../image.schema";
-import { userQuestionSchema } from "./product.user.question.validation";
 import {
   abstractSchema,
   authorSchema,
-  createMongooseObjectId,
   createPositiveIntegerField,
   createPostiveNumberField,
   createValidStringField,
+  objectIdValidator,
 } from "../../utils/zod.utils";
 
 // -------------------------------------------------------
@@ -42,7 +41,7 @@ export const productInputSchema = z.object({
   name: productNameField,
   description: productDescriptionField,
   categories: z
-    .array(createMongooseObjectId())
+    .array(objectIdValidator("Category"))
     .refine((items) => new Set(items).size === items.length, {
       message: "All categories must be unique",
     }),
@@ -75,7 +74,6 @@ export const otherProps = z.object({
   reviewCount: reviewCountField,
   averageReview: averageReviewField,
   viewCount: viewCountField,
-  userQuestions: z.array(userQuestionSchema),
   finalPrice: finalPriceField,
 });
 
