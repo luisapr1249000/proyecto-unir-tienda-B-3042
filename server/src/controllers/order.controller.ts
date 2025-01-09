@@ -7,6 +7,7 @@ import { Product } from "../models/product.model";
 import { OrderItemInput } from "../types/orderItem";
 import { User } from "../models/user.model";
 import { roundToTwoDecimals, canUpdateOrder } from "../utils/order.utils";
+import { getDefaultPaginationOptions } from "../utils/utils";
 
 class OrderController {
   public async createOrder(req: Request, res: Response) {
@@ -142,10 +143,22 @@ class OrderController {
     }
   }
 
-  public async getOrders(_req: Request, res: Response) {
+  public async getOrders(req: Request, res: Response) {
     try {
-      const orders = await Order.find({});
-      if (!orders) {
+      const { limit, page, sort } = {
+        ...getDefaultPaginationOptions(),
+        ...req.query,
+      };
+
+      const paginationOptions = {
+        limit,
+        page,
+        sort,
+        populate: ["customer"],
+      };
+
+      const orders = await Order.paginate({}, paginationOptions);
+      if (!orders || orders.docs.length === 0) {
         return handleObjectNotFound(res, "Order");
       }
       return res.status(200).json(orders);
@@ -157,8 +170,21 @@ class OrderController {
   public async getOrdersByUser(req: Request, res: Response) {
     try {
       const { userId } = req.params;
-      const orders = await Order.find({ customerId: userId });
-      if (!orders) {
+      const { limit, page, sort } = {
+        ...getDefaultPaginationOptions(),
+        ...req.query,
+      };
+      const query = { customer: userId };
+
+      const paginationOptions = {
+        limit,
+        page,
+        sort,
+        populate: ["customer"],
+      };
+
+      const orders = await Order.paginate(query, paginationOptions);
+      if (!orders || orders.docs.length === 0) {
         return handleObjectNotFound(res, "Order");
       }
       return res.status(200).json(orders);
