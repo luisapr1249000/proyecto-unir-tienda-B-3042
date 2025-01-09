@@ -7,7 +7,7 @@ import {
 
 export const pinCodeField = createValidStringField({
   fieldName: "pin Code",
-  maxLength: 15,
+  maxLength: 30,
 });
 export const localityField = createValidStringField({
   fieldName: "locality",

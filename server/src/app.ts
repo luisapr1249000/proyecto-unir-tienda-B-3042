@@ -18,7 +18,7 @@ import { OrderRoutes } from "./routes/order.routes";
 import { googlePassport } from "./auth/passport/google";
 import { ReportRoutes } from "./routes/report.routes";
 import { UserProductActionsRoutes } from "./routes/users/userProductActions.routes";
-import { AddressDirectionRoutes } from "./routes/users/addressDirection.routes";
+import { AddressDirectionRoutes } from "./routes/users/address.routes";
 import { productQuestiontsRoutes } from "./routes/products/productQuestions.routes";
 // import expressListRoutes from "express-list-routes";
 

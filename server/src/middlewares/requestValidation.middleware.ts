@@ -14,6 +14,7 @@ import { Product } from "../models/product.model";
 import { objectIdValidator } from "../utils/zod.utils";
 import { userRoleSchema } from "../validation-schemas/user-schemas/user.validation";
 import { getDefaultPaginationOptions } from "../utils/utils";
+import { Order } from "../models/orders.model";
 
 export const validRole = (req: Request, res: Response, next: NextFunction) => {
   const { success, error } = userRoleSchema.safeParse(req.body);
@@ -120,4 +121,25 @@ export const validCategoryName = (
     return handleBadRequest(res, result.error);
   }
   next();
+};
+
+export const verifyOrderOwnershipOrSellerRoleOrAdmin = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  const { orderId } = req.params;
+  const order = await Order.findById(orderId);
+  if (!order) {
+    return handleObjectNotFound(res, "Order");
+  }
+  const authUserId = req.user?._id.toString();
+  const authUserRole = req.user?.role;
+  if (authUserRole === "admin") {
+    next();
+  }
+  if (authUserId === order.customer.toString() || authUserRole === "admin") {
+    return next();
+  }
+  return handleNotPermissions(res);
 };

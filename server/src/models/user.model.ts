@@ -2,6 +2,7 @@ import bcrypt from "bcrypt";
 import { PaginateModel, Schema, model } from "mongoose";
 import mongoosePaginate from "mongoose-paginate-v2";
 import { UserDocument } from "../types/user";
+import { createAddressSchema } from "../utils/mongoose-schemas/mongoose.utils";
 
 export const imageSchema = new Schema({
   originalName: String,
@@ -10,55 +11,6 @@ export const imageSchema = new Schema({
   size: String,
   createdAt: { type: Date, default: Date.now },
 });
-
-const addressDirectionSchema = new Schema(
-  {
-    pinCode: {
-      type: String,
-      trim: true,
-    },
-    locality: {
-      type: String,
-      trim: true,
-      minlength: 10,
-      maxlength: 100,
-    },
-    addressLine1: {
-      type: String,
-      trim: true,
-      minlength: 10,
-      maxlength: 100,
-    },
-    addressLine2: {
-      type: String,
-      trim: true,
-      maxlength: 100,
-    },
-    cityDistrictTown: {
-      type: String,
-      required: true,
-      trim: true,
-    },
-    state: {
-      type: String,
-      required: true,
-    },
-    alternatePhone: {
-      type: String,
-      trim: true,
-    },
-    landmark: {
-      type: String,
-      trim: true,
-    },
-    addressType: {
-      type: String,
-      required: true,
-      enum: ["home", "work"],
-    },
-  },
-  { timestamps: true },
-);
 
 const cartItem = new Schema(
   {
@@ -74,6 +26,11 @@ const cartItem = new Schema(
     },
     price: Number,
     seller: { type: Schema.Types.ObjectId, ref: "User" },
+    subtotal: {
+      type: Number,
+      required: true,
+      default: 0,
+    },
   },
   { timestamps: true },
 );
@@ -130,7 +87,11 @@ const userSchema = new Schema(
         select: false,
       },
     ],
-    cart: { type: userCartSchema, select: false },
+    cart: {
+      type: userCartSchema,
+      default: { items: [], totalPrice: 0, totalItems: 0 },
+      select: false,
+    },
     isSeller: { type: Boolean, default: false },
     role: {
       type: String,
@@ -138,7 +99,7 @@ const userSchema = new Schema(
       default: "user",
     },
     addressDirections: {
-      type: [addressDirectionSchema],
+      type: [createAddressSchema({ withTimestamps: true })],
       select: false,
     },
     googleId: String,

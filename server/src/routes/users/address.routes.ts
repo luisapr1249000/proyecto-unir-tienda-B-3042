@@ -1,5 +1,5 @@
 import { Router } from "express";
-import addressDirectionController from "../../controllers/users/addressDirection.controller";
+import addressDirectionController from "../../controllers/users/address.controller";
 import {
   authMiddleware,
   verifyUserOwnershipOrAdminRole,
@@ -8,7 +8,7 @@ import {
   validateObjectIdParams,
   validateSchemaBody,
 } from "../../middlewares/requestValidation.middleware";
-import { addressDirectionInputSchema } from "../../validation-schemas/user-schemas/addressDirection.validation";
+import { addressDirectionInputSchema } from "../../validation-schemas/user-schemas/address.validation";
 import { ADDRESS_DIRECTION_ID } from "../../constants";
 
 const router = Router();

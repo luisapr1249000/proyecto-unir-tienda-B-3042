@@ -13,6 +13,7 @@ import {
 import {
   orderInputSchema,
   orderItemInputSchema,
+  statusFieldSchema,
 } from "../validation-schemas/order.validation";
 
 const router = Router();
@@ -31,11 +32,10 @@ router.post(
   orderController.createOrder,
 );
 router.put(
-  "/orders/:orderId",
+  "/orders/:orderId/orderItem/:orderItemId",
   authMiddleware,
-  validateObjectIdParams(["orderId"]),
-  verifyUserOwnershipOrAdminRole("orderId"),
-  validateSchemaBody(orderInputSchema),
+  validateObjectIdParams(["orderId", "orderItemId"]),
+  validateSchemaBody(statusFieldSchema),
   orderController.updateOrder,
 );
 router.delete(

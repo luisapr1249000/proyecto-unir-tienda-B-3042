@@ -5,6 +5,8 @@ import { handleError, handleObjectNotFound } from "../utils/error.utils";
 import { startSession } from "mongoose";
 import { Product } from "../models/product.model";
 import { OrderItemInput } from "../types/orderItem";
+import { User } from "../models/user.model";
+import { roundToTwoDecimals, canUpdateOrder } from "../utils/order.utils";
 
 class OrderController {
   public async createOrder(req: Request, res: Response) {
@@ -13,11 +15,24 @@ class OrderController {
 
     try {
       const authUserId = extractAuthUserId(req);
-      const { totalPrice, items } = req.body;
-      let totalPriceCalculated = 0;
-      const orderItems: OrderItemInput[] = [];
-      for (const item of items) {
-        const product = await Product.findById(item.productId).session(session);
+      const user = await User.findById(authUserId).select("cart");
+      if (!user) {
+        return res.status(404).json({ message: "User not found" });
+      }
+      const { orderItems, shippingAddress } = req.body;
+      const productIds: string[] = orderItems.map((item: OrderItemInput) =>
+        item.product.toString(),
+      );
+      const items = [];
+      const products = await Product.find({ _id: { $in: productIds } }).session(
+        session,
+      );
+
+      let calculatedTotalPrice = 0.0;
+      for (const item of orderItems) {
+        const product = products.find(
+          (product) => product._id.toString() === item.product.toString(),
+        );
         if (!product) {
           return res.status(400).json({
             message: `Product with ID ${item.productId} not found`,
@@ -30,27 +45,36 @@ class OrderController {
           });
         }
 
-        const order: OrderItemInput = {
+        const subtotal = roundToTwoDecimals(product.finalPrice * item.quantity);
+        const orderItem = {
           price: product.finalPrice,
           product: product._id,
           quantity: item.quantity,
           seller: product.author,
+          subtotal: subtotal,
+          status: "pending",
         };
-        totalPriceCalculated += order.price * order.quantity;
         product.quantity -= item.quantity;
+        calculatedTotalPrice += orderItem.subtotal;
         await product.save({ session });
 
-        orderItems.push(order);
+        items.push(orderItem);
+        const productIndex = user?.cart.items.findIndex(
+          (item) => item.product.toString() === product._id.toString(),
+        );
+        if (productIndex === 1) {
+          user?.cart.items.splice(productIndex, 1);
+        }
+
+        await user.save({ session });
       }
-      if (totalPriceCalculated.toFixed(2) !== totalPrice.toFixed(2)) {
-        return res.status(400).json({
-          message: "Total price does not match the total price of the items",
-        });
-      }
+
+      const totalPrice = roundToTwoDecimals(calculatedTotalPrice);
       const order = new Order({
-        customerId: authUserId,
+        customer: authUserId,
         totalPrice,
-        orderItems,
+        orderItems: items,
+        shippingAddress: shippingAddress,
       });
       await order.save({ session });
       await session.commitTransaction();
@@ -68,18 +92,35 @@ class OrderController {
 
   public async updateOrder(req: Request, res: Response) {
     try {
-      const { orderId } = req.params;
-      const orderUpdated = await Order.findOneAndUpdate(
-        {
-          _id: orderId,
-        },
-        req.body,
-        { new: true },
-      );
-      if (!orderUpdated) {
+      const authUserId = extractAuthUserId(req);
+      const { orderId, orderItemId } = req.params;
+      const { status } = req.body;
+      const order = await Order.findById(orderId);
+      if (!order) {
         return handleObjectNotFound(res, "Order");
       }
-      return res.status(200).json(orderUpdated);
+
+      const itemToUpdate = order.orderItems.id(orderItemId);
+      if (!itemToUpdate) {
+        return handleObjectNotFound(res, "Order Item");
+      }
+
+      const canUpdate = canUpdateOrder(
+        authUserId,
+        req.user?.role ?? "",
+        order,
+        status,
+      );
+
+      if (!canUpdate) {
+        return res
+          .status(403)
+          .json({ message: "You cannot update this order" });
+      }
+
+      itemToUpdate.status = status;
+
+      return res.status(200).json(order);
     } catch (e) {
       return handleError(res, e);
     }

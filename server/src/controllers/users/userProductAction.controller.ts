@@ -10,16 +10,57 @@ import { Product } from "../../models/product.model";
 import { extractAuthUserId } from "../../utils/auth.utils";
 import { UserCartItem } from "../../types/user";
 import { createObjectId } from "../../utils/product.utils";
+import { twoDigitsFixed } from "../../utils/utils";
 
 class UserProductActions {
   public async getUserCart(req: Request, res: Response) {
     try {
       const { userId } = req.params;
+      const user = await User.findById(userId).select("cart.items");
+      if (!user) {
+        return res.status(404).json({ message: "User not found" });
+      }
 
-      const user = await User.findById(userId).select("cart").populate("cart");
-      if (!user) return handleObjectNotFound(res, "User");
+      const groupedBySeller = await User.aggregate([
+        { $match: { _id: user._id } },
+        { $unwind: "$cart.items" },
+        {
+          $lookup: {
+            from: "users",
+            localField: "cart.items.seller",
+            foreignField: "_id",
+            as: "sellerInfo",
+          },
+        },
+        { $unwind: "$sellerInfo" },
+        {
+          $group: {
+            _id: "$cart.items.seller",
+            sellerName: { $first: "$sellerInfo.username" },
+            products: {
+              $push: {
+                product: "$cart.items.product",
+                quantity: "$cart.items.quantity",
+                price: "$cart.items.price",
+              },
+            },
+            totalQuantity: { $sum: "$cart.items.quantity" },
+            totalPrice: {
+              $sum: {
+                $multiply: ["$cart.items.price", "$cart.items.quantity"],
+              },
+            },
+          },
+        },
+        {
+          $addFields: {
+            totalPrice: { $round: ["$totalPrice", 2] }, // Redondea `totalPrice` a 2 decimales
+          },
+        },
+        { $sort: { totalPrice: -1 } }, // Ordena por precio total (opcional)
+      ]);
 
-      return res.status(200).json(user);
+      return res.status(200).json(groupedBySeller);
     } catch (e) {
       return handleError(res, e);
     }
@@ -93,7 +134,7 @@ class UserProductActions {
         return handleObjectNotFound(res, "Product");
       }
 
-      const user = await User.findById(userId).select("cart");
+      const user = await User.findById(userId).select("+cart");
       if (!user) return handleObjectNotFound(res, "User");
 
       const productIndex = user.cart.items?.findIndex(
@@ -101,16 +142,21 @@ class UserProductActions {
       );
 
       if (productIndex === -1 && productQuantity > 0) {
+        let subtotal = product.finalPrice * productQuantity;
+        subtotal = twoDigitsFixed(subtotal);
         const cartItem: UserCartItem = {
           quantity: productQuantity,
           seller: product.author,
           price: product.price,
           product: product._id,
+          subtotal: subtotal,
         };
         user.cart.items.push(cartItem);
       }
 
-      if (Number(productQuantity) === 0) {
+      if (productIndex === 1 && Number(productQuantity) === 0) {
+        const subtotal = user?.cart?.items?.[productIndex]?.subtotal ?? 0;
+        user.cart.totalPrice = user.cart.totalPrice - subtotal;
         user.cart.items.splice(productIndex, 1);
       }
       if (productQuantity > 0) {

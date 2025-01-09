@@ -6,8 +6,6 @@ import {
   handleObjectNotFound,
 } from "../../utils/error.utils";
 import { Product } from "../../models/product.model";
-import ViewedProduct from "../../models/viewedProduct.model";
-import { hasNotViewedRecently } from "../../utils/product.utils";
 import { Image } from "../../types/image";
 import {
   deleteS3Objects,
@@ -153,41 +151,11 @@ class ProductController {
 
   public async getProductById(req: Request, res: Response) {
     try {
-      // console.log(req.user);
       const { productId } = req.params;
       const product = await Product.findById(productId)
         .select("+userQuestions")
-        .populate("userQuestions")
-        .populate("author")
-        .populate("categories");
+        .populate("userQuestions categories author");
       if (!product) return handleObjectNotFound(res, "Product");
-
-      const noAuthUserHasViewed = req.cookies[`viewed_${productId}`];
-
-      if (!noAuthUserHasViewed) {
-        product.viewCount += 1;
-
-        res.cookie(`viewed_${productId}`, "true", {
-          maxAge: 24 * 60 * 60 * 1000,
-        });
-      }
-
-      if (req.user) {
-        const userId = req.user._id.toString();
-
-        const notViewedRecently = await hasNotViewedRecently(
-          userId,
-          product._id.toString(),
-        );
-
-        if (notViewedRecently) {
-          await ViewedProduct.create({
-            product: product._id,
-            userId: req.user._id,
-          });
-          product.viewCount += 1;
-        }
-      }
 
       await product.save();
 

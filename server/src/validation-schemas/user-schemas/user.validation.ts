@@ -6,6 +6,7 @@ import {
   createMongooseObjectId,
   createNoWhitespaceString,
   createPositiveIntegerField,
+  createPostiveNumberField,
   createValidStringField,
   phoneNumberSchema,
 } from "../../utils/zod.utils";
@@ -31,13 +32,24 @@ export const userInputSchema = z.object({
   phoneNumber: phoneNumberSchema().optional(),
 });
 
+const subtotalField = createPostiveNumberField({
+  fieldName: "subtotal",
+  multipleOf: 0.01,
+});
+
+const priceField = createPostiveNumberField({
+  fieldName: "price",
+  multipleOf: 0.01,
+});
+
 export const cartItem = z.object({
   product: createMongooseObjectId(),
   seller: createMongooseObjectId(),
   quantity: createPositiveIntegerField({ fieldName: "quantity" })
     .min(1, { message: "Quantity cannot be less than 1" })
     .default(1),
-  price: z.number().optional(),
+  price: priceField,
+  subtotal: subtotalField,
 });
 
 export const userCartSchema = z.object({

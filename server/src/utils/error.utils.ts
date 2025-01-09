@@ -24,6 +24,7 @@ export const handleObjectNotFound = (
     | "Category"
     | "Address"
     | "Order"
+    | "Order Item"
     | "Categories"
     | "Cart"
     | "Saved Products"

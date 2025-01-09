@@ -1,6 +1,7 @@
 import { PaginateModel, Schema, model } from "mongoose";
 import mongoosePaginate from "mongoose-paginate-v2";
 import { OrderDocument } from "../types/order";
+import { createAddressSchema } from "../utils/mongoose-schemas/mongoose.utils";
 
 const orderItemSchema = new Schema(
   {
@@ -18,6 +19,16 @@ const orderItemSchema = new Schema(
       required: true,
     },
     seller: { type: Schema.Types.ObjectId, ref: "User", required: true },
+    subtotal: {
+      type: Number,
+      required: true,
+      default: 0,
+    },
+    status: {
+      type: String,
+      enum: ["pending", "processing", "shipped", "delivered", "cancelled"],
+      default: "pending",
+    },
   },
   { timestamps: true },
 );
@@ -28,16 +39,13 @@ const orderSchema = new Schema(
       type: Schema.Types.ObjectId,
       ref: "User",
     },
-    finalPrice: {
+    totalPrice: {
       type: Number,
       required: true,
     },
-    status: {
-      type: String,
-      enum: ["pending", "processing", "shipped", "delivered"],
-      default: "pending",
-    },
     orderItems: [orderItemSchema],
+    shippingAddress: createAddressSchema({ withId: false }),
+    paymentMethod: String,
   },
   { timestamps: true },
 );

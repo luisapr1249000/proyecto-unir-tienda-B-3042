@@ -20,4 +20,7 @@ export const getDefaultPaginationOptions = () => ({
   sort: "-createdAt",
 });
 
-export const twoDigitsFixed = (num: number) => num.toFixed(2);
+export const twoDigitsFixed = (num: number | string): number => {
+  if (typeof num === "number") return parseFloat(num.toFixed(2));
+  return parseFloat(Number(num).toFixed(2));
+};

@@ -8,20 +8,17 @@ import {
 import { Types } from "mongoose";
 import validator from "validator";
 
-export const objectIdValidator = (fieldName: string) =>
+export const objectIdValidator = (fieldName = "_id") =>
   z
     .string()
     .min(1, { message: `${fieldName} is required` })
     .refine((value) => Types.ObjectId.isValid(value), {
       message: "Invalid ObjectId format",
       path: ["value"],
-    });
+    })
+    .transform((value) => new Types.ObjectId(value));
 
-export const createMongooseObjectId = () =>
-  z.instanceof(Types.ObjectId).refine((id) => Types.ObjectId.isValid(id), {
-    message: "Invalid ObjectId format",
-  });
-
+export const createMongooseObjectId = () => z.instanceof(Types.ObjectId);
 export const abstractSchema = () =>
   z.object({
     _id: createMongooseObjectId(),

@@ -1,19 +1,6 @@
 import { Types } from "mongoose";
-import ViewedProduct from "../models/viewedProduct.model";
 import Review from "../models/review.model";
-
-export const hasNotViewedRecently = async (
-  userId: string,
-  productId: string,
-) => {
-  const oneHourAgo = new Date(Date.now() - 10 * 60 * 1000);
-  const recentViewed = await ViewedProduct.findOne({
-    userId,
-    productId,
-    timestamp: { $gte: oneHourAgo },
-  });
-  return !recentViewed;
-};
+import { UserCartItem } from "../types/user";
 
 export const getCommentCountFromProduct = (productId: string) =>
   Review.countDocuments({ product: productId });
@@ -37,4 +24,20 @@ export const getAverageReview = async (productId: string) => {
 
 export const fixedProductPrice = (price: number) => {
   price.toFixed(2);
+};
+
+export const calculateTotalPrice = (items: UserCartItem[]): number => {
+  return items.reduce((total, item) => {
+    const price = item.price ?? 0;
+    const quantity = item.quantity ?? 0;
+    return total + price * quantity;
+  }, 0);
+};
+
+export const calculateSubtotal = (items: UserCartItem[]): number => {
+  return items.reduce((total, item) => {
+    const price = item.price ?? 0;
+    const quantity = item.quantity ?? 0;
+    return total + price * quantity;
+  }, 0);
 };
