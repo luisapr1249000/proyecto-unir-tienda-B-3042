@@ -302,6 +302,14 @@ describe("Product Routes", () => {
       expect(response.status).toBe(404);
     });
 
+    it("should return 400 if required fields are missing", async () => {
+      const response = await request(app)
+        .post(productEndpoint)
+        .set("Cookie", sellerCookies);
+
+      expect(response.status).toBe(400);
+    });
+
     it("should return 400 if not valid id", async () => {
       const response = await request(app)
         .put(nonValidProductIdEndpoint)

@@ -8,6 +8,15 @@ class Reportcontroller {
   public async createReport(req: Request, res: Response) {
     try {
       const userId = extractAuthUserId(req);
+      const alreadyReported = await Report.findOne({
+        itemType: req.body.itemType,
+        reportedItem: req.body.reportedItem,
+      });
+      if (alreadyReported) {
+        return res
+          .status(400)
+          .json({ message: "You already reported this item" });
+      }
       const { reportedItem, itemType, reason, problemDescription } = req.body;
       const report = new Report({
         reportedItem,
@@ -55,10 +64,34 @@ class Reportcontroller {
     }
   }
 
+  public async getReports(req: Request, res: Response) {
+    try {
+      const { limit, page, sort } = {
+        ...getDefaultPaginationOptions(),
+        ...req.query,
+      };
+      const paginationOptions = {
+        limit,
+        page,
+        sort,
+        populate: ["reporter", "reportedItem"],
+      };
+      const reports = await Report.paginate(paginationOptions);
+      if (!reports || reports.docs.length === 0) {
+        return handleObjectNotFound(res, "Report");
+      }
+      return res.status(200).json(reports);
+    } catch (e) {
+      return handleError(res, e);
+    }
+  }
+
   public async getReportById(req: Request, res: Response) {
     try {
       const { reportedId } = req.params;
-      const reportedPost = await Report.findById(reportedId);
+      const reportedPost = await Report.findById(reportedId).populate(
+        "reporter reportedItem",
+      );
       if (!reportedPost) {
         return handleObjectNotFound(res, "Product");
       }

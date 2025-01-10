@@ -28,7 +28,8 @@ export const handleObjectNotFound = (
     | "Categories"
     | "Cart"
     | "Saved Products"
-    | "Wishlist",
+    | "Wishlist"
+    | "Report",
   multipleObjects = false,
   extraMessage = "",
 ) => {

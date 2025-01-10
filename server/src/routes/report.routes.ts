@@ -20,46 +20,50 @@ import {
 
 const router = Router();
 
+router.get("/reports", authMiddleware, isAdmin, reportController.getReports);
+
 router.post(
-  "/report/:reportItem/",
+  "/reports/:reportItem/",
   authMiddleware,
   validateSchemaBody(reportInputSchema),
   validateObjectIdParams(REPORTED_OBJECT_ID),
   reportController.createReport,
 );
 router.get(
-  "/report/:reportId",
+  "/reports/:reportId",
   validateObjectIdParams(REPORTED_ID),
   isAdmin,
   reportController.getReportById,
 );
 router.put(
-  "/report/:reportId",
+  "/reports/:reportId",
   validateObjectIdParams(REPORTED_ID),
   authMiddleware,
+  isAdmin,
   reportController.updateReport,
 );
 router.delete(
-  "/report/:reportId",
+  "/reports/:reportId",
   validateObjectIdParams(REPORTED_ID),
   authMiddleware,
+  isAdmin,
   reportController.deleteReport,
 );
 
 router.get(
-  "/report/products/:productId",
+  "/reports/products/:productId",
   validateObjectIdParams(PRODUCT_ID),
   isAdmin,
   reportController.getReportsFromProduct,
 );
 router.get(
-  "/report/reviews/:reviewId",
+  "/reports/reviews/:reviewId",
   validateObjectIdParams(REVIEW_ID),
   isAdmin,
   reportController.getReportsFromReview,
 );
 router.get(
-  "/report/users/:userId",
+  "/reports/users/:userId",
   validateObjectIdParams(USER_ID),
   isUserOwnerOrAdmin,
   reportController.getReportsByUser,
