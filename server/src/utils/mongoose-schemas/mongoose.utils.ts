@@ -1,4 +1,5 @@
 import { Schema, Types } from "mongoose";
+import { User } from "../../models/user.model";
 
 export const createAddressSchema = ({
   withTimestamps = false,
@@ -57,3 +58,14 @@ export const createAddressSchema = ({
 };
 
 export const createObjectId = (id: string) => new Types.ObjectId(id);
+
+export const createAdmin = async () => {
+  const user = new User({
+    username: "admin",
+    email: "admin@admin.com",
+    password: "admin",
+    role: "admin",
+  });
+  await user.save();
+  console.table({ user: user.toJSON() });
+};

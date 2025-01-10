@@ -6,6 +6,11 @@ import { getOrCreateUser } from "./user.fixture";
 
 export const getTotalReportCount = async () => await Report.countDocuments();
 
+export const generateReportResolution = () => ({
+  resolution: faker.lorem.sentence(),
+  resolved: true,
+});
+
 export const generateReportDataFixture = () => {
   const data = {
     reason: faker.helpers.arrayElement([
@@ -48,7 +53,7 @@ export const createReportFixture = async ({
   return report;
 };
 
-export const getOrCreateReport = async ({ reporter }: ReportFixture = {}) => {
+export const getOrCreateReport = async () => {
   const random = faker.number.int({
     min: 0,
     max: await getTotalReportCount(),
@@ -56,9 +61,7 @@ export const getOrCreateReport = async ({ reporter }: ReportFixture = {}) => {
 
   let report = await Report.findOne().skip(random);
   if (!report) {
-    report = await createReportFixture({
-      reporter,
-    });
+    report = await createReportFixture();
   }
 
   return report;

@@ -3,7 +3,7 @@ import {
   abstractSchema,
   createMongooseObjectId,
   createValidStringField,
-  objectIdValidator,
+  // objectIdValidator,
 } from "../utils/zod.utils";
 
 const problemDescriptionField = createValidStringField({
@@ -25,17 +25,17 @@ export const reportInputSchema = z.object({
   ]),
   itemType: z.enum(["Product", "Review"]),
   problemDescription: problemDescriptionField.optional(),
-  reportedItem: objectIdValidator(),
 });
 
-export const reportUpdateSchema = z.object({ resolution: resolutionField });
+export const reportResolutionSchema = z.object({ resolution: resolutionField });
 
 export const reportProps = z.object({
   reporter: createMongooseObjectId(),
   resolution: resolutionField.optional(),
   reportedItem: createMongooseObjectId(),
+  resolved: z.boolean(),
 });
 
 export const reportSchema = abstractSchema()
-  .merge(reportInputSchema.omit({ reportedItem: true }))
+  .merge(reportInputSchema)
   .merge(reportProps);

@@ -9,8 +9,9 @@ import { getResourceOwnerId } from "../utils/resource.utils";
 export const authMiddleware = passport.authenticate("jwt", { session: false });
 
 export const isAdmin = (req: Request, res: Response, next: NextFunction) => {
-  const authUserRole = req.user?.role;
-  if (authUserRole !== "admin") {
+  if (!req.user) return handleNotPermissions(res);
+  const { role } = req.user;
+  if (role !== "admin") {
     return handleNotPermissions(res);
   }
   next();

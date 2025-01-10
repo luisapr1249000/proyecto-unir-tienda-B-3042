@@ -1,5 +1,6 @@
 import { model, Schema, PaginateModel } from "mongoose";
 import { ReportDocument } from "../types/report";
+import mongoosePaginate from "mongoose-paginate-v2";
 
 const reportSchema = new Schema(
   {
@@ -35,6 +36,8 @@ reportSchema.index(
   { reporter: 1, reportedItem: 1, itemType: 1 },
   { unique: true },
 );
+
+reportSchema.plugin(mongoosePaginate);
 const Report = model<ReportDocument, PaginateModel<ReportDocument>>(
   "Report",
   reportSchema,

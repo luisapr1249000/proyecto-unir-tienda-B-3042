@@ -7,19 +7,21 @@ import { getDefaultPaginationOptions } from "../utils/utils";
 class Reportcontroller {
   public async createReport(req: Request, res: Response) {
     try {
+      const { reporteItemId } = req.params;
+      const { itemType, reason, problemDescription } = req.body;
+
       const userId = extractAuthUserId(req);
       const alreadyReported = await Report.findOne({
-        itemType: req.body.itemType,
-        reportedItem: req.body.reportedItem,
+        itemType: itemType,
+        reportedItem: reporteItemId,
       });
       if (alreadyReported) {
         return res
           .status(400)
           .json({ message: "You already reported this item" });
       }
-      const { reportedItem, itemType, reason, problemDescription } = req.body;
       const report = new Report({
-        reportedItem,
+        reportedItem: reporteItemId,
         itemType,
         reason,
         problemDescription,
@@ -36,9 +38,9 @@ class Reportcontroller {
   public async updateReport(req: Request, res: Response) {
     try {
       const { resolution } = req.body;
-      const { reportedId } = req.params;
+      const { reportId } = req.params;
       const reportedPost = await Report.findByIdAndUpdate(
-        reportedId,
+        reportId,
         { resolution, resolved: true },
         { new: true },
       );
@@ -53,8 +55,8 @@ class Reportcontroller {
 
   public async deleteReport(req: Request, res: Response) {
     try {
-      const { reportedId } = req.params;
-      const reportedPost = await Report.findByIdAndDelete(reportedId);
+      const { reportId } = req.params;
+      const reportedPost = await Report.findByIdAndDelete(reportId);
       if (!reportedPost) {
         return handleObjectNotFound(res, "Product");
       }
@@ -76,7 +78,7 @@ class Reportcontroller {
         sort,
         populate: ["reporter", "reportedItem"],
       };
-      const reports = await Report.paginate(paginationOptions);
+      const reports = await Report.paginate({}, paginationOptions);
       if (!reports || reports.docs.length === 0) {
         return handleObjectNotFound(res, "Report");
       }
@@ -88,8 +90,8 @@ class Reportcontroller {
 
   public async getReportById(req: Request, res: Response) {
     try {
-      const { reportedId } = req.params;
-      const reportedPost = await Report.findById(reportedId).populate(
+      const { reportId } = req.params;
+      const reportedPost = await Report.findById(reportId).populate(
         "reporter reportedItem",
       );
       if (!reportedPost) {

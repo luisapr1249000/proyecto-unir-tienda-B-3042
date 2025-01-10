@@ -2,6 +2,7 @@
 import mongoose, { connect } from "mongoose";
 import app from "./app";
 import { env } from "./config/envConfig";
+// import { createAdmin } from "./utils/mongoose-schemas/mongoose.utils";
 
 mongoose.Promise = global.Promise;
 
@@ -16,6 +17,7 @@ const connectAndStartServer = async () => {
     app.listen(PORT, () => {
       console.log(`Server is running on http://localhost:${PORT}`);
     });
+    // await createAdmin();
   } catch (e) {
     console.error("Database connection error:", e);
     process.exit(1);

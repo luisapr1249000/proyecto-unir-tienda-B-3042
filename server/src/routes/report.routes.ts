@@ -9,37 +9,36 @@ import {
   validateObjectIdParams,
   validateSchemaBody,
 } from "../middlewares/requestValidation.middleware";
-import { reportInputSchema } from "../validation-schemas/report.validation";
 import {
-  PRODUCT_ID,
-  REPORTED_ID,
-  REPORTED_OBJECT_ID,
-  REVIEW_ID,
-  USER_ID,
-} from "../constants";
+  reportInputSchema,
+  reportResolutionSchema,
+} from "../validation-schemas/report.validation";
+import { PRODUCT_ID, REPORTED_ID, REVIEW_ID, USER_ID } from "../constants";
 
 const router = Router();
 
 router.get("/reports", authMiddleware, isAdmin, reportController.getReports);
 
 router.post(
-  "/reports/:reportItem/",
+  "/reports/:reporteItemId/",
   authMiddleware,
+  validateObjectIdParams(["reporteItemId"]),
   validateSchemaBody(reportInputSchema),
-  validateObjectIdParams(REPORTED_OBJECT_ID),
   reportController.createReport,
 );
 router.get(
   "/reports/:reportId",
-  validateObjectIdParams(REPORTED_ID),
+  authMiddleware,
   isAdmin,
+  validateObjectIdParams(REPORTED_ID),
   reportController.getReportById,
 );
 router.put(
   "/reports/:reportId",
-  validateObjectIdParams(REPORTED_ID),
   authMiddleware,
   isAdmin,
+  validateObjectIdParams(REPORTED_ID),
+  validateSchemaBody(reportResolutionSchema),
   reportController.updateReport,
 );
 router.delete(
@@ -53,18 +52,21 @@ router.delete(
 router.get(
   "/reports/products/:productId",
   validateObjectIdParams(PRODUCT_ID),
+  authMiddleware,
   isAdmin,
   reportController.getReportsFromProduct,
 );
 router.get(
   "/reports/reviews/:reviewId",
   validateObjectIdParams(REVIEW_ID),
+  authMiddleware,
   isAdmin,
   reportController.getReportsFromReview,
 );
 router.get(
   "/reports/users/:userId",
   validateObjectIdParams(USER_ID),
+  authMiddleware,
   isUserOwnerOrAdmin,
   reportController.getReportsByUser,
 );

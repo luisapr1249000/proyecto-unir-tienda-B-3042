@@ -51,7 +51,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(passportJwt.initialize());
 app.use(googlePassport.initialize());
 
-app.use("/app/v1", ReportRoutes);
+app.use("/api/v1", ReportRoutes);
 app.use("/api/v1", AuthRoutes);
 app.use("/api/v1", UserRoutes);
 app.use("/api/v1", UserProductActionsRoutes);

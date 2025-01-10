@@ -18,7 +18,7 @@ const options = {
 passport.use(
   new JwtStrategy(options, async (payload, done) => {
     try {
-      const user = await User.findById(payload.sub).select("-password +role");
+      const user = await User.findById(payload.sub).select("+role -password");
       if (!user) return done(null, false, { message: "User not found" });
       return done(null, user);
     } catch (e) {
