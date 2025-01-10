@@ -106,7 +106,6 @@ class UserController {
       if (!user) return handleObjectNotFound(res, "User");
       return res.status(200).json(user);
     } catch (e) {
-      console.log("se ha producido un error en el cambio de rol de usuario");
       return handleError(res, e);
     }
   }

@@ -153,8 +153,8 @@ class ProductController {
     try {
       const { productId } = req.params;
       const product = await Product.findById(productId)
-        .select("+userQuestions")
-        .populate("userQuestions categories author");
+        .select("+productQuestions")
+        .populate("productQuestions categories author");
       if (!product) return handleObjectNotFound(res, "Product");
 
       await product.save();

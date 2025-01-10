@@ -16,9 +16,9 @@ const userQuestionSchema = new Schema(
 const productSpecification = new Schema(
   {
     dimensions: {
-      width: String,
-      depth: String,
-      height: String,
+      width: Number,
+      depth: Number,
+      height: Number,
     },
     material: String,
     finish: String,

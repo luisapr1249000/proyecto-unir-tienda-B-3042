@@ -2,23 +2,21 @@ import { Request, Response } from "express";
 import { handleError, handleObjectNotFound } from "../utils/error.utils";
 import Report from "../models/report.model";
 import { extractAuthUserId } from "../utils/auth.utils";
-import { createObjectId } from "../utils/product.utils";
+import { getDefaultPaginationOptions } from "../utils/utils";
 
 class Reportcontroller {
   public async createReport(req: Request, res: Response) {
     try {
       const userId = extractAuthUserId(req);
-      const { reason } = req.body;
-      const { objectId, reportType } = req.params;
+      const { reportedItem, itemType, reason, problemDescription } = req.body;
       const report = new Report({
+        reportedItem,
+        itemType,
         reason,
+        problemDescription,
         reporter: userId,
       });
-      if (reportType === "product") {
-        report.reportedProduct = createObjectId(objectId);
-      } else {
-        report.reportedReview = createObjectId(objectId);
-      }
+
       await report.save();
       return res.status(201).json(report);
     } catch (e) {
@@ -47,7 +45,7 @@ class Reportcontroller {
   public async deleteReport(req: Request, res: Response) {
     try {
       const { reportedId } = req.params;
-      const reportedPost = await Report.findByIdAndUpdate(reportedId);
+      const reportedPost = await Report.findByIdAndDelete(reportedId);
       if (!reportedPost) {
         return handleObjectNotFound(res, "Product");
       }
@@ -73,8 +71,22 @@ class Reportcontroller {
   public async getReportsByUser(req: Request, res: Response) {
     try {
       const { userId } = req.params;
-      const reports = await Report.find({ reporter: userId });
-      if (!reports || reports.length === 0) {
+      const { limit, page, sort } = {
+        ...getDefaultPaginationOptions(),
+        ...req.query,
+      };
+      const paginationOptions = {
+        limit,
+        page,
+        sort,
+        populate: ["reporter", "reportedItem"],
+      };
+
+      const query = {
+        reporter: userId,
+      };
+      const reports = await Report.paginate(query, paginationOptions);
+      if (!reports || reports.docs.length === 0) {
         return handleObjectNotFound(res, "Product");
       }
       return res.status(200).json(reports);
@@ -86,13 +98,26 @@ class Reportcontroller {
   public async getReportsFromProduct(req: Request, res: Response) {
     try {
       const { productId } = req.params;
-      const reportedPost = await Report.find({
-        reportedPost: productId,
-      });
-      if (!reportedPost || reportedPost.length === 0) {
+      const { limit, page, sort } = {
+        ...getDefaultPaginationOptions(),
+        ...req.query,
+      };
+      const paginationOptions = {
+        limit,
+        page,
+        sort,
+        populate: ["reporter", "reportedItem"],
+      };
+
+      const query = {
+        reportedItem: productId,
+        itemType: "Product",
+      };
+      const reports = await Report.paginate(query, paginationOptions);
+      if (!reports || reports.docs.length === 0) {
         return handleObjectNotFound(res, "Product");
       }
-      return res.status(200).json(reportedPost);
+      return res.status(200).json(reports);
     } catch (e) {
       return handleError(res, e);
     }
@@ -101,43 +126,76 @@ class Reportcontroller {
   public async getReportsFromReview(req: Request, res: Response) {
     try {
       const { reviewId } = req.params;
-      const reportedPost = await Report.find({
-        reportedReview: reviewId,
-      });
-      if (!reportedPost || reportedPost.length === 0) {
+      const { limit, page, sort } = {
+        ...getDefaultPaginationOptions(),
+        ...req.query,
+      };
+      const paginationOptions = {
+        limit,
+        page,
+        sort,
+        populate: ["reporter", "reportedItem"],
+      };
+
+      const query = {
+        reportedItem: reviewId,
+        itemType: "Review",
+      };
+      const reports = await Report.paginate(query, paginationOptions);
+      if (!reports || reports.docs.length === 0) {
         return handleObjectNotFound(res, "Product");
       }
-      return res.status(200).json(reportedPost);
+      return res.status(200).json(reports);
     } catch (e) {
       return handleError(res, e);
     }
   }
 
-  public async getReportedReviews(_req: Request, res: Response) {
+  public async getReportedReviews(req: Request, res: Response) {
     try {
-      const query = {
-        reportedReview: { $ne: null, $exists: true },
+      const { limit, page, sort } = {
+        ...getDefaultPaginationOptions(),
+        ...req.query,
       };
-      const reportedReviews = await Report.find(query);
-      if (!reportedReviews || reportedReviews.length === 0) {
+      const paginationOptions = {
+        limit,
+        page,
+        sort,
+        populate: ["reporter", "reportedItem"],
+      };
+      const query = {
+        itemType: "Review",
+      };
+      const reports = await Report.paginate(query, paginationOptions);
+      if (!reports || reports.docs.length === 0) {
         return handleObjectNotFound(res, "Review");
       }
-      return res.status(200).json(reportedReviews);
+      return res.status(200).json(reports);
     } catch (e) {
       return handleError(res, e);
     }
   }
 
-  public async getReportedProducts(_req: Request, res: Response) {
+  public async getReportedProducts(req: Request, res: Response) {
     try {
-      const query = {
-        reportedProduct: { $ne: null, $exists: true },
+      const { limit, page, sort } = {
+        ...getDefaultPaginationOptions(),
+        ...req.query,
       };
-      const reportedProducts = await Report.find(query);
-      if (!reportedProducts || reportedProducts.length === 0) {
+      const paginationOptions = {
+        limit,
+        page,
+        sort,
+        populate: ["reporter", "reportedItem"],
+      };
+      const query = {
+        itemType: "Product",
+      };
+      const reports = await Report.paginate(query, paginationOptions);
+      if (!reports || reports.docs.length === 0) {
         return handleObjectNotFound(res, "Product");
       }
-      return res.status(200).json(reportedProducts);
+      return res.status(200).json(reports);
     } catch (e) {
       return handleError(res, e);
     }

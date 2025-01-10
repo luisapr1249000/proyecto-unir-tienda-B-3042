@@ -9,7 +9,7 @@ import {
   validateObjectIdParams,
   validateSchemaBody,
 } from "../middlewares/requestValidation.middleware";
-import { reportedTypeSchema } from "../validation-schemas/report.validation";
+import { reportInputSchema } from "../validation-schemas/report.validation";
 import {
   PRODUCT_ID,
   REPORTED_ID,
@@ -21,9 +21,9 @@ import {
 const router = Router();
 
 router.post(
-  "/report/:objectId/:reportType",
+  "/report/:reportItem/",
   authMiddleware,
-  validateSchemaBody(reportedTypeSchema),
+  validateSchemaBody(reportInputSchema),
   validateObjectIdParams(REPORTED_OBJECT_ID),
   reportController.createReport,
 );

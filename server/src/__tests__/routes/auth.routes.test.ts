@@ -26,7 +26,7 @@ describe("Auth Routes", () => {
     await disconnectDB();
   });
 
-  describe.skip(`POST ${signupEndpoint}`, () => {
+  describe(`POST ${signupEndpoint}`, () => {
     it("should return 200 and sign up a new user successfully", async () => {
       const data = generateUserFixture();
       console.log(data);
@@ -116,7 +116,7 @@ describe("Auth Routes", () => {
     });
   });
 
-  describe.skip(`GET ${refreshTokenEndpoint}`, () => {
+  describe(`GET ${refreshTokenEndpoint}`, () => {
     it("should refresh the access token successfully", async () => {
       const response = await request(app)
         .get(refreshTokenEndpoint)
@@ -138,10 +138,11 @@ describe("Auth Routes", () => {
         .get(refreshTokenEndpoint)
         .set("Cookie", [`refreshToken=${invalidRefreshToken}`]);
 
+      console.log("response", response.body);
       expect(response.status).toBe(403);
     });
   });
-  describe.skip(`GET ${getAuthUserEndpoint}`, () => {
+  describe(`GET ${getAuthUserEndpoint}`, () => {
     it("should return the authenticated user data", async () => {
       const response = await request(app)
         .get(getAuthUserEndpoint)

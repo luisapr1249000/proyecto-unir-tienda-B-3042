@@ -23,7 +23,7 @@ describe("User Model Tests", () => {
     expect(userSaved._id).toBeDefined();
 
     expect(userSaved.email).toBe(userInput.email);
-    expect(userSaved.role).toBe("user");
+    expect(userSaved.role).toBe(undefined);
     expect(userSaved.hasConfirmedEmail).toBe(false);
     expect(userSaved.isSeller).toBe(false);
   });

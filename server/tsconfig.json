@@ -25,7 +25,7 @@
     "exactOptionalPropertyTypes": true,
     "forceConsistentCasingInFileNames": true
   },
-  "include": ["src/**/*.ts"],
+  "include": ["src/**/*", "src/templates/**/*"],
   "exclude": ["./coverage", "./dist", "./src/__tests__", "./src/__fixture__"],
   "ts-node": {
     "transpileOnly": true,

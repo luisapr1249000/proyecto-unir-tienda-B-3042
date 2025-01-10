@@ -61,13 +61,14 @@ describe("Product Routes", () => {
       productEndpoint,
       product._id.toString(),
     );
+    console.log("productIdEnpoint------> ", productIdEndpoint);
   });
 
   afterAll(async () => {
     await disconnectDB();
   });
 
-  describe.skip("GET /products (with pagination)", () => {
+  describe("GET /products (with pagination)", () => {
     it("should return 200 and retrieve paginated list of products", async () => {
       const response = await request(app).get(productEndpoint);
 
@@ -91,10 +92,9 @@ describe("Product Routes", () => {
     });
   });
 
-  describe.skip(`GET ${productEndpoint}/:productId`, () => {
+  describe(`GET ${productEndpoint}/:productId`, () => {
     it("should return 200 and retrieve product successfully by ID", async () => {
       const response = await request(app).get(productIdEndpoint);
-
       expect(response.status).toBe(200);
     });
 
@@ -111,7 +111,7 @@ describe("Product Routes", () => {
     });
   });
 
-  describe.skip(`GET ${productEndpoint}/category/:categoryId`, () => {
+  describe(`GET ${productEndpoint}/category/:categoryId`, () => {
     let getProductsByCategoryEndpoint = "";
     const getProductsByAuthorNoValidIdEndpoint = createEndpoint(
       "products",
@@ -163,7 +163,7 @@ describe("Product Routes", () => {
     });
   });
 
-  describe.skip("GET /products/author/:userId", () => {
+  describe("GET /products/author/:userId", () => {
     let getProductsByAuthorEndpoint = "";
     const getProductsByAuthorNoValidIdEndpoint = createEndpoint(
       "products",
@@ -217,14 +217,14 @@ describe("Product Routes", () => {
     });
   });
 
-  describe.skip(`POST ${productEndpoint}`, () => {
-    console.log(userId);
+  describe(`POST ${productEndpoint}`, () => {
     it("should return 201 and successfully create a product with valid data if user is seller", async () => {
       const response = await request(app)
         .post(productEndpoint)
         .set("Cookie", sellerCookies)
         .send(productData);
 
+      console.log("response ---------> ", response);
       expect(response.status).toBe(201);
     });
 
@@ -263,7 +263,7 @@ describe("Product Routes", () => {
     });
   });
 
-  describe.skip(`PUT ${productEndpoint}/:productId`, () => {
+  describe(`PUT ${productEndpoint}/:productId`, () => {
     it("should return 200 if successfully update a product with valid data", async () => {
       console.log("product data", productData);
       const response = await request(app)
@@ -320,7 +320,7 @@ describe("Product Routes", () => {
     });
   });
 
-  describe.skip(`DELETE ${productEndpoint}/:productId`, () => {
+  describe(`DELETE ${productEndpoint}/:productId`, () => {
     let productIdToDelete = "";
     let deleteProductEndpoint = "";
     beforeEach(async () => {

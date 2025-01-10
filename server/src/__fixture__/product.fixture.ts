@@ -79,7 +79,7 @@ export const createProductFixture = async (userId?: string) => {
   });
 
   await product.save();
-  console.log("Product fixture created:", product);
+  // console.log("Product fixture created:", product);
 
   return product;
 };

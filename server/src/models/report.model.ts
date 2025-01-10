@@ -1,18 +1,19 @@
-import { model, Schema } from "mongoose";
+import { model, Schema, PaginateModel } from "mongoose";
+import { ReportDocument } from "../types/report";
 
 const reportSchema = new Schema(
   {
-    reportedProduct: {
+    reportedItem: {
       type: Schema.Types.ObjectId,
-      ref: "Product",
-      required: false,
+      required: true,
+      refPath: "itemType",
     },
-    reportedReview: {
-      type: Schema.Types.ObjectId,
-      ref: "Review",
-      required: false,
+    itemType: {
+      type: String,
+      required: true,
+      enum: ["Product", "Review"],
     },
-    reporter: { type: Schema.Types.ObjectId, ref: "User" },
+    reporter: { type: Schema.Types.ObjectId, ref: "User", required: true },
     reason: {
       type: String,
       enum: [
@@ -30,6 +31,12 @@ const reportSchema = new Schema(
   { timestamps: true },
 );
 
-reportSchema.index({ reportedPost: 1, reporter: 1 }, { unique: true });
-const Report = model("Product Report", reportSchema);
+reportSchema.index(
+  { reporter: 1, reportedItem: 1, itemType: 1 },
+  { unique: true },
+);
+const Report = model<ReportDocument, PaginateModel<ReportDocument>>(
+  "Report",
+  reportSchema,
+);
 export default Report;

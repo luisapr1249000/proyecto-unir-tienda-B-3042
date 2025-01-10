@@ -97,6 +97,7 @@ const userSchema = new Schema(
       type: String,
       enum: ["user", "admin"],
       default: "user",
+      select: false,
     },
     addressDirections: {
       type: [createAddressSchema({ withTimestamps: true })],

@@ -39,11 +39,11 @@ export const getKey = () => {
 };
 
 export const genAccessToken = (payload: UserJwt) => {
-  return jwt.sign(payload, getKey(), { expiresIn: "15m" });
+  return jwt.sign(payload, getKey(), { expiresIn: "15m" }) ?? null;
 };
 
 export const genRefreshToken = (payload: UserJwt) => {
-  return jwt.sign(payload, getKey(), { expiresIn: "7d" });
+  return jwt.sign(payload, getKey(), { expiresIn: "7d" }) ?? null;
 };
 
 export const checkRefreshTokenAndGenAccessToken = (refreshToken: string) => {
@@ -51,9 +51,13 @@ export const checkRefreshTokenAndGenAccessToken = (refreshToken: string) => {
     throw new Error("Refresh token is required.");
   }
   const key = getKey();
-  const { username, sub } = jwt.verify(refreshToken, key) as UserJwt;
-  const payload = { username, sub } as UserJwt;
-  return genAccessToken(payload);
+  try {
+    const { username, sub } = jwt.verify(refreshToken, key) as UserJwt;
+    const payload = { username, sub } as UserJwt;
+    return genAccessToken(payload);
+  } catch {
+    return null;
+  }
 };
 
 export const extractAuthUserId = (req: Request): string => {

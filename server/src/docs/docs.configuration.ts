@@ -1,3 +1,6 @@
+import path from "path";
+const routes = path.join(__dirname, "routes", "*.yml");
+
 export default {
   definition: {
     openapi: "3.1.0",
@@ -22,5 +25,5 @@ export default {
       },
     },
   },
-  apis: [`src/docs/**/*.yml`],
+  apis: [routes],
 };
