@@ -64,6 +64,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/InternalServerError"
 
+  /users/{userId}:
     put:
       tags:
         - User
@@ -109,8 +110,6 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/InternalServerError"
-
-  /users/{userId}:
     delete:
       tags:
         - User
@@ -369,165 +368,6 @@ paths:
                 $ref: "#/components/schemas/ForbiddenError"
         "404":
           description: "User or product not found in the cart."
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/NotFoundError"
-        "500":
-          description: "Internal server error."
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/InternalServerError"
-
-  /users/{userId}/saved-products:
-    get:
-      security:
-        - cookieAuth: []
-      tags:
-        - Saved Products
-      summary: "Retrieve saved products for a specific user"
-      description: "Fetches the list of products saved by a specified user."
-      parameters:
-        - name: userId
-          in: path
-          required: true
-          description: "The ID of the user whose saved products are to be retrieved."
-          schema:
-            type: string
-      responses:
-        "200":
-          description: "Saved products for the specified user."
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/Product" # Reference to the product schema
-        "401":
-          description: "Unauthorized access due to missing or invalid token."
-          content:
-            text/plain:
-              schema:
-                $ref: "#/components/schemas/UnauthorizedError"
-        "403":
-          description: "Forbidden due to lack of permissions."
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ForbiddenError"
-        "404":
-          description: "User not found or no saved products found."
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/NotFoundError"
-        "500":
-          description: "Internal server error."
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/InternalServerError"
-
-  /users/{userId}/saved-products/{productId}:
-    post:
-      security:
-        - cookieAuth: []
-      tags:
-        - Saved Products
-      summary: "Add a product to a user's saved products"
-      description: "Adds a specified product to the saved products of a specified user."
-      parameters:
-        - name: userId
-          in: path
-          required: true
-          description: "The ID of the user to save the product for."
-          schema:
-            type: string
-
-        - name: productId
-          in: path
-          required: true
-          description: "The ID of the product to be saved."
-          schema:
-            type: string
-
-      responses:
-        "200":
-          description: "Product added to the user's saved products."
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  savedProducts:
-                    type: array
-                    items:
-                      $ref: "#/components/schemas/Product" # Updated saved products
-        "401":
-          description: "Unauthorized access due to missing or invalid token."
-          content:
-            text/plain:
-              schema:
-                $ref: "#/components/schemas/UnauthorizedError"
-        "403":
-          description: "Forbidden due to lack of permissions."
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ForbiddenError"
-        "404":
-          description: "User not found."
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/NotFoundError"
-        "500":
-          description: "Internal server error."
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/InternalServerError"
-
-    delete:
-      security:
-        - cookieAuth: []
-      tags:
-        - Saved Products
-      summary: "Remove a product from a user's saved products"
-      description: "Removes a specified product from the saved products of a specified user."
-      parameters:
-        - name: userId
-          in: path
-          required: true
-          description: "The ID of the user to remove the product from their saved products."
-          schema:
-            type: string
-
-        - name: productId
-          in: path
-          required: true
-          description: "The ID of the product to be removed from saved products."
-          schema:
-            type: string
-
-      responses:
-        "204":
-          description: "Product removed from the user's saved products successfully."
-        "401":
-          description: "Unauthorized access due to missing or invalid token."
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/UnauthorizedError"
-        "403":
-          description: "Forbidden due to lack of permissions."
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ForbiddenError"
-        "404":
-          description: "User or product not found in the saved products."
           content:
             application/json:
               schema:

@@ -1,11 +1,11 @@
 components:
   schemas:
-    CommentInput:
+    ReviewInput:
       type: object
       properties:
         content:
           type: string
-          description: "The content of the comment."
+          description: "The content of the review."
           example: "Great product! Highly recommend it."
         product:
           type: string
@@ -13,7 +13,7 @@ components:
           example: "60d5f7f2b5c7d41c5c8c8e1b" # Example product ID
         images:
           type: array
-          description: "An array of image objects associated with the comment."
+          description: "An array of image objects associated with the review."
           items:
             $ref: "#/components/schemas/Image" # Reference to the Image schema
         review:
@@ -24,13 +24,14 @@ components:
           maximum: 5
       required:
         - content
+        - review
         - product
       additionalProperties: false
 
-    Comment:
+    Review:
       type: object
       allOf:
         - $ref: "#/components/schemas/Abstract" # Reference to the Abstract schema
-        - $ref: "#/components/schemas/CommentInput" # Reference to CommentInput schema
+        - $ref: "#/components/schemas/ReviewInput" # Reference to ReviewInput schema
         - $ref: "#/components/schemas/Author" # Reference to Author schema
         - type: object

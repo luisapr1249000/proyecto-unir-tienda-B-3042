@@ -25,19 +25,23 @@ router.post("/auth/logout", authMiddleware, authController.logout);
 router.get("/auth/user/me", authMiddleware, authController.getAuthUser);
 router.get("/auth/token/validate", authController.validateToken);
 router.get("/auth/token/refresh", authController.refreshToken);
-router.post("/auth/reset-password", authController.resetPassword);
 router.post(
   "/auth/change-password",
   authMiddleware,
   validateSchemaBody(passwordChangeSchema),
   authController.changePassword,
 );
-router.post("/auth/resend-reset-password", authController.resendResetPassword);
+
+router.post("/auth/forgot-password", authController.forgotPassword);
+router.post(
+  "/auth/send-forgot-password-mail",
+  authController.sendForgotPasswordMail,
+);
 
 router.post("/auth/confirmation-email", authController.confirmationEmail);
 router.post(
-  "/auth/resend-confirmation-email",
-  authController.resendConfirmationEmail,
+  "/auth/send-confirmation-email",
+  authController.sendConfirmationEmail,
 );
 
 router.get(

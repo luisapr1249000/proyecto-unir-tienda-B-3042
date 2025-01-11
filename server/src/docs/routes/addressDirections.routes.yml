@@ -1,5 +1,5 @@
 paths:
-  /users/address-direction:
+  /users/{userId}/address-direction:
     post:
       tags:
         - AddressDirection
@@ -12,7 +12,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/AddressDirectionInput"
+              $ref: "#/components/schemas/AddressInput"
       responses:
         "201":
           description: "Address direction created successfully."
@@ -45,7 +45,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/InternalServerError"
 
-  /users/address-direction/{addressDirectionId}:
+  /users/{userId}/address-direction/{addressDirectionId}:
     put:
       tags:
         - AddressDirection
@@ -66,7 +66,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/AddressDirectionInput"
+              $ref: "#/components/schemas/AddressInput"
       responses:
         "200":
           description: "Address direction updated successfully."

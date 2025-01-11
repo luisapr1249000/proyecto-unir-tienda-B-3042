@@ -1,0 +1,81 @@
+components:
+  schemas:
+    AddressInput:
+      type: object
+      properties:
+        pinCode:
+          type: string
+          description: "The postal code of the address."
+          example: "12345"
+        locality:
+          type: string
+          description: "The locality or area of the address."
+          minLength: 10
+          maxLength: 100
+          example: "Downtown Area"
+        addressLine1:
+          type: string
+          description: "The first line of the address."
+          minLength: 10
+          maxLength: 100
+          example: "123 Main St"
+        addressLine2:
+          type: string
+          description: "The second line of the address (optional)."
+          maxLength: 100
+          example: "Apt 4B"
+        cityDistrictTown:
+          type: string
+          description: "The city, district, or town of the address."
+          example: "Los Angeles"
+        state:
+          type: string
+          description: "The state of the address."
+          example: "CA"
+        alternatePhone:
+          type: string
+          description: "An optional alternate phone number."
+          example: "+1-234-567-8901"
+        addressType:
+          type: string
+          description: "Type of address, can be home or work."
+          enum:
+            - home
+            - work
+          example: "home"
+      required:
+        - pinCode
+        - locality
+        - addressLine1
+        - cityDistrictTown
+        - state
+        - addressType
+      additionalProperties: false
+      example:
+        pinCode: "12345"
+        locality: "Downtown Area"
+        addressLine1: "123 Main St"
+        addressLine2: "Apt 4B"
+        cityDistrictTown: "Los Angeles"
+        state: "CA"
+        alternatePhone: "+1-234-567-8901"
+        addressType: "home"
+
+    Address:
+      allOf:
+        - $ref: "#/components/schemas/Abstract" # Reference to the Abstract schema
+        - $ref: "#/components/schemas/AddressInput" # Reference to the AddressInput schema
+        - type: object
+      example:
+        pinCode: "12345"
+        locality: "Downtown Area"
+        addressLine1: "123 Main St"
+        addressLine2: "Apt 4B"
+        cityDistrictTown: "Los Angeles"
+        state: "CA"
+        alternatePhone: "+1-234-567-8901"
+        addressType: "home"
+        _id: "60e6f0c8d5b3c0325c1c8c19"
+        createdAt: "2023-03-01T00:00:00.000Z"
+        updatedAt: "2023-03-01T00:00:00.000Z"
+        __v: 0

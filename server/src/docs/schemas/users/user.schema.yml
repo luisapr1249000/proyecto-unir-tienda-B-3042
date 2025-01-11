@@ -1,0 +1,138 @@
+components:
+  schemas:
+    UserInput:
+      type: object
+      properties:
+        username:
+          type: string
+          description: "The username of the user, must not contain spaces and can only include dots."
+          example: "john.doe"
+          minLength: 1
+        email:
+          type: string
+          description: "The email address of the user, must be a valid email format."
+          example: "john@example.com"
+          minLength: 1
+
+        firstName:
+          type: string
+          description: "The first name of the user."
+          example: "John"
+
+        lastName:
+          type: string
+          description: "The last name of the user."
+          example: "Doe"
+        bio:
+          type: string
+          description: "A short biography of the user."
+          example: "Software Developer based in New York."
+        phoneNumber:
+          type: string
+          description: "The user's phone number, must be in a valid format."
+          example: "+1234567890"
+      required:
+        - username
+        - email
+
+    User:
+      type: object
+      allOf:
+        - $ref: "#/components/schemas/Abstract" # Extend the abstract schema
+        - $ref: "#/components/schemas/UserInput" # Reference to the UserInput schema
+        - type: object
+          properties:
+            password:
+              type: string
+              description: "The hashed password for the user."
+              example: "$2b$10$EIXNwzQVmGdReBf4JWVqUe6QOaI2D5G5TfiyDi5mGxAOaRj0WxkO2"
+            avatar:
+              $ref: "#/components/schemas/Image" # Reference to the image schema (assuming defined elsewhere)
+            lastLogin:
+              type: string
+              format: date-time
+              description: "Timestamp of the user's last login."
+              example: "2024-11-02T10:30:00Z"
+
+            wishlist:
+              type: array
+              items:
+                type: string
+                format: objectid
+                description: "Array of product IDs in the wishlist."
+                example: "60d0fe4f5311236168a109cb"
+            cart:
+              type: array
+              items:
+                type: string
+                format: objectid
+                description: "Array of product IDs in the cart."
+                example: "60d0fe4f5311236168a109cc"
+            isSeller:
+              type: boolean
+              description: "Indicates if the user is a seller."
+              example: false
+            role:
+              type: string
+              enum:
+                - user
+                - admin
+              description: "Role assigned to the user."
+              example: "user"
+            addressDirections:
+              type: array
+              items:
+                $ref: "#/components/schemas/Address" # Reference to the Address schema
+
+          required:
+            - username
+            - email
+            - password
+            - role
+
+          example:
+            username: "john.doe"
+            email: "john@example.com"
+            password: "$2b$10$EIXNwzQVmGdReBf4JWVqUe6QOaI2D5G5TfiyDi5mGxAOaRj0WxkO2"
+            firstName: "John"
+            lastName: "Doe"
+            bio: "Software Developer based in New York."
+            phoneNumber: "+1234567890"
+            avatar:
+              originalName: "avatar.jpg"
+              url: "https://example.com/avatar.jpg"
+              contentType: "image/jpeg"
+              size: "1024x768"
+              createdAt: "2023-03-01T00:00:00.000Z"
+            lastLogin: "2023-03-01T00:00:00.000Z"
+            wishlist:
+              - "60e6f0c8d5b3c0325c1c8c1a"
+            cart:
+              items:
+                - product: "60e6f0c8d5b3c0325c1c8c1a"
+                  quantity: 1
+                  price: 10
+                  seller: "60e6f0c8d5b3c0325c1c8c1a"
+                  subtotal: 10
+              totalPrice: 10
+              totalItems: 1
+            isSeller: false
+            role: "user"
+            addressDirections:
+              - pinCode: "12345"
+                locality: "Downtown Area"
+                addressLine1: "123 Main St"
+                addressLine2: "Apt 4B"
+                cityDistrictTown: "Los Angeles"
+                state: "CA"
+                alternatePhone: "+1-234-567-8901"
+                addressType: "home"
+                _id: "60e6f0c8d5b3c0325c1c8c19"
+                createdAt: "2023-03-01T00:00:00.000Z"
+                updatedAt: "2023-03-01T00:00:00.000Z"
+                __v: 0
+            googleId: "1234567890"
+            _id: "60e6f0c8d5b3c0325c1c8c19"
+            createdAt: "2023-03-01T00:00:00.000Z"
+            updatedAt: "2023-03-01T00:00:00.000Z"
+            __v: 0

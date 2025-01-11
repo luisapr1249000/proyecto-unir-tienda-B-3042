@@ -286,9 +286,7 @@ describe("Product Questions Routes", () => {
     });
 
     it("should return 401 if auth token is missing", async () => {
-      const response = await request(app)
-        .delete(questionIdEndpoint)
-        .send(productQuestionAnswerFixture());
+      const response = await request(app).delete(questionIdEndpoint);
 
       expect(response.status).toBe(401);
     });

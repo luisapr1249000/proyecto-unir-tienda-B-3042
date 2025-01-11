@@ -1,0 +1,103 @@
+components:
+  schemas:
+    ChangePasswordInput:
+      type: object
+      properties:
+        currentPassword:
+          type: string
+          description: "The current password of the user."
+          example: "password123"
+        newPassword:
+          type: string
+          description: "The new password of the user."
+          example: "newpassword123"
+        confirmPassword:
+          type: string
+          description: "The new password of the user."
+          example: "newpassword123"
+      required:
+        - currentPassword
+        - newPassword
+        - confirmPassword
+      additionalProperties: false
+      example:
+        currentPassword: "password123"
+        newPassword: "newpassword123"
+        confirmPassword: "newpassword123"
+
+    SignupInput:
+      type: object
+      properties:
+        username:
+          type: string
+          description: "The username of the user, must not contain spaces and can only include dots."
+          example: "john.doe"
+        email:
+          type: string
+          description: "The email address of the user, must be a valid email format."
+          example: "john@example.com"
+        password:
+          type: string
+          description: "The password of the user."
+          example: "password123"
+
+        confirmPassword:
+          type: string
+          description: "The password of the user."
+          example: "password123"
+      required:
+        - username
+        - email
+        - password
+        - confirmPassword
+      additionalProperties: false
+      example:
+        username: "john.doe"
+        email: "john@example.com"
+        password: "password123"
+        confirmPassword: "password123"
+
+    LoginInput:
+      type: object
+      properties:
+        loginValue:
+          type: string
+          description: "The username or email of the user."
+          example: "john.doe@example.com"
+        password:
+          type: string
+          description: "The password of the user."
+          example: "password123"
+      required:
+        - loginValue
+        - password
+      additionalProperties: false
+      example:
+        loginValue: "john.doe@example.com"
+        password: "password123"
+
+    ForgotPasswordRequest:
+      type: object
+      properties:
+        email:
+          type: string
+          description: "The email address of the user."
+          example: "john@example.com"
+      required:
+        - email
+      additionalProperties: false
+      example:
+        email: "john@example.com"
+
+    SendConfirmationEmailRequest:
+      type: object
+      properties:
+        email:
+          type: string
+          description: "The email address of the user."
+          example: "john@example.com"
+      required:
+        - email
+      additionalProperties: false
+      example:
+        email: "john@example.com"

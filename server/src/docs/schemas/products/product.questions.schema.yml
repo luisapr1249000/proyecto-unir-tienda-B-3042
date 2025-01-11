@@ -1,0 +1,96 @@
+components:
+  schemas:
+    ProductQuestionInput:
+      type: object
+      properties:
+        content:
+          type: string
+          description: "The content of the question."
+          example: "What is the material of the product?"
+      required:
+        - content
+      additionalProperties: false
+      example:
+        content: "What is the material of the product?"
+
+    ProductQuestionAnswer:
+      type: object
+      properties:
+        answer:
+          type: string
+          description: "The answer to the question."
+          example: "Wood"
+      required:
+        - answer
+      additionalProperties: false
+      example:
+        answer: "Wood"
+
+    ProductQuestion:
+      allOf:
+        - $ref: "#/components/schemas/Abstract" # Reference to the Abstract schem
+        - $ref: "#/components/schemas/ProductQuestionInput" # Reference to the ProductQuestionInput schema
+        - $ref: "#/components/schemas/ProductQuestionAnswer" # Reference to the Author schema
+        - type: object
+          properties:
+            user:
+              - $ref: "#/components/schemas/User" # Reference to the User schema
+            isAnswered:
+              type: boolean
+              description: "Indicates if the question has been answered."
+              example: false
+              default: false
+          required:
+            - user
+      example:
+        user:
+          username: "john.doe"
+          email: "john@example.com"
+          password: "$2b$10$EIXNwzQVmGdReBf4JWVqUe6QOaI2D5G5TfiyDi5mGxAOaRj0WxkO2"
+          firstName: "John"
+          lastName: "Doe"
+          bio: "Software Developer based in New York."
+          phoneNumber: "+1234567890"
+          avatar:
+            originalName: "avatar.jpg"
+            url: "https://example.com/avatar.jpg"
+            contentType: "image/jpeg"
+            size: "1024x768"
+            createdAt: "2023-03-01T00:00:00.000Z"
+          lastLogin: "2023-03-01T00:00:00.000Z"
+          wishlist:
+            - "60e6f0c8d5b3c0325c1c8c1a"
+          cart:
+            items:
+              - product: "60e6f0c8d5b3c0325c1c8c1a"
+                quantity: 1
+                price: 10
+                seller: "60e6f0c8d5b3c0325c1c8c1a"
+                subtotal: 10
+            totalPrice: 10
+            totalItems: 1
+          isSeller: false
+          role: "user"
+          addressDirections:
+            - pinCode: "12345"
+              locality: "Downtown Area"
+              addressLine1: "123 Main St"
+              addressLine2: "Apt 4B"
+              cityDistrictTown: "Los Angeles"
+              state: "CA"
+              alternatePhone: "+1-234-567-8901"
+              addressType: "home"
+              _id: "60e6f0c8d5b3c0325c1c8c19"
+              createdAt: "2023-03-01T00:00:00.000Z"
+              updatedAt: "2023-03-01T00:00:00.000Z"
+              __v: 0
+          _id: "60e6f0c8d5b3c0325c1c8c19"
+          createdAt: "2023-03-01T00:00:00.000Z"
+          updatedAt: "2023-03-01T00:00:00.000Z"
+          __v: 0
+        content: "What is the material of the product?"
+        answer: "Wood"
+        isAnswered: false
+        _id: "60e6f0c8d5b3c0325c1c8c19"
+        createdAt: "2023-03-01T00:00:00.000Z"
+        updatedAt: "2023-03-01T00:00:00.000Z"

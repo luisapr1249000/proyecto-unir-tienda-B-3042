@@ -1,0 +1,134 @@
+components:
+  schemas:
+    OrderItem:
+      type: object
+      properties:
+        product:
+          type: string
+          description: "The ID of the product."
+          example: "60d5f7f2b5c7d41c5c8c8e1a"
+        quantity:
+          type: integer
+          description: "The quantity of the product."
+          example: 1
+        price:
+          type: number
+          description: "The price of the product."
+          example: 10
+        seller:
+          type: string
+          description: "The ID of the seller."
+          example: "60d5f7f2b5c7d41c5c8c8e1a"
+        subtotal:
+          type: number
+          description: "The subtotal of the order item."
+          example: 10
+      required:
+        - product
+        - quantity
+        - price
+        - seller
+        - subtotal
+
+    OrderInput:
+      type: object
+      properties:
+        orderItems:
+          type: array
+          description: "An array of order items, each containing a product ID, quantity, and price."
+          items:
+            $ref: "#/components/schemas/OrderItem" # Reference to OrderItem schema
+      required:
+        - customer
+        - totalPrice
+
+    Order:
+      allOf:
+        - $ref: "#/components/schemas/Abstract" # Reference to the Abstract schema
+        - $ref: "#/components/schemas/OrderInput" # Reference to the OrderInput schema
+        - type: object
+          properties:
+            orderItems:
+              type: array
+              description: "An array of order items, each containing a product ID, quantity, and price."
+              items:
+                $ref: "#/components/schemas/OrderItem" # Reference to OrderItem schema
+            shippingAddress:
+              $ref: "#/components/schemas/Address" # Reference to the Address schema
+            paymentMethod:
+              type: string
+              description: "The payment method used for the order."
+              example: "Credit Card"
+          required:
+            - customer
+            - totalPrice
+    example:
+      customer:
+        username: "john.doe"
+        email: "john@example.com"
+        password: "$2b$10$EIXNwzQVmGdReBf4JWVqUe6QOaI2D5G5TfiyDi5mGxAOaRj0WxkO2"
+        firstName: "John"
+        lastName: "Doe"
+        bio: "Software Developer based in New York."
+        phoneNumber: "+1234567890"
+        avatar:
+          originalName: "avatar.jpg"
+          url: "https://example.com/avatar.jpg"
+          contentType: "image/jpeg"
+          size: "1024x768"
+          createdAt: "2023-03-01T00:00:00.000Z"
+          lastLogin: "2023-03-01T00:00:00.000Z"
+        wishlist:
+          - "60e6f0c8d5b3c0325c1c8c1a"
+        cart:
+          items:
+            - product: "60e6f0c8d5b3c0325c1c8c1a"
+              quantity: 1
+              price: 10
+              seller: "60e6f0c8d5b3c0325c1c8c1a"
+              subtotal: 10
+          totalPrice: 10
+          totalItems: 1
+        isSeller: false
+        role: "user"
+        addressDirections:
+          - pinCode: "12345"
+            locality: "Downtown Area"
+            addressLine1: "123 Main St"
+            addressLine2: "Apt 4B"
+            cityDistrictTown: "Los Angeles"
+            state: "CA"
+            alternatePhone: "+1-234-567-8901"
+            addressType: "home"
+            _id: "60e6f0c8d5b3c0325c1c8c19"
+            createdAt: "2023-03-01T00:00:00.000Z"
+            updatedAt: "2023-03-01T00:00:00.000Z"
+            __v: 0
+        _id: "60e6f0c8d5b3c0325c1c8c19"
+        createdAt: "2023-03-01T00:00:00.000Z"
+        updatedAt: "2023-03-01T00:00:00.000Z"
+        __v: 0
+      totalPrice: 10
+      orderItems:
+        - product: "60e6f0c8d5b3c0325c1c8c1a"
+          quantity: 1
+          price: 10
+          seller: "60e6f0c8d5b3c0325c1c8c1a"
+          subtotal: 10
+      shippingAddress:
+        pinCode: "12345"
+        locality: "Downtown Area"
+        addressLine1: "123 Main St"
+        addressLine2: "Apt 4B"
+        cityDistrictTown: "Los Angeles"
+        state: "CA"
+        alternatePhone: "+1-234-567-8901"
+        addressType: "home"
+        _id: "60e6f0c8d5b3c0325c1c8c19"
+        createdAt: "2023-03-01T00:00:00.000Z"
+        updatedAt: "2023-03-01T00:00:00.000Z"
+        __v: 0
+      paymentMethod: "Credit Card"
+      _id: "60e6f0c8d5b3c0325c1c8c19"
+      createdAt: "2023-03-01T00:00:00.000Z"
+      updatedAt: "2023-03-01T00:00:00.000Z"

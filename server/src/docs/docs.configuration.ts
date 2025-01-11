@@ -1,5 +1,5 @@
 import path from "path";
-const routes = path.join(__dirname, "routes", "*.yml");
+const routes = path.join(__dirname, "**", "*.yml");
 
 export default {
   definition: {

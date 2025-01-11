@@ -10,24 +10,7 @@ paths:
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                username:
-                  type: string
-                  description: "The username of the user."
-                  example: "john_doe"
-                email:
-                  type: string
-                  description: "The email address of the user."
-                  example: "john@example.com"
-                password:
-                  type: string
-                  description: "The password for the user account."
-                  example: "P@ssw0rd"
-              required:
-                - username
-                - email
-                - password
+              $ref: "#/components/schemas/SignupInput"
       responses:
         "201":
           description: "User account successfully created."
@@ -81,20 +64,8 @@ paths:
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                rememberMe:
-                  type: boolean
-                  example: true
-                loginValue:
-                  type: string
-                  example: "user@example.com" # or username
-                password:
-                  type: string
-                  example: "strongpassword123"
-              required:
-                - loginValue
-                - password
+              $ref: "#/components/schemas/LoginInput"
+
       responses:
         "200":
           description: "User logged in successfully"
@@ -161,6 +132,42 @@ paths:
               schema:
                 $ref: "#/components/schemas/InternalServerError"
 
+  /auth/token/validate:
+    get:
+      tags:
+        - Auth
+      summary: "Validate Access Token"
+      description: "Validate the access token using the refresh token stored in cookies."
+      parameters:
+        - in: query
+          name: token
+          description: Token
+          required: true
+          schema:
+            type: string
+            example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c"
+      responses:
+        "200":
+          description: "Access token successfully validated"
+        "401":
+          description: "Unauthorized"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UnauthorizedError"
+        "403":
+          description: "Invalid refresh token"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InvalidRefreshTokenError"
+        "500":
+          description: "Internal Server Error"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InternalServerError"
+
   /auth/token/refresh:
     get:
       tags:
@@ -212,3 +219,221 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/UnauthorizedError"
+
+  /auth/confirmation-email:
+    post:
+      tags:
+        - Auth
+      summary: Confirmation email
+      description: Confirmation email
+      parameters:
+        - in: query
+          name: token
+          description: Token
+          required: true
+          schema:
+            type: string
+            example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c"
+
+      responses:
+        "200":
+          description: "Success"
+          content:
+            application/json:
+              schema:
+                properties:
+                  message:
+                    type: string
+                    example: "User confirmed successfully"
+                    description: "The message of the response."
+        "401":
+          description: "Unauthorized"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UnauthorizedError"
+        "404":
+          description: "Not Found"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotFoundError"
+        "500":
+          description: "Internal Server Error"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InternalServerError"
+  auth/send-confirmation-email:
+    post:
+      tags:
+        - Auth
+      summary: send Confirm email
+      description: send Confirm email
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SendConfirmationEmailRequest"
+      responses:
+        "200":
+          description: "Success"
+          content:
+            application/json:
+              schema:
+                properties:
+                  message:
+                    type: string
+                    example: "A confirmation email has been sent."
+                    description: "The message of the response."
+        "401":
+          description: "Unauthorized"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UnauthorizedError"
+        "404":
+          description: "Not Found"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotFoundError"
+        "500":
+          description: "Internal Server Error"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InternalServerError"
+
+  auth/send-forgot-password-email:
+    post:
+      tags:
+        - Auth
+      summary: "Send forgot password email"
+      description: "Send forgot password email"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SendConfirmationEmailRequest"
+      responses:
+        "200":
+          description: "Success"
+          content:
+            application/json:
+              schema:
+                properties:
+                  message:
+                    type: string
+                    example: "A reset password has been sent."
+                    description: "The message of the response."
+        "400":
+          description: "Bad Request"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BadRequestError"
+        "500":
+          description: "Internal Server Error"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InternalServerError"
+
+  /auth/change-password:
+    post:
+      tags:
+        - Auth
+      summary: "Change Password"
+      description: "Change the password of the authenticated user."
+      security:
+        - cookieAuth: [] # Requires authentication via cookies
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ChangePasswordInput"
+      responses:
+        "200":
+          description: "Password changed successfully."
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Password updated successfully"
+        "401":
+          description: "Unauthorized access due to missing or invalid token."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UnauthorizedError"
+        "404":
+          description: "User not found."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotFoundError"
+        "400":
+          description: "Bad Request"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BadRequestError"
+        "500":
+          description: "Internal Server Error"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InternalServerError"
+
+  /auth/forgot-password:
+    post:
+      tags:
+        - Auth
+      summary: "Send forgot password email"
+      description: "Send forgot password email"
+      parameters:
+        - in: query
+          name: token
+          description: Token
+          required: true
+          schema:
+            type: string
+            example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c"
+
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ForgotPasswordRequest"
+      responses:
+        "200":
+          description: "Success"
+          content:
+            application/json:
+              schema:
+                properties:
+                  message:
+                    type: string
+                    example: "Password updated successfully."
+                    description: "The message of the response."
+
+        "400":
+          description: "Bad Request"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BadRequestError"
+        "500":
+          description: "Internal Server Error"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InternalServerError"

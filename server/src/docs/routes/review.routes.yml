@@ -1,15 +1,15 @@
 paths:
-  /products/{productId}/comments:
+  /products/{productId}/reviews:
     get:
       tags:
-        - Comment
-      summary: "Retrieve a paginated list of comments for a specific product"
-      description: "Fetches paginated comments for a given product, including author details. Supports pagination parameters."
+        - Review
+      summary: "Retrieve a paginated list of reviews for a specific product"
+      description: "Fetches paginated reviews for a given product, including author details. Supports pagination parameters."
       parameters:
         - name: productId
           in: path
           required: true
-          description: "The ID of the product to retrieve comments for."
+          description: "The ID of the product to retrieve reviews for."
           schema:
             type: string
 
@@ -43,7 +43,7 @@ paths:
             default: "-createdAt"
       responses:
         "200":
-          description: "A paginated list of comments for the specified product."
+          description: "A paginated list of reviews for the specified product."
           content:
             application/json:
               schema:
@@ -54,9 +54,9 @@ paths:
                   docs:
                     type: array
                     items:
-                      $ref: "#/components/schemas/Comment"
+                      $ref: "#/components/schemas/Review"
         "404":
-          description: "Product not found or no comments available for this product."
+          description: "Product not found or no reviews available for this product."
           content:
             application/json:
               schema:
@@ -70,16 +70,16 @@ paths:
 
     post:
       tags:
-        - Comment
-      summary: "Create a comment for a product"
-      description: "Adds a new comment to the specified product, with the authenticated user as the author."
+        - Review
+      summary: "Create a review for a product"
+      description: "Adds a new review to the specified product, with the authenticated user as the author."
       security:
         - cookieAuth: []
       parameters:
         - name: productId
           in: path
           required: true
-          description: "The ID of the product to add a comment to."
+          description: "The ID of the product to add a review to."
           schema:
             type: string
 
@@ -88,14 +88,14 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/CommentInput" # Reference to the comment input schema
+              $ref: "#/components/schemas/ReviewInput" # Reference to the review input schema
       responses:
         "201":
-          description: "Comment created successfully."
+          description: "Review created successfully."
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Comment" # Reference to the created comment schema
+                $ref: "#/components/schemas/Review" # Reference to the created review schema
         "400":
           description: "Bad request due to invalid input."
           content:
@@ -120,36 +120,36 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/InternalServerError"
-  /products/{productId}/comments/{reviewId}:
+  /products/{productId}/reviews/{reviewId}:
     get:
       tags:
-        - Comment
-      summary: "Retrieve a specific comment by its ID"
-      description: "Fetches a single comment for a specified product, including author and product details."
+        - Review
+      summary: "Retrieve a specific review by its ID"
+      description: "Fetches a single review for a specified product, including author and product details."
       parameters:
         - name: productId
           in: path
           required: true
-          description: "The ID of the product associated with the comment."
+          description: "The ID of the product associated with the review."
           schema:
             type: string
 
         - name: reviewId
           in: path
           required: true
-          description: "The ID of the comment to retrieve."
+          description: "The ID of the review to retrieve."
           schema:
             type: string
 
       responses:
         "200":
-          description: "Comment details for the specified comment ID."
+          description: "Review details for the specified review ID."
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Comment" # Reference to the comment schema with populated fields
+                $ref: "#/components/schemas/Review" # Reference to the review schema with populated fields
         "404":
-          description: "Comment not found for the specified product or comment ID."
+          description: "Review not found for the specified product or review ID."
           content:
             application/json:
               schema:
@@ -163,23 +163,23 @@ paths:
 
     put:
       tags:
-        - Comment
-      summary: "Update a specific comment on a product"
-      description: "Updates the specified comment for the product, ensuring the authenticated user is the comment author or has admin privileges."
+        - Review
+      summary: "Update a specific review on a product"
+      description: "Updates the specified review for the product, ensuring the authenticated user is the review author or has admin privileges."
       security:
         - cookieAuth: []
       parameters:
         - name: productId
           in: path
           required: true
-          description: "The ID of the product associated with the comment."
+          description: "The ID of the product associated with the review."
           schema:
             type: string
 
         - name: reviewId
           in: path
           required: true
-          description: "The ID of the comment to update."
+          description: "The ID of the review to update."
           schema:
             type: string
 
@@ -188,14 +188,14 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/CommentInput" # Reference to the comment input schema
+              $ref: "#/components/schemas/ReviewInput" # Reference to the review input schema
       responses:
         "200":
-          description: "Comment updated successfully."
+          description: "Review updated successfully."
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Comment" # Reference to the updated comment schema
+                $ref: "#/components/schemas/Review" # Reference to the updated review schema
         "400":
           description: "Bad request due to invalid input."
           content:
@@ -215,7 +215,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/ForbiddenError"
         "404":
-          description: "Product or comment not found."
+          description: "Product or review not found."
           content:
             application/json:
               schema:
@@ -229,29 +229,29 @@ paths:
 
     delete:
       tags:
-        - Comment
-      summary: "Delete a specific comment on a product"
-      description: "Deletes the specified comment from the product, ensuring the authenticated user is the comment author or has admin privileges."
+        - Review
+      summary: "Delete a specific review on a product"
+      description: "Deletes the specified review from the product, ensuring the authenticated user is the review author or has admin privileges."
       security:
         - cookieAuth: []
       parameters:
         - name: productId
           in: path
           required: true
-          description: "The ID of the product associated with the comment."
+          description: "The ID of the product associated with the review."
           schema:
             type: string
 
         - name: reviewId
           in: path
           required: true
-          description: "The ID of the comment to delete."
+          description: "The ID of the review to delete."
           schema:
             type: string
 
       responses:
         "204":
-          description: "Comment deleted successfully."
+          description: "Review deleted successfully."
         "403":
           description: "Forbidden due to lack of permissions."
           content:
@@ -265,7 +265,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/UnauthorizedError"
         "404":
-          description: "Product or comment not found."
+          description: "Product or review not found."
           content:
             application/json:
               schema:

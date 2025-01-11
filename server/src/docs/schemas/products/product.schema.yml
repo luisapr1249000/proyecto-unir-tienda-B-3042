@@ -43,14 +43,20 @@ components:
               type: object
               properties:
                 width:
-                  type: string
-                  example: "6.5 inches"
+                  type: number
+                  example: 6.5
+                  minimum: 0
+                  description: "The width of the product in cm."
                 depth:
-                  type: string
-                  example: "0.3 inches"
+                  type: number
+                  example: 0.3
+                  minimum: 0
+                  description: "The depth of the product in cm."
                 height:
-                  type: string
-                  example: "3 inches"
+                  type: number
+                  example: 3
+                  minimum: 0
+                  description: "The height of the product in cm."
             material:
               type: string
               example: "Aluminum"
@@ -63,6 +69,8 @@ components:
             weightCapacity:
               type: number
               example: 150 # In kilograms
+              minimum: 0
+              description: "The weight capacity of the product in kilograms."
         brand:
           type: array
           description: "The brand names associated with the product."
@@ -80,7 +88,7 @@ components:
       allOf:
         - $ref: "#/components/schemas/Abstract" # Reference to the abstract schema
         - $ref: "#/components/schemas/ProductInput" # Reference to the abstract schema
-        - $ref: "#/components/schemas/Author" # Reference to the abstract schema
+        - $ref: "#/components/schemas/Seller" # Reference to the abstract schema
         - type: object
           properties:
             category:

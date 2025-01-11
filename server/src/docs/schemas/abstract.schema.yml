@@ -56,6 +56,14 @@ components:
           description: "The ID of the author."
           example: "60d5f7f2b5c7d41c5c8c8e1a"
 
+    Seller:
+      type: object
+      properties:
+        seller:
+          type: string
+          description: "The ID of the seller."
+          example: "60d5f7f2b5c7d41c5c8c8e1a"
+
     # Product:
     #   type: object
     #   properties:

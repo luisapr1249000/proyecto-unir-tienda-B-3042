@@ -1,0 +1,236 @@
+paths:
+  /products/{productId}/questions/:
+    post:
+      tags:
+        - Product
+      summary: "Create a user question for a product"
+      description: "Adds a new user question to the specified product, with the authenticated user as the author."
+      security:
+        - cookieAuth: []
+      parameters:
+        - name: productId
+          in: path
+          required: true
+          description: "The ID of the product to add a user question to."
+          schema:
+            type: string
+
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ProductQuestionInput" # Reference to the product question input schema
+      responses:
+        "201":
+          description: "User question created successfully."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProductQuestion" # Reference to the created user question schema
+        "400":
+          description: "Bad request due to invalid input."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BadRequestError"
+        "401":
+          description: "Unauthorized access due to missing or invalid token."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UnauthorizedError"
+        "404":
+          description: "Product not found."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotFoundError"
+        "500":
+          description: "Internal server error."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InternalServerError"
+  /products/{productId}/questions/{productQuestionId}:
+    put:
+      tags:
+        - Product
+      summary: "Update a user question for a product"
+      description: "Updates the specified user question for the product, ensuring the authenticated user is the author or has admin privileges."
+      security:
+        - cookieAuth: []
+      parameters:
+        - name: productId
+          in: path
+          required: true
+          description: "The ID of the product associated with the user question."
+          schema:
+            type: string
+
+        - name: productQuestionId
+          in: path
+          required: true
+          description: "The ID of the user question to update."
+          schema:
+            type: string
+
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ProductQuestionInput" # Reference to the product question input schema
+      responses:
+        "200":
+          description: "User question updated successfully."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProductQuestion" # Reference to the updated user question schema
+        "400":
+          description: "Bad request due to invalid input."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BadRequestError"
+        "401":
+          description: "Unauthorized access due to missing or invalid token."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UnauthorizedError"
+        "403":
+          description: "Forbidden due to lack of permissions."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ForbiddenError"
+        "404":
+          description: "Product or user question not found."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotFoundError"
+        "500":
+          description: "Internal server error."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InternalServerError"
+
+    delete:
+      tags:
+        - Product
+      summary: "Delete a user question for a product"
+      description: "Deletes the specified user question from the product, ensuring the authenticated user is the author or has admin privileges."
+      security:
+        - cookieAuth: []
+      parameters:
+        - name: productId
+          in: path
+          required: true
+          description: "The ID of the product associated with the user question."
+          schema:
+            type: string
+
+        - name: productQuestionId
+          in: path
+          required: true
+          description: "The ID of the user question to delete."
+          schema:
+            type: string
+
+      responses:
+        "204":
+          description: "User question deleted successfully."
+        "403":
+          description: "Forbidden due to lack of permissions."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ForbiddenError"
+        "401":
+          description: "Unauthorized access due to missing or invalid token."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UnauthorizedError"
+        "404":
+          description: "Product or user question not found."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotFoundError"
+        "500":
+          description: "Internal server error."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InternalServerError"
+  /products/{productId}/questions/{productQuestionId}/answer:
+    put:
+      tags:
+        - Product
+      summary: "Answer a user question for a product"
+      description: "Updates the answer for the specified user question for the product, ensuring the authenticated user is the author or has admin privileges."
+      security:
+        - cookieAuth: []
+      parameters:
+        - name: productId
+          in: path
+          required: true
+          description: "The ID of the product associated with the user question."
+          schema:
+            type: string
+
+        - name: productQuestionId
+          in: path
+          required: true
+          description: "The ID of the user question to answer."
+          schema:
+            type: string
+
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ProductQuestionAnswer" # Reference to the product question answer schema
+      responses:
+        "200":
+          description: "User question answer updated successfully."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProductQuestion" # Reference to the updated user question schema
+        "400":
+          description: "Bad request due to invalid input."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BadRequestError"
+        "401":
+          description: "Unauthorized access due to missing or invalid token."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UnauthorizedError"
+        "403":
+          description: "Forbidden due to lack of permissions."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ForbiddenError"
+        "404":
+          description: "Product or user question not found."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotFoundError"
+        "500":
+          description: "Internal server error."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InternalServerError"

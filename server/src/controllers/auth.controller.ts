@@ -143,13 +143,13 @@ class AuthController {
       if (!user) return handleObjectNotFound(res, "User");
       user.hasConfirmedEmail = true;
       await user.save();
-      return res.status(200).json(user);
+      return res.status(200).json({ message: "User confirmed successfully" });
     } catch (e) {
       return handleError(res, e);
     }
   }
 
-  public async resendConfirmationEmail(req: Request, res: Response) {
+  public async sendConfirmationEmail(req: Request, res: Response) {
     try {
       const { email } = req.body;
       const user = await User.findOne({ email });
@@ -174,7 +174,7 @@ class AuthController {
     }
   }
 
-  public async resetPassword(req: Request, res: Response) {
+  public async forgotPassword(req: Request, res: Response) {
     try {
       const { token } = req.query;
       if (!token) return handleNotPermissions(res);
@@ -185,13 +185,13 @@ class AuthController {
       if (!user) return handleObjectNotFound(res, "User");
       user.password = newPassword;
       await user.save();
-      return res.status(200).json(user);
+      return res.status(200).json({ message: "Password updated successfully" });
     } catch (e) {
       return handleError(res, e);
     }
   }
 
-  public async resendResetPassword(req: Request, res: Response) {
+  public async sendForgotPasswordMail(req: Request, res: Response) {
     try {
       const { email } = req.body;
       const user = await User.findOne({ email });

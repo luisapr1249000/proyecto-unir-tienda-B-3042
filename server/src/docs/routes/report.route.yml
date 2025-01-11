@@ -1,0 +1,455 @@
+paths:
+  /reports:
+    get:
+      tags:
+        - Report
+      summary: "Retrieve a paginated list of reports"
+      description: "Fetches paginated reports for a given user, including reporter details. Supports pagination parameters."
+      parameters:
+        - name: page
+          in: query
+          required: false
+          description: "The page number to retrieve."
+          schema:
+            type: integer
+            minimum: 1
+            default: 1
+        - name: limit
+          in: query
+          required: false
+          description: "The number of reports to return per page."
+          schema:
+            type: integer
+            minimum: 1
+            default: 10
+        - name: sort
+          in: query
+          required: false
+          description: "The field by which to sort reports."
+          schema:
+            type: string
+            enum:
+              - createdAt
+              - -createdAt
+              - updatedAt
+              - -updatedAt
+            default: "-createdAt"
+      responses:
+        "200":
+          description: "A paginated list of reports."
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/PaginationResult"
+                  - type: object
+                properties:
+                  docs:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Report"
+        "404":
+          description: "No reports found."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotFoundError" # Reference to your NotFoundError schema
+        "500":
+          description: "Internal server error."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InternalServerError"
+
+    post:
+      tags:
+        - Report
+      summary: "Create a report for a product or review"
+      description: "Adds a new report to the specified product or review, with the authenticated user as the reporter."
+      security:
+        - cookieAuth: []
+      parameters:
+        - name: reporteItemId
+          in: path
+          required: true
+          description: "The ID of the product or review to add a report to."
+          schema:
+            type: string
+
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ReportInput" # Reference to the report input schema
+      responses:
+        "201":
+          description: "Report created successfully."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Report" # Reference to the created report schema
+        "400":
+          description: "Bad request due to invalid input."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BadRequestError"
+        "401":
+          description: "Unauthorized access due to missing or invalid token."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UnauthorizedError"
+        "404":
+          description: "Product or review not found."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotFoundError"
+        "500":
+          description: "Internal server error."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InternalServerError"
+  /reports/{reportId}:
+    get:
+      tags:
+        - Report
+      summary: "Retrieve a specific report by its ID"
+      description: "Fetches a single report for a specified product or review, including reporter and product/review details."
+      parameters:
+        - name: reportId
+          in: path
+          required: true
+          description: "The ID of the report to retrieve."
+          schema:
+            type: string
+
+      responses:
+        "200":
+          description: "Report details for the specified report ID."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Report" # Reference to the report schema with populated fields
+        "404":
+          description: "Report not found for the specified product or review."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotFoundError"
+        "500":
+          description: "Internal server error."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InternalServerError"
+
+    put:
+      tags:
+        - Report
+      summary: "Update a specific report on a product or review"
+      description: "Updates the specified report for the product or review, ensuring the authenticated user is the reporter or has admin privileges."
+      security:
+        - cookieAuth: []
+      parameters:
+        - name: reportId
+          in: path
+          required: true
+          description: "The ID of the report to update."
+          schema:
+            type: string
+
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ReportInput" # Reference to the report input schema
+      responses:
+        "200":
+          description: "Report updated successfully."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Report" # Reference to the updated report schema
+        "400":
+          description: "Bad request due to invalid input."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BadRequestError"
+        "401":
+          description: "Unauthorized access due to missing or invalid token."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UnauthorizedError"
+        "403":
+          description: "Forbidden due to lack of permissions."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ForbiddenError"
+        "404":
+          description: "Product or review not found."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotFoundError"
+        "500":
+          description: "Internal server error."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InternalServerError"
+
+    delete:
+      tags:
+        - Report
+      summary: "Delete a specific report on a product or review"
+      description: "Deletes the specified report from the product or review, ensuring the authenticated user is the reporter or has admin privileges."
+      security:
+        - cookieAuth: []
+      parameters:
+        - name: reportId
+          in: path
+          required: true
+          description: "The ID of the report to delete."
+          schema:
+            type: string
+
+      responses:
+        "204":
+          description: "Report deleted successfully."
+        "403":
+          description: "Forbidden due to lack of permissions."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ForbiddenError"
+        "401":
+          description: "Unauthorized access due to missing or invalid token."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UnauthorizedError"
+        "404":
+          description: "Product or review not found."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotFoundError"
+        "500":
+          description: "Internal server error."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InternalServerError"
+  /reports/products/{productId}:
+    get:
+      tags:
+        - Report
+      summary: "Retrieve a paginated list of reports for a product"
+      description: "Fetches paginated reports for a given product, including reporter details. Supports pagination parameters."
+      parameters:
+        - name: productId
+          in: path
+          required: true
+          description: "The ID of the product to retrieve reports for."
+          schema:
+            type: string
+
+        - name: page
+          in: query
+          required: false
+          description: "The page number to retrieve."
+          schema:
+            type: integer
+            minimum: 1
+            default: 1
+        - name: limit
+          in: query
+          required: false
+          description: "The number of reports to return per page."
+          schema:
+            type: integer
+            minimum: 1
+            default: 10
+        - name: sort
+          in: query
+          required: false
+          description: "The field by which to sort reports."
+          schema:
+            type: string
+            enum:
+              - createdAt
+              - -createdAt
+              - updatedAt
+              - -updatedAt
+            default: "-createdAt"
+      responses:
+        "200":
+          description: "A paginated list of reports for the specified product."
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/PaginationResult"
+                  - type: object
+                properties:
+                  docs:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Report"
+        "404":
+          description: "Product not found or no reports available for this product."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotFoundError"
+        "500":
+          description: "Internal server error."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InternalServerError"
+  /reports/reviews/{reviewId}:
+    get:
+      tags:
+        - Report
+      summary: "Retrieve a paginated list of reports for a review"
+      description: "Fetches paginated reports for a given review, including reporter details. Supports pagination parameters."
+      parameters:
+        - name: reviewId
+          in: path
+          required: true
+          description: "The ID of the review to retrieve reports for."
+          schema:
+            type: string
+
+        - name: page
+          in: query
+          required: false
+          description: "The page number to retrieve."
+          schema:
+            type: integer
+            minimum: 1
+            default: 1
+        - name: limit
+          in: query
+          required: false
+          description: "The number of reports to return per page."
+          schema:
+            type: integer
+            minimum: 1
+            default: 10
+        - name: sort
+          in: query
+          required: false
+          description: "The field by which to sort reports."
+          schema:
+            type: string
+            enum:
+              - createdAt
+              - -createdAt
+              - updatedAt
+              - -updatedAt
+            default: "-createdAt"
+      responses:
+        "200":
+          description: "A paginated list of reports for the specified review."
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/PaginationResult"
+                  - type: object
+                properties:
+                  docs:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Report"
+        "404":
+          description: "Review not found or no reports available for this review."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotFoundError"
+        "500":
+          description: "Internal server error."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InternalServerError"
+
+  /reports/users/{userId}:
+    get:
+      tags:
+        - Report
+      summary: "Retrieve a paginated list of reports for a user"
+      description: "Fetches paginated reports for a given user, including reporter details. Supports pagination parameters."
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          description: "The ID of the user to retrieve reports for."
+          schema:
+            type: string
+
+        - name: page
+          in: query
+          required: false
+          description: "The page number to retrieve."
+          schema:
+            type: integer
+            minimum: 1
+            default: 1
+        - name: limit
+          in: query
+          required: false
+          description: "The number of reports to return per page."
+          schema:
+            type: integer
+            minimum: 1
+            default: 10
+        - name: sort
+          in: query
+          required: false
+          description: "The field by which to sort reports."
+          schema:
+            type: string
+            enum:
+              - createdAt
+              - -createdAt
+              - updatedAt
+              - -updatedAt
+            default: "-createdAt"
+      responses:
+        "200":
+          description: "A paginated list of reports."
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/PaginationResult"
+                  - type: object
+                properties:
+                  docs:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Report"
+        "404":
+          description: "No reports found."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotFoundError" # Reference to your NotFoundError schema
+        "500":
+          description: "Internal server error."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InternalServerError"

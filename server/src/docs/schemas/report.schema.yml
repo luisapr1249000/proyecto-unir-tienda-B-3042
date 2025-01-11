@@ -1,0 +1,78 @@
+components:
+  schemas:
+    ReportInput:
+      type: object
+      properties:
+        itemType:
+          type: string
+          enum:
+            - Product
+            - Review
+          description: Type of the reported item.
+          example: "Product"
+        reason:
+          type: string
+          enum:
+            - Spam
+            - Inappropriate Content
+            - Misleading Information
+            - Other
+          description: The reason for reporting the item.
+          example: "Spam"
+        problemDescription:
+          type: string
+          description: Additional details about the problems
+          example: "This item is a duplicate listing."
+          nullable: true
+
+    ReportUpdate:
+      type: object
+      properties:
+        resolution:
+          type: string
+          description: Description of the resolution if the report is resolved.
+          example: "This item is a duplicate listing."
+
+    Report:
+      type: object
+      allOf:
+        - $ref: "#/components/schemas/ReportInput"
+        - $ref: "#/components/schemas/ReportUpdate"
+        - $ref: "#/components/schemas/Abstract" # Extend the abstract schema
+        - type: object
+          properties:
+            reportedItem:
+              type: string
+              format: ObjectId
+              description: ID of the reported item (Product or Review).
+            itemType:
+              type: string
+              enum:
+                - Product
+                - Review
+              description: Type of the reported item.
+            reporter:
+              type: string
+              format: ObjectId
+              description: ID of the user reporting the issue.
+            resolved:
+              type: boolean
+              default: false
+              description: Indicates whether the report has been resolved.
+      required:
+        - reportedItem
+        - itemType
+        - reporter
+        - reason
+      example:
+        reportedItem: "60e6f0c8d5b3c0325c1c8c19"
+        itemType: "Product"
+        reporter: "60e6f0c8d5b3c0325c1c8c1a"
+        reason: "Spam"
+        problemDescription: "This item is a duplicate listing."
+        resolved: false
+        resolution: null
+        _id: "60e6f0c8d5b3c0325c1c8c19"
+        createdAt: "2023-03-01T00:00:00.000Z"
+        updatedAt: "2023-03-01T00:00:00.000Z"
+        __v: 0
