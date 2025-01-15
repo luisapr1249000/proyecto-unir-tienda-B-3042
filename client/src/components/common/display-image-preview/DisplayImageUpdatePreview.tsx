@@ -1,23 +1,40 @@
-import { Box, Card, Paper } from "@mui/material";
+import {
+  Box,
+  Card,
+  CardActions,
+  CardContent,
+  CardHeader,
+  Divider,
+  Paper,
+  Typography,
+} from "@mui/material";
 import Grid from "@mui/material/Grid2";
 import React, { useEffect, useState } from "react";
-import IconButtonDelete from "../buttons/iconbutton-delete/IconButtonDelete";
+import { DisplayImage } from "./DisplayImagePreview";
 
 const DisplayImageUpdatePreview = ({
   onDeleteFile,
-  files,
+  selectedFiles,
   existedImages,
   onDeleteExistedImage,
 }: {
   onDeleteFile: (index: number) => void;
-  files: File[];
+  selectedFiles: File[];
   existedImages: string[];
   onDeleteExistedImage: (index: number) => void;
 }) => {
   const [previews, setPreviews] = useState<string[]>();
   useEffect(() => {
-    if (files && files.length > 0) {
-      const previewUrls = files.map((file) => URL.createObjectURL(file));
+    if (selectedFiles.length === 0) {
+      setPreviews([]);
+      return;
+    }
+
+    if (selectedFiles && selectedFiles.length > 0) {
+      const previewUrls = selectedFiles.map((file) =>
+        URL.createObjectURL(file)
+      );
+      console.log("previewUrls", previewUrls);
       setPreviews(previewUrls);
 
       return () => {
@@ -26,86 +43,51 @@ const DisplayImageUpdatePreview = ({
         });
       };
     }
-  }, []);
+  }, [selectedFiles]);
 
-  // console.log("previews", previews);
   return (
-    <>
-      {existedImages && existedImages.length > 0 && (
-        <Paper
-          component={Grid}
-          elevation={4}
-          container
-          spacing={3}
-          size={{ xs: 12 }}
-          sx={{
-            justifyContent: "center",
-            alignItems: "center",
-            p: 3,
-            flexDirection: { xs: "column", md: "row" },
-          }}
-        >
-          {existedImages?.map((existedImage, index) => (
-            <Paper
-              component={Grid}
-              size={{ xs: "grow" }}
-              elevation={2}
-              key={existedImage}
-              sx={{
-                height: { xs: 200, md: 150 },
-                width: { xs: 1, md: 150 },
-                objectFit: "contained",
-                position: "relative",
-              }}
-            >
-              <IconButtonDelete onDelete={() => onDeleteExistedImage(index)} />
-              <Box
-                component="img"
-                sx={{ objectFit: "cover", height: 1, width: 1 }}
-                src={existedImage}
-              />
-            </Paper>
-          ))}
-        </Paper>
-      )}
+    <Grid container spacing={3} size={{ xs: 12 }}>
+      <Card variant="outlined">
+        <CardContent component={Grid} container spacing={3} size={{ xs: 12 }}>
+          <Typography variant="caption">
+            {existedImages && existedImages.length > 0
+              ? "Existed Images"
+              : "No Existed Images"}
+          </Typography>
+        </CardContent>
+        <Divider />
+        <CardContent component={Grid} container spacing={3} size={{ xs: 12 }}>
+          {existedImages && existedImages.length > 0 && (
+            <>
+              {existedImages.map((existedImage, index) => (
+                <DisplayImage
+                  preview={existedImage}
+                  onDeleteFile={onDeleteExistedImage}
+                  imageIndex={index}
+                />
+              ))}
+            </>
+          )}
+        </CardContent>
+      </Card>
       {previews && previews.length > 0 && (
-        <Paper
-          component={Grid}
-          elevation={4}
-          container
-          spacing={3}
-          size={{ xs: 12 }}
-          sx={{
-            justifyContent: "center",
-            alignItems: "center",
-            p: 3,
-            flexDirection: { xs: "column", md: "row" },
-          }}
-        >
-          {previews?.map((preview, index) => (
-            <Paper
-              component={Grid}
-              size={{ xs: "grow" }}
-              elevation={2}
-              key={preview}
-              sx={{
-                height: { xs: 200, md: 150 },
-                width: { xs: 1, md: 150 },
-                objectFit: "contained",
-                position: "relative",
-              }}
-            >
-              <IconButtonDelete onDelete={() => onDeleteFile(index)} />
-              <Box
-                component="img"
-                sx={{ objectFit: "cover", height: 1, width: 1 }}
-                src={preview}
+        <Card variant="outlined">
+          <CardContent>
+            <Typography variant="caption">Preview Images</Typography>
+          </CardContent>
+          <Divider />
+          <CardContent component={Grid} container spacing={3} size={{ xs: 12 }}>
+            {previews.map((preview, index) => (
+              <DisplayImage
+                preview={preview}
+                onDeleteFile={onDeleteFile}
+                imageIndex={index}
               />
-            </Paper>
-          ))}
-        </Paper>
+            ))}
+          </CardContent>
+        </Card>
       )}
-    </>
+    </Grid>
   );
 };
 

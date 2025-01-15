@@ -1,102 +1,127 @@
 import { z } from "zod";
+import {
+  lowercaseRegex,
+  objectIdRegex,
+  symbolRegex,
+  uppercaseRegex,
+  letterNumberDotHyphenUnderscoreRegex as noSpacesRegex,
+  phoneNumberRegex,
+} from "../constants/regex";
 
-export const AlphanumericAndDotsRegex = /^[a-zA-Z0-9.]+$/;
-export const numericRegex = /^[0-9]+$/;
-export const lettersRegex = /^[a-zA-Z]+$/;
-export const passwordRegex =
-  /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[^A-Za-z0-9]).{8,}$/;
+export const objectIdValidator = z
+  .string()
+  .min(24, "ObjectId is too short")
+  .max(24, "ObjectId is too long")
+  .regex(objectIdRegex, "ObjectId is invalid");
 
-export const noSpacesRegex = /^\S*$/;
-export const basicStringField = z.string().trim();
+export const createBasicString = () => z.string().trim();
+export const createBasicNumber = () =>
+  z.coerce.number().finite({ message: "Value must be a finite number" });
 
-export const emailStringField = basicStringField
-  .email("Email is invalid")
-  .transform((value) => value.toLowerCase());
-
-export const passwordStringField = basicStringField.regex(
-  passwordRegex,
-  "Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character"
-);
-
-export const alphanumericStringField = basicStringField.regex(
-  AlphanumericAndDotsRegex,
-  "Alphanumeric string is invalid"
-);
-
-export const noSpacesField = basicStringField.regex(
-  noSpacesRegex,
-  "No spaces allowed"
-);
+export const createEmailField = () =>
+  createBasicString()
+    .email("Email must be a valid email address")
+    .min(1, "Email must not be empty")
+    .max(100, "Email must not exceed 100 characters");
 
 export const createValidStringField = ({
   fieldName,
   minLength = 1,
-  maxLength = 25,
+  maxLength = 30,
 }: {
   fieldName: string;
   minLength?: number;
   maxLength?: number;
 }) =>
-  basicStringField
-    .min(minLength, `${fieldName} required`)
-    .max(
-      maxLength,
-      `${fieldName} must be no more than ${maxLength} characters`
-    );
-
-export const createNonNegativeNumberField = ({
-  fieldName,
-  maxValue,
-}: {
-  fieldName: string;
-  maxValue?: number;
-}) => {
-  const schema = z.coerce
-    .number()
-    .int(`The ${fieldName} must be int`)
-    .nonnegative(`The ${fieldName} must be non-negative`);
-
-  if (maxValue) {
-    schema.max(maxValue, `The ${fieldName} must not exceed ${maxValue}`);
-  }
-
-  return schema;
-};
+  createBasicString()
+    .min(minLength, { message: `${fieldName} required -----` })
+    .max(maxLength, {
+      message: `${fieldName} must be no more than ${maxLength} characters`,
+    });
 
 export const createPositiveNumberField = ({
   fieldName,
+  minValue = 1,
   maxValue,
+  multipleOf,
 }: {
   fieldName: string;
+  minValue?: number;
   maxValue?: number;
+  multipleOf?: number;
 }) => {
-  const schema = z.coerce
-    .number()
-    .nonnegative(`The ${fieldName} must be positive`)
-    .multipleOf(0.01, `The ${fieldName} must have 2 decimals`);
-
+  let field = createBasicNumber()
+    .min(minValue, `${fieldName} must be at least ${minValue}`)
+    .nonnegative("Value must be a positive number");
   if (maxValue) {
-    schema.max(maxValue, `The ${fieldName} must not exceed ${maxValue}`);
+    field = field.max(maxValue);
   }
-
-  return schema;
+  if (multipleOf) {
+    field = field.multipleOf(
+      multipleOf,
+      'Just enter a number with two decimal places, for example "10.00"'
+    );
+  }
+  return field;
 };
 
-export const createIntField = ({
+export const createPositiveIntegerField = ({
   fieldName,
+  minValue = 1,
   maxValue,
 }: {
   fieldName: string;
+  minValue?: number;
   maxValue?: number;
 }) => {
-  const schema = z.coerce
-    .number()
-    .int(`The ${fieldName} must be int`)
-    .nonnegative(`The ${fieldName} must be positive`);
-
+  let field = createBasicNumber()
+    .min(minValue, `${fieldName} must be at least ${minValue}`)
+    .int("Value must not be a decimal")
+    .nonnegative("Value must be a positive integer");
   if (maxValue) {
-    schema.max(maxValue, `The ${fieldName} must not exceed ${maxValue}`);
+    field = field.max(maxValue, `Value must not exceed ${maxValue}`);
   }
-
-  return schema;
+  return field;
 };
+
+export const createPasswordSchema = () =>
+  z
+    .string()
+    .min(8, "Password must be at least 8 characters")
+    .regex(
+      uppercaseRegex,
+      "Password must contain at least one uppercase letter"
+    )
+    .regex(
+      lowercaseRegex,
+      "Password must contain at least one lowercase letter"
+    )
+    .regex(symbolRegex, "Password must contain at least one symbol");
+
+export const confirmPasswordSchema = () =>
+  z
+    .object({
+      password: createPasswordSchema(),
+      confirmPassword: z.string(),
+    })
+    .refine(({ confirmPassword, password }) => confirmPassword === password, {
+      message: "Passwords do not match",
+      path: ["Confirm"],
+    });
+
+export const noWhiteSpaceField = () =>
+  createValidStringField({ fieldName: "Username" }).regex(
+    noSpacesRegex,
+    "No spaces are allowed"
+  );
+
+export const phoneNumberField = () =>
+  createValidStringField({ fieldName: "Phone Number", maxLength: 10 }).regex(
+    phoneNumberRegex,
+    "Phone number is invalid"
+  );
+
+export const is_modifiedField = () =>
+  z.object({
+    is_modified: z.boolean().optional(),
+  });

@@ -1,10 +1,15 @@
 import { Request, Response } from "express";
 import { extractAuthUserId } from "../utils/auth.utils";
-import { handleError, handleObjectNotFound } from "../utils/error.utils";
+import {
+  handleError,
+  handleNotPermissions,
+  handleObjectNotFound,
+} from "../utils/error.utils";
 import { Product } from "../models/product.model";
 import Review from "../models/review.model";
 import { Image } from "../types/image";
 import { getAverageReview } from "../utils/product.utils";
+import { Order } from "../models/orders.model";
 
 class ReviewController {
   public async createReview(req: Request, res: Response) {
@@ -13,6 +18,13 @@ class ReviewController {
       const { productId } = req.params;
       const product = await Product.findById(productId);
       if (!product) return handleObjectNotFound(res, "Product", true);
+
+      const hasAlreadyReviewed = await Review.findOne({
+        product: productId,
+        author: authUserId,
+      });
+      if (hasAlreadyReviewed)
+        return res.status(400).json({ message: "Already reviewed" });
 
       const data = { ...req.body, author: authUserId, product: productId };
       const review = new Review(data);
@@ -65,9 +77,13 @@ class ReviewController {
         _id: reviewId,
         product: productId,
       };
-      const review = await Review.findOneAndUpdate(query, req.body, {
-        new: true,
-      });
+      const review = await Review.findOneAndUpdate(
+        query,
+        { ...req.body, is_modified: true },
+        {
+          new: true,
+        },
+      );
       if (!review) return handleObjectNotFound(res, "Review");
 
       return res.status(200).json(review);
@@ -105,16 +121,14 @@ class ReviewController {
         populate: ["author", "product"],
       };
 
-      const query = {
-        isDeleted: false,
-      };
+      const query = {};
 
-      const reviewId = await Review.paginate(query, options);
-      const { docs } = reviewId;
+      const reviews = await Review.paginate(query, options);
+      const { docs } = reviews;
       if (docs.length === 0 || !docs)
         return handleObjectNotFound(res, "Review", true);
 
-      return res.status(200).json(reviewId);
+      return res.status(200).json(reviews);
     } catch (e) {
       return handleError(res, e);
     }
@@ -130,16 +144,15 @@ class ReviewController {
       };
 
       const query = {
-        isDeleted: false,
         product: productId,
       };
 
-      const reviewId = await Review.paginate(query, options);
-      const { docs } = reviewId;
+      const reviews = await Review.paginate(query, options);
+      const { docs } = reviews;
       if (docs.length === 0 || !docs)
         return handleObjectNotFound(res, "Review", true);
 
-      return res.status(200).json(reviewId);
+      return res.status(200).json(reviews);
     } catch (e) {
       return handleError(res, e);
     }
@@ -155,16 +168,15 @@ class ReviewController {
       };
 
       const query = {
-        isDeleted: false,
         author: userId,
       };
 
-      const reviewId = await Review.paginate(query, options);
-      const { docs } = reviewId;
+      const reviews = await Review.paginate(query, options);
+      const { docs } = reviews;
       if (docs.length === 0 || !docs)
         return handleObjectNotFound(res, "Review", true);
 
-      return res.status(200).json(reviewId);
+      return res.status(200).json(reviews);
     } catch (e) {
       return handleError(res, e);
     }
@@ -179,6 +191,25 @@ class ReviewController {
       if (!review) return handleObjectNotFound(res, "Review");
 
       return res.status(200).json(review);
+    } catch (e) {
+      return handleError(res, e);
+    }
+  }
+
+  public async canUserReview(req: Request, res: Response) {
+    try {
+      const { userId, productId } = req.params;
+      const canReview = await Order.findOne({
+        customer: userId,
+        "orderItems.product": productId,
+      });
+
+      if (!canReview) return handleNotPermissions(res);
+
+      const review = await Review.findById(req.params.reviewId);
+      if (!review) return handleObjectNotFound(res, "Review");
+
+      return res.status(200).json({ canReview });
     } catch (e) {
       return handleError(res, e);
     }

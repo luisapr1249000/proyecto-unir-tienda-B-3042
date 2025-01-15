@@ -18,7 +18,7 @@ class ProductController {
     try {
       const authUserId = extractAuthUserId(req);
       const price = parseFloat(req.body.price);
-      const discount = parseFloat(req.body.discount);
+      const discount = parseFloat(req.body.discount ?? 0);
       const finalPrice = Number(
         (discount ? price * (1 - discount / 100) : price).toFixed(2),
       );
@@ -30,7 +30,7 @@ class ProductController {
       const savedProduct = await product.save();
       if (!savedProduct) return handleBadSaved(res);
 
-      return res.status(201).json({ f: req.files, savedProduct });
+      return res.status(201).json(savedProduct);
     } catch (e) {
       return handleError(res, e);
     }
@@ -42,6 +42,7 @@ class ProductController {
       if (!req.files || req.files.length === 0) {
         return handleObjectNotFound(res, "Product");
       }
+      console.log(req.files);
       const images: Image[] = [];
       for (const file of req.files as Express.Multer.File[]) {
         const fileName = file.location.split("/").pop() as string;
@@ -53,6 +54,7 @@ class ProductController {
         };
         images.push(image);
       }
+      console.log("should be here");
       const product = await Product.findByIdAndUpdate(
         productId,
         {
@@ -60,8 +62,11 @@ class ProductController {
         },
         { new: true },
       );
+      console.log("should be here too");
       if (!product) return handleObjectNotFound(res, "Product", true);
 
+      console.log("should be here three");
+      console.log(product);
       return res.status(200).json(product);
     } catch (e) {
       return handleError(res, e);
@@ -101,7 +106,11 @@ class ProductController {
       const finalPrice = Number(
         (discount ? price * (1 - discount / 100) : price).toFixed(2),
       );
-      const updates = { ...req.body, finalPrice: finalPrice };
+      const updates = {
+        ...req.body,
+        finalPrice: finalPrice,
+        is_modified: true,
+      };
       const product = await Product.findByIdAndUpdate(productId, updates, {
         new: true,
       });

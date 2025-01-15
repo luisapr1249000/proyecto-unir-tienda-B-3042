@@ -2,12 +2,24 @@ import { Category, CategoryId } from "./category";
 import { Review, ReviewId } from "./review";
 import { Product, ProductId } from "./product";
 import { User, UserId } from "./user";
+import { Report } from "./report";
 
 export type PaginationConfig = {
   page?: number;
   limit?: number;
   sort?: string;
 };
+
+export type PaginationOptions = {
+  page?: number;
+  limit?: number;
+  sort?: string;
+};
+
+export type PaginatedQueryOptions = PaginationOptions &
+  QueryKey & {
+    isKeepPreviousData?: boolean;
+  };
 
 export type PaginationOptionsCategoryId = PaginationConfig & CategoryId;
 export type PaginationOptionsCategoryName = PaginationConfig & {
@@ -49,7 +61,11 @@ export type PaginationResultUsers = PaginationResult & {
   docs: User[];
 };
 
-export type QueryKey = { queryKey: (string | boolean | number)[] };
+export type PaginationResultReports = PaginationResult & {
+  docs: Report[];
+};
+
+export type QueryKey = { queryKey?: (string | boolean | number)[] };
 export type PaginationOptionAndQueryKey = PaginationConfig & QueryKey;
 export type PaginationOptionUserIdAndQueryKey = PaginationOptionAndQueryKey &
   UserId;

@@ -73,6 +73,7 @@ export const productSchema = new Schema(
     reviewCount: { type: Number, default: 0 },
     productQuestions: { type: [userQuestionSchema], select: false },
     averageReview: { type: Number, default: 0 },
+    is_modified: { type: Boolean, default: false },
   },
   {
     timestamps: true,

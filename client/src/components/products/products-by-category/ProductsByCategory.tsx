@@ -4,12 +4,12 @@ import {
   useQueryClient,
 } from "@tanstack/react-query";
 import React, { useEffect, useState } from "react";
-import { getProductsByCategoryByIdWithPagination } from "../../../api/product.api";
+// import { getProductsByCategoryByIdWithPagination } from "../../../api/products/product.api";
 import { Category } from "../../../types/category";
-import PaginationButtons from "../../common/pagination-buttons/PaginationButtons";
-import { Box, Divider } from "@mui/material";
-import SortToggleButtons from "../../common/buttons/sort-toggle-buttons/SortToggleButtons";
-import ProductResultOverviewInfo from "../ProductResultOverViewinfo/ProductResultOverviewInfo";
+// import PaginationButtons from "../../common/pagination-buttons/PaginationButtons";
+// import { Box, Divider } from "@mui/material";
+// import SortToggleButtons from "../../common/buttons/sort-toggle-buttons/SortToggleButtons";
+// import ProductResultOverviewInfo from "../ProductResultOverViewinfo/ProductResultOverviewInfo";
 import Grid from "@mui/material/Grid2";
 import ProductCard from "../product-card/product-card/ProductCard";
 import GridLoadingSkeleton from "../../common/load-spinner/GridLoadingSkeleton";

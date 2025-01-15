@@ -1,7 +1,7 @@
 import { useParams } from "react-router-dom";
 import Grid from "@mui/material/Grid2";
 import { Divider, Typography } from "@mui/material";
-import { useGetCategoryByName } from "../../../hooks/category";
+import { useGetCategoryByName } from "../../../hooks/categories.hooks";
 import GridLoadingSkeleton from "../../../components/common/load-spinner/GridLoadingSkeleton";
 import ProductsByCategory from "../../../components/products/products-by-category/ProductsByCategory";
 

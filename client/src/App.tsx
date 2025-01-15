@@ -31,14 +31,14 @@ function App() {
   const router = createBrowserRouter([
     {
       element: <BaseLayout />,
-      path: "",
+      // path: "",
       children: [...productRoutes],
     },
-    ...adminRoutes,
+    // ...adminRoutes,
     ...authRoutes,
     ...userRoutes,
-    ...categoryRoutes,
-    ...reviewsRoutes,
+    // ...categoryRoutes,
+    // ...reviewsRoutes,
   ]);
 
   if (!isOnline) return <NetworkOffline />;

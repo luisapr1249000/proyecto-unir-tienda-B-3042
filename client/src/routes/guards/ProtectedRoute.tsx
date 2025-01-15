@@ -1,4 +1,4 @@
-import { Navigate, Outlet, useOutletContext } from "react-router-dom";
+import { Navigate, Outlet } from "react-router-dom";
 import { useAuthUser } from "../../hooks/auth";
 import LoadSpinner from "../../components/common/load-spinner/LoadSpinner";
 
@@ -9,6 +9,7 @@ const ProtectedRoute = () => {
   }
 
   if (isError) return <Navigate to="/" />;
+
   return <Outlet context={authUser} />;
 };
 

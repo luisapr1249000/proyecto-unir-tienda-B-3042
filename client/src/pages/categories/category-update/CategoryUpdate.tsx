@@ -3,7 +3,7 @@ import Grid from "@mui/material/Grid2";
 import { Divider, Typography } from "@mui/material";
 import CategoryUpdateForm from "../../../components/categories/category-update/CategoryUpdateForm";
 import { useParams } from "react-router-dom";
-import { useGetCategoryById } from "../../../hooks/category";
+import { useGetCategoryById } from "../../../hooks/categories.hooks";
 import LoadSpinner from "../../../components/common/load-spinner/LoadSpinner";
 
 const CategoryUpdate = () => {

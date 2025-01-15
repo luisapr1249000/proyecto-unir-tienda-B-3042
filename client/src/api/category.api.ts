@@ -1,16 +1,20 @@
 import { api } from "../config/axios.config";
-import { Category } from "../types/category";
-import { PaginationResultCategories } from "../types/paginationResult";
+import {
+  Category,
+  CategoryId,
+  CategoryInput,
+  CategoryName,
+} from "../types/category";
+import {
+  PaginationConfig,
+  PaginationResultCategories,
+} from "../types/paginationResult";
 
-export const getCategories = async ({
+export const getCategoriesWithPagination = async ({
   page = 1,
   limit = 10,
   sort = "-createdAt",
-}: {
-  page?: number;
-  limit?: number;
-  sort?: string;
-}): Promise<PaginationResultCategories> => {
+}: PaginationConfig): Promise<PaginationResultCategories> => {
   const response = await api<PaginationResultCategories>(
     `/categories?page=${page}&limit=${limit}&sort=${sort}`
   );
@@ -19,18 +23,34 @@ export const getCategories = async ({
 
 export const getCategoryById = async ({
   categoryId,
-}: {
-  categoryId: string;
-}): Promise<Category> => {
+}: CategoryId): Promise<Category> => {
   const response = await api<Category>(`/categories/${categoryId}`);
   return response.data;
 };
 
 export const getCategoryByName = async ({
   categoryName,
-}: {
-  categoryName: string;
-}): Promise<Category> => {
+}: CategoryName): Promise<Category> => {
   const response = await api<Category>(`/categories/name/${categoryName}`);
   return response.data;
+};
+
+export const createCategory = async (category: CategoryInput) => {
+  const response = await api.post<Category>(`/categories`, category);
+  return response.data;
+};
+
+export const updateCategory = async (
+  categoryId: string,
+  category: CategoryInput
+) => {
+  const response = await api.put<Category>(
+    `/categories/${categoryId}`,
+    category
+  );
+  return response.data;
+};
+
+export const deleteCategory = async (categoryId: string) => {
+  await api.delete(`/categories/${categoryId}`);
 };

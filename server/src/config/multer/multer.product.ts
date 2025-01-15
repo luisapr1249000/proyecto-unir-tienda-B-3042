@@ -27,4 +27,4 @@ const s3ProductStorage = multer({
   limits,
 });
 
-export const uploadImageProduct = s3ProductStorage.array("file", 5);
+export const uploadImageProduct = s3ProductStorage.array("file", 8);

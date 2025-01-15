@@ -1,18 +1,19 @@
 import { z } from "zod";
 import { userSchema } from "./user-schemas/user.validation";
 import {
-  basicStringField,
-  emailStringField,
-  noSpacesField,
-  passwordStringField,
+  createBasicString,
+  createEmailField,
+  createPasswordSchema,
+  createValidStringField,
+  noWhiteSpaceField,
 } from "../utils/zod.utils";
 
 export const signupSchema = z
   .object({
-    username: noSpacesField.max(30, "Max 30 characters"),
-    email: emailStringField,
-    password: passwordStringField,
-    confirmPassword: passwordStringField,
+    username: noWhiteSpaceField(),
+    email: createEmailField(),
+    password: createPasswordSchema(),
+    confirmPassword: z.string().min(1, "Please confirm your password"),
   })
   .refine((data) => data.password === data.confirmPassword, {
     message: "Password dont match",
@@ -20,26 +21,50 @@ export const signupSchema = z
   });
 
 export const loginSchema = z.object({
-  rememberMe: z.boolean().default(false),
-  loginValue: basicStringField,
-  password: basicStringField,
+  rememberMe: z.coerce.boolean().optional(),
+  loginValue: createValidStringField({
+    fieldName: "Login value",
+    maxLength: 100,
+  }),
+  password: z.string().min(1, "Password is required"),
 });
 
-export const resetPasswordSchema = z
-  .object({
-    password: passwordStringField,
-    confirmPassword: passwordStringField,
-  })
-  .refine((data) => data.password === data.confirmPassword, {
-    message: "Password dont match",
-    path: ["confirmPassword"],
-  });
-
-export const emailSchema = z.object({ email: emailStringField });
+export const emailSchema = z.object({ email: createEmailField() });
 
 export const signupResponse = z.object({
   userSaved: userSchema,
-  accessToken: basicStringField,
+  accessToken: createBasicString(),
 });
 
-export const loginResponse = z.object({ userId: basicStringField });
+export const loginResponse = z.object({ userId: createBasicString() });
+
+export const changePasswordSchema = z
+  .object({
+    currentPassword: createBasicString().min(1, "Current password is required"),
+    newPassword: createPasswordSchema(),
+    confirmPassword: z.string().min(1, "Confirmation password is required"),
+  })
+  .refine(
+    ({ newPassword, confirmPassword }) => newPassword === confirmPassword,
+    {
+      path: ["confirmPassword"],
+      message: "Passwords do not match",
+    }
+  );
+
+export const forgotPasswordSchema = z
+  .object({
+    newPassword: createPasswordSchema(),
+    confirmPassword: z.string().min(1, "Confirmation password is required"),
+  })
+  .refine(
+    ({ newPassword, confirmPassword }) => newPassword === confirmPassword,
+    {
+      path: ["confirmPassword"],
+      message: "Passwords do not match",
+    }
+  );
+
+export const mailRequestSchema = z.object({
+  email: createEmailField(),
+});

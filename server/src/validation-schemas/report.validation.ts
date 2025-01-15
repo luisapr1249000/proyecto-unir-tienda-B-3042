@@ -3,7 +3,6 @@ import {
   abstractSchema,
   createMongooseObjectId,
   createValidStringField,
-  // objectIdValidator,
 } from "../utils/zod.utils";
 
 const problemDescriptionField = createValidStringField({
@@ -23,7 +22,7 @@ export const reportInputSchema = z.object({
     "Misleading Information",
     "Other",
   ]),
-  itemType: z.enum(["Product", "Review"]),
+  itemType: z.enum(["Product", "Review", "User"]),
   problemDescription: problemDescriptionField.optional(),
 });
 

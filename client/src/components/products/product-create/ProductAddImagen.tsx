@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import ButtonInputFile from "../../common/buttons/button-input-file/ButtonInputFile";
 import DisplayImagePreview from "../../common/display-image-preview/DisplayImagePreview";
-import { uploadImage } from "../../../api/product.api";
+import { uploadImage } from "../../../api/products/product.api";
 import { useMutation } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";

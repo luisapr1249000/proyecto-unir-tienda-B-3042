@@ -1,95 +1,82 @@
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
-import {
-  PaginationOptionAndQueryKey,
-  PaginationOptionCategoryIdAndQueryKey,
-  PaginationOptionCategoryNameAndQueryKey,
-  PaginationOptionUserIdAndQueryKey,
-} from "../types/paginationResult";
+import { PaginatedQueryOptions, QueryKey } from "../types/paginationResult";
+import { mergePaginationOptions } from "../utils/api.utils";
 import {
   getProductById,
-  getProductsByCategoryByIdWithPagination,
-  getProductsByCategoryByNameWithPagination,
+  getProductsByCategoryWithPagination,
   getProductstByAuthorWithPagination,
   getProductsWithPagination,
-} from "../api/product.api";
+} from "../api/products/products.api";
+import { UserId } from "../types/user";
+import { CategoryId } from "../types/category";
 import { ProductId } from "../types/product";
 
-export const useGetProductsWithPagination = ({
-  queryKey,
-  page,
-  limit,
-  sort,
-}: PaginationOptionAndQueryKey) => {
+export const useGetProductsWithPagination = (
+  options: PaginatedQueryOptions = {}
+) => {
+  const { limit, page, sort, queryKey, isKeepPreviousData } = {
+    ...mergePaginationOptions(options),
+    ...options,
+  };
   return useQuery({
-    refetchOnWindowFocus: false,
-    queryKey: queryKey,
+    queryKey: queryKey ?? ["products", { page, limit, sort }],
     queryFn: () => getProductsWithPagination({ page, limit, sort }),
-    placeholderData: keepPreviousData,
-  });
-};
-
-export const useGetProductsByAuthorWithPagination = ({
-  queryKey,
-  userId,
-  limit,
-  page,
-  sort,
-}: PaginationOptionUserIdAndQueryKey) => {
-  return useQuery({
-    refetchOnWindowFocus: false,
-    queryKey: queryKey,
-    queryFn: () =>
-      getProductstByAuthorWithPagination({ userId, page, limit, sort }),
-  });
-};
-
-export const useGetProductsByCategoryByNameWithPagination = ({
-  queryKey,
-  categoryName,
-  page,
-  limit,
-  sort,
-}: PaginationOptionCategoryNameAndQueryKey) => {
-  return useQuery({
-    queryKey: queryKey,
-    queryFn: () =>
-      getProductsByCategoryByNameWithPagination({
-        categoryName,
-        page,
-        limit,
-        sort,
-      }),
-  });
-};
-
-export const useGetProductsByCategoryByIdWithPagination = ({
-  queryKey,
-  categoryId,
-  page,
-  limit,
-  sort,
-  enabled,
-}: PaginationOptionCategoryIdAndQueryKey) => {
-  return useQuery({
-    queryKey: queryKey,
-    queryFn: () =>
-      getProductsByCategoryByIdWithPagination({
-        categoryId,
-        page,
-        limit,
-        sort,
-      }),
-    enabled: !!enabled,
     retry: false,
     refetchOnWindowFocus: false,
-    placeholderData: keepPreviousData,
-    staleTime: 5000,
+    placeholderData: isKeepPreviousData ? keepPreviousData : undefined,
   });
 };
 
-export const useGetProductById = ({ productId }: ProductId) => {
+export const useGetProductsByAuthorWithPagination = (
+  options: PaginatedQueryOptions & UserId = { userId: "" }
+) => {
+  const { limit, page, sort, queryKey, isKeepPreviousData, userId } = {
+    ...mergePaginationOptions(options),
+    ...options,
+  };
   return useQuery({
-    queryKey: [`product-${productId}`],
+    queryKey: queryKey ?? ["products", { page, limit, sort }],
+    queryFn: () =>
+      getProductstByAuthorWithPagination({
+        page,
+        limit,
+        sort,
+        userId: userId,
+      }),
+    retry: false,
+    refetchOnWindowFocus: false,
+    placeholderData: isKeepPreviousData ? keepPreviousData : undefined,
+  });
+};
+
+export const useGetProductsByCategoryWithPagination = (
+  options: PaginatedQueryOptions & CategoryId = { categoryId: "" }
+) => {
+  const { limit, page, sort, queryKey, isKeepPreviousData, categoryId } = {
+    ...mergePaginationOptions(options),
+    ...options,
+  };
+  return useQuery({
+    queryKey: queryKey ?? ["products-category", { page, limit, sort }],
+    queryFn: () =>
+      getProductsByCategoryWithPagination({
+        page,
+        limit,
+        sort,
+        categoryId: categoryId,
+      }),
+    retry: false,
+    refetchOnWindowFocus: false,
+    placeholderData: isKeepPreviousData ? keepPreviousData : undefined,
+  });
+};
+
+export const useGetProductById = (options: ProductId & QueryKey) => {
+  const { productId, queryKey } = options;
+  return useQuery({
+    queryKey: queryKey ?? [`product-${productId}`],
     queryFn: () => getProductById({ productId }),
+    retry: false,
+    refetchOnWindowFocus: false,
   });
 };

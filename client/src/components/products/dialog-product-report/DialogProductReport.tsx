@@ -15,7 +15,7 @@ import ClearIcon from "@mui/icons-material/Clear";
 import CancelButton from "../../common/buttons/cancel-button/CancelButton";
 import SubmitButton from "../../common/buttons/submit-button/SubmitButton";
 import { toFormikValidationSchema } from "zod-formik-adapter";
-import { reportInputSchema } from "../../../validation-schemas/productReport.validation";
+import { reportInputSchema } from "../../../validation-schemas/report.validation";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { createReport } from "../../../api/productReport.api";
 import { toast } from "react-toastify";

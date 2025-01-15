@@ -5,10 +5,10 @@ import { productInputSchema } from "../../../validation-schemas/product-schemas/
 import { InputAdornment, TextField, Typography } from "@mui/material";
 import SubmitButton from "../../common/buttons/submit-button/SubmitButton";
 import ProductAddCategories from "./ProductAddCategory";
-import { useGetCategoriesWitPagination } from "../../../hooks/category";
-import GridDivider from "../../common/grid-divider/GridDivider";
+import { useGetCategoriesWitPagination } from "../../../hooks/categories.hooks";
+import GridDivider from "../../common/grid/grid-divider/GridDivider";
 import { useMutation } from "@tanstack/react-query";
-import { createProduct } from "../../../api/product.api";
+import { createProduct } from "../../../api/products/product.api";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import ProductAddImagen from "./ProductAddImagen";

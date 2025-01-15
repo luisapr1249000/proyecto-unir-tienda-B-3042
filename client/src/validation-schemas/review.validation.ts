@@ -2,8 +2,9 @@ import { z } from "zod";
 import { abstractSchema } from "./abstract.validation";
 import { imageSchema } from "./image.validation";
 import {
-  createNonNegativeNumberField,
+  createPositiveIntegerField,
   createValidStringField,
+  is_modifiedField,
 } from "../utils/zod.utils";
 import { userSchema } from "./user-schemas/user.validation";
 import { productSchema } from "./product-schemas/product.validation";
@@ -13,7 +14,7 @@ const reviewContentField = createValidStringField({
   maxLength: 200,
 });
 
-const reviewField = createNonNegativeNumberField({
+const reviewField = createPositiveIntegerField({
   fieldName: "review",
   maxValue: 5,
 });
@@ -28,6 +29,7 @@ export const reviewProps = z.object({
   images: z.array(imageSchema),
   product: productSchema,
 });
-export const reviewSchema = abstractSchema
+export const reviewSchema = abstractSchema()
   .merge(reviewInputSchema)
+  .merge(is_modifiedField())
   .merge(reviewProps);

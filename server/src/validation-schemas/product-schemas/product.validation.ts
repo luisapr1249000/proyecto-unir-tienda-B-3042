@@ -6,8 +6,9 @@ import {
   abstractSchema,
   authorSchema,
   createPositiveIntegerField,
-  createPostiveNumberField,
+  createPositiveNumberField,
   createValidStringField,
+  is_modifiedField,
   objectIdValidator,
 } from "../../utils/zod.utils";
 
@@ -22,17 +23,17 @@ const productDescriptionField = createValidStringField({
 });
 
 const quantityField = createPositiveIntegerField({ fieldName: "Quantity" });
-const priceField = createPostiveNumberField({
+const priceField = createPositiveNumberField({
   fieldName: "Price",
   multipleOf: 0.01,
 });
 
-const discountField = createPostiveNumberField({
+const discountField = createPositiveNumberField({
   fieldName: "Discount",
   multipleOf: 0.01,
 });
 
-const finalPriceField = createPostiveNumberField({
+const finalPriceField = createPositiveNumberField({
   fieldName: "Final Price",
   multipleOf: 0.01,
 });
@@ -47,9 +48,8 @@ export const productInputSchema = z.object({
     }),
   price: priceField,
   quantity: quantityField,
-  images: z.array(imageSchema),
   specifications: specificationsSchema,
-  discount: discountField,
+  discount: discountField.optional(),
 });
 
 const likesField = createPositiveIntegerField({ fieldName: "Likes" });
@@ -75,9 +75,11 @@ export const otherProps = z.object({
   averageReview: averageReviewField,
   viewCount: viewCountField,
   finalPrice: finalPriceField,
+  images: z.array(imageSchema),
 });
 
 export const productSchema = abstractSchema()
   .merge(productInputSchema)
   .merge(authorSchema())
-  .merge(otherProps);
+  .merge(otherProps)
+  .merge(is_modifiedField());

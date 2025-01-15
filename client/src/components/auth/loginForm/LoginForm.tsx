@@ -15,7 +15,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { login } from "../../../api/auth.api";
 import { toast } from "react-toastify";
 import ShowPassword from "../show-password/ShowPassword";
-import GridLoaderCenter from "../../common/grid-loader-center/GridLoaderCenter";
+import GridLoaderCenter from "../../common/grid/grid-loader-center/GridLoaderCenter";
 
 const LoginForm = () => {
   const queryClient = useQueryClient();

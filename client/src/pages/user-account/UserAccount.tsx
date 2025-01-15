@@ -6,8 +6,6 @@ import AccountBoxIcon from "@mui/icons-material/AccountBox";
 import {
   Avatar,
   Card,
-  Divider,
-  IconButton,
   List,
   ListItem,
   ListItemAvatar,

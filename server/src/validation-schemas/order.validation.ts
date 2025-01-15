@@ -3,23 +3,23 @@ import {
   abstractSchema,
   createMongooseObjectId,
   createPositiveIntegerField,
-  createPostiveNumberField,
+  createPositiveNumberField,
   objectIdValidator,
 } from "../utils/zod.utils";
 import { addressDirectionInputSchema } from "./user-schemas/address.validation";
 
 const quantityField = createPositiveIntegerField({ fieldName: "quantity" });
-const priceField = createPostiveNumberField({
+const priceField = createPositiveNumberField({
   fieldName: "price",
   multipleOf: 0.01,
 });
 
-const subtotalField = createPostiveNumberField({
+const subtotalField = createPositiveNumberField({
   fieldName: "subtotal",
   multipleOf: 0.01,
 });
 
-const totalPriceField = createPostiveNumberField({
+const totalPriceField = createPositiveNumberField({
   fieldName: "finalPrice",
   multipleOf: 0.01,
 });

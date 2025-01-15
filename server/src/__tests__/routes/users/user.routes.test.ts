@@ -35,9 +35,7 @@ describe("User Routes", () => {
       adminCookies = adminCookie;
 
       const { user: user1, cookies } = await loginAndGetCookies();
-      console.log("USER 1 ----> ", user1);
       const { user: user2, cookies: cookie2 } = await loginAndGetCookies();
-      console.log("USER 2 ----> ", user2);
 
       userId = user1._id.toString();
       userCookies = cookies;

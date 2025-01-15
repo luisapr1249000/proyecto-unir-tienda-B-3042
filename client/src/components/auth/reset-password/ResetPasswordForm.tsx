@@ -1,7 +1,7 @@
 import { useFormik } from "formik";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { toFormikValidationSchema } from "zod-formik-adapter";
-import { resetPasswordSchema } from "../../../validation-schemas/auth.validation";
+import { forgotPasswordSchema } from "../../../validation-schemas/auth.validation";
 import Grid from "@mui/material/Grid2";
 import { InputAdornment, TextField } from "@mui/material";
 import ShowPassword from "../show-password/ShowPassword";
@@ -17,11 +17,9 @@ const ResetPasswordForm = () => {
   };
   const formik = useFormik({
     initialValues,
-    validationSchema: toFormikValidationSchema(resetPasswordSchema),
+    validationSchema: toFormikValidationSchema(forgotPasswordSchema),
     onSubmit: (values) => console.log(values),
   });
-
-  useEffect(() => {}, []);
 
   return (
     <Grid component="form" onSubmit={formik.handleSubmit}>

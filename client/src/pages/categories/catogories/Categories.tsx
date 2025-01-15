@@ -1,7 +1,7 @@
 import React from "react";
 import Grid from "@mui/material/Grid2";
 import { Card, Divider, Typography } from "@mui/material";
-import { useGetCategoriesWitPagination } from "../../../hooks/category";
+import { useGetCategoriesWitPagination } from "../../../hooks/categories.hooks";
 import CategoryCard from "../../../components/categories/category-card/CategoryCard";
 
 const Categories = () => {

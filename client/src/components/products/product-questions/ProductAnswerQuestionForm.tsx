@@ -12,7 +12,7 @@ import { TextField } from "@mui/material";
 import SubmitButton from "../../common/buttons/submit-button/SubmitButton";
 import { useMutation } from "@tanstack/react-query";
 import { toast } from "react-toastify";
-import { answerUserQuestionForOneProduct } from "../../../api/product.api";
+import { answerUserQuestionForOneProduct } from "../../../api/products/product.api";
 
 const ProductAnswerQuestionForm = ({
   productId,

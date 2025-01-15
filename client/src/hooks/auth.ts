@@ -7,6 +7,7 @@ export const useAuthUser = () =>
     queryFn: getAuthUser,
     retry: false,
     refetchOnWindowFocus: false,
+    staleTime: 15 * 60 * 1000,
   });
 
 export const useVerifyToken = (token: string) =>

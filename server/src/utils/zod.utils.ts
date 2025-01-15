@@ -46,7 +46,7 @@ export const createValidStringField = ({
       message: `${fieldName} must be no more than ${maxLength} characters`,
     });
 
-export const createPostiveNumberField = ({
+export const createPositiveNumberField = ({
   fieldName,
   minValue = 1,
   maxValue,
@@ -93,7 +93,7 @@ export const createPositiveIntegerField = ({
 
 export const createEmailField = () =>
   createBasicString()
-    .email()
+    .email("Email must be a valid email address")
     .min(1, "Email must not be empty")
     .max(100, "Email must not exceed 100 characters");
 
@@ -139,9 +139,7 @@ export const createNoWhitespaceString = (field: string, maxLength = 35) =>
 export const phoneNumberSchema = () =>
   z.string().trim().min(1).refine(validator.isMobilePhone);
 
-export const validateZodSchema = (schema: z.ZodTypeAny, data: unknown) => {
-  const result = schema.safeParse(data);
-  if (!result.success) {
-    throw new Error("Validation failed");
-  }
-};
+export const is_modifiedField = () =>
+  z.object({
+    is_modified: z.boolean().default(false),
+  });

@@ -7,7 +7,7 @@ import {
   useQueryClient,
 } from "@tanstack/react-query";
 import { useParams } from "react-router-dom";
-import { searchProductsWithPagination } from "../../../api/product.api";
+import { searchProductsWithPagination } from "../../../api/products/product.api";
 import GridLoadingSkeleton from "../../../components/common/load-spinner/GridLoadingSkeleton";
 import ObjectNotFound from "../../../components/common/object-not-found/ObjectNotFound";
 import ProductCard from "../../../components/products/product-card/product-card/ProductCard";

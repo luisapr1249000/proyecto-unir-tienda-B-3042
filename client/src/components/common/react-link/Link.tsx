@@ -1,15 +1,19 @@
 import {
   Link as MuiLink,
-  LinkProps,
+  LinkProps as MuiLinkProps,
   ListItemProps,
   ListItem,
 } from "@mui/material";
-import { blue } from "@mui/material/colors";
-import { forwardRef } from "react";
-import { NavLink, Link as ReactLink_, NavLinkProps } from "react-router-dom";
+import { blue, grey } from "@mui/material/colors";
+import {
+  NavLink,
+  Link as ReactLink_,
+  NavLinkProps,
+  LinkProps,
+} from "react-router-dom";
 
-export const Link = (props: LinkProps) => (
-  <MuiLink {...props} component={ReactLink_} to={props.href ?? "#"} />
+export const Link = (props: LinkProps & MuiLinkProps) => (
+  <MuiLink {...props} component={ReactLink_} />
 );
 
 export const ListItemLink = (props: ListItemProps & NavLinkProps) => (

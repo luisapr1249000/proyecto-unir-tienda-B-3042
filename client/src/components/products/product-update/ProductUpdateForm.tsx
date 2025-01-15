@@ -19,9 +19,9 @@ import {
 import ProductAddCategories from "../product-create/ProductAddCategory";
 import ProductAddImagen from "../product-create/ProductAddImagen";
 import SubmitButton from "../../common/buttons/submit-button/SubmitButton";
-import GridDivider from "../../common/grid-divider/GridDivider";
+import GridDivider from "../../common/grid/grid-divider/GridDivider";
 import ProductSpecificationsForm from "../product-create/ProductSpecificationsForm";
-import { useGetCategoriesWitPagination } from "../../../hooks/category";
+import { useGetCategoriesWitPagination } from "../../../hooks/categories.hooks";
 import ProductUpdateImages from "./ProductUpdateImages";
 
 const ProductUpdateForm = ({ product }: ProductProp) => {

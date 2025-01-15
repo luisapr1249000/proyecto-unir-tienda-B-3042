@@ -1,42 +1,34 @@
 import { z } from "zod";
 import {
-  createPostiveNumberField,
+  createPositiveNumberField,
   createValidStringField,
 } from "../../utils/zod.utils";
 
-// const specificationsWidth = createValidStringField({
-//   fieldName: "specification width",
-//   maxLength: 10,
-// }).refine((value) => Number(value) > 0, "Width must be greater than 0");
+const specificationMaterial = createValidStringField({
+  fieldName: "material",
+  minLength: 0,
+});
+const specificationFinish = createValidStringField({
+  fieldName: "finish",
+  minLength: 0,
+});
 
-// const specificationsDepth = createValidStringField({
-//   fieldName: "specification width",
-//   maxLength: 10,
-// }).refine((value) => Number(value) > 0, "Width must be greater than 0");
-// const specificationsHeight = createValidStringField({
-//   fieldName: "specification width",
-//   maxLength: 10,
-// }).refine((value) => Number(value) > 0, "Width must be greater than 0");
-
-const specificationMaterial = createValidStringField({ fieldName: "material" });
-const specificationFinish = createValidStringField({ fieldName: "finish" });
-
-const specificationsWidth = createPostiveNumberField({
+const specificationsWidth = createPositiveNumberField({
   fieldName: "specification width",
   multipleOf: 0.01,
 });
 
-const specificationsDepth = createPostiveNumberField({
+const specificationsDepth = createPositiveNumberField({
   fieldName: "specification depth",
   multipleOf: 0.01,
 });
 
-const specificationsHeight = createPostiveNumberField({
+const specificationsHeight = createPositiveNumberField({
   fieldName: "specification height",
   multipleOf: 0.01,
 });
 
-const weightCapacityField = createPostiveNumberField({
+const weightCapacityField = createPositiveNumberField({
   fieldName: "weight capacity",
   multipleOf: 0.01,
 });
@@ -53,6 +45,6 @@ export const specificationsSchema = z
     material: specificationMaterial.optional(),
     finish: specificationFinish.optional(),
     assemblyRequired: z.coerce.boolean().optional(),
-    weightCapacity: weightCapacityField,
+    weightCapacity: weightCapacityField.optional(),
   })
   .optional();

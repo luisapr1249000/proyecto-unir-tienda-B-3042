@@ -5,6 +5,7 @@ import {
   authorSchema,
   createPositiveIntegerField,
   createValidStringField,
+  is_modifiedField,
   productObjIdSchema,
 } from "../utils/zod.utils";
 
@@ -31,4 +32,5 @@ export const reviewSchema = abstractSchema()
   .merge(reviewInputSchema)
   .merge(reviewOtherPropsSchema)
   .merge(authorSchema())
+  .merge(is_modifiedField())
   .merge(productObjIdSchema());

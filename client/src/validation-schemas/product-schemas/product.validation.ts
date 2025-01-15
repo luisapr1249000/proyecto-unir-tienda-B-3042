@@ -1,31 +1,26 @@
 import { z } from "zod";
-import { imageSchema } from "../image.validation";
+import { imageFileArraySchema, imageSchema } from "../image.validation";
 import { userSchema } from "../user-schemas/user.validation";
 import { categorySchema } from "../category.validation";
-import { userQuestionSchema } from "./product.user.question.validation";
+import { specificationsSchema } from "./productSpecifications.validation";
 import {
-  basicStringField,
-  createIntField,
-  createNonNegativeNumberField,
+  createBasicString,
+  createPositiveIntegerField,
   createPositiveNumberField,
   createValidStringField,
+  is_modifiedField,
 } from "../../utils/zod.utils";
+import { productQuestionSchema } from "./productQuestions.validation";
 import { abstractSchema } from "../abstract.validation";
-import { specificationsSchema } from "./productSpecifications.validation";
 
-const likesField = createNonNegativeNumberField({ fieldName: "Likes" });
-const dislikesField = createNonNegativeNumberField({ fieldName: "Dislikes" });
-const wishlistCountField = createNonNegativeNumberField({
+const wishlistCountField = createPositiveIntegerField({
   fieldName: "Wishlist Count",
 });
-const commentCountField = createNonNegativeNumberField({
+const reviewCountField = createPositiveIntegerField({
   fieldName: "Review Count",
 });
-const averageReviewField = createNonNegativeNumberField({
+const averageReviewField = createPositiveNumberField({
   fieldName: "Avaregate Review",
-});
-const viewCountField = createNonNegativeNumberField({
-  fieldName: "View Count",
 });
 
 const productNameField = createValidStringField({
@@ -37,9 +32,12 @@ const productDescriptionField = createValidStringField({
   maxLength: 500,
 });
 
-const quantityField = createIntField({ fieldName: "Quantity" });
+const quantityField = createPositiveIntegerField({ fieldName: "Quantity" });
 
-const priceField = createPositiveNumberField({ fieldName: "Price" });
+const priceField = createPositiveNumberField({
+  fieldName: "Price",
+  multipleOf: 0.01,
+});
 
 export const productInputSchema = z.object({
   name: productNameField,
@@ -53,29 +51,28 @@ export const productInputSchema = z.object({
   quantity: quantityField,
   specifications: specificationsSchema.optional(),
   discount: z.number().nonnegative().multipleOf(0.01).optional(),
+  images: imageFileArraySchema.optional(),
 });
 
 export const otherProductProps = z.object({
   categories: z.array(categorySchema),
   author: userSchema,
-  likes: likesField,
-  dislikes: dislikesField,
   wishlistCount: wishlistCountField,
-  commentCount: commentCountField,
+  reviewCount: reviewCountField,
   averageReview: averageReviewField,
-  viewCount: viewCountField,
-  userQuestions: z.array(userQuestionSchema).optional(),
+  productQuestions: z.array(productQuestionSchema).optional(),
   images: z.array(imageSchema).default([]),
   finalPrice: z.coerce.number().nonnegative().multipleOf(0.01),
 });
 
-export const productSchema = abstractSchema
+export const productSchema = abstractSchema()
   .merge(productInputSchema.omit({ categories: true }))
+  .merge(is_modifiedField())
   .merge(otherProductProps);
 
 export const productQuantitySchema = (quantity: number) =>
   z.object({ quantity: z.number().int().positive().min(1).max(quantity) });
 
 export const productUserQuestionId = z.object({
-  userQuestionId: basicStringField,
+  userQuestionId: createBasicString(),
 });

@@ -1,7 +1,7 @@
 import { z } from "zod";
 import {
   createPositiveIntegerField,
-  createPostiveNumberField,
+  createPositiveNumberField,
   createValidStringField,
 } from "../utils/zod.utils";
 
@@ -40,7 +40,7 @@ export const paginationCoerceSchema = z.object({
   sort: sortSchema,
 });
 
-const minPriceField = createPostiveNumberField({
+const minPriceField = createPositiveNumberField({
   fieldName: "minPrice",
   multipleOf: 0.01,
 });

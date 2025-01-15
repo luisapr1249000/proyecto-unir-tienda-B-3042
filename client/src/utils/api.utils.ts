@@ -1,6 +1,6 @@
 import { PaginationConfig } from "../types/paginationResult";
 
-const DEFAULT_PAGINATION_VALUES: PaginationConfig = {
+const DEFAULT_PAGINATION_VALUES = {
   page: 1,
   limit: 10,
   sort: "-createdAt",
@@ -8,4 +8,4 @@ const DEFAULT_PAGINATION_VALUES: PaginationConfig = {
 
 export const mergePaginationOptions = (
   paginationOptions: PaginationConfig
-): PaginationConfig => ({ ...DEFAULT_PAGINATION_VALUES, ...paginationOptions });
+) => ({ ...DEFAULT_PAGINATION_VALUES, ...paginationOptions });

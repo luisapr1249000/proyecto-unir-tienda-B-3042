@@ -33,7 +33,7 @@ export const jwtSchema = z.object({
   username: z.string().min(1),
 });
 
-export const passwordChangeSchema = z
+export const changePasswordSchema = z
   .object({
     currentPassword: createBasicString().min(1, "Current password is required"),
     newPassword: createPasswordSchema(),
@@ -46,3 +46,20 @@ export const passwordChangeSchema = z
       message: "Passwords do not match",
     },
   );
+
+export const resetPasswordSchema = z
+  .object({
+    newPassword: createPasswordSchema(),
+    confirmPassword: z.string().min(1, "Confirmation password is required"),
+  })
+  .refine(
+    ({ newPassword, confirmPassword }) => newPassword === confirmPassword,
+    {
+      path: ["confirmPassword"],
+      message: "Passwords do not match",
+    },
+  );
+
+export const mailRequestSchema = z.object({
+  email: createEmailField(),
+});

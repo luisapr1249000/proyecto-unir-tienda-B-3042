@@ -6,6 +6,7 @@ import {
 } from "../middlewares/auth.middleware";
 import { reviewInputSchema } from "../validation-schemas/review.validation";
 import {
+  checkIfhasAlreadyReviewed,
   validateObjectIdParams,
   validateSchemaBody,
   validPagination,
@@ -18,13 +19,14 @@ const router = Router();
 
 router.get(
   "/reviews/",
-  authMiddleware,
-  isAdmin,
+  // authMiddleware,
+  // isAdmin,
   validPagination,
   reviewController.getAllReviews,
 );
 router.get(
   "/reviews/user/:userId",
+  authMiddleware,
   isAdmin,
   validPagination,
   validateObjectIdParams(USER_ID),
@@ -47,6 +49,7 @@ router.post(
   "/products/:productId/reviews/",
   authMiddleware,
   validateObjectIdParams(PRODUCT_ID),
+  checkIfhasAlreadyReviewed,
   validateSchemaBody(reviewInputSchema),
   reviewController.createReview,
 );

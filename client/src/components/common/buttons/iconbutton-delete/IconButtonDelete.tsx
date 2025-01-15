@@ -1,23 +1,25 @@
-import { Box, IconButton } from "@mui/material";
+import { Box, IconButton, Tooltip } from "@mui/material";
 import ClearIcon from "@mui/icons-material/Clear";
-import React from "react";
-import { grey } from "@mui/material/colors";
+import Paper from "@mui/material/Paper";
 
 const IconButtonDelete = ({ onDelete }: { onDelete: () => void }) => {
   return (
-    <Box
+    <Paper
       sx={{
-        bgcolor: grey[50],
         p: 0.3,
         position: "absolute",
         top: 0,
         right: 0,
       }}
+      square
+      elevation={1}
     >
-      <IconButton size="small" onClick={onDelete}>
-        <ClearIcon sx={{ color: grey[900] }} fontSize="inherit" />
-      </IconButton>
-    </Box>
+      <Tooltip title="Delete">
+        <IconButton size="small" onClick={onDelete}>
+          <ClearIcon fontSize="inherit" />
+        </IconButton>
+      </Tooltip>
+    </Paper>
   );
 };
 

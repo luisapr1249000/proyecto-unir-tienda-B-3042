@@ -11,6 +11,9 @@ import {
 } from "../utils/utils.loadable";
 import pMinDelay from "p-min-delay";
 import AuthLayout from "../components/auth/AuthLayout";
+import ForgotPassword from "../components/auth/reset-password/ResetPasswordForm";
+import SendConfirmationEmail from "../pages/auth/send-mail/SendConfirmationEmail";
+import SendForgotPasswordMail from "../pages/auth/send-mail/SendForgotPasswordMail";
 import ResetPassword from "../pages/auth/reset-password/ResetPassword";
 
 const SignupLoadable = createLoadableComponent(
@@ -19,14 +22,6 @@ const SignupLoadable = createLoadableComponent(
 
 const LoginLoadable = createLoadableComponent(
   () => import("../pages/auth/login/Login")
-);
-
-const ResetPasswordConfirmationLoadable = createLoadableComponent(
-  () => import("../pages/auth/reset-password/ResetPasswordRequest")
-);
-
-const SendMailConfirmationLoadable = createLoadableComponent(
-  () => import("../pages/auth/send-mail-confirmation/SendMailConfirmation")
 );
 
 const authRoutes: RouteObject[] = [
@@ -44,21 +39,32 @@ const authRoutes: RouteObject[] = [
             path: "/auth/login",
             element: <LoginLoadable />,
           },
+
           {
-            path: "/auth/request-reset-password/",
-            element: <ResetPasswordConfirmationLoadable />,
+            path: "/auth/forgot-password",
+            element: <SendForgotPasswordMail />,
           },
+
+          {
+            path: "/auth/reset-password",
+            element: <ResetPassword />,
+          },
+
           {
             path: "/auth/send-mail-confirmation",
-            element: <SendMailConfirmationLoadable />,
+            element: <SendConfirmationEmail />,
           },
+          // {
+          //   path: "/auth/request-reset-password/",
+          //   element: <ResetPasswordConfirmationLoadable />,
+          // },
+          // {
+          //   path: "/auth/send-mail-confirmation",
+          //   element: <SendMailConfirmationLoadable />,
+          // },
         ],
       },
     ],
-  },
-  {
-    path: "/auth/reset-password/:token",
-    element: <ResetPassword />,
   },
 ];
 

@@ -6,7 +6,7 @@ import {
   createMongooseObjectId,
   createNoWhitespaceString,
   createPositiveIntegerField,
-  createPostiveNumberField,
+  createPositiveNumberField,
   createValidStringField,
   phoneNumberSchema,
 } from "../../utils/zod.utils";
@@ -32,12 +32,12 @@ export const userInputSchema = z.object({
   phoneNumber: phoneNumberSchema().optional(),
 });
 
-const subtotalField = createPostiveNumberField({
+const subtotalField = createPositiveNumberField({
   fieldName: "subtotal",
   multipleOf: 0.01,
 });
 
-const priceField = createPostiveNumberField({
+const priceField = createPositiveNumberField({
   fieldName: "price",
   multipleOf: 0.01,
 });

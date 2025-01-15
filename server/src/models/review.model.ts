@@ -10,6 +10,7 @@ export const reviewSchema = new Schema(
     author: { type: Schema.Types.ObjectId, ref: "User" },
     images: [imageSchema],
     review: { type: Number, default: undefined, min: 1, max: 5 },
+    is_modified: { type: Boolean, default: false },
   },
   { timestamps: true },
 );

@@ -20,13 +20,7 @@ import { User } from "../../../types/user";
 import MailIcon from "@mui/icons-material/Mail";
 import { ListItemLink } from "../../common/react-link/Link";
 
-const UserMenuDrawer = ({
-  isDrawOpen,
-  user,
-}: {
-  isDrawOpen: boolean;
-  user: User;
-}) => {
+const UserMenuDrawer = ({ user }: { user: User }) => {
   const drawerWidth = 340;
   const shortDrawerWidth = 60;
 

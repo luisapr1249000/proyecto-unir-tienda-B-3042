@@ -3,8 +3,10 @@ import authController from "../controllers/auth.controller";
 import { authMiddleware } from "../middlewares/auth.middleware";
 import { validateSchemaBody } from "../middlewares/requestValidation.middleware";
 import {
+  resetPasswordSchema,
   loginSchema,
-  passwordChangeSchema,
+  mailRequestSchema,
+  changePasswordSchema,
   signupSchema,
 } from "../validation-schemas/auth.validation";
 import passport from "passport";
@@ -28,19 +30,25 @@ router.get("/auth/token/refresh", authController.refreshToken);
 router.post(
   "/auth/change-password",
   authMiddleware,
-  validateSchemaBody(passwordChangeSchema),
+  validateSchemaBody(changePasswordSchema),
   authController.changePassword,
 );
 
-router.post("/auth/forgot-password", authController.forgotPassword);
+router.post(
+  "/auth/forgot-password",
+  validateSchemaBody(resetPasswordSchema),
+  authController.forgotPassword,
+);
 router.post(
   "/auth/send-forgot-password-mail",
+  validateSchemaBody(mailRequestSchema),
   authController.sendForgotPasswordMail,
 );
 
 router.post("/auth/confirmation-email", authController.confirmationEmail);
 router.post(
   "/auth/send-confirmation-email",
+  validateSchemaBody(mailRequestSchema),
   authController.sendConfirmationEmail,
 );
 

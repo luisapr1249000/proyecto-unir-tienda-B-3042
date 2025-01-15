@@ -10,7 +10,6 @@ const AuthLayout = () => {
     <Grid sx={{ minHeight: "calc(100vh)" }} direction="column" container>
       <Header />
       <Outlet />
-      {/* <Footer /> */}
     </Grid>
   );
 };

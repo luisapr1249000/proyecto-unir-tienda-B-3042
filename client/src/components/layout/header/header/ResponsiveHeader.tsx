@@ -10,10 +10,10 @@ import {
 import SearchIcon from "@mui/icons-material/Search";
 
 import Grid from "@mui/material/Grid2";
-import HeaderSearchBar from "../header-search-bar/HeaderSearchBar";
+import HeaderSearchBar from "../search-bar/HeaderSearchBar";
 import { useQuery } from "@tanstack/react-query";
 import HeaderAuth from "../header-auth/HeaderAuth";
-import HeaderAuthButtons from "../header-auth-buttons/HeaderAuthButtons";
+import HeaderAuthButtons from "../header-auth/access-buttons/HeaderAuthButtons";
 import IconButton from "@mui/material/IconButton";
 import MenuIcon from "@mui/icons-material/Menu";
 import HomeIcon from "@mui/icons-material/Home";

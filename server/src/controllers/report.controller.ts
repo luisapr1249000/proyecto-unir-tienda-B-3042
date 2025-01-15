@@ -186,6 +186,34 @@ class Reportcontroller {
     }
   }
 
+  public async getReportsFromUser(req: Request, res: Response) {
+    try {
+      const { userId } = req.params;
+      const { limit, page, sort } = {
+        ...getDefaultPaginationOptions(),
+        ...req.query,
+      };
+      const paginationOptions = {
+        limit,
+        page,
+        sort,
+        populate: ["reporter", "reportedItem"],
+      };
+
+      const query = {
+        reportedItem: userId,
+        itemType: "User",
+      };
+      const reports = await Report.paginate(query, paginationOptions);
+      if (!reports || reports.docs.length === 0) {
+        return handleObjectNotFound(res, "User");
+      }
+      return res.status(200).json(reports);
+    } catch (e) {
+      return handleError(res, e);
+    }
+  }
+
   public async getReportedReviews(req: Request, res: Response) {
     try {
       const { limit, page, sort } = {
@@ -229,6 +257,31 @@ class Reportcontroller {
       const reports = await Report.paginate(query, paginationOptions);
       if (!reports || reports.docs.length === 0) {
         return handleObjectNotFound(res, "Product");
+      }
+      return res.status(200).json(reports);
+    } catch (e) {
+      return handleError(res, e);
+    }
+  }
+
+  public async getReportedUsers(req: Request, res: Response) {
+    try {
+      const { limit, page, sort } = {
+        ...getDefaultPaginationOptions(),
+        ...req.query,
+      };
+      const paginationOptions = {
+        limit,
+        page,
+        sort,
+        populate: ["reporter", "reportedItem"],
+      };
+      const query = {
+        itemType: "User",
+      };
+      const reports = await Report.paginate(query, paginationOptions);
+      if (!reports || reports.docs.length === 0) {
+        return handleObjectNotFound(res, "User");
       }
       return res.status(200).json(reports);
     } catch (e) {

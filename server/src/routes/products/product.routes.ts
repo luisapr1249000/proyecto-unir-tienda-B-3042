@@ -35,7 +35,7 @@ router.post(
 );
 
 router.post(
-  "/products/:productId/image",
+  "/products/:productId/images",
   authMiddleware,
   validateObjectIdParams(PRODUCT_ID),
   uploadImageProduct,

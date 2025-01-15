@@ -1,7 +1,5 @@
 import { z } from "zod";
 import {
-  addressDirection,
-  addressDirectionInputSchema,
   userInputSchema,
   userSchema,
 } from "../validation-schemas/user-schemas/user.validation";
@@ -10,6 +8,10 @@ import {
   userSavedProductsSchema,
   userWishlistSchema,
 } from "../validation-schemas/user-schemas/user.product.actions.validation";
+import {
+  addressDirection,
+  addressDirectionInputSchema,
+} from "../validation-schemas/user-schemas/userAddressDirection.validation";
 
 export type User = z.infer<typeof userSchema>;
 export type UserInput = z.infer<typeof userInputSchema>;

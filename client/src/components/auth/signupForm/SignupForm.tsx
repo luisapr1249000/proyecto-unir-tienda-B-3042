@@ -10,7 +10,7 @@ import { signup } from "../../../api/auth.api";
 import LoadSpinner from "../../common/load-spinner/LoadSpinner";
 import { toast } from "react-toastify";
 import ShowPassword from "../show-password/ShowPassword";
-import GridLoaderCenter from "../../common/grid-loader-center/GridLoaderCenter";
+import GridLoaderCenter from "../../common/grid/grid-loader-center/GridLoaderCenter";
 
 const SignupForm = () => {
   const [showPassword, setShowPassword] = useState(false);

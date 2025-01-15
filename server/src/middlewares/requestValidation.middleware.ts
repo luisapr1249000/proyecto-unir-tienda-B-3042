@@ -15,6 +15,8 @@ import { objectIdValidator } from "../utils/zod.utils";
 import { userRoleSchema } from "../validation-schemas/user-schemas/user.validation";
 import { getDefaultPaginationOptions } from "../utils/utils";
 import { Order } from "../models/orders.model";
+import { extractAuthUserId } from "../utils/auth.utils";
+import Review from "../models/review.model";
 
 export const validRole = (req: Request, res: Response, next: NextFunction) => {
   const { success, error } = userRoleSchema.safeParse(req.body);
@@ -142,4 +144,20 @@ export const verifyOrderOwnershipOrSellerRoleOrAdmin = async (
     return next();
   }
   return handleNotPermissions(res);
+};
+
+export const checkIfhasAlreadyReviewed = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  const authUserId = extractAuthUserId(req);
+  const { productId } = req.params;
+  const hasAlreadyReviewed = await Review.findOne({
+    product: productId,
+    author: authUserId,
+  });
+  if (hasAlreadyReviewed)
+    return res.status(400).json({ message: "Already reviewed" });
+  next();
 };
