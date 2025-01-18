@@ -20,9 +20,9 @@ const router = Router();
 router.get("/reports", authMiddleware, isAdmin, reportController.getReports);
 
 router.post(
-  "/reports/:reporteItemId/",
+  "/reports/:reportedItemId/",
   authMiddleware,
-  validateObjectIdParams(["reporteItemId"]),
+  validateObjectIdParams(["reportedItemId"]),
   validateSchemaBody(reportInputSchema),
   reportController.createReport,
 );

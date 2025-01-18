@@ -28,12 +28,14 @@ export const userInputSchema = z.object({
   firstName: firstNameField,
   lastName: lastNameField,
   bio: biographyField,
-  phoneNumber: phoneNumberField().optional(),
+  mobilePhone: phoneNumberField().optional(),
 });
+
+export const userRole = z.enum(["user", "admin"]);
 
 export const userInfo = z.object({
   isSeller: z.boolean(),
-  role: z.enum(["user", "admin"]),
+  role: userRole,
   lastLogin: z.date().optional(),
   whislist: z.array(z.string()).optional(),
   cart: z.array(z.string()).optional(),

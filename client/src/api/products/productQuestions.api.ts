@@ -24,7 +24,7 @@ export const updateUserQuestionForOneProduct = async ({
 }: ProductQuestionContent & ProductId & ProductUserQuestionId) => {
   const response = await api.put<Product>(
     `/products/${productId}/questions/${userQuestionId}`,
-    content
+    { content }
   );
   return response.data;
 };

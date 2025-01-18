@@ -5,18 +5,36 @@ import { toFormikValidationSchema } from "zod-formik-adapter";
 import { productQuestionInputSchema } from "../../../../validation-schemas/product-schemas/productQuestions.validation";
 import SubmitButton from "../../../common/buttons/submit-button/SubmitButton";
 import TextField from "../../../common/textfields/TextField";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { createUserQuestionForOneProduct } from "../../../../api/products/productQuestions.api";
+import { toast } from "react-toastify";
+import CircleLoadingGrid from "../../../common/loading/CircleLoadingGrid";
+import { ProductId } from "../../../../types/product";
 
-const ProductQuestionForm = () => {
+const ProductQuestionForm = ({ productId }: ProductId) => {
+  const queryClient = useQueryClient();
+  const { mutate: createUserQuestionMutation, isPending } = useMutation({
+    mutationFn: createUserQuestionForOneProduct,
+    onSuccess: () => {
+      toast.success("User Question Created!");
+      queryClient.invalidateQueries({ queryKey: [`product-${productId}`] });
+    },
+    onError: () => {
+      toast.error("Error creating User Question!");
+    },
+  });
+
   const initialValues = {
     content: "",
   };
   const formik = useFormik({
     initialValues,
     validationSchema: toFormikValidationSchema(productQuestionInputSchema),
-    onSubmit: (values) => {
-      console.log(values);
+    onSubmit: ({ content }) => {
+      createUserQuestionMutation({ content, productId });
     },
   });
+  if (isPending) return <CircleLoadingGrid />;
   return (
     <Grid container spacing={2} component="form" onSubmit={formik.handleSubmit}>
       <Grid size={{ xs: 12 }}>

@@ -21,7 +21,7 @@ router.get(
   "/reviews/",
   // authMiddleware,
   // isAdmin,
-  validPagination,
+  // validPagination,
   reviewController.getAllReviews,
 );
 router.get(

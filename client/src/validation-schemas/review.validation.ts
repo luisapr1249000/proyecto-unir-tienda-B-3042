@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { abstractSchema } from "./abstract.validation";
-import { imageSchema } from "./image.validation";
+import { imageFileArraySchema, imageSchema } from "./image.validation";
 import {
   createPositiveIntegerField,
   createValidStringField,
@@ -22,6 +22,7 @@ const reviewField = createPositiveIntegerField({
 export const reviewInputSchema = z.object({
   content: reviewContentField,
   review: reviewField,
+  images: imageFileArraySchema.optional(),
 });
 
 export const reviewProps = z.object({

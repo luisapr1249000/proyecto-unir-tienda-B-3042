@@ -1,44 +1,44 @@
 import { useFormik } from "formik";
-import React from "react";
 import Grid from "@mui/material/Grid2";
 import { useAuthUser } from "../../../../hooks/auth";
 import { toFormikValidationSchema } from "zod-formik-adapter";
 import { userInputSchema } from "../../../../validation-schemas/user-schemas/user.validation";
-import { TextField } from "@mui/material";
 import SubmitButton from "../../../common/buttons/submit-button/SubmitButton";
 import { useMutation } from "@tanstack/react-query";
-import { UserInput } from "../../../../types/user";
 import { updateUser } from "../../../../api/users/user.api";
+import TextField from "../../../common/textfields/TextField";
+import { toast } from "react-toastify";
+import CircleLoadingGrid from "../../../common/loading/CircleLoadingGrid";
 
 const UserUpdateForm = () => {
-  const { mutate: update } = useMutation({ mutationFn: updateUser });
+  const { mutate: updateUserMutation, isPending } = useMutation({
+    mutationFn: updateUser,
+    onSuccess: () => {
+      toast.success("User updated successfully");
+    },
+    onError: (error) => {
+      toast.error(error.message);
+    },
+  });
   const { data: authUser } = useAuthUser();
-  let initialValues: UserInput = {
-    username: "",
-    email: "",
-    firstName: "",
-    lastName: "",
-    phoneNumber: "",
-    bio: "",
+  const initialValues = {
+    username: authUser?.username ?? "",
+    email: authUser?.email ?? "",
+    firstName: authUser?.firstName ?? "",
+    lastName: authUser?.lastName ?? "",
+    mobilePhone: authUser?.mobilePhone ?? "",
+    bio: authUser?.bio ?? "",
   };
 
-  if (authUser) {
-    initialValues = {
-      username: authUser.username,
-      email: authUser.email,
-      firstName: authUser.firstName,
-      lastName: authUser.lastName,
-      phoneNumber: authUser.phoneNumber,
-      bio: authUser.bio,
-    };
-  }
   const formik = useFormik({
     initialValues,
     enableReinitialize: true,
     validationSchema: toFormikValidationSchema(userInputSchema),
-    onSubmit: (values) => update(values),
+    onSubmit: (values) =>
+      updateUserMutation({ userId: authUser?._id ?? "", data: values }),
   });
 
+  if (isPending) return <CircleLoadingGrid />;
   return (
     <Grid spacing={3} container component="form" onSubmit={formik.handleSubmit}>
       <Grid size={{ xs: 12 }}>
@@ -57,9 +57,6 @@ const UserUpdateForm = () => {
               ? formik.errors.username
               : undefined
           }
-          slotProps={{
-            inputLabel: { shrink: true },
-          }}
           focused={
             formik.touched.username && Boolean(!formik.errors.username)
               ? true
@@ -90,9 +87,6 @@ const UserUpdateForm = () => {
               ? formik.errors.email
               : undefined
           }
-          slotProps={{
-            inputLabel: { shrink: true },
-          }}
           focused={
             formik.touched.email && Boolean(!formik.errors.email)
               ? true
@@ -120,9 +114,6 @@ const UserUpdateForm = () => {
               ? formik.errors.firstName
               : undefined
           }
-          slotProps={{
-            inputLabel: { shrink: true },
-          }}
           focused={
             formik.touched.firstName && Boolean(!formik.errors.firstName)
               ? true
@@ -150,9 +141,6 @@ const UserUpdateForm = () => {
               ? formik.errors.lastName
               : undefined
           }
-          slotProps={{
-            inputLabel: { shrink: true },
-          }}
           focused={
             formik.touched.lastName && Boolean(!formik.errors.lastName)
               ? true
@@ -168,30 +156,27 @@ const UserUpdateForm = () => {
       <Grid size={{ xs: 12 }}>
         <TextField
           fullWidth
-          name="phoneNumber"
+          name="mobilePhone"
           label="Phone Number"
           placeholder="Phone Number"
-          value={formik.values.phoneNumber}
+          value={formik.values.mobilePhone}
           onChange={formik.handleChange}
           onBlur={formik.handleBlur}
           error={
-            formik.touched.phoneNumber && Boolean(formik.errors.phoneNumber)
+            formik.touched.mobilePhone && Boolean(formik.errors.mobilePhone)
           }
           helperText={
-            formik.touched.phoneNumber && Boolean(formik.errors.phoneNumber)
-              ? formik.errors.phoneNumber
+            formik.touched.mobilePhone && Boolean(formik.errors.mobilePhone)
+              ? formik.errors.mobilePhone
               : undefined
           }
-          slotProps={{
-            inputLabel: { shrink: true },
-          }}
           focused={
-            formik.touched.phoneNumber && Boolean(!formik.errors.phoneNumber)
+            formik.touched.mobilePhone && Boolean(!formik.errors.mobilePhone)
               ? true
               : undefined
           }
           color={
-            formik.touched.phoneNumber && Boolean(!formik.errors.phoneNumber)
+            formik.touched.mobilePhone && Boolean(!formik.errors.mobilePhone)
               ? "success"
               : undefined
           }
@@ -214,9 +199,6 @@ const UserUpdateForm = () => {
               ? formik.errors.bio
               : undefined
           }
-          slotProps={{
-            inputLabel: { shrink: true },
-          }}
           focused={
             formik.touched.bio && Boolean(!formik.errors.bio) ? true : undefined
           }

@@ -22,7 +22,7 @@ const ResetPasswordForm = () => {
   });
 
   return (
-    <Grid component="form" onSubmit={formik.handleSubmit}>
+    <Grid container spacing={3} component="form" onSubmit={formik.handleSubmit}>
       <Grid size={{ xs: 12 }}>
         <TextField
           fullWidth

@@ -4,7 +4,7 @@ import LoadSpinner from "../../common/load-spinner/LoadSpinner";
 import ObjectNotFound from "../../common/object-not-found/ObjectNotFound";
 import Grid from "@mui/material/Grid2";
 import { useGetReviewsFromProductWithPagination } from "../../../hooks/review.hooks";
-import ReviewItem from "../../reviews/review-item/ReviewItem";
+// import ReviewItem from "../../reviews/review-item/ReviewItem";
 import PaginationButtons from "../../common/pagination-buttons/PaginationButtons";
 
 const ProductItemReviews = ({ productId }: ProductId) => {
@@ -28,9 +28,9 @@ const ProductItemReviews = ({ productId }: ProductId) => {
 
   return (
     <Grid>
-      {data.docs.map((review) => (
+      {/* {data.docs.map((review) => (
         <ReviewItem review={review} key={review._id} />
-      ))}
+      ))} */}
       <PaginationButtons
         handleChange={onChangePage}
         page={page}

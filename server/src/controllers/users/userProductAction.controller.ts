@@ -21,6 +21,7 @@ class UserProductActions {
         return res.status(404).json({ message: "User not found" });
       }
 
+      console.log(user);
       const groupedBySeller = await User.aggregate([
         { $match: { _id: user._id } },
         { $unwind: "$cart.items" },
@@ -60,6 +61,7 @@ class UserProductActions {
         { $sort: { totalPrice: -1 } }, // Ordena por precio total (opcional)
       ]);
 
+      console.log(groupedBySeller);
       return res.status(200).json(groupedBySeller);
     } catch (e) {
       return handleError(res, e);
@@ -120,16 +122,15 @@ class UserProductActions {
       const userId = extractAuthUserId(req);
       const { productId } = req.params;
       const { productQuantity } = req.body;
-
-      if (productQuantity < 0) {
+      if (productQuantity === undefined || productQuantity <= 0) {
         return res
           .status(400)
           .json({ message: "Quantity must be 0 or greater" });
       }
 
       const product = await Product.findById(productId)
-        .select("price")
-        .select("author");
+        .select("+author")
+        .populate("author");
       if (!product) {
         return handleObjectNotFound(res, "Product");
       }
@@ -141,13 +142,14 @@ class UserProductActions {
         (item) => item.product?.toString() === productId,
       );
 
+      console.log(product);
       if (productIndex === -1 && productQuantity > 0) {
         let subtotal = product.finalPrice * productQuantity;
         subtotal = twoDigitsFixed(subtotal);
         const cartItem: UserCartItem = {
           quantity: productQuantity,
-          seller: product.author,
-          price: product.price,
+          seller: product.author._id,
+          price: product.finalPrice,
           product: product._id,
           subtotal: subtotal,
         };

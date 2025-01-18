@@ -3,18 +3,26 @@ import {
   PaginationConfig,
   PaginationResultReports,
 } from "../types/paginationResult";
-import { Report, ReportInput, ReportResolution } from "../types/report";
+import {
+  Report,
+  ReportedItemId,
+  ReportInput,
+  ReportResolution,
+} from "../types/report";
 
-export const createReport = async (data: ReportInput): Promise<Report> => {
-  const response = await api.post<Report>(`/reports`, data);
+export const createReport = async ({
+  reportedItemId,
+  ...data
+}: ReportInput & ReportedItemId): Promise<Report> => {
+  const response = await api.post<Report>(`/reports/${reportedItemId}`, data);
   return response.data;
 };
 
-export const updateReport = async (
-  reportedId: string,
-  data: ReportResolution
-) => {
-  const response = await api.put<Report>(`/reports/${reportedId}`, data);
+export const updateReport = async ({
+  reportedItemId,
+  ...data
+}: ReportInput & ReportedItemId) => {
+  const response = await api.put<Report>(`/reports/${reportedItemId}`, data);
   return response.data;
 };
 

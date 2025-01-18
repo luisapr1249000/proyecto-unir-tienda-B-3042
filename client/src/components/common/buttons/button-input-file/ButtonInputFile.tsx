@@ -15,6 +15,7 @@ const ButtonInputFile = ({
       component="label"
       role={undefined}
       tabIndex={-1}
+      // fullWidth
     >
       Upload files
       <input

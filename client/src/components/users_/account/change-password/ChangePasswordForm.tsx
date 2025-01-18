@@ -6,8 +6,21 @@ import { InputAdornment, TextField } from "@mui/material";
 import ShowPassword from "../../../auth/show-password/ShowPassword";
 import SubmitButton from "../../../common/buttons/submit-button/SubmitButton";
 import { changePasswordSchema } from "../../../../validation-schemas/auth.validation";
+import { changePassword } from "../../../../api/auth.api";
+import CircleLoadingGrid from "../../../common/loading/CircleLoadingGrid";
+import { useMutation } from "@tanstack/react-query";
+import { toast } from "react-toastify";
 
 const ChangePasswordForm = () => {
+  const { mutate: changePasswordMutation, isPending } = useMutation({
+    mutationFn: changePassword,
+    onSuccess: () => {
+      toast.success("User updated successfully");
+    },
+    onError: (error) => {
+      toast.error(error.message);
+    },
+  });
   const [showPassword, setShowPassword] = useState(false);
   const handleClickShowPassword = () => setShowPassword((show) => !show);
 
@@ -21,10 +34,11 @@ const ChangePasswordForm = () => {
     initialValues,
     validationSchema: toFormikValidationSchema(changePasswordSchema),
     onSubmit: (values) => {
-      console.log(values);
+      changePasswordMutation(values);
     },
   });
 
+  if (isPending) return <CircleLoadingGrid />;
   return (
     <Grid container spacing={3} component="form" onSubmit={formik.handleSubmit}>
       <Grid size={{ xs: 12 }}>

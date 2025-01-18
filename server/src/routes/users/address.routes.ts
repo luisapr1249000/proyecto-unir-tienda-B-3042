@@ -13,15 +13,29 @@ import { ADDRESS_DIRECTION_ID } from "../../constants";
 
 const router = Router();
 
+router.get(
+  "/users/:username/address-directions",
+  // authMiddleware,
+  // verifyUserOwnershipOrAdminRole("userId"),
+  addressDirectionController.getAddressDirections,
+);
+
+router.get(
+  "/users/:userId/address-directions/:addressDirectionId",
+  // authMiddleware,
+  // verifyUserOwnershipOrAdminRole("userId"),
+  addressDirectionController.getAddressDirectionById,
+);
+
 router.post(
-  "/users/:userId/address-direction",
+  "/users/:userId/address-directions",
   authMiddleware,
   verifyUserOwnershipOrAdminRole("userId"),
   validateSchemaBody(addressDirectionInputSchema),
   addressDirectionController.createAddressDirection,
 );
 router.put(
-  "/users/:userId/address-direction/:addressDirectionId",
+  "/users/:userId/address-directions/:addressDirectionId",
   authMiddleware,
   verifyUserOwnershipOrAdminRole("userId"),
 
@@ -30,7 +44,7 @@ router.put(
   addressDirectionController.updateAddressDirection,
 );
 router.delete(
-  "/users/:userId/address-direction/:addressDirectionId",
+  "/users/:userId/address-directions/:addressDirectionId",
   authMiddleware,
   verifyUserOwnershipOrAdminRole("userId"),
   validateObjectIdParams(ADDRESS_DIRECTION_ID),

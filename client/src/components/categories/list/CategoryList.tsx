@@ -9,7 +9,7 @@ import ListItemText from "@mui/material/ListItemText";
 import ExpandMore from "@mui/icons-material/ExpandMore";
 import ExpandLess from "@mui/icons-material/ExpandLess";
 import LocalMallIcon from "@mui/icons-material/LocalMall";
-import { LinkText } from "../../common/react-link/ReactLink";
+import { LinkText } from "../../common/react-link/Link";
 
 const CategoryList = () => {
   const {

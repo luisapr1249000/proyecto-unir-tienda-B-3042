@@ -3,7 +3,7 @@ import {
   PaginationConfig,
   PaginationResultUsers,
 } from "../../types/paginationResult";
-import { User, UserInput } from "../../types/user";
+import { User, UserId, UserInput } from "../../types/user";
 
 export const getUserByUsername = async (username: string): Promise<User> => {
   const response = await api<User>(`/users/username/${username}`);
@@ -15,8 +15,11 @@ export const getUserById = async (userId: string): Promise<User> => {
   return response.data;
 };
 
-export const updateUser = async (data: UserInput): Promise<User> => {
-  const response = await api.put<User>("/users", data);
+export const updateUser = async ({
+  userId,
+  data,
+}: { data: UserInput } & UserId): Promise<User> => {
+  const response = await api.put<User>(`/users/${userId}`, data);
   return response.data;
 };
 
@@ -32,5 +35,12 @@ export const getUsersWithPagination = async ({
     `/users?page=${page}&limit=${limit}&sort=${sort}`
   );
 
+  return response.data;
+};
+
+export const uploadUserAvatar = async (data: File) => {
+  const formData = new FormData();
+  formData.append("file", data);
+  const response = await api.post<User>(`/users/avatar`, formData);
   return response.data;
 };

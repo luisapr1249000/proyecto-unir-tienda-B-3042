@@ -9,9 +9,10 @@ export const normalizeString = (str: string) => {
 };
 
 export const generateUniqueValue = (originalName: string) => {
+  const value = normalizeString(originalName);
   const timestamp = Date.now();
   const randomSuffix = Math.floor(Math.random() * 10000);
-  return `${timestamp}-${randomSuffix}-${originalName}`;
+  return `${timestamp}-${randomSuffix}-${value}`;
 };
 
 export const getDefaultPaginationOptions = () => ({

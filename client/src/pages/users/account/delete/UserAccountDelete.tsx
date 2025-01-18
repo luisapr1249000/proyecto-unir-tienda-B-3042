@@ -3,20 +3,29 @@ import { Divider, Typography } from "@mui/material";
 import Grid from "@mui/material/Grid2";
 import UserAccountDeleteForm from "../../../../components/users_/account/delete/UserAccountDeleteForm";
 
+import { Card, CardContent } from "@mui/material";
 const UserAccountDelete = () => {
   return (
-    <Grid sx={{ p: 1.5 }}>
-      <Grid spacing={2} container sx={{ p: 3 }} size={{ xs: 11 }}>
-        <Grid container size={{ xs: 12 }}>
+    <Grid
+      sx={{
+        p: 3,
+      }}
+    >
+      <Card>
+        <CardContent>
           <Typography variant="h5">Delete Account</Typography>
-        </Grid>
+        </CardContent>
+        <Divider />
 
-        <Divider flexItem sx={{ flexGrow: 1, my: 2 }} />
-
-        <Grid size={{ xs: 12 }}>
+        <CardContent>
+          <Typography variant="subtitle2" color="textSecondary">
+            Delete your account permanently
+          </Typography>
+        </CardContent>
+        <CardContent>
           <UserAccountDeleteForm />
-        </Grid>
-      </Grid>
+        </CardContent>
+      </Card>
     </Grid>
   );
 };

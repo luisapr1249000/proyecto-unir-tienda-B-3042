@@ -29,7 +29,9 @@ export const handleObjectNotFound = (
     | "Cart"
     | "Saved Products"
     | "Wishlist"
-    | "Report",
+    | "Report"
+    | "File"
+    | "Address Direction",
   multipleObjects = false,
   extraMessage = "",
 ) => {

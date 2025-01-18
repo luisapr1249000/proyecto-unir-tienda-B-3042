@@ -2,33 +2,25 @@ import React from "react";
 import Grid from "@mui/material/Grid2";
 import { Divider, Paper, Typography } from "@mui/material";
 import ProductCreateForm from "../../../components/products_/create/ProductCreateForm";
+import { Card, CardContent } from "@mui/material";
 
 const ProductCreate = () => {
   return (
     <Grid
-      container
       sx={{
-        // height: "calc(100vh)",
-        justifyContent: "center",
-        alignItems: "center",
-        border: 4,
-        p: 4,
+        p: 3,
       }}
     >
-      <Grid
-        component={Paper}
-        elevation={4}
-        container
-        spacing={3}
-        size={{ xs: 10 }}
-        sx={{ p: 3 }}
-      >
-        <Grid>
+      <Card>
+        <CardContent>
           <Typography variant="h5">Post A New Product!</Typography>
-        </Grid>
-        <Divider sx={{ width: 1 }} />
-        <ProductCreateForm />
-      </Grid>
+        </CardContent>
+        <Divider />
+
+        <CardContent>
+          <ProductCreateForm />
+        </CardContent>
+      </Card>
     </Grid>
   );
 };

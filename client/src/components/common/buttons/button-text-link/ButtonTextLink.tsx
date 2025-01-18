@@ -1,4 +1,26 @@
-import React from "react";
-import ReactLink from "../../react-link/ReactLink";
-import ButtonText, { ButtonTxt } from "../button-text/ButtonText";
-import { styled } from "@mui/material/styles";
+import {
+  Button,
+  ButtonProps,
+  IconButton,
+  IconButtonProps,
+} from "@mui/material";
+import { Link, LinkProps } from "react-router-dom";
+
+export const ButtonLink = ({ children, ...props }: ButtonProps & LinkProps) => {
+  return (
+    <Button component={Link} {...props}>
+      {children}
+    </Button>
+  );
+};
+
+export const IconButtonLink = ({
+  children,
+  ...props
+}: IconButtonProps & LinkProps) => {
+  return (
+    <IconButton component={Link} {...props}>
+      {children}
+    </IconButton>
+  );
+};

@@ -7,6 +7,57 @@ import {
 import { User } from "../../models/user.model";
 
 class AddressDirectionController {
+  public async getAddressDirections(req: Request, res: Response) {
+    try {
+      const { username } = req.params;
+      const user = await User.findOne({ username }).select("addressDirections");
+      if (!user) return handleObjectNotFound(res, "User");
+
+      if (!user.addressDirections || user.addressDirections.length === 0)
+        return handleObjectNotFound(res, "Address Direction");
+
+      return res.status(200).json(user.addressDirections);
+    } catch (error) {
+      return handleError(res, error);
+    }
+  }
+
+  public async getAddressDirectionById(req: Request, res: Response) {
+    try {
+      const { userId, addressDirectionId } = req.params;
+      const user = await User.findOne({ username: userId }).select(
+        "addressDirections",
+      );
+      if (!user) return handleObjectNotFound(res, "User");
+
+      if (!user.addressDirections.id(addressDirectionId))
+        return handleObjectNotFound(res, "Address Direction");
+
+      return res
+        .status(200)
+        .json(user.addressDirections.id(addressDirectionId));
+    } catch (error) {
+      return handleError(res, error);
+    }
+  }
+
+  public async getAddressDirectionByIdAndUsername(req: Request, res: Response) {
+    try {
+      const { username, addressDirectionId } = req.params;
+      const user = await User.findOne({ username }).select("addressDirections");
+      if (!user) return handleObjectNotFound(res, "User");
+
+      if (!user.addressDirections || user.addressDirections.length === 0)
+        return handleObjectNotFound(res, "Address Direction");
+
+      return res
+        .status(200)
+        .json(user.addressDirections.id(addressDirectionId));
+    } catch (error) {
+      return handleError(res, error);
+    }
+  }
+
   public async createAddressDirection(req: Request, res: Response) {
     try {
       const { userId } = req.params;

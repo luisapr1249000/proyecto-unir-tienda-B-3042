@@ -4,9 +4,11 @@ import { useColorScheme } from "@mui/material/styles";
 import { ProductProp } from "../../../types/product";
 import ProductCardImage from "./ProductCardImage";
 import ProductCardBody from "../../products/product-card/product-card-body/ProductCardBody";
-import ReactLink from "../../common/react-link/ReactLink";
 import ProductCardSecondaryActions from "./ProductCardSecondaryActions";
 import ProductCardActions from "./ProductCardActions";
+import ProductCardContent from "./ProductCardBody";
+import { Link } from "../../common/react-link/Link";
+// import ProductIconButtonActions from "../../products/product-iconbutton-actions/ProductIconButtonActions";
 
 const ProductCard = ({ product }: ProductProp) => {
   const { mode } = useColorScheme();
@@ -18,19 +20,13 @@ const ProductCard = ({ product }: ProductProp) => {
         position: "relative",
       }}
       variant={mode === "dark" ? "elevation" : "outlined"}
-      // square
-      elevation={2}
     >
       <ProductCardImage product={product} />
-      <ProductCardActions />
-      {/* <ProductIconButtonActions product={product} /> */}
-      <CardActionArea
-        component={ReactLink}
-        to={`/products/details/${product._id}`}
-      >
-        <ProductCardBody product={product} />
+      <ProductCardActions productId={product._id} />
+      <CardActionArea component={Link} to={`/products/details/${product._id}`}>
+        <ProductCardContent product={product} />
       </CardActionArea>
-      <ProductCardSecondaryActions />
+      <ProductCardSecondaryActions productId={product._id} />
     </Card>
   );
 };

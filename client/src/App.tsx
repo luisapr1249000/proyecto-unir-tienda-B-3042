@@ -16,6 +16,7 @@ import { useEffect } from "react";
 import NetworkOffline from "./components/network/network-offline/NetworkOffline";
 import adminRoutes from "./routes/admin.routes";
 import reviewsRoutes from "./routes/review.routes";
+import addressDirectionRoutes from "./routes/addressDirections.routes";
 
 function App() {
   const isOnline = useNavigatorOnLine();
@@ -32,13 +33,12 @@ function App() {
     {
       element: <BaseLayout />,
       // path: "",
-      children: [...productRoutes],
+      children: [...productRoutes, ...categoryRoutes],
     },
-    // ...adminRoutes,
+    ...adminRoutes,
     ...authRoutes,
     ...userRoutes,
-    // ...categoryRoutes,
-    // ...reviewsRoutes,
+    ...reviewsRoutes,
   ]);
 
   if (!isOnline) return <NetworkOffline />;

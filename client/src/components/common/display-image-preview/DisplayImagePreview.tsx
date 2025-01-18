@@ -1,4 +1,11 @@
-import { Box, Paper } from "@mui/material";
+import {
+  Box,
+  Card,
+  CardContent,
+  Divider,
+  Paper,
+  Typography,
+} from "@mui/material";
 import Grid from "@mui/material/Grid2";
 import { useEffect, useState } from "react";
 import IconButtonDelete from "../buttons/iconbutton-delete/IconButtonDelete";
@@ -12,15 +19,16 @@ export const DisplayImage = ({
   preview: string;
   onDeleteFile: (index: number) => void;
 }) => (
-  <Grid size={{ xs: 12, md: 4 }} sx={{ position: "relative" }}>
+  <Grid size={{ xs: 12, md: 4 }} sx={{ position: "relative", border: 1 }}>
     <Paper
-      elevation={4}
+      elevation={5}
       component="img"
       src={preview}
       sx={{
-        width: "100%",
-        height: "100%",
-        objectFit: "cover",
+        width: 1,
+        height: 1,
+        objectFit: "contain",
+        objectPosition: "center",
       }}
     />
     <IconButtonDelete
@@ -64,22 +72,29 @@ const DisplayImagePreview = ({
     selectedFiles.length > 0 &&
     previews &&
     previews.length > 0 && (
-      <Paper
-        elevation={6}
-        variant="outlined"
-        component={Grid}
-        container
-        spacing={5}
-        sx={{ p: 3 }}
-      >
-        {previews.map((preview, index) => (
-          <DisplayImage
-            imageIndex={index}
-            preview={preview}
-            onDeleteFile={onDeleteFile}
-          />
-        ))}
-      </Paper>
+      <Card variant="outlined">
+        <CardContent>
+          <Typography variant="body2" component="h2" color="textSecondary">
+            Preview
+          </Typography>
+        </CardContent>
+        <Divider />
+        <CardContent
+          component={Grid}
+          container
+          spacing={2}
+          size={{ xs: 4 }}
+          sx={{ maxHeight: 500, p: 3 }}
+        >
+          {previews.map((preview, index) => (
+            <DisplayImage
+              imageIndex={index}
+              preview={preview}
+              onDeleteFile={onDeleteFile}
+            />
+          ))}
+        </CardContent>
+      </Card>
     )
   );
 };

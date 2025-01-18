@@ -9,7 +9,7 @@ const reviewsRoutes: RouteObject[] = [
     element: <ReviewsCreate />,
   },
   {
-    path: "/products/item/:productId/commments/:reviewId",
+    path: "/products/item/:productId/reviews/:reviewId",
     element: <ReviewsUpdate />,
   },
 ];

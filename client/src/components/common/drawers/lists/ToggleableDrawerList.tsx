@@ -18,7 +18,13 @@ const ToggleableDrawerList = ({
 }) => (
   <>
     {listItem.map((item) => (
-      <ListItemLink to={item.link} divider disableGutters disablePadding>
+      <ListItemLink
+        key={item.label}
+        to={item.link}
+        divider
+        disableGutters
+        disablePadding
+      >
         <ListItemButton disableRipple>
           <ListItemIcon sx={{ minWidth: 0, mr: isDrawOpen ? 2 : 0 }}>
             {item.icon}
@@ -26,6 +32,8 @@ const ToggleableDrawerList = ({
           <ListItemText
             sx={{ display: isDrawOpen ? "block" : "none" }}
             primary={item.label}
+            // disableTypography
+            primaryTypographyProps={{ fontSize: "0.8rem" }}
           />
         </ListItemButton>
       </ListItemLink>

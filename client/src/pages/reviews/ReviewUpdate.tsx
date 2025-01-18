@@ -7,8 +7,8 @@ import { useParams } from "react-router-dom";
 import { useGetProductById } from "../../hooks/products.hooks";
 import LoadSpinner from "../../components/common/load-spinner/LoadSpinner";
 import ObjectNotFound from "../../components/common/object-not-found/ObjectNotFound";
-import ReviewUpdateForm from "../../components/reviews/review-update/ReviewUpdateForm";
 import { useGetReviewById } from "../../hooks/review.hooks";
+import ReviewUpdateForm from "../../components/reviews/update/ReviewUpdateForm";
 
 const ReviewUpdate = () => {
   const { productId, reviewId } = useParams();

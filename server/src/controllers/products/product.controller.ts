@@ -40,7 +40,7 @@ class ProductController {
     try {
       const { productId } = req.params;
       if (!req.files || req.files.length === 0) {
-        return handleObjectNotFound(res, "Product");
+        return handleObjectNotFound(res, "File");
       }
       console.log(req.files);
       const images: Image[] = [];
@@ -163,7 +163,7 @@ class ProductController {
       const { productId } = req.params;
       const product = await Product.findById(productId)
         .select("+productQuestions")
-        .populate("productQuestions categories author");
+        .populate("productQuestions.user categories author");
       if (!product) return handleObjectNotFound(res, "Product");
 
       await product.save();

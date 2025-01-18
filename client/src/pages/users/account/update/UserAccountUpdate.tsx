@@ -1,58 +1,53 @@
 import React from "react";
 import Grid from "@mui/material/Grid2";
 import { useMatches, useOutletContext } from "react-router-dom";
-import { Card, Divider, Typography } from "@mui/material";
+import { Card, CardContent, Divider, Paper, Typography } from "@mui/material";
 import { useQuery } from "@tanstack/react-query";
 import UserAccountUpdateAvatarForm from "../../../../components/users_/account/avatar/update/UserAccountUpdateAvatarForm";
 import UserUpdateForm from "../../../../components/users_/account/update/UserUpdateForm";
+import UserCard from "../../../../components/users_/card/UserCard";
+import { User } from "../../../../types/user";
 
 const UserAccountUpdate = () => {
   const matches = useMatches();
   console.log(matches);
-  //   const context = useOutletContext<User>();
+  const authUser = useOutletContext<User>();
 
   return (
     <Grid
-      // container
       sx={{
-        // height: "calc(100vh)",
-        // justifyContent: "center",
-        // alignItems: "center",
-        p: 1.5,
+        p: 3,
       }}
     >
-      <Grid
-        // component={Card}
-        // variant="outlined"
-        spacing={2}
-        container
-        sx={{ p: 3 }}
-        size={{ xs: 11 }}
-      >
-        <Grid container size={{ xs: 12 }}>
-          <Typography variant="h5">User General Information</Typography>
-        </Grid>
-        <Grid size={{ xs: 12 }}>
-          <Divider sx={{ flexGrow: 1 }}>
-            <Typography variant="subtitle2" color="textSecondary">
-              User Avatar
-            </Typography>
-          </Divider>
-        </Grid>
+      <Card>
+        <CardContent>
+          <Typography variant="h5">User Account</Typography>
+        </CardContent>
+        <Divider />
+        <CardContent>
+          <UserCard user={authUser} />
+        </CardContent>
+        <Divider />
 
-        {/* <Grid size={{ xs: 12 }}>
-          <UserProfileCard user={context} />
-        </Grid> */}
-        <UserAccountUpdateAvatarForm />
-        <Grid size={{ xs: 12 }}>
-          <Divider sx={{ flexGrow: 1 }}>
-            <Typography variant="subtitle2" color="textSecondary">
-              User Info
-            </Typography>
-          </Divider>
-        </Grid>
-        <UserUpdateForm />
-      </Grid>
+        <CardContent>
+          <Typography variant="subtitle2" color="textSecondary">
+            User Avatar
+          </Typography>
+        </CardContent>
+        <CardContent>
+          <UserAccountUpdateAvatarForm />
+        </CardContent>
+
+        <Divider />
+        <CardContent>
+          <Typography variant="subtitle2" color="textSecondary">
+            Update User Info
+          </Typography>
+        </CardContent>
+        <CardContent>
+          <UserUpdateForm />
+        </CardContent>
+      </Card>
     </Grid>
   );
 };

@@ -22,7 +22,7 @@ export const reportInputSchema = z.object({
     "Misleading Information",
     "Other",
   ]),
-  itemType: z.enum(["Product", "Review", "User"]),
+  itemType: z.enum(["Product", "Review", "User", "Category"]),
   problemDescription: problemDescriptionField.optional(),
 });
 

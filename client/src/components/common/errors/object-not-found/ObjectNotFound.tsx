@@ -1,6 +1,5 @@
 import Grid from "@mui/material/Grid2";
 import {
-  Button,
   Card,
   CardActions,
   CardContent,
@@ -34,7 +33,7 @@ const ObjectNotFound = ({
     <Card
       variant="outlined"
       component={Grid}
-      size={{ xs: 11, md: 6 }}
+      size={{ xs: 11, md: "grow" }}
       direction="column"
       container
       sx={{ p: 3, justifyContent: "center", alignItems: "center" }}

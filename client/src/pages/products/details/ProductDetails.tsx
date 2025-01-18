@@ -1,13 +1,14 @@
 import React from "react";
+import Grid from "@mui/material/Grid2";
 import { useParams } from "react-router-dom";
 import { ProductId } from "../../../types/product";
 import { useGetProductById } from "../../../hooks/products.hooks";
 import ObjectNotFound from "../../../components/common/object-not-found/ObjectNotFound";
 import ProductItemSkeleton from "../../../components/products/product-item/ProductItemSkeleton";
-import Grid from "@mui/material/Grid2";
 import ProductDetailsCard from "../../../components/products_/details/ProductDetails";
 import ProductQuestions from "../../../components/products_/details/questions/ProductQuestions";
-import ProductReviewList from "../../../components/reviews_/list/ProductReviewList";
+import ProductSpecificationts from "../../../components/products_/details/specifications/ProductSpecificationts";
+import ProductReviewList from "../../../components/reviews/list/ProductReviewList";
 
 const ProductDetails = () => {
   const { productId } = useParams() as ProductId;
@@ -34,7 +35,11 @@ const ProductDetails = () => {
       spacing={3}
     >
       <ProductDetailsCard product={product} />
-      <ProductQuestions questions={product.productQuestions ?? []} />
+      <ProductSpecificationts product={product} />
+      <ProductQuestions
+        productId={product._id}
+        questions={product.productQuestions ?? []}
+      />
       <ProductReviewList productId={product._id} />
     </Grid>
   );

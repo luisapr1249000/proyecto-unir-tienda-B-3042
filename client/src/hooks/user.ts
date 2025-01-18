@@ -7,6 +7,11 @@ import {
 import { UserId } from "../types/user";
 import { PaginatedQueryOptions, QueryKey } from "../types/paginationResult";
 import { mergePaginationOptions } from "../utils/api.utils";
+import { getUserAddressById, getUserAddresses } from "../api/users/address.api";
+import {
+  getUserCart,
+  getUserWishlist,
+} from "../api/users/userProductActions.api";
 
 export const useGetUsersWithPagination = (
   options: PaginatedQueryOptions = {}
@@ -34,15 +39,55 @@ export const useGetUserByUsername = (
   });
 };
 
-export const useGetUserById = (options: UserId & QueryKey) => {
+export const useGetUserById = (
+  options: UserId & QueryKey & { enabled: boolean }
+) => {
   const { userId, queryKey } = options;
+  console.log("user id query key", userId);
   return useQuery({
     queryKey: queryKey ?? [`user-${userId}`],
     queryFn: () => getUserById(userId),
     retry: false,
     refetchOnWindowFocus: false,
+    enabled: options.enabled,
   });
 };
+
+export const useGetUserAddresses = ({ userId, queryKey }: UserId & QueryKey) =>
+  useQuery({
+    queryKey: queryKey ?? [`user-${userId}-address-direction`],
+    queryFn: () => getUserAddresses(userId),
+    retry: false,
+    refetchOnWindowFocus: false,
+  });
+
+export const useGetUserAddressById = ({
+  userId,
+  addressDirectionId,
+  queryKey,
+}: UserId & { addressDirectionId: string } & QueryKey) =>
+  useQuery({
+    queryKey: queryKey ?? [
+      `user-${userId}-address-direction-${addressDirectionId}`,
+    ],
+    queryFn: () => getUserAddressById(userId, addressDirectionId),
+    retry: false,
+    refetchOnWindowFocus: false,
+  });
+
+export const useGetUserCart = ({ userId, queryKey }: UserId & QueryKey) =>
+  useQuery({
+    queryKey: queryKey ?? [`user-${userId}-cart`],
+    queryFn: () => getUserCart({ userId }),
+    refetchOnWindowFocus: false,
+  });
+
+export const useGetUserWishlist = ({ userId, queryKey }: UserId & QueryKey) =>
+  useQuery({
+    queryKey: queryKey ?? [`user-${userId}-wishlist`],
+    queryFn: () => getUserWishlist({ userId }),
+    refetchOnWindowFocus: false,
+  });
 
 // export const useGetUser = ({
 //   queryKey,

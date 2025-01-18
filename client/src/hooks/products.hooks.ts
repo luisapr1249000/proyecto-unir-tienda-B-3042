@@ -57,7 +57,10 @@ export const useGetProductsByCategoryWithPagination = (
     ...options,
   };
   return useQuery({
-    queryKey: queryKey ?? ["products-category", { page, limit, sort }],
+    queryKey: queryKey ?? [
+      `products-category-${categoryId}`,
+      { page, limit, sort },
+    ],
     queryFn: () =>
       getProductsByCategoryWithPagination({
         page,

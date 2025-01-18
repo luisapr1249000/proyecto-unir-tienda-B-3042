@@ -22,7 +22,7 @@ router.get("/products/search-product", productController.searchProducts);
 router.get(
   "/products",
   validatePriceQuery,
-  validPagination,
+  // validPagination,
   optionalAuth,
   productController.getProductsWithPagination,
 );

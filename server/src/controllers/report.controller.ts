@@ -7,13 +7,13 @@ import { getDefaultPaginationOptions } from "../utils/utils";
 class Reportcontroller {
   public async createReport(req: Request, res: Response) {
     try {
-      const { reporteItemId } = req.params;
+      const { reportedItemId } = req.params;
       const { itemType, reason, problemDescription } = req.body;
 
       const userId = extractAuthUserId(req);
       const alreadyReported = await Report.findOne({
         itemType: itemType,
-        reportedItem: reporteItemId,
+        reportedItem: reportedItemId,
       });
       if (alreadyReported) {
         return res
@@ -21,7 +21,7 @@ class Reportcontroller {
           .json({ message: "You already reported this item" });
       }
       const report = new Report({
-        reportedItem: reporteItemId,
+        reportedItem: reportedItemId,
         itemType,
         reason,
         problemDescription,

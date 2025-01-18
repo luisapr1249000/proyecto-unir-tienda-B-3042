@@ -41,31 +41,31 @@ const productSeeder = async () => {
   }
 };
 
-export const genSeeder = ({
+export const genSeeder = async ({
   multiple,
   users,
   categories,
   products,
 }: {
-  multiple: boolean;
-  users: boolean;
-  categories: boolean;
-  products: boolean;
+  multiple?: boolean;
+  users?: boolean;
+  categories?: boolean;
+  products?: boolean;
 }) => {
   if (multiple) {
-    userSeeder();
-    categorySeeder();
-    productSeeder();
+    await userSeeder();
+    await categorySeeder();
+    await productSeeder();
   }
 
   if (users) {
-    userSeeder();
+    await userSeeder();
   }
   if (categories) {
-    categorySeeder();
+    await categorySeeder();
   }
 
   if (products) {
-    productSeeder();
+    await productSeeder();
   }
 };

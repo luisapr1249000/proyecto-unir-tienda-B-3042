@@ -1,67 +1,62 @@
 import { useEffect } from "react";
 import Grid from "@mui/material/Grid2";
-import { Divider, Paper, Typography } from "@mui/material";
-import { useLocation } from "react-router-dom";
+import { Card, CardContent, Divider, Paper, Typography } from "@mui/material";
 import LoginForm from "../../../components/auth/loginForm/LoginForm";
-import { toast } from "react-toastify";
-import { gridContainerCenter } from "../../../assets/css/mui-css-objects/gridCenter";
-import { gridBreakpoints } from "../../../assets/css/mui-css-objects/muiStyles";
 import GoogleAuthButton from "../../../components/auth/google-auth-button/GoogleAuthButton";
 import { Link } from "../../../components/common/react-link/Link";
+import { GridResponsive } from "../../../assets/css/mui-css-objects/grid";
 
-const Login = () => {
-  let { state } = useLocation();
-  console.log(state);
-  useEffect(() => {
-    if (state && state.loginRequired) {
-      state.loginRequired = false;
-      toast.warning("Login required");
-    }
-  }, []);
-  return (
-    <Grid container spacing={3} sx={{ ...gridContainerCenter }}>
-      <Grid
-        component={Paper}
-        elevation={2}
-        container
-        size={gridBreakpoints}
-        sx={{ p: 3 }}
-      >
-        <Grid direction="column" container size={{ xs: 12 }} sx={{}}>
-          <Typography gutterBottom variant="h4">
-            Login to your account
-          </Typography>
-          <Divider sx={{ width: 1 }} />
-          <Typography component="div" variant="body2">
-            Dont you have an account yet?{" "}
-            <Link underline="hover" href="/auth/signup" variant="body2">
-              Sign up here!
-            </Link>
-          </Typography>
-        </Grid>
-        <Divider sx={{ width: 1 }} />
-        <Grid container size={{ xs: 12 }} sx={{}}>
-          <LoginForm />
-        </Grid>
-        <Divider sx={{ width: 1 }}>
-          <Typography variant="caption" color="textSecondary">
-            Or Using
-          </Typography>
-        </Divider>
+const Login = () => (
+  <Grid
+    container
+    sx={{
+      p: 3,
+      justifyContent: "center",
+      alignItems: "center",
+      height: "calc(100vh - 64px)",
+    }}
+  >
+    <Card elevation={2} component={Grid} size={GridResponsive}>
+      <CardContent>
+        <Typography variant="h4">Login</Typography>
+      </CardContent>
+      <Divider />
+      <CardContent>
+        <Typography variant="body2">
+          Don't you have an account yet?{" "}
+          <Link underline="hover" to="/auth/signup" variant="body2">
+            Sign up here!
+          </Link>
+        </Typography>
+      </CardContent>
+      <Divider />
+      <CardContent>
+        <LoginForm />
+      </CardContent>
+      <Divider>
+        <Typography variant="caption" color="textSecondary">
+          Or Using
+        </Typography>
+      </Divider>
 
-        <Grid size={{ xs: 12 }} sx={{}}>
-          <GoogleAuthButton />
-        </Grid>
-        <Link
-          underline="hover"
-          href="/auth/request-reset-password"
-          variant="body2"
-        >
+      <CardContent>
+        <GoogleAuthButton />
+      </CardContent>
+      <Divider />
+      <CardContent spacing={2} component={Grid} container direction="column">
+        <Link variant="body2" underline="none" to="/auth/forgot-password">
           Forgot Password
         </Link>
-      </Grid>
-    </Grid>
-  );
-};
+        <Link
+          variant="body2"
+          underline="none"
+          to="/auth/send-mail-confirmation"
+        >
+          Send Confirmation Email
+        </Link>
+      </CardContent>
+    </Card>
+  </Grid>
+);
 
 export default Login;

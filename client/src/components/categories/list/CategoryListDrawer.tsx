@@ -9,7 +9,7 @@ import ListItemText from "@mui/material/ListItemText";
 import ExpandMore from "@mui/icons-material/ExpandMore";
 import ExpandLess from "@mui/icons-material/ExpandLess";
 import LocalMallIcon from "@mui/icons-material/LocalMall";
-import { LinkText } from "../../common/react-link/ReactLink";
+import { Link, LinkText } from "../../common/react-link/Link";
 
 const CategoryListDrawer = ({ isDrawOpen }: { isDrawOpen: boolean }) => {
   const {
@@ -28,7 +28,7 @@ const CategoryListDrawer = ({ isDrawOpen }: { isDrawOpen: boolean }) => {
     if (categories) {
       const categoryList = categories.docs.map((category) => ({
         label: category.name,
-        link: `/category/${category._id}`,
+        link: `/products/category/${category.name}`,
       }));
       setFormattedCategories([
         ...categoryList,
@@ -66,7 +66,7 @@ const CategoryListDrawer = ({ isDrawOpen }: { isDrawOpen: boolean }) => {
           {formattedCategories.map((category) => (
             <ListItem
               key={category.label}
-              component={LinkText}
+              component={Link}
               to={category.link}
               disableGutters
               disablePadding

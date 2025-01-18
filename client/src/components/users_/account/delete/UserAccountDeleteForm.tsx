@@ -2,47 +2,53 @@ import React from "react";
 import { Button, TextField } from "@mui/material";
 import PersonRemoveIcon from "@mui/icons-material/PersonRemove";
 import Grid from "@mui/material/Grid2";
-import DialogConfirmAction from "../../../common/confirm-delete-object/ConfirmDeleteObject";
 import { useState } from "react";
+import DialogConfirmAction from "../../../common/dialogs/dialog-confirm-action/DialogConfirmAction";
+import { useNavigate } from "react-router-dom";
+import { useMutation } from "@tanstack/react-query";
+import { deleteUser } from "../../../../api/users/user.api";
+import { toast } from "react-toastify";
 
-const UserAccountDeleteForm = () => {
-  const [confirm, setConfirm] = useState(false);
+const UserAccountDeleteForm = ({ userId }: { userId: string }) => {
+  const navigate = useNavigate();
 
-  const handleClick = () => setConfirm((prev) => !prev);
-  const handleClose = () => setConfirm(false);
+  const { mutate: deleteUserMutation } = useMutation({
+    mutationFn: deleteUser,
+    onSuccess: () => {
+      navigate("/users");
+      toast.success("User deleted successfully");
+    },
+    onError: () => {
+      console.log("error");
+      toast.error("Error deleting user");
+    },
+  });
+
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const handleOpenDialog = () => setIsDialogOpen(true);
+  const handleCloseDialog = () => setIsDialogOpen(false);
+  const handleDelete = () => {
+    console.log("delete");
+    setIsDialogOpen(false);
+    deleteUserMutation(userId);
+  };
 
   return (
     <>
       <DialogConfirmAction
-        onDeleteObject={() => {}}
-        open={confirm}
-        object="User"
-        onCancel={handleClose}
+        open={isDialogOpen}
+        onClose={handleCloseDialog}
+        onDeleteObject={handleDelete}
       />
-      <Grid container spacing={3} component="form">
-        <Grid size={{ xs: 12 }}>
-          <TextField
-            label="Reason (optional) "
-            placeholder="Any reason (optional)"
-            fullWidth
-            multiline
-            rows={4}
-            slotProps={{
-              inputLabel: { shrink: true },
-            }}
-          />
-        </Grid>
-        <Grid>
-          <Button
-            startIcon={<PersonRemoveIcon />}
-            onClick={handleClick}
-            color="error"
-            variant="contained"
-          >
-            Delete Account
-          </Button>
-        </Grid>
-      </Grid>
+
+      <Button
+        endIcon={<PersonRemoveIcon />}
+        color="error"
+        variant="contained"
+        onClick={handleOpenDialog}
+      >
+        Delete
+      </Button>
     </>
   );
 };

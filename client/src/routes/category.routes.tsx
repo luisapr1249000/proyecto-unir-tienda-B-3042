@@ -1,7 +1,7 @@
 import { Link, RouteObject } from "react-router-dom";
-import CategoryCreate from "../pages/categories/category-create/CategoryCreate";
-import CategoryUpdate from "../pages/categories/category-update/CategoryUpdate";
-import Categories from "../pages/categories/catogories/Categories";
+import CategoryCreate from "../pages/categories/create/CategoryCreate";
+import CategoryUpdate from "../pages/categories/update/CategoryUpdate";
+import Categories from "../pages/categories/categories/Categories";
 
 const categoryRoutes: RouteObject[] = [
   {
@@ -13,7 +13,7 @@ const categoryRoutes: RouteObject[] = [
     element: <CategoryCreate />,
   },
   {
-    path: "categories/update/:categoryId",
+    path: "categories/:categoryId/update",
     element: <CategoryUpdate />,
   },
 ];

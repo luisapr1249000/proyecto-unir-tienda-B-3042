@@ -29,11 +29,10 @@ const Header = ({ handleOpenDrawer }: { handleOpenDrawer: () => void }) => {
         <HeaderHomeButton handleClickDrawer={handleOpenDrawer} />
         <HeaderSearchBar />
 
-        {isLoading && <SkeletonCircle />}
         <Grid
           container
-          size={{ xs: 4 }}
-          sx={{ justifyContent: "flex-end", alignItems: "center" }}
+          size={{ xs: "grow" }}
+          sx={{ border: 1, justifyContent: "flex-end", alignItems: "center" }}
         >
           {isLoading ? (
             <SkeletonCircle />

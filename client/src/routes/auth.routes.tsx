@@ -11,9 +11,8 @@ import {
 } from "../utils/utils.loadable";
 import pMinDelay from "p-min-delay";
 import AuthLayout from "../components/auth/AuthLayout";
-import ForgotPassword from "../components/auth/reset-password/ResetPasswordForm";
 import SendConfirmationEmail from "../pages/auth/send-mail/SendConfirmationEmail";
-import SendForgotPasswordMail from "../pages/auth/send-mail/SendForgotPasswordMail";
+import ForgotPassword from "../pages/auth/forgot-password/ForgotPassword";
 import ResetPassword from "../pages/auth/reset-password/ResetPassword";
 
 const SignupLoadable = createLoadableComponent(
@@ -42,7 +41,7 @@ const authRoutes: RouteObject[] = [
 
           {
             path: "/auth/forgot-password",
-            element: <SendForgotPasswordMail />,
+            element: <ForgotPassword />,
           },
 
           {

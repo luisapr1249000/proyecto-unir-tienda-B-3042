@@ -1,5 +1,8 @@
 import { useQuery, keepPreviousData } from "@tanstack/react-query";
-import { PaginationConfig } from "../types/paginationResult";
+import {
+  PaginatedQueryOptions,
+  PaginationConfig,
+} from "../types/paginationResult";
 import {
   getReviewById,
   getReviews,
@@ -9,16 +12,20 @@ import {
 import { ReviewId } from "../types/review";
 import { ProductId } from "../types/product";
 import { mergePaginationOptions } from "../utils/api.utils";
+import { UserId } from "../types/user";
 
-export const useGetReviewsWithPagination = (
-  paginationOption: PaginationConfig = {}
-) => {
-  const { limit, page, sort } = mergePaginationOptions(paginationOption);
+export const useGetReviewsWithPagination = ({
+  queryKey,
+  isKeepPreviousData,
+  ...sorting
+}: PaginatedQueryOptions = {}) => {
+  const { limit, page, sort } = mergePaginationOptions(sorting);
 
   return useQuery({
-    queryKey: ["reviews"],
+    queryKey: queryKey ?? ["reviews", limit, page, sort],
     queryFn: () => getReviews({ limit, page, sort }),
-    placeholderData: keepPreviousData,
+    placeholderData: isKeepPreviousData ? keepPreviousData : undefined,
+    refetchOnWindowFocus: false,
   });
 };
 
@@ -34,6 +41,7 @@ export const useGetReviewsFromProductWithPagination = (
     queryFn: () =>
       getReviewsFromPostWithPagination({ productId, limit, page, sort }),
     placeholderData: keepPreviousData,
+    refetchOnWindowFocus: false,
   });
 };
 
@@ -49,6 +57,7 @@ export const useGetReviewsFromUserWithPagination = (
     queryFn: () =>
       getReviewsFromUserWithPagination({ userId, limit, page, sort }),
     placeholderData: keepPreviousData,
+    refetchOnWindowFocus: false,
   });
 };
 

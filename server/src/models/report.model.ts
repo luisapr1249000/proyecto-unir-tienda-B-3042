@@ -12,7 +12,7 @@ const reportSchema = new Schema(
     itemType: {
       type: String,
       required: true,
-      enum: ["Product", "Review", "User"],
+      enum: ["Product", "Review", "User", "Category"],
     },
     reporter: { type: Schema.Types.ObjectId, ref: "User", required: true },
     reason: {

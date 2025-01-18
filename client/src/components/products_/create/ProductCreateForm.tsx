@@ -16,18 +16,20 @@ import {
 import { toast } from "react-toastify";
 import ProductLoadingView from "./ProductLoadingView";
 import ProductUploadingImageLoading from "./ProductUploadingImageLoading";
+import { useNavigate } from "react-router-dom";
 
 const ProductCreateForm = () => {
+  const navigate = useNavigate();
   const {
     mutate: uploadImageMutation,
     isPending: isUploadPending,
     error: uploadError,
   } = useMutation({
-    mutationFn: (data: { productId: string; files: File[] }) =>
-      uploadProductImage(data.productId, data.files),
-    onSuccess: () => {
+    mutationFn: uploadProductImage,
+    onSuccess: (data) => {
       console.log("Image uploaded successfully!");
       toast.success("Image uploaded successfully!");
+      navigate(`/products/details/${data._id}`);
     },
     onError: (error) => {
       console.log(error);
@@ -36,7 +38,6 @@ const ProductCreateForm = () => {
   });
   const {
     mutate: createProductMutation,
-    isSuccess: isCreateSuccess,
     isPending: isCreatePending,
     error: createError,
   } = useMutation({
@@ -74,11 +75,13 @@ const ProductCreateForm = () => {
     initialValues,
     validationSchema: toFormikValidationSchema(productInputSchema),
     onSubmit: ({ images, ...values }) => {
+      console.log(images);
       createProductMutation(values, {
         onSuccess: (data) => {
-          console.log(data);
-          if (isCreateSuccess && images)
+          if (images) {
+            console.log(images);
             uploadImageMutation({ productId: data._id, files: images });
+          }
         },
       });
     },
@@ -97,11 +100,12 @@ const ProductCreateForm = () => {
     formik.setFieldValue("images", files);
   };
 
-  console.log("error from formik", formik.errors);
+  if (isCreatePending) return <ProductLoadingView />;
+  if (isUploadPending) return <ProductUploadingImageLoading />;
+
+  // console.log("error from formik", formik.errors);
   return (
     <Grid container spacing={3} component="form" onSubmit={formik.handleSubmit}>
-      {isCreatePending && <ProductLoadingView />}
-      {isUploadPending && <ProductUploadingImageLoading />}
       <Grid size={{ xs: 12 }}>
         <TextField
           label="Product Name"

@@ -6,7 +6,8 @@ import { useGetProductById } from "../../hooks/products.hooks";
 import { useParams } from "react-router-dom";
 import LoadSpinner from "../../components/common/load-spinner/LoadSpinner";
 import ObjectNotFound from "../../components/common/object-not-found/ObjectNotFound";
-import ReviewCreateForm from "../../components/reviews/review-create/ReviewCreateForm";
+import ReviewCreateForm from "../../components/reviews/create/ReviewCreateForm";
+import ProductCard from "../../components/products_/card/ProductCard";
 const ReviewCreate = () => {
   const { productId } = useParams();
   const {
@@ -22,7 +23,14 @@ const ReviewCreate = () => {
 
   return (
     <Grid sx={{ ...gridContainerCenter }}>
-      <Grid sx={{ p: 3 }} component={Card} variant="outlined">
+      <Grid
+        container
+        spacing={3}
+        sx={{ p: 3 }}
+        component={Card}
+        variant="outlined"
+      >
+        <ProductCard product={product} />
         <ReviewCreateForm productId={product._id} />
       </Grid>
     </Grid>

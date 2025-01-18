@@ -53,10 +53,10 @@ export const getReviewById = async ({
   return response.data;
 };
 
-export const createReview = async (
-  values: ReviewInput,
-  productId: ProductId
-): Promise<Review> => {
+export const createReview = async ({
+  values,
+  productId,
+}: { values: ReviewInput } & ProductId): Promise<Review> => {
   const response = await api.post<Review>(
     `/products/${productId}/reviews/`,
     values
@@ -64,11 +64,14 @@ export const createReview = async (
   return response.data;
 };
 
-export const updateReview = async (
-  values: ReviewInput,
-  productId: ProductId,
-  reviewId: ReviewId
-): Promise<Review> => {
+export const updateReview = async ({
+  values,
+  productId,
+  reviewId,
+}: {
+  values: ReviewInput;
+} & ProductId &
+  ReviewId) => {
   const response = await api.put<Review>(
     `/products/${productId}/reviews/${reviewId}`,
     values

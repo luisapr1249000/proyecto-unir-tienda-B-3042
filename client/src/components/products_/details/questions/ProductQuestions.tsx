@@ -1,6 +1,6 @@
 import Grid from "@mui/material/Grid2";
 import React from "react";
-import { ProductQuestion } from "../../../../types/product";
+import { ProductId, ProductQuestion } from "../../../../types/product";
 import ProductQuestionCard from "./ProductQuestionCard";
 import { Card, CardContent, Divider, Typography } from "@mui/material";
 import ProductQuestionForm from "./ProductQuestionForm";
@@ -13,7 +13,10 @@ const NoQuestions = () => (
   </CardContent>
 );
 
-const ProductQuestions = ({ questions }: { questions: ProductQuestion[] }) => {
+const ProductQuestions = ({
+  productId,
+  questions,
+}: { questions: ProductQuestion[] } & ProductId) => {
   return (
     <Card
       component={Grid}
@@ -29,13 +32,19 @@ const ProductQuestions = ({ questions }: { questions: ProductQuestion[] }) => {
       </CardContent>
       <Divider />
       <CardContent>
-        <ProductQuestionForm />
+        <ProductQuestionForm productId={productId} />
       </CardContent>
       <Divider />
-      <CardContent>
+      <CardContent component={Grid} container spacing={2}>
         {questions.length > 0 ? (
           questions.map((question, index) => (
-            <ProductQuestionCard key={index} question={question} />
+            <Grid size={{ xs: 12 }}>
+              <ProductQuestionCard
+                productId={productId}
+                key={index}
+                question={question}
+              />
+            </Grid>
           ))
         ) : (
           <NoQuestions />

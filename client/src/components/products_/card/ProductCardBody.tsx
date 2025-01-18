@@ -84,7 +84,7 @@ const RegularPrice = ({
     gutterBottom
     variant="h6"
   >
-    <ReactLink to={`/products/item/${productId}`}>$ {price}</ReactLink>
+    $ {price}
   </Typography>
 );
 

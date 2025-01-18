@@ -17,14 +17,14 @@ const QueryResultSummary = (queryResult: QueryResultSummaryProps) => {
     ? queryResult.limit * queryResult.page
     : 10 * queryResult.page;
   return (
-    <Card variant="outlined" sx={{ display: "flex", height: 50 }}>
-      <CardContent>
-        <Typography variant="caption" color="textSecondary" component="div">
-          Showing {queryResult.pagingCounter}-{totalDocsPerPage} of{" "}
-          {queryResult.total} results from {queryResult.querySearch}
-        </Typography>
-      </CardContent>
-    </Card>
+    // <Card variant="outlined" sx={{ display: "flex", height: 50 }}>
+    <CardContent>
+      <Typography variant="caption" color="textSecondary" component="div">
+        Showing {queryResult.pagingCounter}-{totalDocsPerPage} of{" "}
+        {queryResult.total} results from {queryResult.querySearch}
+      </Typography>
+    </CardContent>
+    // </Card>
   );
 };
 

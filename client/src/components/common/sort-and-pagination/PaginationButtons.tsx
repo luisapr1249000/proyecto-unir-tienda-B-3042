@@ -22,7 +22,13 @@ const PaginationButtons = ({
       spacing={2}
       direction="column"
     >
-      <Pagination count={count} page={page} onChange={handleChange} />
+      <Pagination
+        showFirstButton
+        showLastButton
+        count={count}
+        page={page}
+        onChange={handleChange}
+      />
       <Grid container>
         {isLoadingNextPage ? (
           <LoadSpinner />

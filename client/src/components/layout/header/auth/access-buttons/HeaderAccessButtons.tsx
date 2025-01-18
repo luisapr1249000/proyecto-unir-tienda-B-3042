@@ -4,7 +4,6 @@ import Grid from "@mui/material/Grid2";
 import { Box, Button, Card, IconButton, Tooltip } from "@mui/material";
 import { Link } from "react-router-dom";
 import { responsiveDisplay } from "../../../../../assets/css/mui-css-objects/muiStyles";
-import { gridContainerCenter } from "../../../../../assets/css/mui-css-objects/gridCenter";
 import { blue, grey } from "@mui/material/colors";
 
 const HeaderAccessButtons = () => {
@@ -25,10 +24,10 @@ const HeaderAccessButtons = () => {
 
   return (
     <Grid
-      size={{ xs: 6 }}
-      sx={{ justifyContent: "space-evenly", alignItems: "center" }}
+      sx={{ justifyContent: "flex-end" }}
+      size={{ xs: "auto", md: 10 }}
       container
-      // spacing={2}
+      spacing={2}
     >
       {settings.map((setting) => (
         <Box key={setting.link}>

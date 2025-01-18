@@ -82,3 +82,8 @@ export type PaginationOptionProductIddAndQueryKey =
 
 export type PaginationOptionReviewIdAndQueryKey = PaginationOptionAndQueryKey &
   ReviewId;
+
+export type PaginationModel = {
+  pageSize: number;
+  page: number;
+};

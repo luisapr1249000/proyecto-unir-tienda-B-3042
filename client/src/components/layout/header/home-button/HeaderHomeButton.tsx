@@ -2,13 +2,12 @@ import Grid from "@mui/material/Grid2";
 import IconButton from "@mui/material/IconButton";
 import MenuIcon from "@mui/icons-material/Menu";
 import HomeIcon from "@mui/icons-material/Home";
-import ReactLink from "../../../common/react-link/ReactLink";
-import { Link } from "react-router-dom";
 import {
   responsiveDisplay,
   responsiveDisplayIconButtons,
 } from "../../../../assets/css/mui-css-objects/muiStyles";
 import { Button, Tooltip } from "@mui/material";
+import { Link } from "../../../common/react-link/Link";
 
 const HeaderHomeButton = ({
   handleClickDrawer,
@@ -27,7 +26,7 @@ const HeaderHomeButton = ({
       </Tooltip>
       <Tooltip title="Home">
         <IconButton
-          component={ReactLink}
+          component={Link}
           to="/"
           sx={{ ...responsiveDisplayIconButtons, mr: 2 }}
         >

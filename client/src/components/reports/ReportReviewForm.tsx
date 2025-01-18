@@ -13,18 +13,39 @@ import {
   FormLabel,
   TextField,
 } from "@mui/material";
+import { ReviewId } from "../../types/review";
 
-const ReportReviewForm = ({ productId }: ProductId) => {
+import { useMutation } from "@tanstack/react-query";
+import { createReport } from "../../api/report.api";
+import { toast } from "react-toastify";
+import { Reason } from "../../types/report";
+
+const ReportReviewForm = ({ reviewId }: ReviewId) => {
+  const { mutate: createReportMutation } = useMutation({
+    mutationFn: createReport,
+    onSuccess: () => {
+      toast.success("Report Created successfully!");
+    },
+    onError: () => {
+      toast.error("Please check your credentials.");
+    },
+  });
+
   const initialValues = {
     reason: "",
     problemDescription: "",
     itemType: "Product",
   };
-
   const formik = useFormik({
     initialValues,
     validationSchema: toFormikValidationSchema(reportInputSchema),
-    onSubmit: ({ reason }) => mutate({ productId, reason }),
+    onSubmit: ({ reason, problemDescription }) =>
+      createReportMutation({
+        itemType: "Product",
+        reason: reason as Reason,
+        reportedItemId: reviewId,
+        problemDescription: problemDescription ?? "No problem description",
+      }),
   });
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {

@@ -2,26 +2,30 @@ import React from "react";
 import Grid from "@mui/material/Grid2";
 import { Divider, Typography } from "@mui/material";
 import ChangePasswordForm from "../../../../components/users_/account/change-password/ChangePasswordForm";
+import { Card, CardContent } from "@mui/material";
 
 const ChangePassword = () => {
   return (
-    <Grid sx={{ p: 1.5 }}>
-      <Grid spacing={2} container sx={{ p: 3 }} size={{ xs: 11 }}>
-        <Grid container size={{ xs: 12 }}>
-          <Typography variant="h5">User General Information</Typography>
-        </Grid>
-        <Grid size={{ xs: 12 }}>
-          <Divider sx={{ flexGrow: 1 }}>
-            <Typography variant="subtitle2" color="textSecondary">
-              User Avatar
-            </Typography>
-          </Divider>
-        </Grid>
+    <Grid
+      sx={{
+        p: 3,
+      }}
+    >
+      <Card>
+        <CardContent>
+          <Typography variant="h5">Change Password</Typography>
+        </CardContent>
+        <Divider />
 
-        <Grid size={{ xs: 12 }}>
+        <CardContent>
+          <Typography variant="subtitle2" color="textSecondary">
+            Update User Password
+          </Typography>
+        </CardContent>
+        <CardContent>
           <ChangePasswordForm />
-        </Grid>
-      </Grid>
+        </CardContent>
+      </Card>
     </Grid>
   );
 };

@@ -37,6 +37,11 @@ export const landmarkField = createValidStringField({
   maxLength: 40,
 });
 
+export const countryField = createValidStringField({
+  fieldName: "Country",
+  maxLength: 50,
+});
+
 export const addressDirectionInputSchema = z.object({
   mobilePhone: phoneNumberField().optional(),
   pinCode: pinCodeField,
@@ -47,6 +52,7 @@ export const addressDirectionInputSchema = z.object({
   state: stateField,
   landmark: landmarkField,
   addressType: z.enum(["home", "work"]),
+  country: countryField,
 });
 
 export const addressDirection = abstractSchema().merge(

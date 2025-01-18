@@ -27,9 +27,11 @@ export const toggleProductInWishlist = async ({
 export const toggleProductInCart = async ({
   productId,
   userId,
-}: UserId & ProductId): Promise<UserCart> => {
+  quantity,
+}: UserId & ProductId & { quantity: number }): Promise<UserCart> => {
   const response = await api.post<UserCart>(
-    `/users/${userId}/cart/${productId}`
+    `/users/${userId}/cart/${productId}`,
+    { productQuantity: quantity }
   );
   return response.data;
 };

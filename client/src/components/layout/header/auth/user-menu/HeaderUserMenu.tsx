@@ -40,7 +40,7 @@ const HeaderUserMenu = () => {
   const settings = [
     {
       label: "Profile",
-      link: `/profile/${authUser?.username}`,
+      link: `/users/${authUser?.username}`,
       icon: <PermIdentityIcon />,
     },
     {
@@ -50,17 +50,17 @@ const HeaderUserMenu = () => {
     },
     {
       label: "Account",
-      link: `/account/${authUser?.username}/update`,
+      link: `/users/${authUser?.username}/update`,
       icon: <SettingsIcon />,
     },
     {
       label: "Cart",
-      link: `/account/${authUser?.username}/cart`,
+      link: `/users/${authUser?.username}/cart`,
       icon: <ShoppingCartIcon />,
     },
     {
       label: "Wishlist",
-      link: `/account/${authUser?.username}/wishlist`,
+      link: `/users/${authUser?.username}/wishlist`,
       icon: <LocalMallIcon />,
     },
   ];
@@ -83,7 +83,7 @@ const HeaderUserMenu = () => {
   );
   return (
     <Grid
-      size={{ xs: 3 }}
+      // size={{}}
       container
       sx={{ justifyContent: "center", alignItems: "center" }}
       spacing={1}

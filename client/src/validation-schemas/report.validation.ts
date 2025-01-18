@@ -14,13 +14,15 @@ const resolutionField = createValidStringField({
   maxLength: 200,
 });
 
+export const reasonField = z.enum([
+  "Spam",
+  "Inappropriate Content",
+  "Misleading Information",
+  "Other",
+]);
+
 export const reportInputSchema = z.object({
-  reason: z.enum([
-    "Spam",
-    "Inappropriate Content",
-    "Misleading Information",
-    "Other",
-  ]),
+  reason: reasonField,
   itemType: z.enum(["Product", "Review", "User"]),
   problemDescription: problemDescriptionField.optional(),
 });

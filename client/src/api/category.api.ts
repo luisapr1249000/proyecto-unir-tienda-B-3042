@@ -40,14 +40,14 @@ export const createCategory = async (category: CategoryInput) => {
   return response.data;
 };
 
-export const updateCategory = async (
-  categoryId: string,
-  category: CategoryInput
-) => {
-  const response = await api.put<Category>(
-    `/categories/${categoryId}`,
-    category
-  );
+export const updateCategory = async ({
+  categoryId,
+  data,
+}: {
+  categoryId: string;
+  data: CategoryInput;
+}) => {
+  const response = await api.put<Category>(`/categories/${categoryId}`, data);
   return response.data;
 };
 

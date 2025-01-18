@@ -4,7 +4,7 @@ import {
   ListItemProps,
   ListItem,
 } from "@mui/material";
-import { blue, grey } from "@mui/material/colors";
+import { blue } from "@mui/material/colors";
 import {
   NavLink,
   Link as ReactLink_,
@@ -25,4 +25,8 @@ export const ListItemLink = (props: ListItemProps & NavLinkProps) => (
     component={NavLink}
     {...props}
   />
+);
+
+export const LinkText = (props: LinkProps & MuiLinkProps) => (
+  <MuiLink {...props} component={ReactLink_} color="inherit" underline="none" />
 );

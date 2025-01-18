@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { createValidStringField } from "../utils/zod.utils";
+import { createValidStringField, is_modifiedField } from "../utils/zod.utils";
 import { abstractSchema } from "./abstract.validation";
 import { userSchema } from "./user-schemas/user.validation";
 
@@ -20,5 +20,6 @@ export const categoryInputSchema = z.object({
 export const categoryProps = z.object({ author: userSchema });
 
 export const categorySchema = abstractSchema()
+  .merge(is_modifiedField())
   .merge(categoryInputSchema)
   .merge(categoryProps);

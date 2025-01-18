@@ -24,7 +24,10 @@ export const deleteProduct = async (productId: string) => {
   await api.delete(`/products/${productId}`);
 };
 
-export const uploadProductImage = async (productId: string, files: File[]) => {
+export const uploadProductImage = async ({
+  productId,
+  files,
+}: ProductId & { files: File[] }) => {
   const formData = new FormData();
   files.forEach((file) => formData.append("file", file));
   const response = await api.post<Product>(

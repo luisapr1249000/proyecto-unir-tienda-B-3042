@@ -6,6 +6,7 @@ import ObjectNotFound from "../../../components/common/object-not-found/ObjectNo
 import { useParams } from "react-router-dom";
 import ProductUpdateForm from "../../../components/products_/update/ProductUpdateForm";
 import { ProductId } from "../../../types/product";
+import CircleLoadingGrid from "../../../components/common/loading/CircleLoadingGrid";
 
 const ProductUpdate = () => {
   const { productId } = useParams() as ProductId;
@@ -16,6 +17,7 @@ const ProductUpdate = () => {
     refetch,
   } = useGetProductById({ productId });
 
+  if (isLoading) return <CircleLoadingGrid />;
   if (error || !product)
     return <ObjectNotFound onReload={refetch} object="Product" />;
   return (

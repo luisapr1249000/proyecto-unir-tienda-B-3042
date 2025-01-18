@@ -25,6 +25,7 @@ const HeaderThemeSwitcherDrawer = ({
     variant="temporary"
   >
     <Toolbar />
+    <Toolbar />
     <CardContent
       sx={{
         display: "flex",
