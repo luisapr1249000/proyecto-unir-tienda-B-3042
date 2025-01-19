@@ -11,15 +11,17 @@ import CategoryList from "../../categories/list/CategoryList";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import CategoryListDrawer from "../../categories/list/CategoryListDrawer";
 import MobileToggleableDrawer from "../../common/drawers/MobileToggleableDrawer";
-import { User } from "../../../types/user";
+import PriceSlider from "../../common/sliders/PriceSlider";
+import { ListItem, ListItemText } from "@mui/material";
 
-const ToggleableSideMenu = ({
+export const ToggleableSideMenu = ({
   ...props
 }: {
   handleOpen: () => void;
   handleDrawerOpen: () => void;
   isOpen: boolean;
   isDrawerOpen: boolean;
+  children?: ReactNode;
 }) => {
   const options = [
     {
@@ -39,6 +41,7 @@ const ToggleableSideMenu = ({
       <ToggleableDrawer {...props}>
         <ToggleableDrawerList isDrawOpen={props.isOpen} listItem={options} />
         <CategoryListDrawer isDrawOpen={props.isOpen} />
+        {props.children}
       </ToggleableDrawer>
       <MobileToggleableDrawer
         handleOpen={props.handleDrawerOpen}
@@ -50,6 +53,26 @@ const ToggleableSideMenu = ({
         />
         <CategoryListDrawer isDrawOpen={props.isDrawerOpen} />
       </MobileToggleableDrawer>
+    </>
+  );
+};
+
+export const BaseLayOut = ({ children }: { children: ReactNode }) => {
+  return (
+    <>
+      <Grid
+        sx={{
+          display: "flex",
+        }}
+      >
+        {children}
+        <Grid component="main" sx={{ flexGrow: 1, bgcolor: "action.hover" }}>
+          <Grid sx={{}}>
+            <Outlet />
+          </Grid>
+          <Footer />
+        </Grid>
+      </Grid>
     </>
   );
 };
@@ -70,12 +93,12 @@ const BaseLayout = () => {
           display: "flex",
         }}
       >
-        <ToggleableSideMenu
+        {/* <ToggleableSideMenu
           handleDrawerOpen={handleOpenDrawer}
           handleOpen={handleOpenSideMenu}
           isOpen={isOpen}
           isDrawerOpen={isDrawerOpen}
-        />
+        /> */}
         <Grid component="main" sx={{ flexGrow: 1, bgcolor: "action.hover" }}>
           <Grid sx={{}}>
             <Outlet />

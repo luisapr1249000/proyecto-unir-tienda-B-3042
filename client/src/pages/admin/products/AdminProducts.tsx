@@ -1,11 +1,10 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import Grid from "@mui/material/Grid2";
-
 import { gridContainerCenter } from "../../../assets/css/mui-css-objects/gridCenter";
-import AdminProductTable from "../../../components/users/admin/admin-product-table/AdminProductTable";
-import CircleLoadingGrid from "../../../components/common/loading/CircleLoadingGrid";
+import CircleLoadingGrid from "../../../components/common/loaders/CircleLoadingGrid";
 import ObjectNotFound from "../../../components/common/errors/object-not-found/ObjectNotFound";
 import { useGetProductsWithPagination } from "../../../hooks/products.hooks";
+import AdminProductTable from "../../../components/users_/admin/product-table/AdminProductTable";
 
 const AdminProducts = () => {
   const [paginationModel, setPaginationModel] = useState({
@@ -37,9 +36,8 @@ const AdminProducts = () => {
   return (
     <Grid sx={{ ...gridContainerCenter }}>
       <AdminProductTable
-        products={products.docs}
+        products={products.docs ?? []}
         isFetching={isFetching}
-        refetch={refetch}
         totalDocs={products.totalDocs}
         paginationModel={paginationModel}
         setPaginationModel={setPaginationModel}

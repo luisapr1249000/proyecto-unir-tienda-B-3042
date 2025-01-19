@@ -1,7 +1,7 @@
 import React from "react";
 import { Link, useParams } from "react-router-dom";
 import Grid from "@mui/material/Grid2";
-import CircleLoadingGrid from "../../../../components/common/loading/CircleLoadingGrid";
+import CircleLoadingGrid from "../../../../components/common/loaders/CircleLoadingGrid";
 import { useGetUserAddresses } from "../../../../hooks/user";
 import ObjectNotFound from "../../../../components/common/errors/object-not-found/ObjectNotFound";
 import {
@@ -13,7 +13,7 @@ import {
   Typography,
 } from "@mui/material";
 import AddressDirectionCard from "../../../../components/users_/address-direction/card/AddressDirectionCard";
-import { ButtonLink } from "../../../../components/common/buttons/button-text-link/ButtonTextLink";
+import { ButtonLink } from "../../../../components/common/buttons/link/ButtonLink";
 import Fab from "@mui/material/Fab";
 import AddIcon from "@mui/icons-material/Add";
 
@@ -61,7 +61,6 @@ const AddressDirectionList = () => {
       spacing={3}
       size={{ xs: 10 }}
       sx={{
-        bgcolor: "divider",
         p: 3,
       }}
     >
@@ -71,7 +70,7 @@ const AddressDirectionList = () => {
           height: hasAddressDirections ? undefined : "calc(100vh - 64px)",
           position: "relative",
         }}
-        variant="outlined"
+        elevation={4}
       >
         <MobileCreateButton username={username ?? ""} />
         <CardContent>

@@ -11,7 +11,7 @@ import ReviewRatingField from "./ReviewRatingField";
 import ReviewAttachImages from "./ReviewAttachImages";
 import { createReview } from "../../../api/review.api";
 import { toast } from "react-toastify";
-import CircleLoadingGrid from "../../common/loading/CircleLoadingGrid";
+import CircleLoadingGrid from "../../common/loaders/CircleLoadingGrid";
 
 const ReviewCreateForm = ({ productId }: ProductId) => {
   const { mutate: createReviewMutation, isPending } = useMutation({

@@ -28,7 +28,7 @@ import {
   updateUserQuestionForOneProduct,
 } from "../../../../api/products/productQuestions.api";
 import { toast } from "react-toastify";
-import CircleLoadingGrid from "../../../common/loading/CircleLoadingGrid";
+import CircleLoadingGrid from "../../../common/loaders/CircleLoadingGrid";
 
 const ProductAnswerForm = ({
   productId,
@@ -180,9 +180,6 @@ const ProductQuestionCard = ({
   return (
     <Card>
       <CardContent>
-        <Typography gutterBottom variant="body2" color="textSecondary">
-          Username:
-        </Typography>
         <Typography variant="body2">{question.user.username}</Typography>
       </CardContent>
       <Divider />

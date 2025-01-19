@@ -32,7 +32,6 @@ const ToggleableDrawerList = ({
           <ListItemText
             sx={{ display: isDrawOpen ? "block" : "none" }}
             primary={item.label}
-            // disableTypography
             primaryTypographyProps={{ fontSize: "0.8rem" }}
           />
         </ListItemButton>

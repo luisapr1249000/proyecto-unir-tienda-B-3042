@@ -1,21 +1,8 @@
 import { useColorScheme } from "@mui/material/styles";
-import Grid from "@mui/material/Grid2";
-import {
-  Button,
-  ButtonGroup,
-  Card,
-  CardActionArea,
-  CardContent,
-  FormControl,
-  FormControlLabel,
-  FormLabel,
-  Radio,
-  RadioGroup,
-} from "@mui/material";
+import { Button, ButtonGroup } from "@mui/material";
 import LightModeIcon from "@mui/icons-material/LightMode";
 import DarkModeIcon from "@mui/icons-material/DarkMode";
 import SettingsBrightnessIcon from "@mui/icons-material/SettingsBrightness";
-import { grey } from "@mui/material/colors";
 
 const ModeSwitcher = () => {
   const { mode, setMode } = useColorScheme();

@@ -87,3 +87,9 @@ export type PaginationModel = {
   pageSize: number;
   page: number;
 };
+
+export type SearchProductsOptions = {
+  query: string;
+  minPrice: number;
+  maxPrice: number;
+};

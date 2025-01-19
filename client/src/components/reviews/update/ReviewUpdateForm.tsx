@@ -8,7 +8,7 @@ import ReviewRatingField from "../create/ReviewRatingField";
 import { useMutation } from "@tanstack/react-query";
 import { updateReview } from "../../../api/review.api";
 import { toast } from "react-toastify";
-import CircleLoadingGrid from "../../common/loading/CircleLoadingGrid";
+import CircleLoadingGrid from "../../common/loaders/CircleLoadingGrid";
 
 const ReviewUpdateForm = ({
   review,

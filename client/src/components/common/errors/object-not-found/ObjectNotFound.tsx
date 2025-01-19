@@ -33,10 +33,9 @@ const ObjectNotFound = ({
     <Card
       variant="outlined"
       component={Grid}
-      size={{ xs: 11, md: "grow" }}
+      size={{ xs: 11, md: 12 }}
       direction="column"
       container
-      sx={{ p: 3, justifyContent: "center", alignItems: "center" }}
     >
       <CardContent sx={{ textAlign: "center" }}>
         <ErrorIcon sx={{ fontSize: 200, color: yellow[700] }} />
@@ -47,8 +46,10 @@ const ObjectNotFound = ({
           {message}
         </Typography>
       </CardContent>
-      <Divider flexItem sx={{ my: 1 }} />
-      <CardActions>
+      <Divider />
+      <CardActions
+        sx={{ justifyContent: "center", alignItems: "center", p: 3 }}
+      >
         <RefetchButton size="small" onRefetch={onReload} />
         <HomeButton size="small" />
       </CardActions>

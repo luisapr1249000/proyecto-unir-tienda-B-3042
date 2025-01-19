@@ -28,7 +28,7 @@ const CategoryListDrawer = ({ isDrawOpen }: { isDrawOpen: boolean }) => {
     if (categories) {
       const categoryList = categories.docs.map((category) => ({
         label: category.name,
-        link: `/products/category/${category.name}`,
+        link: `/products/categories/${category.name}`,
       }));
       setFormattedCategories([
         ...categoryList,
@@ -57,6 +57,7 @@ const CategoryListDrawer = ({ isDrawOpen }: { isDrawOpen: boolean }) => {
           <ListItemText
             sx={{ display: isDrawOpen ? "block" : "none" }}
             primary="Categories"
+            primaryTypographyProps={{ fontSize: "0.8rem" }}
           />
           {isDrawOpen && <> {isExpanded ? <ExpandLess /> : <ExpandMore />}</>}
         </ListItemButton>
@@ -72,7 +73,10 @@ const CategoryListDrawer = ({ isDrawOpen }: { isDrawOpen: boolean }) => {
               disablePadding
             >
               <ListItemButton sx={{ pl: 4 }}>
-                <ListItemText primary={category.label} />
+                <ListItemText
+                  primaryTypographyProps={{ fontSize: "0.8rem" }}
+                  primary={category.label}
+                />
               </ListItemButton>
             </ListItem>
           ))}

@@ -9,7 +9,7 @@ const UserAccountOverview = () => {
 
   return (
     <Grid container spacing={3} size={{ xs: 10 }} sx={{ p: 3 }}>
-      <Card variant="outlined">
+      <Card elevation={4}>
         <CardContent>
           <Typography variant="h5">User Overview</Typography>
         </CardContent>

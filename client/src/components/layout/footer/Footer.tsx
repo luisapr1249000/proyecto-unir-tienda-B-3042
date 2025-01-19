@@ -21,7 +21,7 @@ export const Footer = () => {
       size={{ xs: 12, md: 6 }}
       container
       spacing={2}
-      sx={{ bgcolor: "primary.light", p: 3 }}
+      sx={{ bgcolor: "background.paper", p: 3 }}
     >
       <Grid size={{ xs: 12, md: 6 }}>
         <Typography color="textSecondary" variant="h6" gutterBottom>
@@ -36,10 +36,10 @@ export const Footer = () => {
           Follow Us
         </Typography>
         <Link to="">
-          <TwitterIcon sx={{ mr: 2 }} />
+          <TwitterIcon color="primary" sx={{ mr: 2 }} />
         </Link>
         <Link to="">
-          <FacebookIcon />
+          <FacebookIcon color="primary" />
         </Link>
       </Grid>
     </Grid>

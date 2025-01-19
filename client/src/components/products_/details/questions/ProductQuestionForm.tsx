@@ -8,7 +8,7 @@ import TextField from "../../../common/textfields/TextField";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { createUserQuestionForOneProduct } from "../../../../api/products/productQuestions.api";
 import { toast } from "react-toastify";
-import CircleLoadingGrid from "../../../common/loading/CircleLoadingGrid";
+import CircleLoadingGrid from "../../../common/loaders/CircleLoadingGrid";
 import { ProductId } from "../../../../types/product";
 
 const ProductQuestionForm = ({ productId }: ProductId) => {

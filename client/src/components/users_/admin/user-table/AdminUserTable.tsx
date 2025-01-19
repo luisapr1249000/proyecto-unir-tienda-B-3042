@@ -20,14 +20,12 @@ import { Link } from "../../../common/react-link/Link";
 const AdminUserTable = ({
   users,
   isFetching,
-  refetch,
   totalDocs,
   paginationModel,
   setPaginationModel,
 }: {
   users: User[];
   isFetching: boolean;
-  refetch: () => void;
   totalDocs: number;
   paginationModel: PaginationModel;
   setPaginationModel: (paginationModel: PaginationModel) => void;

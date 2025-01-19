@@ -10,13 +10,13 @@ import ProductDetailsCategories from "./ProductDetailsCategories";
 
 const ProductDetailsBody = ({ product }: ProductProp) => (
   <CardContent
-    sx={{ position: "relative" }}
+    sx={{ position: "relative", borderRight: 1, borderColor: "divider" }}
     size={{ xs: 12, md: 4 }}
     component={Grid}
     container
     direction="column"
   >
-    <ProductCardActions />
+    {/* <ProductCardActions /> */}
 
     <Typography
       component="div"

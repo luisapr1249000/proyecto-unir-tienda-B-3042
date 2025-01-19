@@ -3,6 +3,7 @@ import { CategoryId } from "../../types/category";
 import {
   PaginationConfig,
   PaginationResultProducts,
+  SearchProductsOptions,
 } from "../../types/paginationResult";
 import { Product, ProductId, ProductInput } from "../../types/product";
 import { UserId } from "../../types/user";
@@ -54,9 +55,14 @@ export const getProductsWithPagination = async ({
   page,
   limit,
   sort,
-}: PaginationConfig): Promise<PaginationResultProducts> => {
+  minPrice = 1,
+  maxPrice = Infinity,
+}: PaginationConfig & {
+  minPrice?: number;
+  maxPrice?: number;
+}): Promise<PaginationResultProducts> => {
   const response = await api<PaginationResultProducts>(
-    `/products?page=${page}&limit=${limit}&sort=${sort}`
+    `/products?page=${page}&limit=${limit}&sort=${sort}&minPrice=${minPrice}&maxPrice=${maxPrice}`
   );
   return response.data;
 };
@@ -66,9 +72,15 @@ export const getProductsByCategoryWithPagination = async ({
   page,
   limit,
   sort,
-}: PaginationConfig & CategoryId): Promise<PaginationResultProducts> => {
+  minPrice = 1,
+  maxPrice = Infinity,
+}: PaginationConfig &
+  CategoryId & {
+    minPrice?: number;
+    maxPrice?: number;
+  }): Promise<PaginationResultProducts> => {
   const response = await api<PaginationResultProducts>(
-    `/products/category/${categoryId}?page${page}&limit=${limit}&sort=${sort}`
+    `/products/category/${categoryId}?page${page}&limit=${limit}&sort=${sort}&minPrice=${minPrice}&maxPrice=${maxPrice}`
   );
   return response.data;
 };
@@ -88,6 +100,20 @@ export const getProductstByAuthorWithPagination = async ({
 }: PaginationConfig & UserId): Promise<PaginationResultProducts> => {
   const response = await api<PaginationResultProducts>(
     `/products/author/${userId}?page${page}&limit=${limit}&sort=${sort}`
+  );
+  return response.data;
+};
+
+export const searchProductsWithPagination = async ({
+  query,
+  minPrice,
+  maxPrice,
+  page,
+  limit,
+  sort,
+}: SearchProductsOptions & PaginationConfig) => {
+  const response = await api<PaginationResultProducts>(
+    `/products/search?query=${query}&page=${page}&limit=${limit}&sort=${sort}&minPrice=${minPrice}&maxPrice=${maxPrice}`
   );
   return response.data;
 };

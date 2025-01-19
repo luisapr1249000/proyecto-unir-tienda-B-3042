@@ -1,17 +1,27 @@
 import { Breadcrumbs } from "@mui/material";
 import React from "react";
-import { Link, useMatches } from "react-router-dom";
+import { useLocation } from "react-router-dom";
+import { Link } from "../react-link/Link";
 
 const BreadCrumbs = () => {
-  let matches = useMatches();
-  let crumbs = matches
-    .filter((match) => Boolean(match.handle?.crumb))
-    .map((match) => match.handle.crumb(match.params.username));
+  const location = useLocation();
+  const paths = location.pathname.split("/");
+  const crumbs = paths.map((path, index) => {
+    if (index === 0) return path;
+    return path.charAt(0) + path.slice(1);
+  });
 
   return (
     <Breadcrumbs>
       {crumbs.map((crumb, index) => (
-        <li key={index}>{crumb}</li>
+        <Link
+          variant="body2"
+          underline="none"
+          key={index}
+          to={crumbs.slice(0, index + 1).join("/")}
+        >
+          {crumb}
+        </Link>
       ))}
     </Breadcrumbs>
   );

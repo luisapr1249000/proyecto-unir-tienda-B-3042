@@ -39,13 +39,13 @@ const HeaderUserMenu = () => {
 
   const settings = [
     {
-      label: "Profile",
-      link: `/users/${authUser?.username}`,
+      label: "Post Product",
+      link: `/products/create`,
       icon: <PermIdentityIcon />,
     },
     {
-      label: "Post Product",
-      link: `/products/create`,
+      label: "Create Category",
+      link: `/categories/create`,
       icon: <PermIdentityIcon />,
     },
     {

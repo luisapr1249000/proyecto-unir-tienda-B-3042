@@ -11,7 +11,7 @@ const UserAccountDelete = () => {
         p: 3,
       }}
     >
-      <Card>
+      <Card elevation={4}>
         <CardContent>
           <Typography variant="h5">Delete Account</Typography>
         </CardContent>

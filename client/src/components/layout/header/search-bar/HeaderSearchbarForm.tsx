@@ -36,7 +36,7 @@ const HeaderSearchbarForm = ({
               </Tooltip>
             </InputAdornment>
           ),
-          sx: { bgcolor: "#fff" },
+          // sx: { bgcolor: "#fff" },
         },
       }}
       sx={{

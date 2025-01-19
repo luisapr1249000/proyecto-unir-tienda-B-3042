@@ -1,6 +1,5 @@
-import React from "react";
 import { ProductProp } from "../../../types/product";
-import { Card, Divider } from "@mui/material";
+import { Card } from "@mui/material";
 import Grid from "@mui/material/Grid2";
 import ProductDetailsImage from "./ProductDetailsImage";
 import ProductDetailsBody from "./body/ProductDetailsBody";
@@ -11,7 +10,7 @@ const ProductDetailsCard = ({ product }: ProductProp) => {
     <Card
       component={Grid}
       container
-      variant="outlined"
+      elevation={4}
       direction={{ xs: "column", md: "row" }}
       sx={{
         position: "relative",
@@ -20,16 +19,10 @@ const ProductDetailsCard = ({ product }: ProductProp) => {
       size={{ xs: 11 }}
     >
       <ProductDetailsImage product={product} />
-      <Divider orientation="vertical" flexItem />
       {/* ----- */}
       <ProductDetailsBody product={product} />
-      <Divider orientation="vertical" flexItem />
       {/* ------ */}
       <ProductPricingDetails product={product} />
-      {/* <ProductItemContent product={product} />
-
-      
-      <ProductItemPrice product={product} />  */}
     </Card>
   );
 };

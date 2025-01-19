@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useGetReviewsWithPagination } from "../../../hooks/review.hooks";
-import CircleLoadingGrid from "../../../components/common/loading/CircleLoadingGrid";
+import CircleLoadingGrid from "../../../components/common/loaders/CircleLoadingGrid";
 import ObjectNotFound from "../../../components/common/errors/object-not-found/ObjectNotFound";
 import AdminReviewTable from "../../../components/users_/admin/review-table/AdminReviewTable";
 import Grid from "@mui/material/Grid2";

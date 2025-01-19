@@ -10,7 +10,10 @@ import ProductCardContent from "./ProductCardBody";
 import { Link } from "../../common/react-link/Link";
 // import ProductIconButtonActions from "../../products/product-iconbutton-actions/ProductIconButtonActions";
 
-const ProductCard = ({ product }: ProductProp) => {
+const ProductCard = ({
+  product,
+  isWishlistItem = false,
+}: ProductProp & { isWishlistItem?: boolean }) => {
   const { mode } = useColorScheme();
   return (
     <Card
@@ -22,7 +25,10 @@ const ProductCard = ({ product }: ProductProp) => {
       variant={mode === "dark" ? "elevation" : "outlined"}
     >
       <ProductCardImage product={product} />
-      <ProductCardActions productId={product._id} />
+      <ProductCardActions
+        isWishlistItem={isWishlistItem}
+        productId={product._id}
+      />
       <CardActionArea component={Link} to={`/products/details/${product._id}`}>
         <ProductCardContent product={product} />
       </CardActionArea>

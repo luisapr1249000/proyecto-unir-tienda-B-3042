@@ -7,14 +7,12 @@ import { Rating } from "@mui/material";
 const AdminReviewTable = ({
   reviews,
   isFetching,
-  refetch,
   totalDocs,
   paginationModel,
   setPaginationModel,
 }: {
   reviews: Review[];
   isFetching: boolean;
-  refetch: () => void;
   totalDocs: number;
   paginationModel: PaginationModel;
   setPaginationModel: (paginationModel: PaginationModel) => void;

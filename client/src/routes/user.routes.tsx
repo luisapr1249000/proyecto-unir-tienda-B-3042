@@ -7,6 +7,7 @@ import ChangePassword from "../pages/users/account/change-password/ChangePasswor
 import ProtectedRoute from "./guards/ProtectedRoute";
 import addressDirectionRoutes from "./addressDirections.routes";
 import UserAccountOverview from "../pages/users/account/overview/UserAccountOverview";
+import UserWishlist from "../pages/users/account/wishlist/UserWishlist";
 
 const loadableOptions = { fallback: <GridLoadingSkeleton /> };
 
@@ -25,6 +26,7 @@ const userRoutes: RouteObject[] = [
           { element: <UserAccountUpdate />, path: "update" },
           { element: <ChangePassword />, path: "change-password" },
           { element: <UserAccountDelete />, path: "delete-account" },
+          { element: <UserWishlist />, path: "wishlist" },
           {
             element: <UserAccountOverview />,
             path: "overview",

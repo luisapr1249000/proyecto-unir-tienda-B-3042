@@ -11,7 +11,7 @@ import DisplayImagePreview from "../../../../common/display-image-preview/Displa
 import { useMutation } from "@tanstack/react-query";
 import { uploadUserAvatar } from "../../../../../api/users/user.api";
 import { toast } from "react-toastify";
-import CircleLoadingGrid from "../../../../common/loading/CircleLoadingGrid";
+import CircleLoadingGrid from "../../../../common/loaders/CircleLoadingGrid";
 
 const UserAccountUpdateAvatarForm = () => {
   const { mutate: uploadUserAvatarMutation, isPending } = useMutation({

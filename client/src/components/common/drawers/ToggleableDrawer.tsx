@@ -26,22 +26,6 @@ const ToggleableDrawer = ({
 }) => {
   const drawerWidth = 250;
   const shortDrawerWidth = 60;
-  const [value, setValue] = React.useState<number[]>([30, 50]);
-
-  const handleChange = (event: Event, newValue: number | number[]) => {
-    setValue(newValue as number[]);
-  };
-
-  const marks = [
-    {
-      value: 0,
-      label: "0",
-    },
-    {
-      value: 100000,
-      label: "100000",
-    },
-  ];
 
   const valueText = (value: number) => `${value}$`;
   return (
@@ -85,23 +69,6 @@ const ToggleableDrawer = ({
           </ListItem>
         </Tooltip>
         {children}
-        <List>
-          <ListItem sx={{ display: "flex", flexDirection: "column" }}>
-            <ListItemText primary="Price" />
-            <Box sx={{ width: 1 }}>
-              <Slider
-                aria-label="Volume"
-                value={value}
-                getAriaValueText={valueText}
-                onChange={handleChange}
-                valueLabelDisplay="auto"
-                marks={marks}
-                max={100000}
-                min={0}
-              />
-            </Box>
-          </ListItem>
-        </List>
       </List>
     </Drawer>
   );

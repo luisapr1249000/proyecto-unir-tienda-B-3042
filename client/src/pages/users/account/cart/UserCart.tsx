@@ -4,7 +4,7 @@ import { Divider, Typography, Paper, Card, CardContent } from "@mui/material";
 import UserCartView from "../../../../components/users_/account/cart/UserCartView";
 import { useParams } from "react-router-dom";
 import { useGetUserCart } from "../../../../hooks/user";
-import CircleLoadingGrid from "../../../../components/common/loading/CircleLoadingGrid";
+import CircleLoadingGrid from "../../../../components/common/loaders/CircleLoadingGrid";
 import ObjectNotFound from "../../../../components/common/errors/object-not-found/ObjectNotFound";
 
 const UserCart = () => {

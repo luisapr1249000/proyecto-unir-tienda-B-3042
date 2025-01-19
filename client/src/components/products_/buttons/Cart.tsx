@@ -9,10 +9,10 @@ import { toggleProductInCart } from "../../../api/users/userProductActions.api";
 import { Product, ProductId } from "../../../types/product";
 import LoadSpinner from "../../common/load-spinner/LoadSpinner";
 
-const Cart = ({ items, productId }: ProductId & { items: Product[] }) => {
+const Cart = ({ productId }: ProductId) => {
   const [isCartItem, setIsCartItem] = useState(false);
 
-  const { data: authUser } = useAuthUser();
+  const { data: authUser, isSuccess: isAuthSuccess } = useAuthUser();
   const navigate = useNavigate();
   const { mutate: addToCartMutation, isPending } = useMutation({
     mutationFn: toggleProductInCart,
@@ -28,16 +28,17 @@ const Cart = ({ items, productId }: ProductId & { items: Product[] }) => {
 
   const handleClick = () => {
     console.log("authUser", authUser);
-    if (!authUser || !authUser._id) {
+    if (!authUser || !isAuthSuccess) {
       toast.warn("Please login to add to Cart");
       navigate("/auth/login");
+    } else {
+      addToCartMutation({
+        userId: authUser?._id ?? "",
+        productId: productId,
+        quantity: 1,
+      });
     }
 
-    addToCartMutation({
-      userId: authUser?._id ?? "",
-      productId: productId,
-      quantity: 1,
-    });
     console.log("addToCartMutation");
   };
 

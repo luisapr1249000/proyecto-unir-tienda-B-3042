@@ -1,65 +1,68 @@
 import React, { useEffect, useState } from "react";
-import { useGetProductsWithPagination } from "../../../hooks/products.hooks";
 import Grid from "@mui/material/Grid2";
-import ProductCard from "../../../components/products_/card/ProductCard";
+import { gridContainerCenter } from "../../../assets/css/mui-css-objects/gridCenter";
+import { useNavigate, useParams, useSearchParams } from "react-router-dom";
+import GridLoadingSkeleton from "../../../components/common/load-spinner/GridLoadingSkeleton";
 import ObjectNotFound from "../../../components/common/errors/object-not-found/ObjectNotFound";
+import {
+  Card,
+  CardActions,
+  CardContent,
+  Divider,
+  Paper,
+  Typography,
+} from "@mui/material";
 import QueryResultSummary from "../../../components/common/query/QueryResultSummary";
+import PageLimitSetter from "../../../components/common/query/PageLimitSetter";
 import SortSelecter from "../../../components/common/sort-and-pagination/SortSelecter";
 import PaginationButtons from "../../../components/common/sort-and-pagination/PaginationButtons";
-import { Paper, Divider, Card, CardActions, CardContent } from "@mui/material";
-import PageLimitSetter from "../../../components/common/query/PageLimitSetter";
-import SkeletonCardGrid from "../../../components/common/skeleton/SkeletonCardGrid";
+import { useSearchProducts } from "../../../hooks/products.hooks";
+import ProductCard from "../../../components/products_/card/ProductCard";
 import { useAuthUser } from "../../../hooks/auth";
-import { useGetUserCart, useGetUserWishlist } from "../../../hooks/user";
-import { useLocation } from "react-router-dom";
+import { useGetUserWishlist } from "../../../hooks/user";
 
-import usePriceStore from "../../../zustand/priceSlice";
-
-const Products = () => {
-  const location = useLocation();
-  console.log("location ------>", location);
+const ProductsSearchResults = () => {
+  const navigate = useNavigate();
+  const [page, setPage] = useState(1);
   const [sortBy, setSortBy] = useState("-createdAt");
   const [limit, setLimit] = useState(10);
-  const [page, setPage] = useState(1);
+
+  const [searchParams] = useSearchParams();
+
+  const {
+    data: products,
+    isLoading,
+    isFetching,
+    error,
+    refetch,
+  } = useSearchProducts({
+    query: searchParams.get("query") || "",
+    minPrice: 0,
+    maxPrice: Infinity,
+    page: page,
+    limit: 10,
+    sort: sortBy,
+  });
 
   const { data: authUser } = useAuthUser();
-  // const { data: cartList } = useGetUserCart({ userId: authUser?._id ?? "" });
   const { data: wishlistList } = useGetUserWishlist({
     userId: authUser?._id ?? "",
     enabled: !!authUser,
   });
 
-  const {
-    data: products,
-    isLoading,
-    error,
-    refetch,
-    isFetching,
-  } = useGetProductsWithPagination({
-    isKeepPreviousData: true,
-    page,
-    limit,
-    sort: sortBy,
-    minPrice: usePriceStore.getState().price.min,
-    maxPrice: usePriceStore.getState().price.max,
-  });
   const handleChangeSort = (sort: string) => {
     setSortBy(sort);
     setPage(1);
   };
   useEffect(() => {
-    window.scrollTo({ top: 0, behavior: "smooth" }); // Smooth scroll to top
-  }, [page]);
-  if (isLoading || isFetching)
-    return (
-      <SkeletonCardGrid
-        sx={{ justifyContent: "center", alignItems: "center", py: 6 }}
-      />
-    );
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, [page, searchParams.get("query"), navigate]);
+
+  if (isLoading) return <GridLoadingSkeleton />;
   if (error)
-    return <ObjectNotFound multiple onReload={refetch} object="Product" />;
+    return <ObjectNotFound object="Product" multiple onReload={refetch} />;
   if (!products)
-    return <ObjectNotFound multiple onReload={refetch} object="Product" />;
+    return <ObjectNotFound object="Product" multiple onReload={refetch} />;
 
   return (
     <Grid
@@ -121,7 +124,6 @@ const Products = () => {
             </Grid>
           </Grid>
         </CardContent>
-
         <Divider />
         <CardContent sx={{ p: 6 }} component={Grid} container spacing={2}>
           {products.docs.map((product) => {
@@ -139,17 +141,17 @@ const Products = () => {
           })}
         </CardContent>
         <Divider />
-        <CardContent>
+        <CardActions sx={{ mt: 3 }}>
           <PaginationButtons
             page={page}
             count={products.totalPages}
             handleChange={(_e, value) => setPage(value)}
             isLoadingNextPage={isFetching}
           />
-        </CardContent>
+        </CardActions>
       </Card>
     </Grid>
   );
 };
 
-export default Products;
+export default ProductsSearchResults;

@@ -1,15 +1,12 @@
-import React from "react";
-import {
-  ButtonLink,
-  IconButtonLink,
-} from "../../common/buttons/button-text-link/ButtonTextLink";
+import { IconButtonLink } from "../../common/buttons/link/ButtonLink";
 import EditIcon from "@mui/icons-material/Edit";
-const ProductCardModifiedButton = ({ productId }: { productId: string }) => {
-  return (
+import { Tooltip } from "@mui/material";
+const ProductCardModifiedButton = ({ productId }: { productId: string }) => (
+  <Tooltip title="Edit Product">
     <IconButtonLink to={`/products/items/${productId}/update`}>
       <EditIcon color="primary" fontSize="small" />
     </IconButtonLink>
-  );
-};
+  </Tooltip>
+);
 
 export default ProductCardModifiedButton;

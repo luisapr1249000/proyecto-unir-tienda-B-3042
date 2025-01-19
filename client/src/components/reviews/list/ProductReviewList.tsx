@@ -3,7 +3,7 @@ import { useGetReviewsFromProductWithPagination } from "../../../hooks/review.ho
 import Grid from "@mui/material/Grid2";
 import { Card, CardContent, Divider, Typography } from "@mui/material";
 import ReviewCard from "../card/ReviewCard";
-import CircleLoadingGrid from "../../common/loading/CircleLoadingGrid";
+import CircleLoadingGrid from "../../common/loaders/CircleLoadingGrid";
 import ObjectNotFound from "../../common/errors/object-not-found/ObjectNotFound";
 
 const NoReviews = () => (
@@ -20,15 +20,15 @@ const ProductReviewList = ({ productId }: { productId: string }) => {
   const { data, isLoading, error, refetch } =
     useGetReviewsFromProductWithPagination({ productId });
 
-  if (isLoading) return <CircleLoadingGrid />;
-  if (error)
-    return <ObjectNotFound multiple object="Review" onReload={refetch} />;
-  if (!data)
-    return <ObjectNotFound multiple object="Review" onReload={refetch} />;
+  // if (isLoading) return <CircleLoadingGrid />;
+  // if (error)
+  //   return <ObjectNotFound multiple object="Review" onReload={refetch} />;
+  // if (!data)
+  //   return <ObjectNotFound multiple object="Review" onReload={refetch} />;
 
   return (
-    <Grid container spacing={2} size={{ xs: 11 }}>
-      <Card variant="outlined">
+    <Grid container spacing={2} size={{ xs: 12, md: 11 }} sx={{}}>
+      <Card variant="outlined" sx={{ flexGrow: 1 }}>
         <CardContent>
           <Typography variant="h6" color="textSecondary">
             Reviews
@@ -36,7 +36,11 @@ const ProductReviewList = ({ productId }: { productId: string }) => {
         </CardContent>
         <Divider />
         <CardContent>
-          {data?.docs.length > 0 ? (
+          {isLoading ? (
+            <CircleLoadingGrid />
+          ) : !data || error ? (
+            <ObjectNotFound multiple object="Review" onReload={refetch} />
+          ) : data?.docs.length > 0 ? (
             data.docs.map((review, index) => (
               <Grid key={index}>
                 <ReviewCard review={review} />
@@ -45,6 +49,30 @@ const ProductReviewList = ({ productId }: { productId: string }) => {
           ) : (
             <NoReviews />
           )}
+          {/* {!data || error ? (
+            <ObjectNotFound multiple object="Review" onReload={refetch} />
+          ) : data?.docs.length > 0 ? (
+            data.docs.map((review, index) => (
+              <Grid key={index}>
+                <ReviewCard review={review} />
+              </Grid>
+            ))
+          ) : (
+            <NoReviews />
+          )} */}
+          {/* {
+            !data || error ? (
+              <ObjectNotFound multiple object="Review" onReload={refetch} />
+            ):    {data?.docs.length > 0 ? (
+              data.docs.map((review, index) => (
+                <Grid key={index}>
+                  <ReviewCard review={review} />
+                </Grid>
+              ))
+            ) : (
+              <NoReviews />
+            )}
+          } */}
         </CardContent>
       </Card>
     </Grid>

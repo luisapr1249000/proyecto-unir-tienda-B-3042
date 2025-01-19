@@ -1,4 +1,4 @@
-import { Box, Paper, Skeleton } from "@mui/material";
+import { Box, CardContent, Paper, Skeleton } from "@mui/material";
 import KeyboardArrowLeft from "@mui/icons-material/KeyboardArrowLeft";
 import KeyboardArrowRight from "@mui/icons-material/KeyboardArrowRight";
 import MobileStepper from "@mui/material/MobileStepper";
@@ -6,6 +6,7 @@ import Button from "@mui/material/Button";
 import Grid from "@mui/material/Grid2";
 import React, { useState } from "react";
 import { ProductProp } from "../../../types/product";
+import { blue, grey } from "@mui/material/colors";
 
 const ImageDisplay = ({
   src,
@@ -95,16 +96,18 @@ const ProductDetailsImage = ({ product }: ProductProp) => {
   const onLoad = () => {
     setLoadingImage(false);
   };
+
   return (
-    <Grid
+    <CardContent
+      component={Grid}
       container
       size={{ xs: 12, md: "grow" }}
-      spacing={1.5}
       sx={{
         justifyContent: "center",
-        alignContent: "center",
-        p: 3,
-        // bgcolor: "#eee",
+        alignItems: "center",
+        borderRight: 1,
+        borderColor: "divider",
+        // p: 3,
       }}
     >
       <ImageDisplay
@@ -119,7 +122,7 @@ const ProductDetailsImage = ({ product }: ProductProp) => {
         onNext={nextImage}
         onBack={backImage}
       />
-    </Grid>
+    </CardContent>
   );
 };
 

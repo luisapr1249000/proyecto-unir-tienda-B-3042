@@ -36,7 +36,7 @@ router.get(
   authMiddleware,
   validateObjectIdParams(USER_ID),
   isUserOwnerOrAdmin,
-  userProductActionController.getUseWishlist,
+  userProductActionController.getUserWishlist,
 );
 router.post(
   "/users/:userId/wishlist/:productId",

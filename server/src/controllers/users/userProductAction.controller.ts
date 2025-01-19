@@ -68,7 +68,7 @@ class UserProductActions {
     }
   }
 
-  public async getUseWishlist(req: Request, res: Response) {
+  public async getUserWishlist(req: Request, res: Response) {
     try {
       const { userId } = req.params;
 

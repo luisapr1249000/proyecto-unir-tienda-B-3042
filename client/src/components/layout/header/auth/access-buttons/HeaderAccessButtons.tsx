@@ -4,7 +4,6 @@ import Grid from "@mui/material/Grid2";
 import { Box, Button, Card, IconButton, Tooltip } from "@mui/material";
 import { Link } from "react-router-dom";
 import { responsiveDisplay } from "../../../../../assets/css/mui-css-objects/muiStyles";
-import { blue, grey } from "@mui/material/colors";
 
 const HeaderAccessButtons = () => {
   const settings = [
@@ -16,9 +15,7 @@ const HeaderAccessButtons = () => {
     {
       label: "Signup",
       link: "auth/signup",
-      icon: (
-        <PersonAddIcon sx={{ color: { xs: "primary.main", md: grey[50] } }} />
-      ),
+      icon: <PersonAddIcon />,
     },
   ];
 

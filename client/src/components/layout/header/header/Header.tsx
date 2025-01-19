@@ -15,6 +15,8 @@ const Header = ({ handleOpenDrawer }: { handleOpenDrawer: () => void }) => {
       position="sticky"
       sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}
       color="inherit"
+      elevation={4}
+      // variant="outlined"
     >
       <Toolbar
         component={Grid}
@@ -32,7 +34,7 @@ const Header = ({ handleOpenDrawer }: { handleOpenDrawer: () => void }) => {
         <Grid
           container
           size={{ xs: "grow" }}
-          sx={{ border: 1, justifyContent: "flex-end", alignItems: "center" }}
+          sx={{ justifyContent: "flex-end", alignItems: "center" }}
         >
           {isLoading ? (
             <SkeletonCircle />

@@ -75,18 +75,28 @@ export const useGetUserAddressById = ({
     refetchOnWindowFocus: false,
   });
 
-export const useGetUserCart = ({ userId, queryKey }: UserId & QueryKey) =>
+export const useGetUserCart = ({
+  userId,
+  queryKey,
+  enabled,
+}: UserId & QueryKey & { enabled?: boolean }) =>
   useQuery({
     queryKey: queryKey ?? [`user-${userId}-cart`],
     queryFn: () => getUserCart({ userId }),
     refetchOnWindowFocus: false,
+    enabled: enabled,
   });
 
-export const useGetUserWishlist = ({ userId, queryKey }: UserId & QueryKey) =>
+export const useGetUserWishlist = ({
+  userId,
+  queryKey,
+  enabled,
+}: UserId & QueryKey & { enabled?: boolean }) =>
   useQuery({
     queryKey: queryKey ?? [`user-${userId}-wishlist`],
     queryFn: () => getUserWishlist({ userId }),
     refetchOnWindowFocus: false,
+    enabled: enabled,
   });
 
 // export const useGetUser = ({

@@ -6,7 +6,7 @@ import { Link } from "react-router-dom";
 const ProductCardImage = ({ product }: ProductProp) => {
   // const [isLoading, setIsLoading] = useState(true);
   // const onLoad = () => setIsLoading(false);
-  console.log("product card image", product.images[0].url);
+  // console.log("product card image", product.images[0].url);
   return (
     <CardActionArea component={Link} to={`/products/details/${product._id}`}>
       <CardMedia

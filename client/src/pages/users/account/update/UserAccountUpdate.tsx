@@ -19,7 +19,7 @@ const UserAccountUpdate = () => {
         p: 3,
       }}
     >
-      <Card>
+      <Card elevation={4}>
         <CardContent>
           <Typography variant="h5">User Account</Typography>
         </CardContent>

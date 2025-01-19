@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 import Grid from "@mui/material/Grid2";
 import {
   Card,
@@ -19,6 +19,11 @@ import SortSelecter from "../../../components/common/sort-and-pagination/SortSel
 import ProductCard from "../../../components/products_/card/ProductCard";
 import PaginationButtons from "../../../components/common/sort-and-pagination/PaginationButtons";
 import { Category } from "../../../types/category";
+import SkeletonCardGrid from "../../../components/common/skeleton/SkeletonCardGrid";
+import BreadCrumbs from "../../../components/common/breadcrumbs/BreadCrumbs";
+import { useGetUserWishlist } from "../../../hooks/user";
+import { useAuthUser } from "../../../hooks/auth";
+import priceStore from "../../../zustand/priceSlice";
 
 const ProductsByCategory = ({ category }: { category: Category }) => {
   const [sortBy, setSortBy] = useState("-createdAt");
@@ -33,7 +38,20 @@ const ProductsByCategory = ({ category }: { category: Category }) => {
     isFetching,
   } = useGetProductsByCategoryWithPagination({
     categoryId: category._id,
+    minPrice: priceStore.getState().price.min,
+    maxPrice: priceStore.getState().price.max,
+    limit,
+    page,
+    sort: sortBy,
   });
+
+  const { data: authUser } = useAuthUser();
+
+  const { data: wishlistList } = useGetUserWishlist({
+    userId: authUser?._id ?? "",
+    enabled: !!authUser,
+  });
+
   const handleChangeSort = (sort: string) => {
     setSortBy(sort);
     setPage(1);
@@ -42,6 +60,14 @@ const ProductsByCategory = ({ category }: { category: Category }) => {
     window.scrollTo({ top: 0, behavior: "smooth" }); // Smooth scroll to top
   }, [page]);
 
+  if (isLoadingProducts)
+    return (
+      <SkeletonCardGrid
+        sx={{ justifyContent: "center", alignItems: "center", py: 6 }}
+      />
+    );
+  if (errorProducts)
+    return <ObjectNotFound object="Prodcts" onReload={refetchProducts} />;
   if (!products)
     return <ObjectNotFound object="Prodcts" onReload={refetchProducts} />;
   return (
@@ -54,11 +80,8 @@ const ProductsByCategory = ({ category }: { category: Category }) => {
         p: 3,
       }}
     >
-      <Card
-        variant="outlined"
-        // component={Grid}
-      >
-        {/* <Grid size={{ xs: 12, md: 6 }}> */}
+      <BreadCrumbs />
+      <Card>
         <CardActions sx={{ flexGrow: 1 }}>
           <Grid size={{ xs: 6 }} container sx={{ flexGrow: 1 }} spacing={2}>
             <Grid
@@ -96,13 +119,22 @@ const ProductsByCategory = ({ category }: { category: Category }) => {
             </Grid>
           </Grid>
         </CardActions>
-        {/* </Grid>  */}
 
         <Divider />
         <CardContent sx={{ p: 6 }} component={Grid} container spacing={2}>
-          {products.docs.map((product) => (
-            <ProductCard key={product._id} product={product} />
-          ))}
+          {products.docs.map((product) => {
+            const isWishlistItem = wishlistList?.wishlist
+              .map((p) => p._id)
+              .includes(product._id);
+            console.log("isWishlistItem", isWishlistItem);
+            return (
+              <ProductCard
+                key={product._id}
+                product={product}
+                isWishlistItem={isWishlistItem}
+              />
+            );
+          })}
         </CardContent>
         <Divider />
         <CardActions sx={{ mt: 3 }}>
@@ -114,44 +146,6 @@ const ProductsByCategory = ({ category }: { category: Category }) => {
           />
         </CardActions>
       </Card>
-      {/* <Grid
-        container
-        size={{ xs: 11 }}
-        sx={{
-          justifyContent: "center",
-          alignItems: "center",
-        }}
-        direction={{ xs: "column", md: "row" }}
-      >
-        <Grid container size={{ xs: 12, md: 6 }}>
-          <Grid size={{ xs: 6 }}>
-            <PageLimitSetter limit={limit} setLimit={setLimit} />
-          </Grid>
-
-          <Grid size={{ xs: 6 }}>
-            <SortSelecter sortBy={sortBy} handleChange={handleChangeSort} />
-          </Grid>
-        </Grid>
-        <Grid
-          container
-          size={{ xs: 12 }}
-          sx={{ p: 4 }}
-          component={Paper}
-          variant="outlined"
-        >
-          {products.docs.map((product) => (
-            <ProductCard key={product._id} product={product} />
-          ))}
-        </Grid>
-      </Grid>
-      <Grid size={{ xs: 12 }}>
-        <PaginationButtons
-          page={page}
-          count={products.totalPages}
-          handleChange={(_e, value) => setPage(value)}
-          isLoadingNextPage={isFetching}
-        />
-      </Grid> */}
     </Grid>
   );
 };

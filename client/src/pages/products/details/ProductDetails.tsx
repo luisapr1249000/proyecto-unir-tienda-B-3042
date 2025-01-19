@@ -3,12 +3,12 @@ import Grid from "@mui/material/Grid2";
 import { useParams } from "react-router-dom";
 import { ProductId } from "../../../types/product";
 import { useGetProductById } from "../../../hooks/products.hooks";
-import ObjectNotFound from "../../../components/common/object-not-found/ObjectNotFound";
-import ProductItemSkeleton from "../../../components/products/product-item/ProductItemSkeleton";
 import ProductDetailsCard from "../../../components/products_/details/ProductDetails";
 import ProductQuestions from "../../../components/products_/details/questions/ProductQuestions";
 import ProductSpecificationts from "../../../components/products_/details/specifications/ProductSpecificationts";
 import ProductReviewList from "../../../components/reviews/list/ProductReviewList";
+import ObjectNotFound from "../../../components/common/errors/object-not-found/ObjectNotFound";
+import SkeletonProductDetail from "../../../components/common/skeleton/SkeletonProductDetail";
 
 const ProductDetails = () => {
   const { productId } = useParams() as ProductId;
@@ -19,7 +19,7 @@ const ProductDetails = () => {
     refetch,
   } = useGetProductById({ productId });
 
-  if (isLoading) return <ProductItemSkeleton />;
+  if (isLoading) return <SkeletonProductDetail />;
   if (error) return <ObjectNotFound onReload={refetch} object="Product" />;
   if (!product) return <ObjectNotFound onReload={refetch} object="Product" />;
 
@@ -30,6 +30,7 @@ const ProductDetails = () => {
         justifyContent: "center",
         alignItems: "center",
         py: 5,
+        border: 1,
         bgcolor: "divider",
       }}
       spacing={3}

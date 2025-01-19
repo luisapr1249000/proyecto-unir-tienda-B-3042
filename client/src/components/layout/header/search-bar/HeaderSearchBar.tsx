@@ -16,12 +16,12 @@ const HeaderSearchBar = ({}: {}) => {
 
   const handleEnter = (e: React.KeyboardEvent<HTMLDivElement>) => {
     if (e.key === "Enter" && search && search.length > 0) {
-      navigate(`/products/search/${search}`);
+      navigate(`/products/search?query=${search}`);
     }
   };
   const handleClick = () => {
     if (search && search.length > 0) {
-      navigate(`/products/search/${search}`);
+      navigate(`/products/search?query=${search}`);
     }
   };
 
@@ -32,7 +32,7 @@ const HeaderSearchBar = ({}: {}) => {
         sx={{
           justifyContent: "center",
           alignContent: "center",
-          border: 1,
+          // border: 1,
           display: { xs: "none", md: "flex" },
         }}
         container

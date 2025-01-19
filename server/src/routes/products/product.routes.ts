@@ -17,7 +17,7 @@ import { uploadImageProduct } from "../../config/multer/multer.product";
 import { CATEGORY_ID, PRODUCT_ID, USER_ID } from "../../constants";
 
 const router = Router();
-router.get("/products/search-product", productController.searchProducts);
+router.get("/products/search", productController.searchProducts);
 
 router.get(
   "/products",

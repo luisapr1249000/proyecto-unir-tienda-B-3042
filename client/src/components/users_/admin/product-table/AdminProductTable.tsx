@@ -11,40 +11,23 @@ import { red } from "@mui/material/colors";
 import ClearIcon from "@mui/icons-material/Clear";
 import EditIcon from "@mui/icons-material/Edit";
 import { Link as ReactLink } from "react-router-dom";
-import { useGetProductsWithPagination } from "../../../../hooks/products.hooks";
-import CircleLoadingGrid from "../../../common/loading/CircleLoadingGrid";
 import DialogConfirmAction from "../../../common/dialogs/dialog-confirm-action/DialogConfirmAction";
+import { Product } from "../../../../types/product";
 
-const AdminProductTable = () => {
+const AdminProductTable = ({
+  products,
+  totalDocs,
+  isFetching,
+  paginationModel,
+  setPaginationModel,
+}: {
+  isFetching: boolean;
+  products: Product[];
+  totalDocs: number;
+  paginationModel: PaginationModel;
+  setPaginationModel: (paginationModel: PaginationModel) => void;
+}) => {
   const [openDialog, setOpenDialog] = useState(false);
-  const [paginationModel, setPaginationModel] = useState({
-    pageSize: 10,
-    page: 1,
-  });
-
-  const {
-    data: products,
-    isLoading,
-    error,
-    isFetching,
-  } = useGetProductsWithPagination({
-    queryKey: [
-      "products-admin",
-      paginationModel.page,
-      paginationModel.pageSize,
-    ],
-    limit: paginationModel.pageSize,
-    page: paginationModel.page,
-  });
-
-  const deleteProduct = (id: GridRowId) => {
-    setOpenDialog(true);
-    console.log(id);
-  };
-
-  if (isLoading) return <CircleLoadingGrid />;
-  if (error) return <Typography>Users not found</Typography>;
-  if (!products) return <Typography>Users not found</Typography>;
 
   const columns: GridColDef[] = [
     {
@@ -107,7 +90,7 @@ const AdminProductTable = () => {
     },
   ];
 
-  const formattedProductData = products.docs.map((product) => ({
+  const formattedProductData = products.map((product) => ({
     id: product._id,
     productName: product.name,
     productFinalPrice: product.finalPrice,
@@ -133,15 +116,15 @@ const AdminProductTable = () => {
         disableColumnFilter
         disableColumnSelector
         disableDensitySelector
-        loading={isFetching}
         rows={formattedProductData}
         columns={columns}
         pagination
+        loading={isFetching}
         paginationMode="server"
         paginationModel={paginationModel}
         onPaginationModelChange={setPaginationModel}
         pageSizeOptions={[5, 10, 25, 50]}
-        rowCount={products.totalDocs}
+        rowCount={totalDocs}
         slots={{ toolbar: GridToolbar }}
         slotProps={{
           loadingOverlay: {

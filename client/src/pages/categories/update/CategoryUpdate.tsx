@@ -7,7 +7,7 @@ import { useGetCategoryById } from "../../../hooks/categories.hooks";
 import LoadSpinner from "../../../components/common/load-spinner/LoadSpinner";
 import ObjectNotFound from "../../../components/common/errors/object-not-found/ObjectNotFound";
 import GridLoaderCenter from "../../../components/common/grid/grid-loader-center/GridLoaderCenter";
-import CircleLoadingGrid from "../../../components/common/loading/CircleLoadingGrid";
+import CircleLoadingGrid from "../../../components/common/loaders/CircleLoadingGrid";
 
 const CategoryUpdate = () => {
   const { categoryId } = useParams() as { categoryId: string };
@@ -27,6 +27,7 @@ const CategoryUpdate = () => {
     <Grid
       sx={{
         p: 3,
+        height: "calc(100vh - 64px)",
       }}
     >
       <Card>

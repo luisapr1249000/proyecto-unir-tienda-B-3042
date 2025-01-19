@@ -9,6 +9,7 @@ const CategoryCreate = () => {
     <Grid
       sx={{
         p: 3,
+        height: "calc(100vh - 64px)",
       }}
     >
       <Card>

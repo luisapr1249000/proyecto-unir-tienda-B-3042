@@ -3,6 +3,8 @@ import {
   LinkProps as MuiLinkProps,
   ListItemProps,
   ListItem,
+  TypographyProps,
+  Typography,
 } from "@mui/material";
 import { blue } from "@mui/material/colors";
 import {
@@ -29,4 +31,8 @@ export const ListItemLink = (props: ListItemProps & NavLinkProps) => (
 
 export const LinkText = (props: LinkProps & MuiLinkProps) => (
   <MuiLink {...props} component={ReactLink_} color="inherit" underline="none" />
+);
+
+export const TypographyLink = (props: TypographyProps & MuiLinkProps) => (
+  <Typography component={MuiLink} {...props} />
 );

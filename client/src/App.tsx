@@ -4,7 +4,7 @@ import authRoutes from "./routes/auth.routes";
 import { useAuthUser } from "./hooks/auth";
 import { ToastContainer } from "react-toastify";
 import userRoutes from "./routes/user.routes";
-import productRoutes from "./routes/products.routes";
+import productRoutes, { productDetailRoutes } from "./routes/products.routes";
 import categoryRoutes from "./routes/category.routes";
 import { useServerStatus } from "./hooks/server.hook";
 // import ServerDownMessage from "./components/common/server-down-message/ServerDownMessage";
@@ -17,6 +17,8 @@ import NetworkOffline from "./components/network/network-offline/NetworkOffline"
 import adminRoutes from "./routes/admin.routes";
 import reviewsRoutes from "./routes/review.routes";
 import addressDirectionRoutes from "./routes/addressDirections.routes";
+import ProductLayout from "./components/products_/ProductsLayout";
+import ProductDetailLayout from "./components/products_/details/ProductDetailLayout";
 
 function App() {
   const isOnline = useNavigatorOnLine();
@@ -31,9 +33,13 @@ function App() {
 
   const router = createBrowserRouter([
     {
-      element: <BaseLayout />,
+      element: <ProductLayout />,
       // path: "",
       children: [...productRoutes, ...categoryRoutes],
+    },
+    {
+      element: <ProductDetailLayout />,
+      children: [...productDetailRoutes],
     },
     ...adminRoutes,
     ...authRoutes,

@@ -9,7 +9,7 @@ import TextField from "../../common/textfields/TextField";
 import { createCategory } from "../../../api/category.api";
 import { toast } from "react-toastify";
 import { useMutation } from "@tanstack/react-query";
-import CircleLoadingGrid from "../../common/loading/CircleLoadingGrid";
+import CircleLoadingGrid from "../../common/loaders/CircleLoadingGrid";
 
 const CategoryCreateForm = () => {
   const { mutate: createCategoryMutation, isPending } = useMutation({

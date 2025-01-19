@@ -3,7 +3,7 @@ import { useGetUserById } from "../../../hooks/user";
 import { useParams } from "react-router-dom";
 import Grid from "@mui/material/Grid2";
 import { Card, CardContent, Divider, Typography } from "@mui/material";
-import CircleLoadingGrid from "../../../components/common/loading/CircleLoadingGrid";
+import CircleLoadingGrid from "../../../components/common/loaders/CircleLoadingGrid";
 import ObjectNotFound from "../../../components/common/errors/object-not-found/ObjectNotFound";
 import AdminUserEditorForm from "../../../components/admin/users/AdminUserEditorForm";
 

@@ -7,7 +7,7 @@ import ShowPassword from "../../../auth/show-password/ShowPassword";
 import SubmitButton from "../../../common/buttons/submit-button/SubmitButton";
 import { changePasswordSchema } from "../../../../validation-schemas/auth.validation";
 import { changePassword } from "../../../../api/auth.api";
-import CircleLoadingGrid from "../../../common/loading/CircleLoadingGrid";
+import CircleLoadingGrid from "../../../common/loaders/CircleLoadingGrid";
 import { useMutation } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 
