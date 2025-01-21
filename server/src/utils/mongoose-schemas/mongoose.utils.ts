@@ -14,13 +14,11 @@ export const createAddressSchema = ({
       locality: {
         type: String,
         trim: true,
-        minlength: 10,
         maxlength: 100,
       },
       addressLine1: {
         type: String,
         trim: true,
-        minlength: 10,
         maxlength: 100,
       },
       addressLine2: {

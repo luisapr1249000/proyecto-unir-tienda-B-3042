@@ -84,9 +84,20 @@ class UserController {
         sort,
       };
 
-      const users = await User.paginate({}, options);
-      const { docs } = users;
-      if (docs.length === 0) return handleObjectNotFound(res, "User", true);
+      const { isSeller, searchQuery } = req.query;
+      const filterQuery: FilterQuery<UserType> = {};
+
+      if (isSeller) {
+        filterQuery.isSeller = true;
+      }
+
+      if (searchQuery) {
+        filterQuery.$text = { $search: String(searchQuery) };
+      }
+
+      const users = await User.paginate(filterQuery, options);
+      if (!users || users.docs.length === 0)
+        return handleObjectNotFound(res, "User", true);
 
       return res.status(200).json(users);
     } catch (e) {

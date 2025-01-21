@@ -6,23 +6,13 @@ import {
 } from "../utils/error.utils";
 import {
   categoryNameSchema,
-  paginationCoerceSchema,
   usernameParamSchema,
 } from "../validation-schemas/query.validation";
 import { Product } from "../models/product.model";
 import { objectIdValidator } from "../utils/zod.utils";
-import { userRoleSchema } from "../validation-schemas/user-schemas/user.validation";
 import { Order } from "../models/orders.model";
 import { extractAuthUserId } from "../utils/auth.utils";
 import Review from "../models/review.model";
-
-export const validRole = (req: Request, res: Response, next: NextFunction) => {
-  const { success, error } = userRoleSchema.safeParse(req.body);
-  if (!success) {
-    return handleBadRequest(res, error);
-  }
-  next();
-};
 
 export const validateSchemaBody = (schema: Zod.Schema) => {
   return (req: Request, res: Response, next: NextFunction) => {
@@ -48,17 +38,16 @@ export const validateObjectIdParams = (paramNames: string[]) => {
   };
 };
 
-export const validPagination = (
-  req: Request,
-  res: Response,
-  next: NextFunction,
-) => {
-  const paginationResult = paginationCoerceSchema.safeParse(req.query);
-  if (!paginationResult.success) {
-    return handleBadRequest(res, paginationResult.error);
-  }
-  next();
+export const validateObjectQueryParams = (schema: Zod.Schema) => {
+  return (req: Request, res: Response, next: NextFunction) => {
+    const { success, error } = schema.safeParse(req.query);
+    if (!success) {
+      return handleBadRequest(res, error);
+    }
+    next();
+  };
 };
+
 export const validUsername = (
   req: Request,
   res: Response,

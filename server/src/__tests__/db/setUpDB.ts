@@ -3,6 +3,8 @@ import { connect, disconnect } from "mongoose";
 import { createUserFixture } from "../../__fixture__/user.fixture";
 import { createCategoryFixture } from "../../__fixture__/category.fixture";
 import { createProductFixture } from "../../__fixture__/product.fixture";
+import { createReviewFixture } from "../../__fixture__/review.fixture";
+import { createReportFixture } from "../../__fixture__/report.fixture";
 import { env } from "../../config/envConfig";
 const DB = env.MONGO_URI_DEV as string;
 
@@ -41,6 +43,18 @@ const productSeeder = async () => {
   }
 };
 
+const reviewSeeder = async () => {
+  for (let index = 0; index < 100; index++) {
+    await createReviewFixture();
+  }
+};
+
+const reportSeeder = async () => {
+  for (let index = 0; index < 100; index++) {
+    await createReportFixture();
+  }
+};
+
 export const genSeeder = async ({
   multiple,
   users,
@@ -56,6 +70,8 @@ export const genSeeder = async ({
     await userSeeder();
     await categorySeeder();
     await productSeeder();
+    await reviewSeeder();
+    await reportSeeder();
   }
 
   if (users) {

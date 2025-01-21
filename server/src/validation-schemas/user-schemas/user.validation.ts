@@ -28,6 +28,7 @@ export const userInputSchema = z.object({
   lastName: lastNameField,
   bio: biographyField,
   mobilePhone: phoneNumberSchema().optional(),
+  birthday: z.date().optional(),
 });
 
 export const userRoleSchema = z.object({

@@ -4,9 +4,11 @@ import {
   reportUpdateSchema,
 } from "../validation-schemas/report.validation";
 import { reportSchema as modelReportSchema } from "../models/report.model";
-import { InferSchemaType } from "mongoose";
+import { InferSchemaType, PaginateModel } from "mongoose";
 
 export type ReportInput = z.infer<typeof reportInputSchema>;
 export type ReportUpdate = z.infer<typeof reportUpdateSchema>;
 
-export type ReportModel = InferSchemaType<typeof modelReportSchema>;
+export type ReportType = InferSchemaType<typeof modelReportSchema>;
+
+export type ReportModel = PaginateModel<ReportType>;

@@ -18,7 +18,7 @@ const connectAndStartServer = async () => {
     app.listen(PORT, () => {
       console.log(`Server is running on http://localhost:${PORT}`);
     });
-    // await genSeeder({ products: true });
+    // await genSeeder({ multiple: true });
     // await createAdmin();
   } catch (e) {
     console.error("Database connection error:", e);

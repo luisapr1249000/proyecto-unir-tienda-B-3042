@@ -142,7 +142,6 @@ class UserProductActions {
         (item) => item.product?.toString() === productId,
       );
 
-      console.log(product);
       if (productIndex === -1 && productQuantity > 0) {
         const subtotal = toTwoDecimals(product.finalPrice * productQuantity);
 

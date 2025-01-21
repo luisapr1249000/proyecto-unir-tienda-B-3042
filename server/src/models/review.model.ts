@@ -5,7 +5,11 @@ import { ReviewModel } from "../types/review";
 
 export const reviewSchema = new Schema(
   {
-    title: { type: String, required: [true, "Title is required"], trim: true },
+    title: {
+      type: String,
+      required: [true, "Title is required"],
+      trim: true,
+    },
     content: {
       type: String,
       required: [true, "Content is required"],
@@ -32,7 +36,7 @@ export const reviewSchema = new Schema(
   { timestamps: true },
 );
 reviewSchema.plugin(mongoosePaginate);
-
+reviewSchema.index({ title: "text", content: "text" });
 const Review = model<ReviewModel, PaginateModel<ReviewModel>>(
   "Review",
   reviewSchema,

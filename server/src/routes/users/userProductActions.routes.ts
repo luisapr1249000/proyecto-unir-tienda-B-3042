@@ -41,6 +41,7 @@ router.get(
   isUserOwnerOrAdmin,
   userProductActionController.getUserWishlist,
 );
+
 router.post(
   "/users/:userId/wishlist/:productId",
   authMiddleware,

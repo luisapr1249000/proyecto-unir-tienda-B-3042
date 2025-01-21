@@ -8,6 +8,7 @@ export const getTotalReviewCount = async () =>
   await Review.countDocuments().exec();
 
 export const generateReviewInputFixture = () => ({
+  title: faker.lorem.paragraph(),
   content: faker.lorem.paragraph(),
   review: faker.number.int({ min: 1, max: 5 }),
   images: createImageArray(),

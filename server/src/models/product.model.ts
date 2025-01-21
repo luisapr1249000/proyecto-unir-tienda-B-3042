@@ -5,7 +5,7 @@ import { ProductModel, ProductType } from "../types/product";
 
 const userQuestionSchema = new Schema(
   {
-    user: { type: Schema.Types.ObjectId, ref: "User", required: true },
+    user: { type: Schema.Types.ObjectId, ref: "User" },
     content: {
       type: String,
       required: true,

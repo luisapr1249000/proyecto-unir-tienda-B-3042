@@ -161,5 +161,5 @@ userSchema.methods.toJSON = function () {
 };
 
 userSchema.plugin(mongoosePaginate);
-
+userSchema.index({ username: "text", email: "text" });
 export const User = model<UserType, UserModel>("User", userSchema);

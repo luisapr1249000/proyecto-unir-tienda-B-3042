@@ -40,7 +40,7 @@ class ProductQuestionsController {
       const productQuestion = product.productQuestions.id(productQuestionId);
       if (!productQuestion) return handleObjectNotFound(res, "Product");
 
-      if (productQuestion.user.toString() !== userAuth)
+      if (productQuestion.user && productQuestion.user.toString() !== userAuth)
         return handleObjectNotFound(res, "Product");
 
       productQuestion.content = content;

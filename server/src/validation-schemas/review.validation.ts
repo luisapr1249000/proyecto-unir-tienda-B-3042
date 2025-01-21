@@ -20,7 +20,7 @@ const reviewTitleField = createValidStringField({
 });
 
 export const reviewInputSchema = z.object({
-  reviewTitle: reviewTitleField,
+  title: reviewTitleField,
   content: reviewContentField,
   rating: ratingField,
 });

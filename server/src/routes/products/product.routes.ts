@@ -7,6 +7,7 @@ import {
 import {
   isSellerOrAdmin,
   validateObjectIdParams,
+  validateObjectQueryParams,
   validateSchemaBody,
 } from "../../middlewares/requestValidation.middleware";
 import { productInputSchema } from "../../validation-schemas/product-schemas/product.validation";
@@ -18,7 +19,7 @@ const router = Router();
 
 router.get(
   "/products",
-  validateSchemaBody(productPaginationAndSortSchema),
+  validateObjectQueryParams(productPaginationAndSortSchema),
   productController.getProductsWithPagination,
 );
 

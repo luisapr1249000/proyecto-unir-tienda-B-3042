@@ -3,31 +3,30 @@ import categoryController from "../controllers/category.controller";
 import { authMiddleware, isAdmin } from "../middlewares/auth.middleware";
 import {
   validateObjectIdParams,
+  validateObjectQueryParams,
   validateSchemaBody,
   validCategoryName,
-  validPagination,
 } from "../middlewares/requestValidation.middleware";
 import { categoryInputSchema } from "../validation-schemas/category.validation";
 import { CATEGORY_ID } from "../constants";
+import { paginationCoerceSchema } from "../validation-schemas/query.validation";
 
 const router = Router();
 
 router.get(
   "/categories",
-  validPagination,
+  validateObjectQueryParams(paginationCoerceSchema),
   categoryController.getCategoriesWithPagination,
 );
 
 router.get(
   "/categories/:categoryId",
   validateObjectIdParams(CATEGORY_ID),
-  validPagination,
   categoryController.getCategoryById,
 );
 
 router.get(
   "/categories/name/:categoryName",
-  validPagination,
   validCategoryName,
   categoryController.getCategoryByName,
 );

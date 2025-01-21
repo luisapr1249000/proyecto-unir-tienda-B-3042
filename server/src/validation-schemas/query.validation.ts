@@ -54,6 +54,11 @@ const searchQueryField = createValidStringField({
   maxLength: 50,
 });
 
+export const userPaginationAndSort = paginationCoerceSchema.extend({
+  searchQuery: searchQueryField.optional(),
+  isSeller: z.coerce.boolean().optional(),
+});
+
 export const productPaginationAndSortSchema = paginationCoerceSchema
   .extend({
     categoryId: objectIdValidator().optional(),
@@ -73,3 +78,16 @@ export const productPaginationAndSortSchema = paginationCoerceSchema
       path: ["minPrice"],
     },
   );
+
+export const reviewPaginationAndSortSchema = paginationCoerceSchema.extend({
+  searchQuery: searchQueryField.optional(),
+});
+
+export const reportPaginationAndSortSchema = paginationCoerceSchema.extend({
+  reportedItem: objectIdValidator().optional(),
+  reporter: objectIdValidator().optional(),
+  itemType: z.enum(["Product", "Review", "User", "Category"]).optional(),
+  reason: z
+    .enum(["Spam", "Inappropriate Content", "Misleading Information"])
+    .optional(),
+});

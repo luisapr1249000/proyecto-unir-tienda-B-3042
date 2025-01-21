@@ -6,9 +6,7 @@ import {
   handleObjectNotFound,
 } from "../utils/error.utils";
 import { Category } from "../models/category.model";
-import { FilterQuery } from "mongoose";
 import { getDefaultPaginationOptions } from "../utils/utils";
-import { CategoryModel } from "../types/category";
 
 class CategoryController {
   public async createCategory(req: Request, res: Response) {
@@ -101,13 +99,9 @@ class CategoryController {
         sort,
         populate: "author",
       };
-      const filterQuery: FilterQuery<CategoryModel> = {};
-      if (req.query.searchQuery) {
-        filterQuery.$text = { $search: String(req.query.searchQuery) };
-      }
-      const categories = await Category.paginate(filterQuery, options);
-      const { docs } = categories;
-      if (docs.length <= 0) return handleObjectNotFound(res, "Categories");
+      const categories = await Category.paginate({}, options);
+      if (!categories || categories.docs.length === 0)
+        return handleObjectNotFound(res, "Categories");
 
       return res.status(200).json(categories);
     } catch (e) {

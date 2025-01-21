@@ -10,6 +10,9 @@ import Review from "../models/review.model";
 import { Image } from "../types/image";
 import { getAverageReview } from "../utils/product.utils";
 import { Order } from "../models/orders.model";
+import { getDefaultPaginationOptions } from "../utils/utils";
+import { FilterQuery } from "mongoose";
+import { ReviewModel } from "../types/review";
 
 class ReviewController {
   public async createReview(req: Request, res: Response) {
@@ -114,18 +117,30 @@ class ReviewController {
     }
   }
 
-  public async getAllReviews(req: Request, res: Response) {
+  public async getReviews(req: Request, res: Response) {
     try {
-      const options = {
+      const { limit, page, sort } = {
+        ...getDefaultPaginationOptions(),
         ...req.query,
+      };
+
+      const options = {
+        limit,
+        page,
+        sort,
         populate: ["author", "product"],
       };
 
-      const query = {};
+      const { searchQuery } = req.query;
 
-      const reviews = await Review.paginate(query, options);
-      const { docs } = reviews;
-      if (docs.length === 0 || !docs)
+      const filterQuery: FilterQuery<ReviewModel> = {};
+
+      if (searchQuery) {
+        filterQuery.$text = { $search: String(searchQuery) };
+      }
+
+      const reviews = await Review.paginate(filterQuery, options);
+      if (!reviews || reviews.docs.length === 0)
         return handleObjectNotFound(res, "Review", true);
 
       return res.status(200).json(reviews);

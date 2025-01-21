@@ -44,7 +44,6 @@ class ProductController {
       if (!req.files || req.files.length === 0) {
         return handleObjectNotFound(res, "File");
       }
-      console.log(req.files);
       const images: Image[] = [];
       for (const file of req.files as Express.Multer.File[]) {
         const fileName = file.location.split("/").pop() as string;
@@ -56,7 +55,6 @@ class ProductController {
         };
         images.push(image);
       }
-      console.log("should be here");
       const product = await Product.findByIdAndUpdate(
         productId,
         {
@@ -64,11 +62,8 @@ class ProductController {
         },
         { new: true },
       );
-      console.log("should be here too");
       if (!product) return handleObjectNotFound(res, "Product", true);
 
-      console.log("should be here three");
-      console.log(product);
       return res.status(200).json(product);
     } catch (e) {
       return handleError(res, e);
@@ -143,7 +138,13 @@ class ProductController {
         ...req.query,
       };
 
-      const { minPrice = "0", maxPrice = "Infinity" } = req.query;
+      const {
+        minPrice = "0",
+        maxPrice = "Infinity",
+        searchQuery,
+        authorId,
+        categoryId,
+      } = req.query;
 
       const options = {
         limit,
@@ -157,17 +158,10 @@ class ProductController {
           $gte: Number(minPrice),
           $lte: Number(maxPrice),
         },
+        ...(searchQuery && { $text: { $search: String(searchQuery) } }),
+        ...(authorId && { author: authorId }),
+        ...(categoryId && { categories: categoryId }),
       };
-      if (req.query.searchQuery) {
-        filterQuery.$text = { $search: String(req.query.searchQuery) };
-      }
-      if (req.query.authorId) {
-        filterQuery.author = req.query.authorId;
-      }
-
-      if (req.query.categoryId) {
-        filterQuery.categories = req.query.categoryId;
-      }
 
       const products = await Product.paginate(filterQuery, options);
       if (!products || products.docs.length === 0)

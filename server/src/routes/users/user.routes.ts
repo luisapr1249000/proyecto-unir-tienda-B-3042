@@ -7,17 +7,24 @@ import {
 } from "../../middlewares/auth.middleware";
 import {
   validateObjectIdParams,
+  validateObjectQueryParams,
   validateSchemaBody,
-  validPagination,
-  validRole,
   validUsername,
 } from "../../middlewares/requestValidation.middleware";
-import { userInputSchema } from "../../validation-schemas/user-schemas/user.validation";
+import {
+  userInputSchema,
+  userRoleSchema,
+} from "../../validation-schemas/user-schemas/user.validation";
 import { USER_ID } from "../../constants";
+import { userPaginationAndSort } from "../../validation-schemas/query.validation";
 
 const router = Router();
 
-router.get("/users/", validPagination, userController.getUsersWithPagination);
+router.get(
+  "/users/",
+  validateObjectQueryParams(userPaginationAndSort),
+  userController.getUsersWithPagination,
+);
 router.put(
   "/users/:userId",
   authMiddleware,
@@ -40,10 +47,10 @@ router.get(
 
 router.put(
   "/users/:userId/role",
-  validateObjectIdParams(USER_ID),
   authMiddleware,
   isAdmin,
-  validRole,
+  validateObjectIdParams(USER_ID),
+  validateSchemaBody(userRoleSchema),
   userController.changeUserRole,
 );
 

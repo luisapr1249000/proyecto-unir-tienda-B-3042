@@ -1,6 +1,6 @@
-import { model, Schema, PaginateModel } from "mongoose";
+import { model, Schema } from "mongoose";
 import mongoosePaginate from "mongoose-paginate-v2";
-import { ReportModel } from "../types/report";
+import { ReportModel, ReportType } from "../types/report";
 
 export const reportSchema = new Schema(
   {
@@ -28,6 +28,7 @@ export const reportSchema = new Schema(
         "Other",
       ],
       required: true,
+      index: "text",
     },
     problemDescription: { type: String, trim: true },
     resolved: { type: Boolean, default: false },
@@ -42,8 +43,5 @@ reportSchema.index(
 );
 
 reportSchema.plugin(mongoosePaginate);
-const Report = model<ReportModel, PaginateModel<ReportModel>>(
-  "Report",
-  reportSchema,
-);
+const Report = model<ReportType, ReportModel>("Report", reportSchema);
 export default Report;

@@ -6,8 +6,8 @@ import { startSession } from "mongoose";
 import { Product } from "../models/product.model";
 import { OrderItemInput } from "../types/orderItem";
 import { User } from "../models/user.model";
-import { roundToTwoDecimals, canUpdateOrder } from "../utils/order.utils";
-import { getDefaultPaginationOptions } from "../utils/utils";
+import { canUpdateOrder } from "../utils/order.utils";
+import { getDefaultPaginationOptions, toTwoDecimals } from "../utils/utils";
 
 class OrderController {
   public async createOrder(req: Request, res: Response) {
@@ -46,7 +46,7 @@ class OrderController {
           });
         }
 
-        const subtotal = roundToTwoDecimals(product.finalPrice * item.quantity);
+        const subtotal = toTwoDecimals(product.finalPrice * item.quantity);
         const orderItem = {
           price: product.finalPrice,
           product: product._id,
@@ -61,7 +61,7 @@ class OrderController {
 
         items.push(orderItem);
         const productIndex = user?.cart.items.findIndex(
-          (item) => item.product.toString() === product._id.toString(),
+          (item) => item.product?.toString() === product._id.toString(),
         );
         if (productIndex === 1) {
           user?.cart.items.splice(productIndex, 1);
@@ -70,7 +70,7 @@ class OrderController {
         await user.save({ session });
       }
 
-      const totalPrice = roundToTwoDecimals(calculatedTotalPrice);
+      const totalPrice = toTwoDecimals(calculatedTotalPrice);
       const order = new Order({
         customer: authUserId,
         totalPrice,
