@@ -1,43 +1,45 @@
-import { useQuery } from "@tanstack/react-query";
+import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import {
   getUserById,
   getUserByUsername,
   getUsersWithPagination,
 } from "../api/users/user.api";
 import { UserId } from "../types/user";
-import { PaginatedQueryOptions, QueryKey } from "../types/paginationResult";
-import { mergePaginationOptions } from "../utils/api.utils";
+import { QueryKey } from "../types/paginationResult";
 import { getUserAddressById, getUserAddresses } from "../api/users/address.api";
 import {
   getUserCart,
   getUserWishlist,
 } from "../api/users/userProductActions.api";
+import { PaginatedQueryOptions } from "../types/query";
 
-export const useGetUsersWithPagination = (
-  options: PaginatedQueryOptions = {}
-) => {
-  const { limit, page, sort, queryKey } = {
-    ...options,
-    ...mergePaginationOptions(options),
-  };
-  return useQuery({
-    queryKey: queryKey ?? ["users", page, sort, limit],
-    queryFn: () => getUsersWithPagination({ limit, page, sort }),
+export const useGetUsersWithPagination_ = ({
+  page,
+  limit,
+  sort,
+  queryKey,
+  isKeepPreviousData = false,
+  enabled = true,
+}: PaginatedQueryOptions) =>
+  useQuery({
+    queryKey: queryKey ?? ["users", { page, limit, sort }],
+    queryFn: () => getUsersWithPagination({ page, limit, sort }),
+    retry: false,
     refetchOnWindowFocus: false,
+    placeholderData: isKeepPreviousData ? keepPreviousData : undefined,
+    enabled: enabled,
   });
-};
 
-export const useGetUserByUsername = (
-  options: { username: string } & QueryKey
-) => {
-  const { username, queryKey } = options;
-  return useQuery({
+export const useGetUserByUsername = ({
+  username,
+  queryKey,
+}: { username: string } & QueryKey) =>
+  useQuery({
     queryKey: queryKey ?? [`user-username-${username}`],
     queryFn: () => getUserByUsername(username),
     retry: false,
     refetchOnWindowFocus: false,
   });
-};
 
 export const useGetUserById = (
   options: UserId & QueryKey & { enabled: boolean }
@@ -98,39 +100,3 @@ export const useGetUserWishlist = ({
     refetchOnWindowFocus: false,
     enabled: enabled,
   });
-
-// export const useGetUser = ({
-//   queryKey,
-//   isUsername = false,
-//   query,
-// }: {
-//   queryKey: string[];
-//   query: string;
-//   isUsername?: boolean;
-// }) => {
-//   return useQuery({
-//     queryKey: queryKey,
-//     queryFn: () => (isUsername ? getUserByUsername(query) : getUserById(query)),
-//   });
-// };
-
-// export const useGetUserCart = ({ userId }: UserId) =>
-//   useQuery({
-//     queryKey: [`user-cart`, userId],
-//     queryFn: () => getUserCart({ userId }),
-//     refetchOnWindowFocus: false,
-//   });
-
-// export const useGetUserWishlist = ({ userId }: UserId) =>
-//   useQuery({
-//     queryKey: [`user-${userId}-wishlist`],
-//     queryFn: () => getUserWishlist({ userId }),
-//     refetchOnWindowFocus: false,
-//   });
-
-// export const useGetUserSavedProducts = ({ userId }: UserId) =>
-//   useQuery({
-//     queryKey: [`user-${userId}-saved-products`],
-//     queryFn: () => getUserSavedProducts({ userId }),
-//     refetchOnWindowFocus: false,
-//   });

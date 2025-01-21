@@ -6,7 +6,7 @@ import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
 import Chip from "@mui/material/Chip";
-import { useGetCategoriesWithPagination } from "../../../hooks/categories.hooks";
+import { useGetCategoriesWithPagination_ } from "../../../hooks/categories.hooks";
 import GridLoadingSkeleton from "../../common/load-spinner/GridLoadingSkeleton";
 
 const ITEM_HEIGHT = 48;
@@ -25,7 +25,7 @@ const ProductCategoriesForm = ({
 }: {
   setCategories: (id: string[]) => void;
 }) => {
-  const { data: categories, isLoading } = useGetCategoriesWithPagination({
+  const { data: categories, isLoading } = useGetCategoriesWithPagination_({
     limit: 50,
   });
 

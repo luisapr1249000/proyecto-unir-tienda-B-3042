@@ -1,9 +1,5 @@
 import { z } from "zod";
-import {
-  abstractSchema,
-  createMongooseObjectId,
-  createValidStringField,
-} from "../utils/zod.utils";
+import { createValidStringField } from "../utils/zod.utils";
 
 const problemDescriptionField = createValidStringField({
   fieldName: "Problem Description",
@@ -27,14 +23,3 @@ export const reportInputSchema = z.object({
 });
 
 export const reportResolutionSchema = z.object({ resolution: resolutionField });
-
-export const reportProps = z.object({
-  reporter: createMongooseObjectId(),
-  resolution: resolutionField.optional(),
-  reportedItem: createMongooseObjectId(),
-  resolved: z.boolean(),
-});
-
-export const reportSchema = abstractSchema()
-  .merge(reportInputSchema)
-  .merge(reportProps);

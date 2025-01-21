@@ -1,4 +1,3 @@
-import React, { useEffect } from "react";
 import {
   BaseLayOut,
   ToggleableSideMenu,
@@ -8,32 +7,41 @@ import { List, ListItem, ListItemText } from "@mui/material";
 import { PriceSliderContainer } from "../common/sliders/PriceSlider";
 import {
   useGetProductsByCategoryWithPagination,
-  useGetProductsWithPagination,
+  useGetProductsWithPagination_,
 } from "../../hooks/products.hooks";
 import { useLocation } from "react-router-dom";
+import { useState } from "react";
+import { useGetCategoryByName } from "../../hooks/categories.hooks";
 
 const ProductLayout = () => {
   const { pathname } = useLocation();
-  const isCategory = pathname.includes("products/categories");
-  const [isOpenSideMenu, setIsOpenSideMenu] = React.useState(true);
-  const [isOpenDrawer, setIsOpenDrawer] = React.useState(false);
+  const isCategory = pathname.includes("/products/categories/");
+  const [isOpenSideMenu, setIsOpenSideMenu] = useState(true);
+  const [isOpenDrawer, setIsOpenDrawer] = useState(false);
 
   const handleOpenSideMenu = () => setIsOpenSideMenu((prev) => !prev);
   const handleOpenDrawer = () => setIsOpenDrawer((prev) => !prev);
 
+  const { data: category } = useGetCategoryByName({
+    categoryName: pathname.split("/").pop() ?? "",
+  });
+
   const { data: products } = isCategory
     ? useGetProductsByCategoryWithPagination({
-        categoryId: pathname.split("/").pop() ?? "",
+        categoryId: category?._id ?? "",
         limit: 10,
         sort: "-price",
+        enabled: !!category,
       })
-    : useGetProductsWithPagination({
+    : useGetProductsWithPagination_({
         limit: 10,
-        sort: "-price",
+        sort: "-finalPrice",
       });
-  console.log("products", products);
-  console.log("top", products?.docs[0].price);
 
+  console.log("isCategory", isCategory);
+  console.log("pathname", pathname);
+  console.log("products", products);
+  console.log("top", products?.docs[0].finalPrice);
   return (
     <>
       <Header handleOpenDrawer={handleOpenDrawer} />
@@ -49,7 +57,7 @@ const ProductLayout = () => {
               <ListItemText primary="Price" />
               <PriceSliderContainer
                 link={pathname}
-                max={products?.docs[0].price ?? 500}
+                max={products?.docs[0].finalPrice ?? 500}
                 min={0}
                 marks={[
                   {
@@ -57,8 +65,8 @@ const ProductLayout = () => {
                     label: "0$",
                   },
                   {
-                    value: products?.docs[0].price ?? 500,
-                    label: products?.docs[0].price ?? 500,
+                    value: products?.docs[0].finalPrice ?? 500,
+                    label: products?.docs[0].finalPrice ?? 500,
                   },
                 ]}
               />

@@ -37,10 +37,6 @@ export const createAddressSchema = ({
         type: String,
         required: true,
       },
-      alternatePhone: {
-        type: String,
-        trim: true,
-      },
       landmark: {
         type: String,
         trim: true,
@@ -50,7 +46,7 @@ export const createAddressSchema = ({
         required: true,
         enum: ["home", "work"],
       },
-      mobileNumber: String,
+      mobilePhone: String,
     },
     { timestamps: withTimestamps, _id: withId },
   );

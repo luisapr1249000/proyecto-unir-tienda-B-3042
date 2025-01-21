@@ -1,6 +1,6 @@
 import { PaginateModel, Schema, model } from "mongoose";
 import mongoosePaginate from "mongoose-paginate-v2";
-import { OrderDocument } from "../types/order";
+import { OrderModel } from "../types/order";
 import { createAddressSchema } from "../utils/mongoose-schemas/mongoose.utils";
 
 const orderItemSchema = new Schema(
@@ -33,7 +33,7 @@ const orderItemSchema = new Schema(
   { timestamps: true },
 );
 
-const orderSchema = new Schema(
+export const orderSchema = new Schema(
   {
     customer: {
       type: Schema.Types.ObjectId,
@@ -50,7 +50,7 @@ const orderSchema = new Schema(
   { timestamps: true },
 );
 orderSchema.plugin(mongoosePaginate);
-export const Order = model<OrderDocument, PaginateModel<OrderDocument>>(
+export const Order = model<OrderModel, PaginateModel<OrderModel>>(
   "Order",
   orderSchema,
 );

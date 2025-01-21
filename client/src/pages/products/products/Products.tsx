@@ -1,5 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { useGetProductsWithPagination } from "../../../hooks/products.hooks";
+import {
+  // useGetProductsWithPagination,
+  useGetProductsWithPagination_,
+} from "../../../hooks/products.hooks";
 import Grid from "@mui/material/Grid2";
 import ProductCard from "../../../components/products_/card/ProductCard";
 import ObjectNotFound from "../../../components/common/errors/object-not-found/ObjectNotFound";
@@ -35,7 +38,7 @@ const Products = () => {
     error,
     refetch,
     isFetching,
-  } = useGetProductsWithPagination({
+  } = useGetProductsWithPagination_({
     isKeepPreviousData: true,
     page,
     limit,

@@ -16,6 +16,12 @@ export type PaginationOptions = {
   sort?: string;
 };
 
+export type ReactQueryOptions = {
+  enabled?: boolean;
+  queryKey?: (string | boolean | number)[];
+  isKeepPreviousData?: boolean;
+};
+
 export type PaginatedQueryOptions = PaginationOptions &
   QueryKey & {
     isKeepPreviousData?: boolean;
@@ -28,10 +34,7 @@ export type PaginationOptionsCategoryName = PaginationConfig & {
 
 export type PaginationOptionsUserId = PaginationConfig & UserId;
 export type PaginationOptionsProductId = PaginationConfig & ProductId;
-export type PaginationOptionsReviewId = PaginationConfig & ReviewId;
-export type PaginationOptionsProductIdAndReviewId = PaginationConfig &
-  ReviewId &
-  ProductId;
+
 export type PaginationResult = {
   hasNextPage: boolean;
   hasPrevPage: boolean;
@@ -66,22 +69,6 @@ export type PaginationResultReports = PaginationResult & {
 };
 
 export type QueryKey = { queryKey?: (string | boolean | number)[] };
-export type PaginationOptionAndQueryKey = PaginationConfig & QueryKey;
-export type PaginationOptionUserIdAndQueryKey = PaginationOptionAndQueryKey &
-  UserId;
-
-export type EnabledQuery = { enabled: boolean };
-export type PaginationOptionCategoryIdAndQueryKey =
-  PaginationOptionAndQueryKey & CategoryId & EnabledQuery;
-
-export type PaginationOptionCategoryNameAndQueryKey =
-  PaginationOptionAndQueryKey & { categoryName: string };
-
-export type PaginationOptionProductIddAndQueryKey =
-  PaginationOptionAndQueryKey & ProductId;
-
-export type PaginationOptionReviewIdAndQueryKey = PaginationOptionAndQueryKey &
-  ReviewId;
 
 export type PaginationModel = {
   pageSize: number;
@@ -89,7 +76,7 @@ export type PaginationModel = {
 };
 
 export type SearchProductsOptions = {
-  query: string;
-  minPrice: number;
-  maxPrice: number;
+  query?: string;
+  minPrice?: number;
+  maxPrice?: number;
 };

@@ -11,10 +11,7 @@ import { categoryInputSchema } from "../validation-schemas/category.validation";
 import { CATEGORY_ID } from "../constants";
 
 const router = Router();
-router.get(
-  "/categories/search-categories",
-  categoryController.searchCategories,
-);
+
 router.get(
   "/categories",
   validPagination,

@@ -18,14 +18,6 @@ export const objectIdValidator = (fieldName = "_id") =>
     })
     .transform((value) => new Types.ObjectId(value));
 
-export const createMongooseObjectId = () => z.instanceof(Types.ObjectId);
-export const abstractSchema = () =>
-  z.object({
-    _id: createMongooseObjectId(),
-    createdAt: z.date(),
-    updatedAt: z.date(),
-  });
-
 export const createBasicString = () => z.string().trim();
 
 export const createBasicNumber = () =>
@@ -121,14 +113,6 @@ export const confirmPasswordSchema = () =>
       message: "Passwords do not match",
       path: ["Confirm"],
     });
-
-export const authorSchema = () =>
-  z.object({ author: createMongooseObjectId() });
-
-export const productObjIdSchema = () =>
-  z.object({
-    product: createMongooseObjectId(),
-  });
 
 export const createNoWhitespaceString = (field: string, maxLength = 35) =>
   createValidStringField({ fieldName: field, maxLength: maxLength }).regex(

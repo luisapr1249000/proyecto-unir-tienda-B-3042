@@ -1,12 +1,7 @@
 import { z } from "zod";
-import { imageSchema } from "./image.schema";
 import {
-  abstractSchema,
-  authorSchema,
   createPositiveIntegerField,
   createValidStringField,
-  is_modifiedField,
-  productObjIdSchema,
 } from "../utils/zod.utils";
 
 const reviewContentField = createValidStringField({
@@ -14,23 +9,18 @@ const reviewContentField = createValidStringField({
   maxLength: 200,
 });
 
-const reviewField = createPositiveIntegerField({
+const ratingField = createPositiveIntegerField({
   fieldName: "review",
   maxValue: 5,
 });
 
+const reviewTitleField = createValidStringField({
+  fieldName: "title",
+  maxLength: 100,
+});
+
 export const reviewInputSchema = z.object({
+  reviewTitle: reviewTitleField,
   content: reviewContentField,
-  review: reviewField,
+  rating: ratingField,
 });
-
-export const reviewOtherPropsSchema = z.object({
-  images: z.array(imageSchema),
-});
-
-export const reviewSchema = abstractSchema()
-  .merge(reviewInputSchema)
-  .merge(reviewOtherPropsSchema)
-  .merge(authorSchema())
-  .merge(is_modifiedField())
-  .merge(productObjIdSchema());

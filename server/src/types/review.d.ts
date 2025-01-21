@@ -1,6 +1,8 @@
-import { Document } from "mongoose";
-import { reviewSchema } from "../validation-schemas/review.validation";
+import { InferSchemaType } from "mongoose";
+import { reviewSchema as modelReviewSchema } from "../models/review.model";
 import { z } from "zod";
+import { reviewInputSchema } from "../validation-schemas/review.validation";
 
-export type Review = z.infer<typeof reviewSchema>;
-export type ReviewDocument = Document & Review;
+export type ReviewInput = z.infer<typeof reviewInputSchema>;
+
+export type ReviewModel = InferSchemaType<typeof modelReviewSchema>;

@@ -3,6 +3,7 @@ import {
   createPositiveIntegerField,
   createPositiveNumberField,
   createValidStringField,
+  objectIdValidator,
 } from "../utils/zod.utils";
 
 const usernameField = createValidStringField({
@@ -28,26 +29,38 @@ export const sortSchema = createValidStringField({
   maxLength: 30,
 });
 
-const pageField = createPositiveIntegerField({ fieldName: "page" });
+const pageField = createPositiveIntegerField({
+  fieldName: "page",
+  minValue: 0,
+});
 const limitField = createPositiveIntegerField({
   fieldName: "limit",
-  minValue: 10,
+  minValue: 5,
 });
 
 export const paginationCoerceSchema = z.object({
-  page: pageField,
-  limit: limitField,
-  sort: sortSchema,
+  page: pageField.optional(),
+  limit: limitField.optional(),
+  sort: sortSchema.optional(),
 });
 
 const minPriceField = createPositiveNumberField({
   fieldName: "minPrice",
   multipleOf: 0.01,
 });
-export const productPriceSortSchema = z
-  .object({
+
+const searchQueryField = createValidStringField({
+  fieldName: "searchQuery",
+  maxLength: 50,
+});
+
+export const productPaginationAndSortSchema = paginationCoerceSchema
+  .extend({
+    categoryId: objectIdValidator().optional(),
+    authorId: objectIdValidator().optional(),
     minPrice: minPriceField.optional(),
     maxPrice: z.coerce.number().nonnegative().optional(),
+    searchQuery: searchQueryField.optional(),
   })
   .refine(
     (data) => {

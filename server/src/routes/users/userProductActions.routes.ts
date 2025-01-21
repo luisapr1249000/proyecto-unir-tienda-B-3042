@@ -6,9 +6,11 @@ import {
 import {
   validateObjectIdParams,
   checkProductExists,
+  validateSchemaBody,
 } from "../../middlewares/requestValidation.middleware";
 import userProductActionController from "../../controllers/users/userProductAction.controller";
 import { USER_ID, USER_ID_AND_PRODUCT_ID } from "../../constants";
+import { cartItemSchema } from "../../validation-schemas/user-schemas/user.validation";
 
 const router = Router();
 // -------------------------------- cart ------------------
@@ -26,6 +28,7 @@ router.post(
   validateObjectIdParams(USER_ID_AND_PRODUCT_ID),
   isUserOwnerOrAdmin,
   checkProductExists,
+  validateSchemaBody(cartItemSchema),
   userProductActionController.toggleProductCart,
 );
 

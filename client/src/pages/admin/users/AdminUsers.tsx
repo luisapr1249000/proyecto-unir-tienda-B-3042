@@ -3,7 +3,7 @@ import Grid from "@mui/material/Grid2";
 import { gridContainerCenter } from "../../../assets/css/mui-css-objects/gridCenter";
 import AdminUserTable from "../../../components/users_/admin/user-table/AdminUserTable";
 import CircleLoadingGrid from "../../../components/common/loaders/CircleLoadingGrid";
-import { useGetUsersWithPagination } from "../../../hooks/user";
+import { useGetUsersWithPagination_ } from "../../../hooks/user";
 import ObjectNotFound from "../../../components/common/errors/object-not-found/ObjectNotFound";
 
 const AdminUsers = () => {
@@ -21,7 +21,7 @@ const AdminUsers = () => {
     isPending,
     isFetching,
     isPlaceholderData,
-  } = useGetUsersWithPagination({
+  } = useGetUsersWithPagination_({
     limit: paginationModel.pageSize,
     page: paginationModel.page,
   });

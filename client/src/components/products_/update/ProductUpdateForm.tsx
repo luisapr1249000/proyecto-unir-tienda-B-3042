@@ -7,13 +7,12 @@ import TextField from "../../common/textfields/TextField";
 import SubmitButton from "../../common/buttons/submit-button/SubmitButton";
 import { Divider, MenuItem, Typography } from "@mui/material";
 import { ProductProp } from "../../../types/product";
-import ProductUpdateCategoryForm from "./ProductUpdateCategoryForm";
-import { useGetCategoriesWithPagination } from "../../../hooks/categories.hooks";
+// import { useGetCategoriesWithPagination } from "../../../hooks/categories.hooks";
 import ProductCategoriesForm from "../create/ProductCategoriesForm";
 import ProductUpdateAttachedImages from "./ProductUpdateAttachedImages";
 
 const ProductUpdateForm = ({ product }: ProductProp) => {
-  const { data: categories } = useGetCategoriesWithPagination({ limit: 50 });
+  // const { data: categories } = useGetCategoriesWithPagination({ limit: 50 });
   const initialValues = {
     name: product.name,
     description: product.description,
@@ -50,7 +49,7 @@ const ProductUpdateForm = ({ product }: ProductProp) => {
     { label: "No", value: false },
   ];
 
-  if (!categories) return <></>;
+  // if (!categories) return <></>;
   return (
     <Grid container spacing={3} component="form" onSubmit={formik.handleSubmit}>
       <ProductCategoriesForm setCategories={handleCategoryChange} />

@@ -17,7 +17,7 @@ import { USER_ID } from "../../constants";
 
 const router = Router();
 
-router.get("/users/", userController.getUsersWithPagination);
+router.get("/users/", validPagination, userController.getUsersWithPagination);
 router.put(
   "/users/:userId",
   authMiddleware,

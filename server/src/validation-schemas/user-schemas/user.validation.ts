@@ -1,75 +1,44 @@
 import { z } from "zod";
-import { imageSchema } from "../image.schema";
 import {
-  abstractSchema,
   createEmailField,
-  createMongooseObjectId,
   createNoWhitespaceString,
   createPositiveIntegerField,
-  createPositiveNumberField,
   createValidStringField,
   phoneNumberSchema,
 } from "../../utils/zod.utils";
 
 const firstNameField = createValidStringField({
   fieldName: "First Name",
+  maxLength: 40,
 }).optional();
 const lastNameField = createValidStringField({
   fieldName: "Last Name",
+  maxLength: 40,
 }).optional();
 
 const biographyField = createValidStringField({
   fieldName: "bio",
-  maxLength: 500,
+  maxLength: 200,
 }).optional();
 
 export const userInputSchema = z.object({
-  username: createNoWhitespaceString("Username", 25),
+  username: createNoWhitespaceString("Username", 30),
   email: createEmailField(),
   firstName: firstNameField,
   lastName: lastNameField,
   bio: biographyField,
-  phoneNumber: phoneNumberSchema().optional(),
+  mobilePhone: phoneNumberSchema().optional(),
 });
 
-const subtotalField = createPositiveNumberField({
-  fieldName: "subtotal",
-  multipleOf: 0.01,
+export const userRoleSchema = z.object({
+  role: z.enum(["user", "admin"]),
 });
 
-const priceField = createPositiveNumberField({
-  fieldName: "price",
-  multipleOf: 0.01,
+const quantityField = createPositiveIntegerField({
+  fieldName: "Quantity",
+  minValue: 1,
 });
 
-export const cartItem = z.object({
-  product: createMongooseObjectId(),
-  seller: createMongooseObjectId(),
-  quantity: createPositiveIntegerField({ fieldName: "quantity" })
-    .min(1, { message: "Quantity cannot be less than 1" })
-    .default(1),
-  price: priceField,
-  subtotal: subtotalField,
+export const cartItemSchema = z.object({
+  quantity: quantityField,
 });
-
-export const userCartSchema = z.object({
-  items: z.array(cartItem).default([]),
-  totalPrice: z.number().positive().default(0),
-  totalItems: z.number().positive().default(0),
-});
-
-export const userRoleField = z.enum(["user", "admin"]);
-
-export const userSchema = userInputSchema.extend({
-  isSeller: z.boolean(),
-  role: userRoleField,
-  lastLogin: z.date(),
-  whislist: z.array(createMongooseObjectId()).optional(),
-  hasConfirmedEmail: z.boolean().default(false),
-  avatar: imageSchema,
-  password: z.string().optional(),
-  googleId: z.string().optional(),
-});
-
-export const userRoleSchema = userSchema.pick({ role: true });
-export const userSchemaComplete = abstractSchema().merge(userSchema);

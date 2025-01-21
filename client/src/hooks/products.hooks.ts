@@ -15,23 +15,22 @@ import {
 import { UserId } from "../types/user";
 import { CategoryId } from "../types/category";
 import { ProductId } from "../types/product";
+import {
+  PaginatedQueryOptions as p,
+  PaginatedQuerySearchOptions,
+} from "../types/query";
 
-export const useGetProductsWithPagination = (
-  options: PaginatedQueryOptions & { minPrice?: number; maxPrice?: number } = {}
-) => {
-  const {
-    limit,
-    page,
-    sort,
-    queryKey,
-    isKeepPreviousData,
-    minPrice,
-    maxPrice,
-  } = {
-    ...mergePaginationOptions(options),
-    ...options,
-  };
-  return useQuery({
+export const useGetProductsWithPagination_ = ({
+  queryKey,
+  limit = 10,
+  page = 1,
+  sort = "-createdAt",
+  minPrice = 1,
+  maxPrice = Infinity,
+  isKeepPreviousData = false,
+  enabled = true,
+}: PaginatedQuerySearchOptions) =>
+  useQuery({
     queryKey: queryKey ?? [
       "products",
       { page, limit, sort, minPrice, maxPrice },
@@ -41,8 +40,37 @@ export const useGetProductsWithPagination = (
     retry: false,
     refetchOnWindowFocus: false,
     placeholderData: isKeepPreviousData ? keepPreviousData : undefined,
+    enabled: enabled,
   });
-};
+
+export const useGetProductsByAuthorWithPagination_ = ({
+  userId,
+  queryKey,
+  limit = 10,
+  page = 1,
+  sort = "-createdAt",
+  isKeepPreviousData = false,
+  enabled = true,
+  minPrice = 1,
+  maxPrice = Infinity,
+}: PaginatedQuerySearchOptions & UserId) =>
+  useQuery({
+    queryKey: queryKey ?? [
+      "products",
+      { page, limit, sort, minPrice, maxPrice },
+    ],
+    queryFn: () =>
+      getProductstByAuthorWithPagination({
+        page,
+        limit,
+        sort,
+        userId: userId,
+      }),
+    retry: false,
+    refetchOnWindowFocus: false,
+    placeholderData: isKeepPreviousData ? keepPreviousData : undefined,
+    enabled: enabled,
+  });
 
 export const useGetProductsByAuthorWithPagination = (
   options: PaginatedQueryOptions & UserId = { userId: "" }
@@ -68,7 +96,7 @@ export const useGetProductsByAuthorWithPagination = (
 
 export const useGetProductsByCategoryWithPagination = (
   options: PaginatedQueryOptions &
-    CategoryId & { minPrice?: number; maxPrice?: number } = {
+    CategoryId & { minPrice?: number; maxPrice?: number; enabled?: boolean } = {
     categoryId: "",
     minPrice: 1,
     maxPrice: Infinity,
@@ -83,6 +111,7 @@ export const useGetProductsByCategoryWithPagination = (
     categoryId,
     minPrice,
     maxPrice,
+    enabled,
   } = {
     ...mergePaginationOptions(options),
     ...options,
@@ -104,6 +133,7 @@ export const useGetProductsByCategoryWithPagination = (
     retry: false,
     refetchOnWindowFocus: false,
     placeholderData: isKeepPreviousData ? keepPreviousData : undefined,
+    enabled: enabled,
   });
 };
 

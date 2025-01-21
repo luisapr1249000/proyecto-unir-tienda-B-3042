@@ -1,20 +1,24 @@
 import { model, Schema, PaginateModel } from "mongoose";
-import { ReportDocument } from "../types/report";
 import mongoosePaginate from "mongoose-paginate-v2";
+import { ReportModel } from "../types/report";
 
-const reportSchema = new Schema(
+export const reportSchema = new Schema(
   {
     reportedItem: {
       type: Schema.Types.ObjectId,
-      required: true,
+      required: [true, "Reported item is required"],
       refPath: "itemType",
     },
     itemType: {
       type: String,
-      required: true,
+      required: [true, "Item type is required"],
       enum: ["Product", "Review", "User", "Category"],
     },
-    reporter: { type: Schema.Types.ObjectId, ref: "User", required: true },
+    reporter: {
+      type: Schema.Types.ObjectId,
+      ref: "User",
+      required: [true, "Reporter is required"],
+    },
     reason: {
       type: String,
       enum: [
@@ -25,9 +29,9 @@ const reportSchema = new Schema(
       ],
       required: true,
     },
-    problemDescription: String,
+    problemDescription: { type: String, trim: true },
     resolved: { type: Boolean, default: false },
-    resolution: String,
+    resolution: { type: String, trim: true },
   },
   { timestamps: true },
 );
@@ -38,7 +42,7 @@ reportSchema.index(
 );
 
 reportSchema.plugin(mongoosePaginate);
-const Report = model<ReportDocument, PaginateModel<ReportDocument>>(
+const Report = model<ReportModel, PaginateModel<ReportModel>>(
   "Report",
   reportSchema,
 );

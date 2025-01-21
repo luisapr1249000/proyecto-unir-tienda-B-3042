@@ -1,6 +1,6 @@
 import React from "react";
 import Grid from "@mui/material/Grid2";
-import { Chip, Divider, Typography } from "@mui/material";
+import { Chip } from "@mui/material";
 import { ProductProp } from "../../../../types/product";
 import { Link } from "react-router-dom";
 
@@ -10,7 +10,7 @@ const ProductDetailsCategories = ({ product }: ProductProp) => (
       <Chip
         clickable
         component={Link}
-        to={`/products/category/${category.name}`}
+        to={`/products/categories/${category.name}`}
         label={category.name}
       />
     ))}

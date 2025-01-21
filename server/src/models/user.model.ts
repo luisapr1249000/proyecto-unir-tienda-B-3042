@@ -1,7 +1,7 @@
 import bcrypt from "bcrypt";
-import { PaginateModel, Schema, model } from "mongoose";
+import { Schema, model } from "mongoose";
 import mongoosePaginate from "mongoose-paginate-v2";
-import { UserDocument } from "../types/user";
+import { UserModel, UserType } from "../types/user";
 import { createAddressSchema } from "../utils/mongoose-schemas/mongoose.utils";
 
 export const imageSchema = new Schema({
@@ -22,9 +22,8 @@ const cartItem = new Schema(
     product: {
       type: Schema.Types.ObjectId,
       ref: "Product",
-      unique: true,
     },
-    price: Number,
+    price: { type: Number, min: [1, "Price cannot be less than 1"] },
     seller: { type: Schema.Types.ObjectId, ref: "User" },
     subtotal: {
       type: Number,
@@ -44,13 +43,14 @@ const userCartSchema = new Schema(
   { _id: false },
 );
 
-const userSchema = new Schema(
+export const userSchema = new Schema(
   {
     username: {
       type: String,
       unique: true,
       required: [true, "Username required"],
       trim: true,
+      maxlength: [40, "Username must be less than 40 characters"],
     },
     email: {
       type: String,
@@ -58,38 +58,47 @@ const userSchema = new Schema(
       required: [true, "Email required"],
       trim: true,
       lowercase: true,
+      maxlength: [100, "Email must be less than 100 characters"],
     },
     password: {
       type: String,
       select: false,
     },
     hasConfirmedEmail: { type: Boolean, default: false },
-    firstName: String,
-    lastName: String,
-    bio: String,
-    phoneNumber: Number,
+    firstName: {
+      type: String,
+      maxlength: [40, "First name must be less than 40 characters"],
+      trim: true,
+    },
+    lastName: {
+      type: String,
+      maxlength: [40, "Last name must be less than 40 characters"],
+      trim: true,
+    },
+    bio: {
+      type: String,
+      default: "",
+      maxlength: [200, "Bio must be less than 200 characters"],
+    },
+    birthday: { type: Date, default: null },
+    mobilePhone: { type: String, maxlength: 15, trim: true, default: "" },
     avatar: imageSchema,
     lastLogin: {
       type: Date,
       default: Date.now(),
     },
-    savedProducts: [
-      {
-        type: Schema.Types.ObjectId,
-        ref: "Product",
-        select: false,
-      },
-    ],
+
     wishlist: [
       {
         type: Schema.Types.ObjectId,
         ref: "Product",
         select: false,
+        default: [],
       },
     ],
     cart: {
       type: userCartSchema,
-      default: { items: [], totalPrice: 0, totalItems: 0 },
+      default: {},
       select: false,
     },
     isSeller: { type: Boolean, default: false },
@@ -102,6 +111,7 @@ const userSchema = new Schema(
     addressDirections: {
       type: [createAddressSchema({ withTimestamps: true })],
       select: false,
+      default: [],
     },
     googleId: String,
   },
@@ -109,7 +119,27 @@ const userSchema = new Schema(
     timestamps: true,
     methods: {
       comparePasswords(candidatePassword: string): boolean {
+        if (!this.password) return false;
         return bcrypt.compareSync(candidatePassword, this.password ?? "");
+      },
+      hashPassword(newPassword: string): string {
+        const salt = bcrypt.genSaltSync(10);
+        return bcrypt.hashSync(newPassword, salt);
+      },
+    },
+    statics: {
+      findByUsername: async function (username: string) {
+        return this.findOne({ username });
+      },
+      findExistingUser: async function (username: string, email: string) {
+        return this.findOne({
+          $or: [{ email: email }, { username: username }],
+        });
+      },
+      findByUsernameOrEmail: async function (loginValue: string) {
+        return this.findOne({
+          $or: [{ email: loginValue }, { username: loginValue }],
+        }).select("+password");
       },
     },
   },
@@ -124,17 +154,6 @@ userSchema.pre("save", async function (next) {
   next();
 });
 
-userSchema.methods.comparePasswords = function (
-  candidatePassword: string,
-): boolean {
-  return this.password
-    ? bcrypt.compareSync(candidatePassword, this.password)
-    : false;
-};
-
-userSchema.methods.hashPassword = function (password: string): string {
-  return bcrypt.hashSync(password, 10);
-};
 userSchema.methods.toJSON = function () {
   const obj = this.toObject();
   delete obj.password;
@@ -142,9 +161,5 @@ userSchema.methods.toJSON = function () {
 };
 
 userSchema.plugin(mongoosePaginate);
-export const User = model<UserDocument, PaginateModel<UserDocument>>(
-  "User",
-  userSchema,
-);
 
-export const ImageModel = model("Image", imageSchema);
+export const User = model<UserType, UserModel>("User", userSchema);

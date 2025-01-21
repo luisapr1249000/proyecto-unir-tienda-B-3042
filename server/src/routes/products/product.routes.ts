@@ -2,30 +2,26 @@ import { Router } from "express";
 import productController from "../../controllers/products/product.controller";
 import {
   authMiddleware,
-  optionalAuth,
   verifyUserOwnershipOrAdminRole,
 } from "../../middlewares/auth.middleware";
 import {
   isSellerOrAdmin,
   validateObjectIdParams,
-  validatePriceQuery,
   validateSchemaBody,
-  validPagination,
 } from "../../middlewares/requestValidation.middleware";
 import { productInputSchema } from "../../validation-schemas/product-schemas/product.validation";
 import { uploadImageProduct } from "../../config/multer/multer.product";
-import { CATEGORY_ID, PRODUCT_ID, USER_ID } from "../../constants";
+import { PRODUCT_ID } from "../../constants";
+import { productPaginationAndSortSchema } from "../../validation-schemas/query.validation";
 
 const router = Router();
-router.get("/products/search", productController.searchProducts);
 
 router.get(
   "/products",
-  validatePriceQuery,
-  // validPagination,
-  optionalAuth,
+  validateSchemaBody(productPaginationAndSortSchema),
   productController.getProductsWithPagination,
 );
+
 router.post(
   "/products",
   authMiddleware,
@@ -34,7 +30,7 @@ router.post(
   productController.createProduct,
 );
 
-router.post(
+router.put(
   "/products/:productId/images",
   authMiddleware,
   validateObjectIdParams(PRODUCT_ID),
@@ -57,34 +53,13 @@ router.put(
   validateSchemaBody(productInputSchema),
   productController.updateProduct,
 );
+
 router.delete(
   "/products/:productId",
   authMiddleware,
   validateObjectIdParams(PRODUCT_ID),
   verifyUserOwnershipOrAdminRole("productId"),
   productController.deleteProduct,
-);
-router.get(
-  "/products/author/:userId",
-  validPagination,
-  validatePriceQuery,
-  validateObjectIdParams(USER_ID),
-  optionalAuth,
-  productController.getProductsByAuthorWithPagination,
-);
-router.get(
-  "/products/:productId",
-  optionalAuth,
-  validateObjectIdParams(PRODUCT_ID),
-  productController.getProductById,
-);
-router.get(
-  "/products/category/:categoryId",
-  validatePriceQuery,
-  validPagination,
-  validateObjectIdParams(CATEGORY_ID),
-  optionalAuth,
-  productController.getProductsByCategoryWithPagination,
 );
 
 export { router as ProductRoutes };

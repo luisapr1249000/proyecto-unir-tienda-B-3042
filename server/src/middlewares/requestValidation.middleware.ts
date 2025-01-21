@@ -5,15 +5,13 @@ import {
   handleObjectNotFound,
 } from "../utils/error.utils";
 import {
-  categoryName as categoryNameSchema,
+  categoryNameSchema,
   paginationCoerceSchema,
-  productPriceSortSchema,
   usernameParamSchema,
 } from "../validation-schemas/query.validation";
 import { Product } from "../models/product.model";
 import { objectIdValidator } from "../utils/zod.utils";
 import { userRoleSchema } from "../validation-schemas/user-schemas/user.validation";
-import { getDefaultPaginationOptions } from "../utils/utils";
 import { Order } from "../models/orders.model";
 import { extractAuthUserId } from "../utils/auth.utils";
 import Review from "../models/review.model";
@@ -55,8 +53,7 @@ export const validPagination = (
   res: Response,
   next: NextFunction,
 ) => {
-  const defaultPagination = { ...getDefaultPaginationOptions(), ...req.query };
-  const paginationResult = paginationCoerceSchema.safeParse(defaultPagination);
+  const paginationResult = paginationCoerceSchema.safeParse(req.query);
   if (!paginationResult.success) {
     return handleBadRequest(res, paginationResult.error);
   }
@@ -87,17 +84,6 @@ export const checkProductExists = async (
   next();
 };
 
-export const validatePriceQuery = async (
-  req: Request,
-  res: Response,
-  next: NextFunction,
-) => {
-  const { minPrice, maxPrice } = req.query;
-  const { success } = productPriceSortSchema.safeParse({ minPrice, maxPrice });
-  if (!success) return res.status(400).json({ messge: "Bad Request" });
-  next();
-};
-
 export const isSellerOrAdmin = (
   req: Request,
   res: Response,
@@ -117,8 +103,7 @@ export const validCategoryName = (
   res: Response,
   next: NextFunction,
 ) => {
-  const { categoryName } = req.params;
-  const result = categoryNameSchema.safeParse(categoryName);
+  const result = categoryNameSchema.safeParse(req.params);
   if (!result.success) {
     return handleBadRequest(res, result.error);
   }

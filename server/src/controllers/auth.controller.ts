@@ -1,13 +1,13 @@
 import { Request, Response } from "express";
 import { User } from "../models/user.model";
 import {
-  checkRefreshTokenAndGenAccessToken,
-  verifyToken,
   createPayload,
   genAccessToken,
   genRefreshToken,
   setTokenCookie,
   extractAuthUserId,
+  validateRefreshTokenAndGenerateAccessToken,
+  validateToken,
 } from "../utils/auth.utils";
 import {
   handleError,
@@ -22,23 +22,23 @@ import {
 } from "../utils/nodemail.utils";
 import { transporter } from "../config/nodemail/nodemail.config";
 import { env } from "../config/envConfig";
+import { ChangePassword, Login, Signup } from "../types/auth";
 
 class AuthController {
   public async signup(req: Request, res: Response) {
     try {
-      const { username, email, password } = req.body;
-      const existingUser = await User.findOne({
-        $or: [{ username }, { email }],
-      });
+      const { username, email, password } = req.body as Signup;
+      const existingUser = await User.findExistingUser(username, email);
 
       if (existingUser)
-        return res.status(400).json({ message: "User already exists." });
+        return res
+          .status(400)
+          .json({ message: "Email Or Username already taken." });
 
       const user = new User({ email, username, password });
       const userSaved = await user.save();
       if (!userSaved)
         return res.status(400).json({ message: "Something went bad." });
-
       const payload = createPayload(
         userSaved._id.toString(),
         userSaved.username,
@@ -49,17 +49,15 @@ class AuthController {
 
       setTokenCookie(res, "refreshToken", refreshToken, null);
       setTokenCookie(res, "accessToken", accessToken, null);
-      return res.status(201).json({ userSaved, accessToken });
+      return res.status(201).json(userSaved);
     } catch (e) {
       return handleError(res, e);
     }
   }
   public async login(req: Request, res: Response) {
     try {
-      const { rememberMe, loginValue, password } = req.body;
-      const user = await User.findOne({
-        $or: [{ email: loginValue }, { username: loginValue }],
-      }).select("+password");
+      const { rememberMe, loginValue, password } = req.body as Login;
+      const user = await User.findByUsernameOrEmail(loginValue);
 
       if (!user) return res.status(404).json({ message: "User not found" });
       const isMatch = user.comparePasswords(password);
@@ -98,7 +96,8 @@ class AuthController {
       const { refreshToken } = req.cookies;
       if (!refreshToken) return res.status(401).json({ error: "Unauthorized" });
 
-      const newAccessToken = checkRefreshTokenAndGenAccessToken(refreshToken);
+      const newAccessToken =
+        validateRefreshTokenAndGenerateAccessToken(refreshToken);
       if (!newAccessToken)
         return res.status(403).json({ error: "Invalid refresh token" });
 
@@ -137,13 +136,13 @@ class AuthController {
     try {
       const { token } = req.query;
       if (!token) return handleNotPermissions(res);
-      const decoded = verifyToken(token as string);
+      const decoded = validateToken(token as string);
       if (!decoded) return handleObjectNotFound(res, "User");
       const user = await User.findById(decoded.sub);
       if (!user) return handleObjectNotFound(res, "User");
       user.hasConfirmedEmail = true;
       await user.save();
-      return res.status(200).json({ message: "User confirmed successfully" });
+      return res.redirect(env.CLIENT_DIRECTION_DEV + "/auth/login");
     } catch (e) {
       return handleError(res, e);
     }
@@ -179,7 +178,7 @@ class AuthController {
       const { token } = req.query;
       if (!token) return handleNotPermissions(res);
       const { newPassword } = req.body;
-      const decoded = verifyToken(token as string);
+      const decoded = validateToken(token as string);
       if (!decoded) return handleObjectNotFound(res, "User");
       const user = await User.findById(decoded.sub).select("+password");
       if (!user) return handleObjectNotFound(res, "User");
@@ -222,11 +221,16 @@ class AuthController {
   public async changePassword(req: Request, res: Response) {
     try {
       const userId = extractAuthUserId(req);
-      const { currentPassword, newPassword } = req.body;
+      const { currentPassword, newPassword, confirmPassword } =
+        req.body as ChangePassword;
+
+      if (newPassword !== confirmPassword)
+        return res.status(400).json({ message: "Passwords do not match" });
 
       const user = await User.findById(userId).select("password");
       if (!user || !user.password)
         return res.status(404).send("User not found");
+
       const isMatch = user.comparePasswords(currentPassword);
       if (!isMatch)
         return res.status(400).send("Current password is incorrect");
@@ -243,7 +247,7 @@ class AuthController {
     try {
       const { token } = req.query;
       if (!token) return handleNotPermissions(res);
-      const decoded = verifyToken(token as string);
+      const decoded = validateToken(token as string);
       if (!decoded) return handleNotPermissions(res);
       const userId = await User.findById(decoded.sub);
       if (!userId) return handleNotPermissions(res);

@@ -1,6 +1,6 @@
 import { Box, Chip, Divider, Typography } from "@mui/material";
 import GridLoadingSkeleton from "../../common/load-spinner/GridLoadingSkeleton";
-import { useGetCategoriesWithPagination } from "../../../hooks/categories.hooks";
+import { useGetCategoriesWithPagination_ } from "../../../hooks/categories.hooks";
 import { useEffect, useState } from "react";
 import OutlinedInput from "@mui/material/OutlinedInput";
 import InputLabel from "@mui/material/InputLabel";
@@ -13,6 +13,7 @@ const ProductUpdateCategoryForm = ({
 }: {
   setCategories: (id: string[]) => void;
 }) => {
+  const { data: categories } = useGetCategoriesWithPagination_({ limit: 50 });
   const [selectedCategories, setSelectedCategories] = useState<string[]>();
   const handleChange = (e: SelectChangeEvent<typeof selectedCategories>) => {
     setSelectedCategories(
@@ -23,9 +24,8 @@ const ProductUpdateCategoryForm = ({
   };
 
   useEffect(() => {
-    if (categoryList.length > 0) {
-      setSelectedCategories(categoryList);
-      setCategories(selectedCategories);
+    if (selectedCategories && selectedCategories.length > 0) {
+      setCategories(selectedCategories ?? []);
     }
   }, []);
 
@@ -49,7 +49,7 @@ const ProductUpdateCategoryForm = ({
           </Box>
         )}
       >
-        {categories.map((category) => (
+        {categories.docs.map((category) => (
           <MenuItem value={category.name}>
             <Box sx={{ display: "flex", alignItems: "center" }}>
               <Chip label={category.name} />

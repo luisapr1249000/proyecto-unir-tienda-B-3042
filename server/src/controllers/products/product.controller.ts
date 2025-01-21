@@ -12,6 +12,8 @@ import {
   deleteSingleS3Object,
 } from "../../config/multer/multer.config";
 import { getDefaultPaginationOptions } from "../../utils/utils";
+import { FilterQuery } from "mongoose";
+import { ProductType } from "../../types/product";
 
 class ProductController {
   public async createProduct(req: Request, res: Response) {
@@ -136,19 +138,38 @@ class ProductController {
 
   public async getProductsWithPagination(req: Request, res: Response) {
     try {
-      const { minPrice = 1, maxPrice = Infinity } = req.query;
       const { limit, page, sort } = {
         ...getDefaultPaginationOptions(),
         ...req.query,
       };
-      const paginationOptions = {
+
+      const { minPrice = "0", maxPrice = "Infinity" } = req.query;
+
+      const options = {
         limit,
         page,
         sort,
         populate: ["author", "categories"],
       };
-      const productQuery = { finalPrice: { $gte: minPrice, $lte: maxPrice } };
-      const products = await Product.paginate(productQuery, paginationOptions);
+
+      const filterQuery: FilterQuery<ProductType> = {
+        finalPrice: {
+          $gte: Number(minPrice),
+          $lte: Number(maxPrice),
+        },
+      };
+      if (req.query.searchQuery) {
+        filterQuery.$text = { $search: String(req.query.searchQuery) };
+      }
+      if (req.query.authorId) {
+        filterQuery.author = req.query.authorId;
+      }
+
+      if (req.query.categoryId) {
+        filterQuery.categories = req.query.categoryId;
+      }
+
+      const products = await Product.paginate(filterQuery, options);
       if (!products || products.docs.length === 0)
         return handleObjectNotFound(res, "Product", true);
 
@@ -169,94 +190,6 @@ class ProductController {
       await product.save();
 
       return res.status(200).json(product);
-    } catch (e) {
-      return handleError(res, e);
-    }
-  }
-
-  public async getProductsByAuthorWithPagination(req: Request, res: Response) {
-    try {
-      const { userId } = req.params;
-      const { limit, page, sort } = {
-        ...getDefaultPaginationOptions(),
-        ...req.query,
-      };
-      const paginationOptions = {
-        limit,
-        page,
-        sort,
-        populate: ["author", "categories"],
-      };
-      const query = {
-        author: userId,
-      };
-      const products = await Product.paginate(query, paginationOptions);
-      if (products.docs.length === 0)
-        return handleObjectNotFound(res, "Product", true);
-
-      return res.status(200).json(products);
-    } catch (e) {
-      return handleError(res, e);
-    }
-  }
-  public async getProductsByCategoryWithPagination(
-    req: Request,
-    res: Response,
-  ) {
-    try {
-      const { minPrice = 1, maxPrice = Infinity } = req.query;
-      const { categoryId } = req.params;
-      const { limit, page, sort } = {
-        ...getDefaultPaginationOptions(),
-        ...req.query,
-      };
-
-      const query = {
-        categories: categoryId,
-        finalPrice: { $gte: minPrice, $lte: maxPrice },
-      };
-      const paginationOptions = {
-        limit,
-        page,
-        sort,
-        populate: ["author", "categories"],
-      };
-
-      const products = await Product.paginate(query, paginationOptions);
-      if (products.docs.length === 0)
-        return handleObjectNotFound(res, "Product", true);
-
-      return res.status(200).json(products);
-    } catch (e) {
-      return handleError(res, e);
-    }
-  }
-
-  public async searchProducts(req: Request, res: Response) {
-    try {
-      const { minPrice = 1, maxPrice = Infinity } = req.query;
-
-      const { limit, page, sort } = {
-        ...getDefaultPaginationOptions(),
-        ...req.query,
-      };
-
-      const { query } = req.query as { query: string };
-      const myQuery = {
-        $text: { $search: query },
-        finalPrice: { $gte: minPrice, $lte: maxPrice },
-      };
-      const paginationOptions = {
-        limit,
-        page,
-        sort,
-        populate: ["author", "categories"],
-      };
-      const productResults = await Product.paginate(myQuery, paginationOptions);
-      if (productResults.docs.length === 0)
-        return handleObjectNotFound(res, "Product", true);
-
-      return res.status(200).json(productResults);
     } catch (e) {
       return handleError(res, e);
     }

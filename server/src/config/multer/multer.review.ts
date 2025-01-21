@@ -2,12 +2,9 @@ import multer from "multer";
 import multerS3 from "multer-s3";
 import { Request } from "express";
 import { s3 } from "./multer.config";
-import {
-  generateUniqueFileName,
-  fileFilter,
-  limits,
-} from "../../utils/multer.utils";
+import { fileFilter, limits } from "../../utils/multer.utils";
 import { env } from "../envConfig";
+import { generateUniqueValue } from "../../utils/utils";
 
 const s3ReviewStorage = multer({
   storage: multerS3({
@@ -19,7 +16,7 @@ const s3ReviewStorage = multer({
     },
     key: function (req: Request, file, cb) {
       const { reviewId } = req.params;
-      const uniqueFileName = generateUniqueFileName(file.originalname);
+      const uniqueFileName = generateUniqueValue(file.originalname);
       const fullPath = `public/products/${reviewId}/${uniqueFileName}`;
       cb(null, fullPath);
     },

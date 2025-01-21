@@ -24,7 +24,7 @@ router.post(
   authController.login,
 );
 router.post("/auth/logout", authMiddleware, authController.logout);
-router.get("/auth/user/me", authMiddleware, authController.getAuthUser);
+router.get("/auth/users/me", authMiddleware, authController.getAuthUser);
 router.get("/auth/token/validate", authController.validateToken);
 router.get("/auth/token/refresh", authController.refreshToken);
 router.post(

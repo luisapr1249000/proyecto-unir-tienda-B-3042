@@ -2,10 +2,6 @@ import React, { useState } from "react";
 import { Slider } from "@mui/material";
 import Grid from "@mui/material/Grid2";
 import { ButtonLink } from "../buttons/link/ButtonLink";
-import {
-  useGetProductsByCategoryWithPagination,
-  useGetProductsWithPagination,
-} from "../../../hooks/products.hooks";
 import { Mark } from "@mui/material/Slider/useSlider.types";
 import usePriceStore from "../../../zustand/priceSlice";
 

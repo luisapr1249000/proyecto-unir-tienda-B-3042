@@ -8,9 +8,8 @@ import {
 } from "../../utils/error.utils";
 import { Product } from "../../models/product.model";
 import { extractAuthUserId } from "../../utils/auth.utils";
-import { UserCartItem } from "../../types/user";
 import { createObjectId } from "../../utils/product.utils";
-import { twoDigitsFixed } from "../../utils/utils";
+import { toTwoDecimals } from "../../utils/utils";
 
 class UserProductActions {
   public async getUserCart(req: Request, res: Response) {
@@ -77,7 +76,7 @@ class UserProductActions {
         .populate("wishlist");
       if (!user) return handleObjectNotFound(res, "User");
 
-      if (isArrayEmptyOrUndefined(user?.wishlist))
+      if (isArrayEmptyOrUndefined(user.wishlist))
         return handleObjectNotFound(res, "Wishlist");
 
       return res.status(200).json(user);
@@ -98,12 +97,18 @@ class UserProductActions {
       const user = await User.findById(userId).select("wishlist");
       if (!user) return handleObjectNotFound(res, "User");
 
-      const productExisted = user.wishlist.includes(createObjectId(productId));
-      if (productExisted) {
-        user.wishlist.pull(productId);
+      const productObjectId = createObjectId(productId);
+      const productExists = user.wishlist.includes(productObjectId);
+
+      if (productExists) {
+        const uptatedWishlist = user.wishlist.filter(
+          (id) => !id.equals(productObjectId),
+        );
+        user.wishlist = uptatedWishlist;
+
         product.wishlistCount -= 1;
       } else {
-        user.wishlist.push(productId);
+        user.wishlist.push(productObjectId);
         product.wishlistCount += 1;
       }
       const [productSaved, userSaved] = await Promise.all([
@@ -122,53 +127,51 @@ class UserProductActions {
       const userId = extractAuthUserId(req);
       const { productId } = req.params;
       const { productQuantity } = req.body;
-      if (productQuantity === undefined || productQuantity <= 0) {
-        return res
-          .status(400)
-          .json({ message: "Quantity must be 0 or greater" });
-      }
 
-      const product = await Product.findById(productId)
-        .select("+author")
-        .populate("author");
+      const product = await Product.findById(productId).populate("author");
       if (!product) {
         return handleObjectNotFound(res, "Product");
       }
 
-      const user = await User.findById(userId).select("+cart");
+      const user = await User.findById(userId).select("cart");
       if (!user) return handleObjectNotFound(res, "User");
 
-      const productIndex = user.cart.items?.findIndex(
+      const cartItems = user.cart.items ?? [];
+
+      const productIndex = cartItems.findIndex(
         (item) => item.product?.toString() === productId,
       );
 
       console.log(product);
       if (productIndex === -1 && productQuantity > 0) {
-        let subtotal = product.finalPrice * productQuantity;
-        subtotal = twoDigitsFixed(subtotal);
-        const cartItem: UserCartItem = {
+        const subtotal = toTwoDecimals(product.finalPrice * productQuantity);
+
+        cartItems.push({
           quantity: productQuantity,
           seller: product.author._id,
           price: product.finalPrice,
           product: product._id,
-          subtotal: subtotal,
-        };
-        user.cart.items.push(cartItem);
+          subtotal,
+        });
       }
 
-      if (productIndex === 1 && Number(productQuantity) === 0) {
-        const subtotal = user?.cart?.items?.[productIndex]?.subtotal ?? 0;
-        user.cart.totalPrice = user.cart.totalPrice - subtotal;
-        user.cart.items.splice(productIndex, 1);
-      }
-      if (productQuantity > 0) {
-        const product = user.cart.items[productIndex];
-        if (product) {
-          product.quantity = productQuantity;
+      const existingItem = cartItems[productIndex];
+      if (existingItem) {
+        if (productQuantity === 0) {
+          const subtotal = toTwoDecimals(existingItem.subtotal);
+          user.cart.totalPrice -= subtotal;
+          cartItems.splice(productIndex, 1);
+        }
+
+        if (productQuantity > 0) {
+          existingItem.quantity = productQuantity;
+          existingItem.subtotal = toTwoDecimals(
+            product.finalPrice * productQuantity,
+          );
         }
       }
 
-      user.cart.totalPrice = user.cart.items.reduce((accumulator, product) => {
+      user.cart.totalPrice = cartItems.reduce((accumulator, product) => {
         const price = product.price ?? 0;
         const quantity = product.quantity ?? 0;
         return accumulator + price * quantity;

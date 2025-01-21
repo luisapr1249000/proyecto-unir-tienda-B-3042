@@ -1,6 +1,5 @@
 import { z } from "zod";
 import {
-  abstractSchema,
   createValidStringField,
   phoneNumberSchema,
 } from "../../utils/zod.utils";
@@ -38,7 +37,7 @@ export const landmarkField = createValidStringField({
 });
 
 export const addressDirectionInputSchema = z.object({
-  mobileNumber: phoneNumberSchema().optional(),
+  mobilePhone: phoneNumberSchema().optional(),
   pinCode: pinCodeField,
   locality: localityField,
   addressLine1: addressLine1Field,
@@ -48,7 +47,3 @@ export const addressDirectionInputSchema = z.object({
   landmark: landmarkField,
   addressType: z.enum(["home", "work"]),
 });
-
-export const addressDirectionSchema = abstractSchema().merge(
-  addressDirectionInputSchema,
-);

@@ -6,12 +6,17 @@ import {
   handleObjectNotFound,
 } from "../utils/error.utils";
 import { Category } from "../models/category.model";
+import { FilterQuery } from "mongoose";
+import { getDefaultPaginationOptions } from "../utils/utils";
+import { CategoryModel } from "../types/category";
 
 class CategoryController {
   public async createCategory(req: Request, res: Response) {
     try {
       const authUserId = extractAuthUserId(req);
-      const existedCategory = await Category.findOne({ name: req.body.name });
+      const existedCategory = await Category.findExistingCategory(
+        req.body.name,
+      );
       if (existedCategory) {
         return res
           .status(400)
@@ -42,10 +47,7 @@ class CategoryController {
   public async getCategoryByName(req: Request, res: Response) {
     try {
       const { categoryName } = req.params;
-      const query = {
-        name: categoryName,
-      };
-      const category = await Category.findOne(query);
+      const category = await Category.findByName(categoryName ?? "");
       if (!category) return handleObjectNotFound(res, "Category");
 
       return res.status(200).json(category);
@@ -57,7 +59,9 @@ class CategoryController {
   public async updateCategory(req: Request, res: Response) {
     try {
       const { categoryId } = req.params;
-      const existedCategory = await Category.findOne({ name: req.body.name });
+      const existedCategory = await Category.findExistingCategory(
+        req.body.name,
+      );
       if (existedCategory) {
         return res
           .status(400)
@@ -87,30 +91,23 @@ class CategoryController {
 
   public async getCategoriesWithPagination(req: Request, res: Response) {
     try {
-      const options = {
+      const { limit, page, sort } = {
+        ...getDefaultPaginationOptions(),
         ...req.query,
+      };
+      const options = {
+        limit,
+        page,
+        sort,
         populate: "author",
       };
-      const categories = await Category.paginate({}, options);
+      const filterQuery: FilterQuery<CategoryModel> = {};
+      if (req.query.searchQuery) {
+        filterQuery.$text = { $search: String(req.query.searchQuery) };
+      }
+      const categories = await Category.paginate(filterQuery, options);
       const { docs } = categories;
       if (docs.length <= 0) return handleObjectNotFound(res, "Categories");
-
-      return res.status(200).json(categories);
-    } catch (e) {
-      return handleError(res, e);
-    }
-  }
-
-  public async searchCategories(req: Request, res: Response) {
-    try {
-      const { query } = req.query as { query: string };
-      const myQuery = {
-        $text: { $search: query },
-      };
-
-      const categories = await Category.paginate(myQuery, { ...req.query });
-      if (categories.docs.length === 0)
-        return handleObjectNotFound(res, "Product", true);
 
       return res.status(200).json(categories);
     } catch (e) {

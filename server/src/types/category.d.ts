@@ -1,10 +1,17 @@
 import { z } from "zod";
-import {
-  categoryInputSchema,
-  categorySchema,
-} from "../validation-schemas/category.validation";
-import { Document } from "mongoose";
+import { categoryInputSchema } from "../validation-schemas/category.validation";
+import { HydratedDocument, InferSchemaType, PaginateModel } from "mongoose";
+import { categorySchema as modelCategorySchema } from "../models/category.model";
 
 export type CategoryInput = z.infer<typeof categoryInputSchema>;
-export type Category = z.infer<typeof categorySchema>;
-export type CategoryDocument = Document & Category;
+export type CategoryType = InferSchemaType<typeof modelCategorySchema>;
+
+export interface CategoryModel extends PaginateModel<CategoryType> {
+  findExistingCategory: (
+    name: string,
+  ) => Promise<HydratedDocument<CategoryCollection>>;
+  findByName: (name: string) => Promise<HydratedDocument<CategoryCollection>>;
+  findByAuthor: (
+    authorId: string,
+  ) => Promise<HydratedDocument<CategoryCollection>>;
+}

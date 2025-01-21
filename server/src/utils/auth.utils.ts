@@ -2,7 +2,6 @@ import { CookieOptions, Request, Response } from "express";
 import { DEFAULT_COOKIES_DAY } from "../constants";
 import { UserJwt } from "../types/auth";
 import jwt, { JwtPayload } from "jsonwebtoken";
-import { User } from "../types/user";
 import { env } from "../config/envConfig";
 
 export const setTokenCookie = (
@@ -22,38 +21,31 @@ export const setTokenCookie = (
   res.cookie(cookieName, token, opts);
 };
 
-export const createPayload = (id: string, username: string): UserJwt => {
-  return {
-    sub: id.toString(),
-    username: username,
-  };
-};
+export const createPayload = (id: string, username: string): JwtPayload => ({
+  sub: id.toString(),
+  username: username,
+});
 
 export const getKey = () => {
   const key = env.ACCESS_TOKEN_SECRET;
-  if (!key) {
-    throw new Error("Missing environment variable: ACCESS_TOKEN_SECRET");
-  }
-
   return key;
 };
 
-export const genAccessToken = (payload: UserJwt) => {
-  return jwt.sign(payload, getKey(), { expiresIn: "15m" }) ?? null;
-};
+export const genAccessToken = (payload: JwtPayload) =>
+  jwt.sign(payload, getKey(), { expiresIn: "30m" }) ?? null;
 
-export const genRefreshToken = (payload: UserJwt) => {
-  return jwt.sign(payload, getKey(), { expiresIn: "7d" }) ?? null;
-};
+export const genRefreshToken = (payload: JwtPayload) =>
+  jwt.sign(payload, getKey(), { expiresIn: "7d" }) ?? null;
 
-export const checkRefreshTokenAndGenAccessToken = (refreshToken: string) => {
+export const validateRefreshTokenAndGenerateAccessToken = (
+  refreshToken: string,
+) => {
   if (!refreshToken) {
     throw new Error("Refresh token is required.");
   }
-  const key = getKey();
   try {
-    const { username, sub } = jwt.verify(refreshToken, key) as UserJwt;
-    const payload = { username, sub } as UserJwt;
+    const { username, sub } = jwt.verify(refreshToken, getKey()) as UserJwt;
+    const payload = { username, sub };
     return genAccessToken(payload);
   } catch {
     return null;
@@ -65,20 +57,14 @@ export const extractAuthUserId = (req: Request): string => {
   return userId ? userId.toString() : "";
 };
 
-export const getUserIdFromAuth = (req: Request) => {
-  const userId = (req.user as User)._id.toString();
-  if (!userId) {
-    throw new Error("Authenticated user ID is missing.");
+export const validateToken = (token: string) => {
+  try {
+    const decoded = jwt.verify(token, getKey()) as UserJwt;
+    if (!decoded || !decoded.sub) return null;
+    return decoded;
+  } catch {
+    return null;
   }
-  return userId;
-};
-
-export const verifyToken = (token: string): JwtPayload | string => {
-  const decoded = jwt.verify(token, getKey());
-  if (!decoded || !decoded.sub) {
-    return "";
-  }
-  return decoded;
 };
 
 export const generateUniqueUsername = () => {

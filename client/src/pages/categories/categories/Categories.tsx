@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import Grid from "@mui/material/Grid2";
 import { Paper, Divider } from "@mui/material";
 import CategoryCard from "../../../components/categories/card/CategoryCard";
-import { useGetCategoriesWithPagination } from "../../../hooks/categories.hooks";
+import { useGetCategoriesWithPagination_ } from "../../../hooks/categories.hooks";
 import PaginationButtons from "../../../components/common/sort-and-pagination/PaginationButtons";
 import LoadSpinner from "../../../components/common/load-spinner/LoadSpinner";
 import ObjectNotFound from "../../../components/common/errors/object-not-found/ObjectNotFound";
@@ -19,7 +19,7 @@ const Categories = () => {
     error,
     refetch,
     isFetching: isFetchingCategories,
-  } = useGetCategoriesWithPagination({
+  } = useGetCategoriesWithPagination_({
     page: page,
     limit: limit,
     isKeepPreviousData: true,

@@ -1,9 +1,7 @@
-import { OrderDocument } from "../types/order";
-
 export const canUpdateOrder = (
   authUserId: string,
   userRole: string,
-  order: OrderDocument,
+  order: { customer: string; orderItems: { seller: string }[] },
   status: string,
 ): boolean => {
   const isCustomer = authUserId === order.customer.toString();
