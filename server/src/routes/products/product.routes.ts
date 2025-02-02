@@ -23,6 +23,12 @@ router.get(
   productController.getProductsWithPagination,
 );
 
+router.get(
+  "/products/:productId",
+  validateObjectIdParams(PRODUCT_ID),
+  productController.getProductById,
+);
+
 router.post(
   "/products",
   authMiddleware,

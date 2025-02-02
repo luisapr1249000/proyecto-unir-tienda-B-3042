@@ -5,13 +5,13 @@ import HeaderDrawerSearchbar from "./mobile/HeaderDrawerSearchbar";
 import HeaderSearchbarForm from "./HeaderSearchbarForm";
 import MobileSearchBar from "./mobile/MobileSearchBar";
 
-const HeaderSearchBar = ({}: {}) => {
+const HeaderSearchBar = () => {
   const navigate = useNavigate();
   const { searchProduct } = useParams();
   const [search, setSearch] = useState(searchProduct ?? "");
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearch?.(e.currentTarget.value);
+    setSearch(e.currentTarget.value);
   };
 
   const handleEnter = (e: React.KeyboardEvent<HTMLDivElement>) => {
@@ -36,14 +36,16 @@ const HeaderSearchBar = ({}: {}) => {
           display: { xs: "none", md: "flex" },
         }}
         container
-        size={{ xs: 0, md: 5 }}
+        size={{ xs: "grow" }}
       >
-        <HeaderSearchbarForm
-          search={search}
-          handleChange={handleChange}
-          handleClick={handleClick}
-          handleEnter={handleEnter}
-        />
+        <Grid size={{ xs: 6 }}>
+          <HeaderSearchbarForm
+            search={search}
+            handleChange={handleChange}
+            handleClick={handleClick}
+            handleEnter={handleEnter}
+          />
+        </Grid>
       </Grid>
     </>
   );

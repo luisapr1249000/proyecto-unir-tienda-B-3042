@@ -1,15 +1,15 @@
-import React from "react";
 import Grid from "@mui/material/Grid2";
 import { ProductProp } from "../../../../types/product";
 import {
   Card,
   CardContent,
   Divider,
-  Paper,
+  InputAdornment,
   TextField,
   Typography,
 } from "@mui/material";
 import { isEmptyString } from "../../../../utils/utils";
+import { GridBorderRadious } from "../../../../assets/css/mui-css-objects/grid";
 
 const ProductSpecificationCard = ({
   specification,
@@ -17,18 +17,31 @@ const ProductSpecificationCard = ({
 }: {
   specification: string;
   label: string;
-}) => (
-  <TextField
-    name={label}
-    label={label}
-    placeholder="Specification"
-    value={specification}
-    fullWidth
-    disabled
-    variant="standard"
-    slotProps={{ inputLabel: { shrink: true }, input: { readOnly: true } }}
-  />
-);
+}) => {
+  const isMeter = ["Width", "Depth", "Height"].includes(label);
+  return (
+    <TextField
+      name={label}
+      label={label}
+      placeholder="Specification"
+      value={specification}
+      fullWidth
+      // disabled
+      variant="standard"
+      slotProps={{
+        inputLabel: { shrink: true },
+        input: {
+          readOnly: true,
+          endAdornment: (
+            <InputAdornment position="end">
+              {isMeter ? "CM" : ""}
+            </InputAdornment>
+          ),
+        },
+      }}
+    />
+  );
+};
 
 const ProductSpecificationts = ({ product }: ProductProp) => {
   const firstSpecificationList = [
@@ -68,8 +81,14 @@ const ProductSpecificationts = ({ product }: ProductProp) => {
   console.log(secondSpecificationList);
 
   return (
-    <Card variant="outlined" component={Grid} spacing={3} size={{ xs: 11 }}>
-      <CardContent>
+    <Card
+      component={Grid}
+      spacing={3}
+      elevation={4}
+      size={{ xs: 11 }}
+      sx={{ ...GridBorderRadious }}
+    >
+      <CardContent sx={{ bgcolor: "action.hover" }}>
         <Typography variant="h6" color="textSecondary">
           Specifications
         </Typography>
@@ -78,11 +97,12 @@ const ProductSpecificationts = ({ product }: ProductProp) => {
       <CardContent
         component={Grid}
         container
+        spacing={3}
         size={{ xs: 12 }}
-        sx={{ justifyContent: "space-evenly", bgcolor: "action.hover" }}
+        sx={{ justifyContent: "space-evenly" }}
       >
-        <Card variant="outlined" component={Grid} size={{ xs: 4 }}>
-          <CardContent>
+        <Card elevation={5} component={Grid} size={{ xs: 12, md: 4 }}>
+          <CardContent sx={{ bgcolor: "action.hover" }}>
             <Typography variant="caption" color="textSecondary">
               Dimensions
             </Typography>
@@ -92,17 +112,15 @@ const ProductSpecificationts = ({ product }: ProductProp) => {
             {firstSpecificationList.map((specification, index) => (
               <ProductSpecificationCard
                 key={index}
-                specification={isEmptyString(
-                  String(specification.value ?? "N/A")
-                )}
+                specification={String(specification.value)}
                 label={specification.label}
               />
             ))}
           </CardContent>
         </Card>
 
-        <Card variant="outlined" component={Grid} size={{ xs: 4 }}>
-          <CardContent>
+        <Card elevation={5} component={Grid} size={{ xs: 12, md: 4 }}>
+          <CardContent sx={{ bgcolor: "action.hover" }}>
             <Typography variant="caption" color="textSecondary">
               Other
             </Typography>
@@ -112,9 +130,7 @@ const ProductSpecificationts = ({ product }: ProductProp) => {
             {secondSpecificationList.map((specification, index) => (
               <ProductSpecificationCard
                 key={index}
-                specification={isEmptyString(
-                  String(specification.value ?? "N/A")
-                )}
+                specification={String(specification.value)}
                 label={specification.label}
               />
             ))}

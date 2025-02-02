@@ -11,7 +11,6 @@ import {
 import { useGetCategoryByName } from "../../../hooks/categories.hooks";
 import GridLoadingSkeleton from "../../../components/common/load-spinner/GridLoadingSkeleton";
 import ObjectNotFound from "../../../components/common/errors/object-not-found/ObjectNotFound";
-import { useGetProductsByCategoryWithPagination } from "../../../hooks/products.hooks";
 import QueryResultSummary from "../../../components/common/query/QueryResultSummary";
 import { useEffect, useState } from "react";
 import PageLimitSetter from "../../../components/common/query/PageLimitSetter";
@@ -24,10 +23,13 @@ import BreadCrumbs from "../../../components/common/breadcrumbs/BreadCrumbs";
 import { useGetUserWishlist } from "../../../hooks/user";
 import { useAuthUser } from "../../../hooks/auth";
 import priceStore from "../../../zustand/priceSlice";
+import { useGetProductsWithPagination } from "../../../hooks/products.hooks";
+import { Link } from "../../../components/common/react-link/Link";
+import CircleLoadingGrid from "../../../components/common/loaders/CircleLoadingGrid";
 
 const ProductsByCategory = ({ category }: { category: Category }) => {
   const [sortBy, setSortBy] = useState("-createdAt");
-  const [limit, setLimit] = useState(10);
+  const [limit, setLimit] = useState(12);
   const [page, setPage] = useState(1);
 
   const {
@@ -36,13 +38,14 @@ const ProductsByCategory = ({ category }: { category: Category }) => {
     error: errorProducts,
     refetch: refetchProducts,
     isFetching,
-  } = useGetProductsByCategoryWithPagination({
+  } = useGetProductsWithPagination({
     categoryId: category._id,
     minPrice: priceStore.getState().price.min,
     maxPrice: priceStore.getState().price.max,
     limit,
     page,
     sort: sortBy,
+    isKeepPreviousData: true,
   });
 
   const { data: authUser } = useAuthUser();
@@ -60,16 +63,11 @@ const ProductsByCategory = ({ category }: { category: Category }) => {
     window.scrollTo({ top: 0, behavior: "smooth" }); // Smooth scroll to top
   }, [page]);
 
-  if (isLoadingProducts)
-    return (
-      <SkeletonCardGrid
-        sx={{ justifyContent: "center", alignItems: "center", py: 6 }}
-      />
-    );
+  if (isLoadingProducts) return <CircleLoadingGrid />;
   if (errorProducts)
-    return <ObjectNotFound object="Prodcts" onReload={refetchProducts} />;
+    return <ObjectNotFound object="Products" onReload={refetchProducts} />;
   if (!products)
-    return <ObjectNotFound object="Prodcts" onReload={refetchProducts} />;
+    return <ObjectNotFound object="Products" onReload={refetchProducts} />;
   return (
     <Grid
       container
@@ -80,46 +78,55 @@ const ProductsByCategory = ({ category }: { category: Category }) => {
         p: 3,
       }}
     >
-      <BreadCrumbs />
-      <Card>
-        <CardActions sx={{ flexGrow: 1 }}>
-          <Grid size={{ xs: 6 }} container sx={{ flexGrow: 1 }} spacing={2}>
+      {/* <BreadCrumbs /> */}
+      <Card elevation={4}>
+        <CardContent
+          component={Grid}
+          container
+          direction={{ xs: "column", md: "row" }}
+          spacing={1}
+          sx={{ justifyContent: "space-between", alignItems: "center" }}
+        >
+          <Typography>
+            <Link underline="none" to="/products">
+              Products
+            </Link>
+          </Typography>
+          <QueryResultSummary
+            page={page}
+            limit={limit}
+            pagingCounter={products.pagingCounter}
+            countPerPage={products.limit}
+            total={products.totalDocs}
+            querySearch={`Products by ${category.name}`}
+            totalPages={products.totalPages}
+          />
+        </CardContent>
+        <Divider />
+        <CardContent>
+          <Grid
+            container
+            spacing={3}
+            direction={{ xs: "column", md: "row" }}
+            sx={{ alignItems: "center" }}
+          >
             <Grid
-              size={{ xs: 5 }}
               container
               sx={{ justifyContent: "center", alignItems: "center" }}
-            >
-              <Paper variant="outlined" sx={{ flexGrow: 1 }}>
-                <QueryResultSummary
-                  page={page}
-                  limit={limit}
-                  pagingCounter={products.pagingCounter}
-                  countPerPage={products.limit}
-                  sortBy="createdAt"
-                  sortDirection="asc"
-                  total={products.totalDocs}
-                  querySearch={`Products in category ${category.name}`}
-                />
-              </Paper>
-            </Grid>
-            <Grid
-              container
-              sx={{ justifyContent: "center", alignItems: "center" }}
-              size={{ xs: "grow" }}
+              size={{ xs: 12, md: "grow" }}
             >
               <PageLimitSetter limit={limit} setLimit={setLimit} />
             </Grid>
 
             <Grid
               container
-              size={{ xs: "grow" }}
+              size={{ xs: 12, md: "grow" }}
               sx={{ justifyContent: "center", alignItems: "center" }}
             >
               <SortSelecter sortBy={sortBy} handleChange={handleChangeSort} />
             </Grid>
           </Grid>
-        </CardActions>
-
+        </CardContent>
         <Divider />
         <CardContent sx={{ p: 6 }} component={Grid} container spacing={2}>
           {products.docs.map((product) => {
@@ -156,13 +163,12 @@ const ProductsCategory = () => {
     data: category,
     isLoading,
     error,
-    isSuccess,
     refetch: refetchCategory,
   } = useGetCategoryByName({
     categoryName,
   });
 
-  if (isLoading) return <GridLoadingSkeleton />;
+  if (isLoading) return <CircleLoadingGrid />;
   if (error)
     return <ObjectNotFound object="Category" onReload={refetchCategory} />;
   if (!category)

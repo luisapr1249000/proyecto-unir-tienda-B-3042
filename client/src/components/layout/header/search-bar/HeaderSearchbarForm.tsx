@@ -16,42 +16,40 @@ const HeaderSearchbarForm = ({
   >;
   handleEnter: React.KeyboardEventHandler<HTMLDivElement>;
   handleClick: () => void;
-}) => {
-  return (
-    <TextField
-      value={search}
-      placeholder="Search anything you like!"
-      onChange={handleChange}
-      onKeyDown={handleEnter}
-      fullWidth
-      size="small"
-      slotProps={{
-        input: {
-          startAdornment: (
-            <InputAdornment position="start">
-              <Tooltip title="Search">
-                <IconButton size="small" onClick={handleClick}>
-                  <SearchIcon fontSize="inherit" />
-                </IconButton>
-              </Tooltip>
-            </InputAdornment>
-          ),
-          // sx: { bgcolor: "#fff" },
-        },
-      }}
-      sx={{
-        "& .MuiInputBase-input": {},
-        "& .MuiOutlinedInput-root": {
-          borderRadius: 3,
-          boxShadow: 0.5,
+}) => (
+  <TextField
+    value={search}
+    placeholder="Search anything you like!"
+    onChange={handleChange}
+    onKeyDown={handleEnter}
+    fullWidth
+    size="small"
+    slotProps={{
+      input: {
+        startAdornment: (
+          <InputAdornment position="start">
+            <Tooltip title="Search">
+              <IconButton size="small" onClick={handleClick}>
+                <SearchIcon fontSize="inherit" />
+              </IconButton>
+            </Tooltip>
+          </InputAdornment>
+        ),
+        // sx: { bgcolor: "#fff" },
+      },
+    }}
+    sx={{
+      "& .MuiInputBase-input": {},
+      "& .MuiOutlinedInput-root": {
+        borderRadius: 2,
+        borderColor: "primary.main",
 
-          "&:hover fieldset": {
-            borderColor: "#00f",
-          },
+        "&:hover fieldset": {
+          borderColor: "primary.dark",
         },
-      }}
-    />
-  );
-};
+      },
+    }}
+  />
+);
 
 export default HeaderSearchbarForm;

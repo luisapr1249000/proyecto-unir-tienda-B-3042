@@ -1,20 +1,30 @@
 import { Link, RouteObject } from "react-router-dom";
-import CategoryCreate from "../pages/categories/create/CategoryCreate";
-import CategoryUpdate from "../pages/categories/update/CategoryUpdate";
-import Categories from "../pages/categories/categories/Categories";
+import { createLoadableComponent } from "../utils/utils.loadable";
+
+const CategoriesLoadable = createLoadableComponent(
+  () => import("../pages/categories/categories/Categories")
+);
+
+const CategoryCreateLoadable = createLoadableComponent(
+  () => import("../pages/categories/create/CategoryCreate")
+);
+
+const CategoryUpdateLoadable = createLoadableComponent(
+  () => import("../pages/categories/update/CategoryUpdate")
+);
 
 const categoryRoutes: RouteObject[] = [
   {
     path: "categories",
-    element: <Categories />,
+    element: <CategoriesLoadable />,
   },
   {
     path: "categories/create",
-    element: <CategoryCreate />,
+    element: <CategoryCreateLoadable />,
   },
   {
     path: "categories/:categoryId/update",
-    element: <CategoryUpdate />,
+    element: <CategoryUpdateLoadable />,
   },
 ];
 

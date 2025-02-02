@@ -1,60 +1,80 @@
+import SearchIcon from "@mui/icons-material/Search";
 import { Drawer } from "@mui/material";
-import React, { useState } from "react";
-import Grid from "@mui/material/Grid2";
-import { useNavigate, useParams } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import HeaderSearchbarForm from "../HeaderSearchbarForm";
-import SearchBarIconButton from "./SearchBarIconButton";
+import Grid from "@mui/material/Grid2";
+import { BorderIconButton } from "../../../../common/buttons/iconbutton-delete/IconButtonDelete";
 
 const HeaderDrawerSearchbar = ({
   open,
-  handleDrawerClick,
+  onCloseDrawer,
 }: {
   open: boolean;
-  handleDrawerClick: () => void;
+  onCloseDrawer: () => void;
 }) => {
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const handleOpen = () => setIsDrawerOpen(true);
+  const handleCloseDrawer = () => setIsDrawerOpen(false);
   const navigate = useNavigate();
-  const { searchProduct } = useParams();
-  const [search, setSearch] = useState(searchProduct ?? "");
+  const [searchParams] = useSearchParams();
+  const [search, setSearch] = useState(searchParams.get("query") ?? "");
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearch?.(e.currentTarget.value);
+    setSearch(e.currentTarget.value);
   };
 
   const handleEnter = (e: React.KeyboardEvent<HTMLDivElement>) => {
     if (e.key === "Enter" && search && search.length > 0) {
-      navigate(`/products/search/${search}`);
-      handleDrawerClick();
+      handleCloseDrawer();
+      navigate(`/products/search?query=${search}`);
     }
   };
   const handleClick = () => {
     if (search && search.length > 0) {
-      handleDrawerClick();
+      onCloseDrawer();
       navigate(`/products/search/${search}`);
     }
   };
+
   return (
-    <Drawer
-      variant="temporary"
-      sx={{
-        height: "calc(100vh)",
-        zIndex: (theme) => theme.zIndex.drawer + 1,
-        p: 3,
-        "& .MuiDrawer-paper": {
-          height: "calc(20vh)",
-          p: 3,
-        },
-      }}
-      open={open}
-      onClose={handleDrawerClick}
-      anchor="top"
-    >
-      <HeaderSearchbarForm
-        search={search}
-        handleChange={handleChange}
-        handleClick={handleClick}
-        handleEnter={handleEnter}
-      />
-    </Drawer>
+    <>
+      <Drawer
+        variant="temporary"
+        sx={{
+          zIndex: (theme) => theme.zIndex.drawer + 1,
+          "& .MuiDrawer-paper": {
+            p: 3,
+          },
+        }}
+        open={isDrawerOpen}
+        onClose={handleCloseDrawer}
+        anchor="top"
+      >
+        <HeaderSearchbarForm
+          search={search}
+          handleChange={handleChange}
+          handleClick={handleClick}
+          handleEnter={handleEnter}
+        />
+      </Drawer>
+      <Grid
+        size={{ xs: "grow" }}
+        container
+        sx={{
+          justifyContent: "flex-end",
+          display: { xs: "flex", md: "none" },
+        }}
+      >
+        <BorderIconButton
+          onClick={handleOpen}
+          size="small"
+          tooltipTitle="Search"
+        >
+          <SearchIcon />
+        </BorderIconButton>
+      </Grid>
+    </>
   );
 };
 

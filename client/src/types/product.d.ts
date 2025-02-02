@@ -23,3 +23,5 @@ export type ProductQuestionAnswer = z.infer<typeof productAnswerInputSchema>;
 
 export type ProductUserQuestionId = z.infer<typeof productUserQuestionId>;
 export type ProductQuestion = z.infer<typeof productQuestionSchema>;
+
+export type ProductData = { data: ProductInput };

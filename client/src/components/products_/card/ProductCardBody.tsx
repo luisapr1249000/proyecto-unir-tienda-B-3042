@@ -1,25 +1,26 @@
-import { CardContent, Rating } from "@mui/material";
+import { CardContent, Rating, Tooltip } from "@mui/material";
 import Grid from "@mui/material/Grid2";
 import { Typography } from "@mui/material";
-import ReactLink from "../../common/react-link/ReactLink";
+import { ProductProp } from "../../../types/product";
 
 // Subcomponent for Product Ratings and Sales
 const ProductRatingsAndSales = ({
   averageReview,
+  soldCount,
 }: {
   averageReview: number;
+  soldCount: number;
 }) => (
   <Grid
     container
     spacing={1}
     sx={{ alignItems: "center", justifyContent: "flex-start" }}
   >
+    <Tooltip title="Average Review">
+      <Rating value={averageReview} size="small" readOnly />
+    </Tooltip>
     <Typography color="textSecondary" variant="caption">
-      {averageReview}
-    </Typography>
-    <Rating value={averageReview} size="small" readOnly />
-    <Typography color="textSecondary" variant="caption">
-      40 Sold
+      {soldCount ?? 0} Sold
     </Typography>
   </Grid>
 );
@@ -88,13 +89,16 @@ const RegularPrice = ({
   </Typography>
 );
 
-// Main ProductCardContent Component
-const ProductCardContent = ({ product }: { product: any }) => {
-  const { averageReview, name, price, finalPrice, discount, _id } = product;
+const ProductCardContent = ({ product }: ProductProp) => {
+  const { averageReview, name, price, finalPrice, discount, _id, soldCount } =
+    product;
 
   return (
     <CardContent>
-      <ProductRatingsAndSales averageReview={averageReview} />
+      <ProductRatingsAndSales
+        soldCount={soldCount}
+        averageReview={averageReview}
+      />
       <ProductName name={name} />
       {discount ? (
         <DiscountedPrice

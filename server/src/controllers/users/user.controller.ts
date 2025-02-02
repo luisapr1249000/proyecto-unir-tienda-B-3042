@@ -95,7 +95,8 @@ class UserController {
         filterQuery.$text = { $search: String(searchQuery) };
       }
 
-      const users = await User.paginate(filterQuery, options);
+      const users = await User.paginate({ isSeller: true }, options);
+      console.log(users);
       if (!users || users.docs.length === 0)
         return handleObjectNotFound(res, "User", true);
 

@@ -8,7 +8,7 @@ const PageLimitSetter = ({
   limit: number;
   setLimit: (limit: number) => void;
 }) => {
-  const options = [10, 20, 30, 40, 50];
+  const options = [12, 24, 36, 48, 50];
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setLimit(parseInt(e.target.value));
   };

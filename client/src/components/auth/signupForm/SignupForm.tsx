@@ -11,12 +11,17 @@ import LoadSpinner from "../../common/load-spinner/LoadSpinner";
 import { toast } from "react-toastify";
 import ShowPassword from "../show-password/ShowPassword";
 import GridLoaderCenter from "../../common/grid/grid-loader-center/GridLoaderCenter";
+import ContainerLoader from "../../common/loaders/ContainerLoader";
 
 const SignupForm = () => {
   const [showPassword, setShowPassword] = useState(false);
   const handleClickShowPassword = () => setShowPassword((show) => !show);
   const queryClient = useQueryClient();
-  const { mutate, isPending, error } = useMutation({
+  const {
+    mutate: signUpMutate,
+    isPending,
+    error,
+  } = useMutation({
     mutationFn: signup,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["authUser"] });
@@ -35,10 +40,11 @@ const SignupForm = () => {
   const formik = useFormik({
     initialValues,
     validationSchema: toFormikValidationSchema(signupSchema),
-    onSubmit: (values) => {
-      mutate(values);
+    onSubmit: (values, { resetForm }) => {
+      signUpMutate(values, { onError: () => resetForm() });
     },
   });
+  if (isPending) return <ContainerLoader />;
   return (
     <Grid
       spacing={3}
@@ -47,169 +53,163 @@ const SignupForm = () => {
       container
       size={{ xs: 12 }}
     >
-      {isPending ? (
-        <GridLoaderCenter />
-      ) : (
-        <>
-          <Grid size={{ xs: 12 }}>
-            <TextField
-              fullWidth
-              required
-              id="username"
-              name="username"
-              label="Username"
-              placeholder="Username"
-              value={formik.values.username}
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-              error={formik.touched.username && Boolean(formik.errors.username)}
-              helperText={
-                formik.touched.username && Boolean(formik.errors.username)
-                  ? formik.errors.username
-                  : undefined
-              }
-              slotProps={{
-                inputLabel: { shrink: true },
-              }}
-              focused={
-                formik.touched.username && Boolean(!formik.errors.username)
-                  ? true
-                  : undefined
-              }
-              color={
-                formik.touched.username && Boolean(!formik.errors.username)
-                  ? "success"
-                  : undefined
-              }
-            />
-          </Grid>
-          <Grid size={{ xs: 12 }}>
-            <TextField
-              fullWidth
-              required
-              id="email"
-              type="email"
-              name="email"
-              label="Email"
-              placeholder="Email"
-              value={formik.values.email}
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-              error={formik.touched.email && Boolean(formik.errors.email)}
-              helperText={
-                formik.touched.email && Boolean(formik.errors.email)
-                  ? formik.errors.email
-                  : undefined
-              }
-              slotProps={{
-                inputLabel: { shrink: true },
-              }}
-              focused={
-                formik.touched.email && Boolean(!formik.errors.email)
-                  ? true
-                  : undefined
-              }
-              color={
-                formik.touched.email && Boolean(!formik.errors.email)
-                  ? "success"
-                  : undefined
-              }
-            />
-          </Grid>
-          <Grid size={{ xs: 12 }}>
-            <TextField
-              fullWidth
-              required
-              type={showPassword ? "text" : "password"}
-              id="password"
-              name="password"
-              label="Password"
-              placeholder="Password"
-              value={formik.values.password}
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-              error={formik.touched.password && Boolean(formik.errors.password)}
-              helperText={
-                formik.touched.password && Boolean(formik.errors.password)
-                  ? formik.errors.password
-                  : undefined
-              }
-              slotProps={{
-                input: {
-                  endAdornment: (
-                    <InputAdornment position="end">
-                      <ShowPassword
-                        showPassword={showPassword}
-                        handleClickShowPassword={handleClickShowPassword}
-                      />
-                    </InputAdornment>
-                  ),
-                },
-                inputLabel: { shrink: true },
-              }}
-              focused={
-                formik.touched.password && Boolean(!formik.errors.password)
-                  ? true
-                  : undefined
-              }
-              color={
-                formik.touched.password && Boolean(!formik.errors.password)
-                  ? "success"
-                  : undefined
-              }
-            />
-          </Grid>
-          <Grid size={{ xs: 12 }}>
-            <TextField
-              fullWidth
-              required
-              type={showPassword ? "text" : "password"}
-              id="confirmPassword"
-              name="confirmPassword"
-              label="Confirm Password"
-              placeholder="Confirm Password"
-              value={formik.values.confirmPassword}
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-              error={
-                formik.touched.confirmPassword &&
-                Boolean(formik.errors.confirmPassword)
-              }
-              helperText={
-                formik.touched.confirmPassword &&
-                Boolean(formik.errors.confirmPassword)
-                  ? formik.errors.confirmPassword
-                  : undefined
-              }
-              slotProps={{
-                input: {
-                  endAdornment: (
-                    <InputAdornment position="end">
-                      <ShowPassword
-                        showPassword={showPassword}
-                        handleClickShowPassword={handleClickShowPassword}
-                      />
-                    </InputAdornment>
-                  ),
-                },
-                inputLabel: { shrink: true },
-              }}
-              focused={
-                formik.touched.confirmPassword &&
-                Boolean(!formik.errors.confirmPassword)
-                  ? true
-                  : undefined
-              }
-              color={
-                formik.touched.confirmPassword &&
-                Boolean(!formik.errors.confirmPassword)
-                  ? "success"
-                  : undefined
-              }
-            />
-          </Grid>
-        </>
-      )}
+      <Grid size={{ xs: 12 }}>
+        <TextField
+          fullWidth
+          required
+          id="username"
+          name="username"
+          label="Username"
+          placeholder="Username"
+          value={formik.values.username}
+          onChange={formik.handleChange}
+          onBlur={formik.handleBlur}
+          error={formik.touched.username && Boolean(formik.errors.username)}
+          helperText={
+            formik.touched.username && Boolean(formik.errors.username)
+              ? formik.errors.username
+              : undefined
+          }
+          slotProps={{
+            inputLabel: { shrink: true },
+          }}
+          focused={
+            formik.touched.username && Boolean(!formik.errors.username)
+              ? true
+              : undefined
+          }
+          color={
+            formik.touched.username && Boolean(!formik.errors.username)
+              ? "success"
+              : undefined
+          }
+        />
+      </Grid>
+      <Grid size={{ xs: 12 }}>
+        <TextField
+          fullWidth
+          required
+          id="email"
+          type="email"
+          name="email"
+          label="Email"
+          placeholder="Email"
+          value={formik.values.email}
+          onChange={formik.handleChange}
+          onBlur={formik.handleBlur}
+          error={formik.touched.email && Boolean(formik.errors.email)}
+          helperText={
+            formik.touched.email && Boolean(formik.errors.email)
+              ? formik.errors.email
+              : undefined
+          }
+          slotProps={{
+            inputLabel: { shrink: true },
+          }}
+          focused={
+            formik.touched.email && Boolean(!formik.errors.email)
+              ? true
+              : undefined
+          }
+          color={
+            formik.touched.email && Boolean(!formik.errors.email)
+              ? "success"
+              : undefined
+          }
+        />
+      </Grid>
+      <Grid size={{ xs: 12 }}>
+        <TextField
+          fullWidth
+          required
+          type={showPassword ? "text" : "password"}
+          id="password"
+          name="password"
+          label="Password"
+          placeholder="Password"
+          value={formik.values.password}
+          onChange={formik.handleChange}
+          onBlur={formik.handleBlur}
+          error={formik.touched.password && Boolean(formik.errors.password)}
+          helperText={
+            formik.touched.password && Boolean(formik.errors.password)
+              ? formik.errors.password
+              : undefined
+          }
+          slotProps={{
+            input: {
+              endAdornment: (
+                <InputAdornment position="end">
+                  <ShowPassword
+                    showPassword={showPassword}
+                    handleClickShowPassword={handleClickShowPassword}
+                  />
+                </InputAdornment>
+              ),
+            },
+            inputLabel: { shrink: true },
+          }}
+          focused={
+            formik.touched.password && Boolean(!formik.errors.password)
+              ? true
+              : undefined
+          }
+          color={
+            formik.touched.password && Boolean(!formik.errors.password)
+              ? "success"
+              : undefined
+          }
+        />
+      </Grid>
+      <Grid size={{ xs: 12 }}>
+        <TextField
+          fullWidth
+          required
+          type={showPassword ? "text" : "password"}
+          id="confirmPassword"
+          name="confirmPassword"
+          label="Confirm Password"
+          placeholder="Confirm Password"
+          value={formik.values.confirmPassword}
+          onChange={formik.handleChange}
+          onBlur={formik.handleBlur}
+          error={
+            formik.touched.confirmPassword &&
+            Boolean(formik.errors.confirmPassword)
+          }
+          helperText={
+            formik.touched.confirmPassword &&
+            Boolean(formik.errors.confirmPassword)
+              ? formik.errors.confirmPassword
+              : undefined
+          }
+          slotProps={{
+            input: {
+              endAdornment: (
+                <InputAdornment position="end">
+                  <ShowPassword
+                    showPassword={showPassword}
+                    handleClickShowPassword={handleClickShowPassword}
+                  />
+                </InputAdornment>
+              ),
+            },
+            inputLabel: { shrink: true },
+          }}
+          focused={
+            formik.touched.confirmPassword &&
+            Boolean(!formik.errors.confirmPassword)
+              ? true
+              : undefined
+          }
+          color={
+            formik.touched.confirmPassword &&
+            Boolean(!formik.errors.confirmPassword)
+              ? "success"
+              : undefined
+          }
+        />
+      </Grid>
 
       <Grid container size={{ xs: 12 }}>
         <SubmitButton fullWidth isValid={formik.isValid} />

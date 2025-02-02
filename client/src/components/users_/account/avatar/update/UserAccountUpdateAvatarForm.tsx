@@ -4,14 +4,13 @@ import Grid from "@mui/material/Grid2";
 import { useFormik } from "formik";
 import { toFormikValidationSchema } from "zod-formik-adapter";
 import { avatarSchema } from "../../../../../validation-schemas/image.validation";
-import { Divider } from "@mui/material";
 import CancelButton from "../../../../common/buttons/cancel-button/CancelButton";
 import SubmitButton from "../../../../common/buttons/submit-button/SubmitButton";
 import DisplayImagePreview from "../../../../common/display-image-preview/DisplayImagePreview";
 import { useMutation } from "@tanstack/react-query";
 import { uploadUserAvatar } from "../../../../../api/users/user.api";
 import { toast } from "react-toastify";
-import CircleLoadingGrid from "../../../../common/loaders/CircleLoadingGrid";
+import ContainerLoader from "../../../../common/loaders/ContainerLoader";
 
 const UserAccountUpdateAvatarForm = () => {
   const { mutate: uploadUserAvatarMutation, isPending } = useMutation({
@@ -47,7 +46,7 @@ const UserAccountUpdateAvatarForm = () => {
     if (formik.values.avatar) formik.setFieldValue("avatar", undefined);
   };
 
-  if (isPending) return <CircleLoadingGrid />;
+  if (isPending) return <ContainerLoader />;
 
   return (
     <Grid

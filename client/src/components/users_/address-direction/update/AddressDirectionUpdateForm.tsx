@@ -9,6 +9,7 @@ import { AddressDirection } from "../../../../types/user";
 import { updateAddress } from "../../../../api/users/address.api";
 import { toast } from "react-toastify";
 import { useMutation } from "@tanstack/react-query";
+import SelectAddresDirectionType from "../create/SelectAddressDirection";
 
 const AddressDirectionUpdateForm = ({
   address,
@@ -53,6 +54,10 @@ const AddressDirectionUpdateForm = ({
       });
     },
   });
+
+  const setAddressType = (value: "home" | "work") => {
+    formik.setFieldValue("addressType", value);
+  };
 
   return (
     <Grid container spacing={3} component="form" onSubmit={formik.handleSubmit}>
@@ -208,6 +213,12 @@ const AddressDirectionUpdateForm = ({
               ? formik.errors.country
               : undefined
           }
+        />
+      </Grid>
+      <Grid size={{ xs: 12 }}>
+        <SelectAddresDirectionType
+          addressType={formik.values.addressType}
+          setAddressType={setAddressType}
         />
       </Grid>
       <Grid size={{ xs: 12 }}>

@@ -9,6 +9,7 @@ export type Category = z.infer<typeof categorySchema>;
 export type CategoryInput = z.infer<typeof categoryInputSchema>;
 export type CategoryId = { categoryId: string };
 export type CategoryName = { categoryName: string };
+export type CategoryData = { data: CategoryInput };
 
 export type CategoryAndLink = Category & Link;
 

@@ -9,8 +9,8 @@ const ModeSwitcher = () => {
   if (!mode) return null;
 
   const options = [
-    { label: "system", icon: <SettingsBrightnessIcon /> },
     { label: "dark", icon: <DarkModeIcon /> },
+    { label: "system", icon: <SettingsBrightnessIcon /> },
     { label: "light", icon: <LightModeIcon /> },
   ];
 

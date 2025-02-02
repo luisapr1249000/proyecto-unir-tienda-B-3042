@@ -35,7 +35,7 @@ export const cartItem = z.object({
 });
 
 export const userCartSchema = z.object({
-  items: z.array(cartItem).default([]),
+  items: z.array(cartItem),
   totalPrice: z.number().positive().default(0),
   totalItems: z.number().positive().default(0),
 });

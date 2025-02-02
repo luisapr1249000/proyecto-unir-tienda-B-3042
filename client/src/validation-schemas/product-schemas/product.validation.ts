@@ -58,11 +58,11 @@ export const otherProductProps = z.object({
   categories: z.array(categorySchema),
   author: userSchema,
   wishlistCount: wishlistCountField,
-  reviewCount: reviewCountField,
   averageReview: averageReviewField,
   productQuestions: z.array(productQuestionSchema).optional(),
   images: z.array(imageSchema).default([]),
   finalPrice: z.coerce.number().nonnegative().multipleOf(0.01),
+  soldCount: createPositiveIntegerField({ fieldName: "Sold Count" }),
 });
 
 export const productSchema = abstractSchema()

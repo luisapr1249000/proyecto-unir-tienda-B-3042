@@ -11,3 +11,4 @@ export type Report = z.infer<typeof reportSchema>;
 export type ReportInput = z.infer<typeof reportInputSchema>;
 export type ReportResolution = z.infer<typeof reportResolutionSchema>;
 export type ReportedItemId = { reportedItemId: string };
+export type ReportData = { data: ReportInput };

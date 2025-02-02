@@ -12,10 +12,9 @@ import {
   GridRowId,
   GridToolbar,
 } from "@mui/x-data-grid";
-import DialogConfirmAction from "../../../common/confirm-delete-object/ConfirmDeleteObject";
 import { User } from "../../../../types/user";
-import { PaginationModel } from "../../../../types/paginationResult";
 import { Link } from "../../../common/react-link/Link";
+import { PaginationModel } from "../../../../types/query";
 
 const AdminUserTable = ({
   users,
@@ -120,12 +119,12 @@ const AdminUserTable = ({
 
   return (
     <>
-      <DialogConfirmAction
+      {/* <DialogConfirmAction
         object="User"
         onDeleteObject={() => {}}
         onCancel={() => setOpenDrag(false)}
         open={openDrag}
-      />
+      /> */}
       <DataGrid
         sx={{ p: 3 }}
         disableColumnFilter

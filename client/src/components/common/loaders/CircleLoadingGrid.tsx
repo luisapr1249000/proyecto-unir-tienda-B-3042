@@ -8,10 +8,9 @@ const CircleLoadingGrid = ({ message }: { message?: string }) => {
     <Grid
       container
       sx={{
+        height: "calc(100vh)",
         justifyContent: "center",
         alignItems: "center",
-        height: "calc(100vh)",
-        width: "100%",
       }}
     >
       <Grid
@@ -19,14 +18,12 @@ const CircleLoadingGrid = ({ message }: { message?: string }) => {
         sx={{
           justifyContent: "center",
           alignItems: "center",
-          height: "calc(100vh)",
-          width: "100%",
         }}
         direction="column"
         spacing={3}
       >
         <CircularProgress color="inherit" />
-        <Typography variant="body2">{message ?? ""}</Typography>
+        {message && <Typography variant="body2">{message} ...</Typography>}
       </Grid>
     </Grid>
   );

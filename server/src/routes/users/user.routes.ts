@@ -21,10 +21,11 @@ import { userPaginationAndSort } from "../../validation-schemas/query.validation
 const router = Router();
 
 router.get(
-  "/users/",
+  "/users",
   validateObjectQueryParams(userPaginationAndSort),
   userController.getUsersWithPagination,
 );
+
 router.put(
   "/users/:userId",
   authMiddleware,
@@ -32,6 +33,7 @@ router.put(
   validateSchemaBody(userInputSchema),
   userController.updateUser,
 );
+
 router.delete(
   "/users/:userId",
   authMiddleware,
@@ -39,6 +41,7 @@ router.delete(
   verifyUserOwnershipOrAdminRole("userId"),
   userController.deleteUser,
 );
+
 router.get(
   "/users/:userId",
   validateObjectIdParams(USER_ID),

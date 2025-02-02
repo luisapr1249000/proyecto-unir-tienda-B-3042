@@ -80,6 +80,8 @@ export const productPaginationAndSortSchema = paginationCoerceSchema
   );
 
 export const reviewPaginationAndSortSchema = paginationCoerceSchema.extend({
+  authorId: objectIdValidator().optional(),
+  productId: objectIdValidator().optional(),
   searchQuery: searchQueryField.optional(),
 });
 

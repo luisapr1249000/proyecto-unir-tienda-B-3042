@@ -19,9 +19,15 @@ const reviewField = createPositiveIntegerField({
   maxValue: 5,
 });
 
+export const reviewTitleField = createValidStringField({
+  fieldName: "title",
+  maxLength: 50,
+});
+
 export const reviewInputSchema = z.object({
+  title: reviewTitleField,
   content: reviewContentField,
-  review: reviewField,
+  rating: reviewField,
   images: imageFileArraySchema.optional(),
 });
 

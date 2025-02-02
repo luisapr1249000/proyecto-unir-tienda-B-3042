@@ -20,13 +20,12 @@ import Grid from "@mui/material/Grid2";
 import { Link, useNavigate } from "react-router-dom";
 import { logout } from "../../../../../api/auth.api";
 import LoadSpinner from "../../../../common/load-spinner/LoadSpinner";
-import { User } from "../../../../../types/user";
 import UserCart from "../user-cart/UserCart";
+import { useAuthUser } from "../../../../../hooks/auth";
+import { isAdmin } from "../../../../../utils/utils";
 const HeaderUserMenu = () => {
   const navigate = useNavigate();
-  const { data: authUser, isLoading } = useQuery<User>({
-    queryKey: ["authUser"],
-  });
+  const { data: authUser, isLoading } = useAuthUser();
   const queryClient = useQueryClient();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
@@ -37,16 +36,33 @@ const HeaderUserMenu = () => {
     setAnchorEl(null);
   };
 
-  const settings = [
+  const adminOrSellerOptions = [
     {
       label: "Post Product",
       link: `/products/create`,
       icon: <PermIdentityIcon />,
+      requiresSeller: true,
     },
     {
       label: "Create Category",
       link: `/categories/create`,
       icon: <PermIdentityIcon />,
+      requiresSeller: true,
+    },
+  ];
+
+  const settings = [
+    {
+      label: "Post Product",
+      link: `/products/create`,
+      icon: <PermIdentityIcon />,
+      requiresSeller: true,
+    },
+    {
+      label: "Create Category",
+      link: `/categories/create`,
+      icon: <PermIdentityIcon />,
+      requiresSeller: true,
     },
     {
       label: "Account",
@@ -81,9 +97,12 @@ const HeaderUserMenu = () => {
       <Typography variant="body2">Logout</Typography>
     </MenuItem>
   );
+
+  if (isLoading) return <LoadSpinner />;
+  if (!authUser) return <></>;
+  console.log(authUser);
   return (
     <Grid
-      // size={{}}
       container
       sx={{ justifyContent: "center", alignItems: "center" }}
       spacing={1}
@@ -100,21 +119,30 @@ const HeaderUserMenu = () => {
             onClose={handleClose}
             open={Boolean(anchorEl)}
           >
-            {settings.map((setting) => (
-              <MenuItem
-                component={Link}
-                to={setting.link}
-                onClick={handleClose}
-                divider
-                key={setting.label}
-              >
-                <ListItemIcon>{setting.icon}</ListItemIcon>
-                <Typography variant="body2">{setting.label}</Typography>
-              </MenuItem>
-            ))}
+            {settings.map((setting) => {
+              const authSetting = ["Create Category", "Post Product"];
+              const isSellerOrAdmin =
+                authUser && (isAdmin(authUser.role) || authUser.isSeller);
+              console.log("isSellerOrAdmin", isSellerOrAdmin);
+              if (!isSellerOrAdmin && authSetting.includes(setting.label))
+                return <></>;
+              else
+                return (
+                  <MenuItem
+                    component={Link}
+                    to={setting.link}
+                    onClick={handleClose}
+                    divider
+                    key={setting.label}
+                  >
+                    <ListItemIcon>{setting.icon}</ListItemIcon>
+                    <Typography variant="body2">{setting.label}</Typography>
+                  </MenuItem>
+                );
+            })}
             {logoutItem}
           </Menu>
-          <UserCart />
+          <UserCart userId={authUser._id} username={authUser.username} />
         </>
       )}
     </Grid>

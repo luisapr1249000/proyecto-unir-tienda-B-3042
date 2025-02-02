@@ -29,6 +29,7 @@ export const userInputSchema = z.object({
   lastName: lastNameField,
   bio: biographyField,
   mobilePhone: phoneNumberField().optional(),
+  birthday: z.date().or(z.string()).nullish(),
 });
 
 export const userRole = z.enum(["user", "admin"]);

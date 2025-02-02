@@ -1,14 +1,11 @@
 import { api } from "../config/axios.config";
 import {
-  PaginationConfig,
-  PaginationResultReports,
-} from "../types/paginationResult";
-import {
   Report,
   ReportedItemId,
   ReportInput,
   ReportResolution,
 } from "../types/report";
+import { PaginationOptions, ReportPaginationResults } from "../types/query";
 
 export const createReport = async ({
   reportedItemId,
@@ -34,8 +31,8 @@ export const getReportsWithPagination = async ({
   page,
   limit,
   sort,
-}: PaginationConfig): Promise<PaginationResultReports> => {
-  const response = await api<PaginationResultReports>(
+}: PaginationOptions): Promise<ReportPaginationResults> => {
+  const response = await api<ReportPaginationResults>(
     `/reports?page=${page}&limit=${limit}&sort=${sort}`
   );
   return response.data;
@@ -51,8 +48,8 @@ export const getReportsFromProduct = async ({
   page,
   limit,
   sort,
-}: PaginationConfig & { productId: string }) => {
-  const response = await api<PaginationResultReports>(
+}: PaginationOptions & { productId: string }) => {
+  const response = await api<ReportPaginationResults>(
     `/reports/products/${productId}?page=${page}&limit=${limit}&sort=${sort}`
   );
 
@@ -64,8 +61,8 @@ export const getReportsFromReview = async ({
   page,
   limit,
   sort,
-}: PaginationConfig & { reviewId: string }) => {
-  const response = await api<PaginationResultReports>(
+}: PaginationOptions & { reviewId: string }) => {
+  const response = await api<ReportPaginationResults>(
     `/reports/reviews/${reviewId}?page=${page}&limit=${limit}&sort=${sort}`
   );
 
@@ -77,8 +74,8 @@ export const getReportsFromUser = async ({
   page,
   limit,
   sort,
-}: PaginationConfig & { userId: string }) => {
-  const response = await api<PaginationResultReports>(
+}: PaginationOptions & { userId: string }) => {
+  const response = await api<ReportPaginationResults>(
     `/reports/users/${userId}?page=${page}&limit=${limit}&sort=${sort}`
   );
 
@@ -89,8 +86,8 @@ export const getReportedProducts = async ({
   page,
   limit,
   sort,
-}: PaginationConfig) => {
-  const response = await api<PaginationResultReports>(
+}: PaginationOptions) => {
+  const response = await api<ReportPaginationResults>(
     `/reports?page=${page}&limit=${limit}&sort=${sort}`
   );
   return response.data;

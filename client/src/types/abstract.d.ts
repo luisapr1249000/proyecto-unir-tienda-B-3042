@@ -8,3 +8,10 @@ export type ListItemProps = {
   icon?: React.ReactNode;
   description?: string;
 };
+
+export type MenuItem = {
+  label: string;
+  link: string;
+  icon?: React.ReactNode;
+  description?: string;
+};

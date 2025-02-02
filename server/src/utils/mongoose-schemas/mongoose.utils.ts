@@ -45,6 +45,10 @@ export const createAddressSchema = ({
         enum: ["home", "work"],
       },
       mobilePhone: String,
+      isDefault: {
+        type: Boolean,
+        default: false,
+      },
     },
     { timestamps: withTimestamps, _id: withId },
   );

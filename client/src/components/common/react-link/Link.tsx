@@ -5,8 +5,13 @@ import {
   ListItem,
   TypographyProps,
   Typography,
+  ListItemButtonProps,
+  ListItemButton,
+  ListItemIconProps,
+  ListItemIcon,
+  Grid2Props,
 } from "@mui/material";
-import { blue } from "@mui/material/colors";
+import Grid from "@mui/material/Grid2";
 import {
   NavLink,
   Link as ReactLink_,
@@ -21,12 +26,20 @@ export const Link = (props: LinkProps & MuiLinkProps) => (
 export const ListItemLink = (props: ListItemProps & NavLinkProps) => (
   <ListItem
     sx={{
-      color: "text.primary",
-      "&.active": { color: blue[50], bgcolor: blue[500] },
+      color: "text.secondary",
+      "&.active": { color: "text.primary", bgcolor: "action.hover" },
     }}
     component={NavLink}
     {...props}
   />
+);
+
+export const NavLinkListItemButton = (
+  props: ListItemButtonProps & NavLinkProps
+) => <ListItemButton component={NavLink} {...props} />;
+
+export const GridNavLink = (props: Grid2Props & NavLinkProps) => (
+  <Grid component={NavLink} {...props} />
 );
 
 export const LinkText = (props: LinkProps & MuiLinkProps) => (

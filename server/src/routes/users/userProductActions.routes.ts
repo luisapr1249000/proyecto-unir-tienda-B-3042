@@ -14,11 +14,19 @@ import { cartItemSchema } from "../../validation-schemas/user-schemas/user.valid
 
 const router = Router();
 // -------------------------------- cart ------------------
+router.delete(
+  "/users/:userId/clean-cart",
+  authMiddleware,
+  validateObjectIdParams(USER_ID),
+  isUserOwnerOrAdmin,
+  userProductActionController.cleanUserCart,
+);
+
 router.get(
   "/users/:userId/cart",
   authMiddleware,
   validateObjectIdParams(USER_ID),
-  isUserOwnerOrAdmin,
+  // isUserOwnerOrAdmin,
   userProductActionController.getUserCart,
 );
 
@@ -34,6 +42,14 @@ router.post(
 
 // -------------------------------- cart ------------------
 // -------------------------------- wishlist ------------------
+router.delete(
+  "/users/:userId/clean-wishlist",
+  authMiddleware,
+  validateObjectIdParams(USER_ID),
+  isUserOwnerOrAdmin,
+  userProductActionController.cleanUserWishlist,
+);
+
 router.get(
   "/users/:userId/wishlist",
   authMiddleware,

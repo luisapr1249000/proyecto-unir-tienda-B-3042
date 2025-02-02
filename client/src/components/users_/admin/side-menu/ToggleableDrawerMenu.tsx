@@ -1,7 +1,7 @@
 import React from "react";
 import HomeIcon from "@mui/icons-material/Home";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
-import ToggleableDrawer from "../../../common/drawers/ToggleableDrawer";
+import ToggleableDrawer from "../../../common/drawers/ToggleableSideMenu";
 import ToggleableDrawerList from "../../../common/drawers/lists/ToggleableDrawerList";
 import MobileToggleableDrawer from "../../../common/drawers/MobileToggleableDrawer";
 
@@ -36,14 +36,17 @@ const ToggleableDrawerMenu = ({
 
   return (
     <>
-      <ToggleableDrawer handleOpen={handleOpen} isOpen={isOpen}>
-        <ToggleableDrawerList isDrawOpen={isOpen} listItem={options} />
+      <ToggleableDrawer onClick={handleOpen} isSideMenuOpen={isOpen}>
+        <ToggleableDrawerList isSideMenuOpen={isOpen} listItem={options} />
       </ToggleableDrawer>
       <MobileToggleableDrawer
-        handleOpen={handleDrawerOpen}
+        onCloseDrawer={handleDrawerOpen}
         isOpen={isDrawerOpen}
       >
-        <ToggleableDrawerList isDrawOpen={isDrawerOpen} listItem={options} />
+        <ToggleableDrawerList
+          isSideMenuOpen={isDrawerOpen}
+          listItem={options}
+        />
       </MobileToggleableDrawer>
     </>
   );

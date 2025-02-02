@@ -1,16 +1,35 @@
-import React from "react";
+import React, { useState } from "react";
 import Header from "../layout/header/header/Header";
-import { Box, Toolbar } from "@mui/material";
 import { Outlet } from "react-router-dom";
-import { Footer } from "../layout/footer/Footer";
 import Grid from "@mui/material/Grid2";
+import MobileToggleableDrawer from "../common/drawers/MobileToggleableDrawer";
+import ToggleableDrawerList from "../common/drawers/lists/ToggleableDrawerList";
+import { createMenuItems } from "../../utils/menu.utils";
 
 const AuthLayout = () => {
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const handleOpenDrawer = () => setIsDrawerOpen(true);
+  const handleCloseDrawer = () => setIsDrawerOpen(false);
+
   return (
-    <Grid sx={{ minHeight: "calc(100vh)" }} direction="column" container>
-      <Header />
-      <Outlet />
-    </Grid>
+    <>
+      <Header handleOpenDrawer={handleOpenDrawer} />
+
+      <MobileToggleableDrawer
+        onCloseDrawer={handleCloseDrawer}
+        isOpen={isDrawerOpen}
+      >
+        <ToggleableDrawerList
+          isSideMenuOpen={isDrawerOpen}
+          listItem={createMenuItems()}
+          onCloseDrawer={handleCloseDrawer}
+        />
+      </MobileToggleableDrawer>
+
+      <Grid sx={{ minHeight: "calc(100vh)" }} direction="column" container>
+        <Outlet />
+      </Grid>
+    </>
   );
 };
 

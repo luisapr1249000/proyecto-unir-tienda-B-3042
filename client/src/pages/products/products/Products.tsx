@@ -1,32 +1,36 @@
-import React, { useEffect, useState } from "react";
-import {
-  // useGetProductsWithPagination,
-  useGetProductsWithPagination_,
-} from "../../../hooks/products.hooks";
+import { useEffect, useState } from "react";
+import { useGetProductsWithPagination } from "../../../hooks/products.hooks";
 import Grid from "@mui/material/Grid2";
 import ProductCard from "../../../components/products_/card/ProductCard";
-import ObjectNotFound from "../../../components/common/errors/object-not-found/ObjectNotFound";
+import ObjectNotFound, {
+  GridObjectNotFound,
+  ObjectNotFoundCard,
+} from "../../../components/common/errors/object-not-found/ObjectNotFound";
 import QueryResultSummary from "../../../components/common/query/QueryResultSummary";
 import SortSelecter from "../../../components/common/sort-and-pagination/SortSelecter";
 import PaginationButtons from "../../../components/common/sort-and-pagination/PaginationButtons";
-import { Paper, Divider, Card, CardActions, CardContent } from "@mui/material";
+import {
+  Divider,
+  Card,
+  CardContent,
+  CardActions,
+  Typography,
+} from "@mui/material";
 import PageLimitSetter from "../../../components/common/query/PageLimitSetter";
 import SkeletonCardGrid from "../../../components/common/skeleton/SkeletonCardGrid";
 import { useAuthUser } from "../../../hooks/auth";
-import { useGetUserCart, useGetUserWishlist } from "../../../hooks/user";
-import { useLocation } from "react-router-dom";
+import { useGetUserWishlist } from "../../../hooks/user";
 
 import usePriceStore from "../../../zustand/priceSlice";
+import { Link } from "../../../components/common/react-link/Link";
+import { GridBorderRadious } from "../../../assets/css/mui-css-objects/grid";
 
 const Products = () => {
-  const location = useLocation();
-  console.log("location ------>", location);
   const [sortBy, setSortBy] = useState("-createdAt");
-  const [limit, setLimit] = useState(10);
+  const [limit, setLimit] = useState(12);
   const [page, setPage] = useState(1);
 
   const { data: authUser } = useAuthUser();
-  // const { data: cartList } = useGetUserCart({ userId: authUser?._id ?? "" });
   const { data: wishlistList } = useGetUserWishlist({
     userId: authUser?._id ?? "",
     enabled: !!authUser,
@@ -38,7 +42,7 @@ const Products = () => {
     error,
     refetch,
     isFetching,
-  } = useGetProductsWithPagination_({
+  } = useGetProductsWithPagination({
     isKeepPreviousData: true,
     page,
     limit,
@@ -60,9 +64,23 @@ const Products = () => {
       />
     );
   if (error)
-    return <ObjectNotFound multiple onReload={refetch} object="Product" />;
+    return (
+      <GridObjectNotFound
+        onReload={refetch}
+        message="Try searching for something else"
+        multiple
+        object="Product"
+      />
+    );
   if (!products)
-    return <ObjectNotFound multiple onReload={refetch} object="Product" />;
+    return (
+      <GridObjectNotFound
+        onReload={refetch}
+        message="Try searching for something else"
+        multiple
+        object="Product"
+      />
+    );
 
   return (
     <Grid
@@ -74,50 +92,48 @@ const Products = () => {
         p: 3,
       }}
     >
-      <Card elevation={4}>
-        <CardContent sx={{ flexGrow: 1 }}>
+      <Card elevation={4} sx={{ flexGrow: 1, ...GridBorderRadious }}>
+        <CardContent
+          component={Grid}
+          container
+          direction={{ xs: "column", md: "row" }}
+          spacing={1}
+          sx={{ justifyContent: "space-between", alignItems: "center" }}
+        >
+          <Typography>
+            <Link underline="none" to="/products">
+              Products
+            </Link>
+          </Typography>
+          <QueryResultSummary
+            page={page}
+            limit={limit}
+            pagingCounter={products.pagingCounter}
+            countPerPage={products.limit}
+            total={products.totalDocs}
+            querySearch={`Products`}
+            totalPages={products.totalPages}
+          />
+        </CardContent>
+        <Divider />
+        <CardContent>
           <Grid
             container
-            size="grow"
-            spacing={2}
+            spacing={3}
             direction={{ xs: "column", md: "row" }}
-            sx={{ justifyContent: "stretch" }}
+            sx={{ alignItems: "center" }}
           >
-            <Paper
-              elevation={6}
-              size={{ xs: "grow" }}
-              component={Grid}
-              container
-              sx={{
-                // height: 1,
-                flexGrow: 1,
-                justifyContent: "center",
-                alignItems: "center",
-                // border: 1,
-              }}
-            >
-              <QueryResultSummary
-                page={page}
-                limit={limit}
-                pagingCounter={products.pagingCounter}
-                countPerPage={products.limit}
-                sortBy="createdAt"
-                sortDirection="asc"
-                total={products.totalDocs}
-                querySearch={`Products`}
-              />
-            </Paper>
             <Grid
               container
               sx={{ justifyContent: "center", alignItems: "center" }}
-              size={{ xs: "grow" }}
+              size={{ xs: 12, md: "grow" }}
             >
               <PageLimitSetter limit={limit} setLimit={setLimit} />
             </Grid>
 
             <Grid
               container
-              size={{ xs: "grow" }}
+              size={{ xs: 12, md: "grow" }}
               sx={{ justifyContent: "center", alignItems: "center" }}
             >
               <SortSelecter sortBy={sortBy} handleChange={handleChangeSort} />
@@ -126,7 +142,7 @@ const Products = () => {
         </CardContent>
 
         <Divider />
-        <CardContent sx={{ p: 6 }} component={Grid} container spacing={2}>
+        <CardContent sx={{ p: 3 }} component={Grid} container spacing={3}>
           {products.docs.map((product) => {
             const isWishlistItem = wishlistList?.wishlist
               .map((p) => p._id)

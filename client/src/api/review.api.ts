@@ -1,10 +1,8 @@
 import { api } from "../config/axios.config";
 import {
-  PaginationConfig,
-  PaginationOptionsProductId,
-  PaginationOptionsUserId,
-  PaginationResultReviews,
-} from "../types/paginationResult";
+  ReviewPaginationAndSortOptions,
+  ReviewPaginationResults,
+} from "../types/query";
 import { ProductId } from "../types/product";
 import { Review, ReviewId, ReviewInput } from "../types/review";
 
@@ -12,33 +10,13 @@ export const getReviews = async ({
   limit,
   page,
   sort,
-}: PaginationConfig): Promise<PaginationResultReviews> => {
-  const response = await api<PaginationResultReviews>(
-    `/reviews?page=${page}&limit=${limit}&sort=${sort}`
-  );
-  return response.data;
-};
-
-export const getReviewsFromPostWithPagination = async ({
   productId,
-  limit,
-  page,
-  sort,
-}: PaginationOptionsProductId): Promise<PaginationResultReviews> => {
-  const response = await api<PaginationResultReviews>(
-    `/products/${productId}/reviews?page=${page}&limit=${limit}&sort=${sort}`
-  );
-  return response.data;
-};
-
-export const getReviewsFromUserWithPagination = async ({
   userId,
-  limit,
-  page,
-  sort,
-}: PaginationOptionsUserId): Promise<PaginationResultReviews> => {
-  const response = await api<PaginationResultReviews>(
-    `/reviews/user/${userId}page=${page}&limit=${limit}&sort=${sort}`
+}: ReviewPaginationAndSortOptions): Promise<ReviewPaginationResults> => {
+  const hasProduct = productId ? `&productId=${productId}` : "";
+  const hasUser = userId ? `&userId=${userId}` : "";
+  const response = await api<ReviewPaginationResults>(
+    `/reviews?page=${page}&limit=${limit}&sort=${sort}${hasProduct}${hasUser}`
   );
   return response.data;
 };

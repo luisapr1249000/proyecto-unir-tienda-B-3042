@@ -1,5 +1,4 @@
 import { useQuery, keepPreviousData } from "@tanstack/react-query";
-
 import {
   getCategoriesWithPagination,
   getCategoryById,

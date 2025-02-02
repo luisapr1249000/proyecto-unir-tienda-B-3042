@@ -124,6 +124,8 @@ class ReviewController {
         ...req.query,
       };
 
+      const { authorId, productId, searchQuery } = req.query;
+
       const options = {
         limit,
         page,
@@ -131,13 +133,15 @@ class ReviewController {
         populate: ["author", "product"],
       };
 
-      const { searchQuery } = req.query;
-
-      const filterQuery: FilterQuery<ReviewModel> = {};
-
-      if (searchQuery) {
-        filterQuery.$text = { $search: String(searchQuery) };
+      if (req.user?.role !== "admin" && !productId && !authorId) {
+        return handleNotPermissions(res);
       }
+
+      const filterQuery: FilterQuery<ReviewModel> = {
+        ...(productId && { product: productId }),
+        ...(authorId && { author: authorId }),
+        ...(searchQuery && { $text: { $search: String(searchQuery) } }),
+      };
 
       const reviews = await Review.paginate(filterQuery, options);
       if (!reviews || reviews.docs.length === 0)
@@ -149,53 +153,53 @@ class ReviewController {
     }
   }
 
-  public async getReviewsFromProduct(req: Request, res: Response) {
-    try {
-      const { productId } = req.params;
+  // public async getReviewsFromProduct(req: Request, res: Response) {
+  //   try {
+  //     const { productId } = req.params;
 
-      const options = {
-        ...req.query,
-        populate: ["author"],
-      };
+  //     const options = {
+  //       ...req.query,
+  //       populate: ["author"],
+  //     };
 
-      const query = {
-        product: productId,
-      };
+  //     const query = {
+  //       product: productId,
+  //     };
 
-      const reviews = await Review.paginate(query, options);
-      const { docs } = reviews;
-      if (docs.length === 0 || !docs)
-        return handleObjectNotFound(res, "Review", true);
+  //     const reviews = await Review.paginate(query, options);
+  //     const { docs } = reviews;
+  //     if (docs.length === 0 || !docs)
+  //       return handleObjectNotFound(res, "Review", true);
 
-      return res.status(200).json(reviews);
-    } catch (e) {
-      return handleError(res, e);
-    }
-  }
+  //     return res.status(200).json(reviews);
+  //   } catch (e) {
+  //     return handleError(res, e);
+  //   }
+  // }
 
-  public async getUserReviews(req: Request, res: Response) {
-    try {
-      const { userId } = req.params;
+  // public async getUserReviews(req: Request, res: Response) {
+  //   try {
+  //     const { userId } = req.params;
 
-      const options = {
-        ...req.query,
-        populate: ["author", "product"],
-      };
+  //     const options = {
+  //       ...req.query,
+  //       populate: ["author", "product"],
+  //     };
 
-      const query = {
-        author: userId,
-      };
+  //     const query = {
+  //       author: userId,
+  //     };
 
-      const reviews = await Review.paginate(query, options);
-      const { docs } = reviews;
-      if (docs.length === 0 || !docs)
-        return handleObjectNotFound(res, "Review", true);
+  //     const reviews = await Review.paginate(query, options);
+  //     const { docs } = reviews;
+  //     if (docs.length === 0 || !docs)
+  //       return handleObjectNotFound(res, "Review", true);
 
-      return res.status(200).json(reviews);
-    } catch (e) {
-      return handleError(res, e);
-    }
-  }
+  //     return res.status(200).json(reviews);
+  //   } catch (e) {
+  //     return handleError(res, e);
+  //   }
+  // }
 
   public async getReviewById(req: Request, res: Response) {
     try {

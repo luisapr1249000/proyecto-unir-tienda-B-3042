@@ -13,7 +13,6 @@ const Login = () => (
       p: 3,
       justifyContent: "center",
       alignItems: "center",
-      height: "calc(100vh - 64px)",
     }}
   >
     <Card elevation={2} component={Grid} size={GridResponsive}>

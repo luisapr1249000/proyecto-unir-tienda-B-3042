@@ -1,4 +1,4 @@
-import { AppBar, Avatar, Divider, IconButton, Toolbar } from "@mui/material";
+import { AppBar, Divider, Toolbar } from "@mui/material";
 import Grid from "@mui/material/Grid2";
 import HeaderSearchBar from "../search-bar/HeaderSearchBar";
 import SkeletonCircle from "../../../common/skeleton/SkeletonCircle";
@@ -15,16 +15,14 @@ const Header = ({ handleOpenDrawer }: { handleOpenDrawer: () => void }) => {
       position="sticky"
       sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}
       color="inherit"
-      elevation={4}
-      // variant="outlined"
     >
       <Toolbar
         component={Grid}
         container
         sx={{
-          // border: 1,
-          justifyContent: "space-around",
+          justifyContent: "space-evenly",
           alignItems: "center",
+          // border: 1,
         }}
         spacing={2}
       >
@@ -33,7 +31,7 @@ const Header = ({ handleOpenDrawer }: { handleOpenDrawer: () => void }) => {
 
         <Grid
           container
-          size={{ xs: "grow" }}
+          // size={{ xs: "grow" }}
           sx={{ justifyContent: "flex-end", alignItems: "center" }}
         >
           {isLoading ? (

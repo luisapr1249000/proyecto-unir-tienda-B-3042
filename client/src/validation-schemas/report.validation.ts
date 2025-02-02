@@ -23,7 +23,7 @@ export const reasonField = z.enum([
 
 export const reportInputSchema = z.object({
   reason: reasonField,
-  itemType: z.enum(["Product", "Review", "User"]),
+  itemType: z.enum(["Product", "Review", "User", "Category"]),
   problemDescription: problemDescriptionField.optional(),
 });
 

@@ -28,8 +28,8 @@ export const disconnectDB = async () => {
 };
 
 const userSeeder = async () => {
-  for (let index = 0; index < 500; index++) {
-    await createUserFixture();
+  for (let index = 0; index < 100; index++) {
+    await createUserFixture(false, true);
   }
 };
 const categorySeeder = async () => {
@@ -84,4 +84,11 @@ export const genSeeder = async ({
   if (products) {
     await productSeeder();
   }
+};
+
+export const genAdminUser = async () => {
+  console.log("Creating admin user...");
+  const admin = await createUserFixture(true);
+  console.log("ADMIN EMAIL:", admin.user.email);
+  console.log("ADMIN PASSWORD:", admin.password);
 };

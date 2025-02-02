@@ -9,60 +9,61 @@ import {
   IconButton,
   Typography,
 } from "@mui/material";
-import Grid from "@mui/material/Grid2";
 import EditIcon from "@mui/icons-material/Edit";
 import ReportButton from "../../common/buttons/report/ReportButton";
 import DialogReportCategory from "../dialogs/DialogReportCategory";
-import { formatDate } from "../../../utils/util.dates";
 import { Link } from "../../common/react-link/Link";
+import { useAuthUser } from "../../../hooks/auth";
+import { isOwnerOrAdmin } from "../../../utils/utils";
 
 const CategoryCard = ({ category }: { category: Category }) => {
   const categoryState = {
     categoryId: category._id,
   };
 
+  const { data: authUser } = useAuthUser();
+
   const [openDialog, setOpenDialog] = useState(false);
   const handleClickOpen = () => setOpenDialog(true);
   const handleClose = () => setOpenDialog(false);
   return (
-    <Card variant="outlined" sx={{}}>
+    <Card elevation={5} sx={{}}>
       <CardActionArea
         component={Link}
-        to={`/products/category/${category.name}`}
+        to={`/products/categories/${category.name}`}
         state={categoryState}
       >
-        <CardContent sx={{ minHeight: 100, maxHeight: 100 }}>
-          <Typography variant="h6" component="div">
-            {category.name}
+        <CardContent>
+          <Typography variant="subtitle2" component="div">
+            <Link
+              underline="hover"
+              to={`/products/categories/${category.name}`}
+            >
+              {category.name}
+            </Link>
           </Typography>
-        </CardContent>
-        <Divider />
-        <CardContent sx={{ minHeight: 250 }}>
-          <Typography color="textSecondary" variant="body2">
-            {category.description}
-          </Typography>
-          <Typography variant="caption" color="textSecondary">
-            Created At: {formatDate(category.createdAt)}
-          </Typography>
-          {category.is_modified && (
-            <Typography variant="caption" color="textSecondary">
-              Updated At: {formatDate(category.updatedAt)}
-            </Typography>
-          )}
         </CardContent>
       </CardActionArea>
       <Divider />
       <CardActions sx={{ justifyContent: "space-between" }}>
         <ReportButton handleOpen={handleClickOpen} />
         <DialogReportCategory open={openDialog} handleClose={handleClose} />
-        <IconButton
-          component={Link}
-          to={`/categories/${category._id}/update`}
-          size="small"
-          color="inherit"
-        >
-          <EditIcon fontSize="inherit" />
-        </IconButton>
+
+        {authUser &&
+          isOwnerOrAdmin({
+            authorId: category.author._id,
+            userId: authUser._id,
+            role: authUser.role,
+          }) && (
+            <IconButton
+              component={Link}
+              to={`/categories/${category._id}/update`}
+              size="small"
+              color="inherit"
+            >
+              <EditIcon fontSize="inherit" />
+            </IconButton>
+          )}
       </CardActions>
     </Card>
   );

@@ -21,7 +21,7 @@ export const login = async (data: AuthLogin): Promise<LoginResponse> => {
 };
 
 export const getAuthUser = async (): Promise<User> => {
-  const response = await api("/auth/user/me", { timeout: 1000 });
+  const response = await api("/auth/users/me", { timeout: 1000 });
   return response.data.user;
 };
 
@@ -29,9 +29,12 @@ export const logout = async () => {
   await api.post("/auth/logout", {});
 };
 
-export const verifyToken = async (token: string) => {
+export const validateToken = async (token: string) => {
   const response = await api<{ isValidToken: boolean }>(
-    `/auth/token/verify?token=${token}`
+    `/auth/token/validate?token=${token}`,
+    {
+      timeout: 1000,
+    }
   );
   return response.data;
 };
@@ -41,17 +44,23 @@ export const changePassword = async (data: ChangePassword) => {
   return response.data;
 };
 
-export const forgotPassword = async (data: ForgotPassword) => {
+export const forgotPassword = async ({
+  data,
+  token,
+}: {
+  data: ForgotPassword;
+  token: string;
+}) => {
+  const response = await api.post(`/auth/forgot-password?token=${token}`, data);
+  return response.data;
+};
+
+export const sendForgotPasswordEmail = async (data: MailRequest) => {
   const response = await api.post("/auth/forgot-password", data);
   return response.data;
 };
 
-export const sendResetPasswordEmail = async (data: MailRequest) => {
-  const response = await api.post("/auth/reset-password", data);
-  return response.data;
-};
-
 export const sendConfirmationEmail = async (data: MailRequest) => {
-  const response = await api.post("/auth/confirm-email", data);
+  const response = await api.post("/auth/send-confirmation-email", data);
   return response.data;
 };

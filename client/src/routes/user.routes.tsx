@@ -9,8 +9,6 @@ import addressDirectionRoutes from "./addressDirections.routes";
 import UserAccountOverview from "../pages/users/account/overview/UserAccountOverview";
 import UserWishlist from "../pages/users/account/wishlist/UserWishlist";
 
-const loadableOptions = { fallback: <GridLoadingSkeleton /> };
-
 const userRoutes: RouteObject[] = [
   {
     element: <ProtectedRoute />,

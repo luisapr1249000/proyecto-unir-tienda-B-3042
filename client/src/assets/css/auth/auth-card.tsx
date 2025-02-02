@@ -3,5 +3,5 @@ export const GridAuthCard = {
   sm: 7,
   md: 6,
   lg: 5,
-  xl: 4,
+  xl: 3,
 };

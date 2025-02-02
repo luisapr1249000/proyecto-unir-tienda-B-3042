@@ -1,11 +1,15 @@
 import React from "react";
-import { ProductProp } from "../../../types/product";
+import { ProductProp } from "../../../../types/product";
 import { Button, CardContent, Divider, Typography } from "@mui/material";
 import Grid from "@mui/material/Grid2";
 import ProductQuantitySelectorForm from "./quantity-selector/ProductQuantitySelectorForm";
 
 const ProductPricingDetails = ({ product }: ProductProp) => (
-  <CardContent component={Grid} size={{ xs: 12, md: 3 }}>
+  <CardContent
+    component={Grid}
+    size={{ xs: 12, md: 3 }}
+    sx={{ height: 1, overflow: "auto" }}
+  >
     <Typography gutterBottom color="textSecondary" variant="subtitle2">
       Price:
     </Typography>

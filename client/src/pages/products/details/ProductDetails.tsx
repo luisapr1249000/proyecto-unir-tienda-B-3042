@@ -1,9 +1,8 @@
-import React from "react";
 import Grid from "@mui/material/Grid2";
 import { useParams } from "react-router-dom";
 import { ProductId } from "../../../types/product";
 import { useGetProductById } from "../../../hooks/products.hooks";
-import ProductDetailsCard from "../../../components/products_/details/ProductDetails";
+import ProductDetailsCard from "../../../components/products_/details/details-card/ProductDetails";
 import ProductQuestions from "../../../components/products_/details/questions/ProductQuestions";
 import ProductSpecificationts from "../../../components/products_/details/specifications/ProductSpecificationts";
 import ProductReviewList from "../../../components/reviews/list/ProductReviewList";
@@ -29,9 +28,7 @@ const ProductDetails = () => {
       sx={{
         justifyContent: "center",
         alignItems: "center",
-        py: 5,
-        border: 1,
-        bgcolor: "divider",
+        py: { xs: 0, md: 3 },
       }}
       spacing={3}
     >

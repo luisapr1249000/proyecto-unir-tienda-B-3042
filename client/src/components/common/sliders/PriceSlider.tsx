@@ -5,14 +5,14 @@ import { ButtonLink } from "../buttons/link/ButtonLink";
 import { Mark } from "@mui/material/Slider/useSlider.types";
 import usePriceStore from "../../../zustand/priceSlice";
 
-export const PriceSliderContainer = ({
+const PriceSlider = ({
   marks,
-  max,
+  max = 500,
   min = 0,
   link,
 }: {
   marks: Mark[];
-  max: number;
+  max?: number;
   min?: number;
   link?: string;
 }) => {
@@ -32,7 +32,13 @@ export const PriceSliderContainer = ({
     <Grid
       container
       direction="column"
-      sx={{ width: 1, justifyContent: "center", alignItems: "center", p: 1 }}
+      sx={{
+        flexGrow: 1,
+        justifyContent: "center",
+        alignItems: "center",
+        p: 1,
+        // border: 1,
+      }}
     >
       <Slider
         size="small"
@@ -47,7 +53,11 @@ export const PriceSliderContainer = ({
         min={min}
         disableSwap
       />
-      <ButtonLink to={link ?? ""}>Go</ButtonLink>
+      <ButtonLink variant="outlined" to={link ?? ""}>
+        Go
+      </ButtonLink>
     </Grid>
   );
 };
+
+export default PriceSlider;

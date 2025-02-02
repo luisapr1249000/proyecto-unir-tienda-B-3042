@@ -56,6 +56,7 @@ class OrderController {
           status: "pending",
         };
         product.quantity -= item.quantity;
+        product.soldCount += item.quantity;
         calculatedTotalPrice += orderItem.subtotal;
         await product.save({ session });
 

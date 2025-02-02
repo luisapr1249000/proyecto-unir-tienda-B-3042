@@ -1,16 +1,29 @@
 import { Badge, IconButton, Tooltip } from "@mui/material";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import CartIcon from "@mui/icons-material/ShoppingCart";
+import { BorderIconButton } from "../../../../common/buttons/iconbutton-delete/IconButtonDelete";
+import { useGetUserCart } from "../../../../../hooks/user";
+import { Link } from "../../../../common/react-link/Link";
+import { UserId } from "../../../../../types/user";
 
-const UserCart = () => {
+const UserCart = ({ userId, username }: UserId & { username: string }) => {
+  const { data: userCart } = useGetUserCart({
+    userId: userId,
+  });
+
+  if (!userCart) return <></>;
   return (
-    <Tooltip title="Cart">
-      <IconButton>
-        <Badge badgeContent={3} color="primary">
+    <Link to={`/users/${username}/cart`}>
+      <BorderIconButton tooltipTitle="Cart" size="small">
+        <Badge
+          badgeContent={userCart.cart.totalItems}
+          color="primary"
+          invisible={userCart.cart.totalItems === 0}
+        >
           <CartIcon />
         </Badge>
-      </IconButton>
-    </Tooltip>
+      </BorderIconButton>
+    </Link>
   );
 };
 

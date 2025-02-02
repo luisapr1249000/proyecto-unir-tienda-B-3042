@@ -1,15 +1,6 @@
-import {
-  Box,
-  Card,
-  CardActions,
-  CardContent,
-  CardHeader,
-  Divider,
-  Paper,
-  Typography,
-} from "@mui/material";
+import { Card, CardContent, Divider, Typography } from "@mui/material";
 import Grid from "@mui/material/Grid2";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { DisplayImage } from "./DisplayImagePreview";
 
 const DisplayImageUpdatePreview = ({

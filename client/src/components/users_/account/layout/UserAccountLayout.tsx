@@ -17,6 +17,7 @@ const UserAccountLayout = () => {
   return (
     <>
       <Header handleOpenDrawer={handleOpenDrawer} />
+
       <Box sx={{ display: "flex" }}>
         <ToggleableUserMenu
           isOpen={isMenuOpen}

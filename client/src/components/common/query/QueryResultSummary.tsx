@@ -1,30 +1,39 @@
-import { Card, CardContent, Divider, Typography } from "@mui/material";
-import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
-import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
+import { Divider, Typography } from "@mui/material";
+import Grid from "@mui/material/Grid2";
 
 interface QueryResultSummaryProps {
   countPerPage: number;
   pagingCounter: number;
   total: number;
   querySearch: string;
-  sortBy: string;
-  sortDirection: string;
   page: number;
   limit?: number;
+  totalPages?: number;
 }
-const QueryResultSummary = (queryResult: QueryResultSummaryProps) => {
-  const totalDocsPerPage = queryResult.limit
-    ? queryResult.limit * queryResult.page
-    : 10 * queryResult.page;
+const QueryResultSummary = ({
+  page,
+  total,
+  querySearch,
+  pagingCounter,
+  limit,
+  totalPages,
+}: QueryResultSummaryProps) => {
+  const totalDocsPerPage = limit ? limit * page : 10 * page;
   return (
-    // <CardContent
-    //   sx={{ flexGrow: 1, justifyContent: "center", alignItems: "center" }}
-    // >
-    <Typography variant="caption" color="textSecondary" component="div">
-      Showing {queryResult.pagingCounter}-{totalDocsPerPage} of{" "}
-      {queryResult.total} results from {queryResult.querySearch}
-    </Typography>
-    // </CardContent>
+    <Grid
+      container
+      spacing={{ xs: 1, md: 1.5 }}
+      sx={{ alignItems: { xs: "center", md: "flex-start" } }}
+      direction={{ xs: "column", md: "row" }}
+    >
+      <Typography variant="caption" color="textSecondary" component="div">
+        Showing {pagingCounter}-{totalDocsPerPage} of {total} results from{" "}
+        {querySearch}
+      </Typography>
+      <Typography variant="caption" color="textSecondary" component="div">
+        Page {page} of {totalPages}
+      </Typography>
+    </Grid>
   );
 };
 

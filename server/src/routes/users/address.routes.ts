@@ -9,22 +9,35 @@ import {
   validateSchemaBody,
 } from "../../middlewares/requestValidation.middleware";
 import { addressDirectionInputSchema } from "../../validation-schemas/user-schemas/address.validation";
-import { ADDRESS_DIRECTION_ID } from "../../constants";
+import { USER_ID_AND_ADDRESS_DIRECTION_ID } from "../../constants";
 
 const router = Router();
 
 router.get(
-  "/users/:username/address-directions",
+  "/users/:userId/address-directions",
   // authMiddleware,
   // verifyUserOwnershipOrAdminRole("userId"),
   addressDirectionController.getAddressDirections,
 );
 
 router.get(
+  "/users/:userId/default-address-direction",
+  addressDirectionController.getUserDefaultAddressDirection,
+);
+
+router.get(
   "/users/:userId/address-directions/:addressDirectionId",
   // authMiddleware,
+  validateObjectIdParams(USER_ID_AND_ADDRESS_DIRECTION_ID),
   // verifyUserOwnershipOrAdminRole("userId"),
   addressDirectionController.getAddressDirectionById,
+);
+
+router.put(
+  "/users/:userId/address-directions/:addressDirectionId/default",
+  // authMiddleware,
+  // verifyUserOwnershipOrAdminRole("userId"),
+  addressDirectionController.setDefaultAddressDirection,
 );
 
 router.post(
@@ -39,7 +52,7 @@ router.put(
   authMiddleware,
   verifyUserOwnershipOrAdminRole("userId"),
 
-  validateObjectIdParams(ADDRESS_DIRECTION_ID),
+  validateObjectIdParams(USER_ID_AND_ADDRESS_DIRECTION_ID),
   validateSchemaBody(addressDirectionInputSchema),
   addressDirectionController.updateAddressDirection,
 );
@@ -47,7 +60,7 @@ router.delete(
   "/users/:userId/address-directions/:addressDirectionId",
   authMiddleware,
   verifyUserOwnershipOrAdminRole("userId"),
-  validateObjectIdParams(ADDRESS_DIRECTION_ID),
+  validateObjectIdParams(USER_ID_AND_ADDRESS_DIRECTION_ID),
   addressDirectionController.deleteAddressDirection,
 );
 

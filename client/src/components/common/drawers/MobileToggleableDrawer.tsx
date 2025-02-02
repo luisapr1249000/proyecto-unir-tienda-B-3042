@@ -8,19 +8,19 @@ import ListItemText from "@mui/material/ListItemText";
 import Paper from "@mui/material/Paper";
 import Toolbar from "@mui/material/Toolbar";
 import Tooltip from "@mui/material/Tooltip";
-import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 
 const MobileToggleableDrawer = ({
-  handleOpen,
+  onCloseDrawer,
   isOpen,
   children,
+  drawerWidth = 300,
 }: {
   isOpen: boolean;
-  handleOpen: () => void;
+  onCloseDrawer: () => void;
   children: React.ReactNode;
+  drawerWidth?: number;
 }) => {
-  const drawerWidth = 300;
   return (
     <Drawer
       sx={{
@@ -40,20 +40,19 @@ const MobileToggleableDrawer = ({
         },
       }}
       open={isOpen}
-      onClose={handleOpen}
+      onClose={onCloseDrawer}
     >
       <Toolbar />
-      <Toolbar />
       <List
-        // sx={{ m: isOpen ? 2 : 0, height: 1 }}
+        sx={{ height: 1 }}
         component={Paper}
         variant="outlined"
         disablePadding
       >
         <Tooltip title="Close" placement="right">
           <ListItem divider disableGutters disablePadding sx={{}}>
-            <ListItemButton onClick={handleOpen}>
-              <ListItemIcon sx={{ minWidth: 0 }}>
+            <ListItemButton onClick={onCloseDrawer}>
+              <ListItemIcon sx={{}}>
                 <ArrowForwardIcon />
               </ListItemIcon>
               <ListItemText primary="Close" />

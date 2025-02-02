@@ -1,4 +1,4 @@
-import { Breadcrumbs } from "@mui/material";
+import { Breadcrumbs, Typography } from "@mui/material";
 import React from "react";
 import { useLocation } from "react-router-dom";
 import { Link } from "../react-link/Link";
@@ -12,16 +12,17 @@ const BreadCrumbs = () => {
   });
 
   return (
-    <Breadcrumbs>
+    <Breadcrumbs maxItems={3} aria-label="breadcrumb">
       {crumbs.map((crumb, index) => (
-        <Link
-          variant="body2"
-          underline="none"
-          key={index}
-          to={crumbs.slice(0, index + 1).join("/")}
-        >
-          {crumb}
-        </Link>
+        <Typography variant="body2">
+          <Link
+            underline="hover"
+            key={index}
+            to={crumbs.slice(0, index + 1).join("/")}
+          >
+            {crumb}
+          </Link>
+        </Typography>
       ))}
     </Breadcrumbs>
   );

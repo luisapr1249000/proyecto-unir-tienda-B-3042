@@ -12,7 +12,8 @@ import ListItemText from "@mui/material/ListItemText";
 import ExpandMore from "@mui/icons-material/ExpandMore";
 import ExpandLess from "@mui/icons-material/ExpandLess";
 import LocalMallIcon from "@mui/icons-material/LocalMall";
-import { LinkText } from "../../common/react-link/Link";
+import { GridNavLink, LinkText } from "../../common/react-link/Link";
+import ToggleableDrawerList from "../../common/drawers/lists/ToggleableDrawerList";
 
 const CategoryList = () => {
   const {
@@ -44,37 +45,63 @@ const CategoryList = () => {
   if (isLoading) return <div>Loading</div>;
   if (error) return <div>Error</div>;
   if (!categories) return <div>Not Found</div>;
+  const options = [
+    {
+      label: "Categories",
+      link: "/categories",
+      icon: (
+        <GridNavLink
+          container
+          to="/categories"
+          sx={{
+            "&.active": { color: "primary.dark" },
+            color: "text.secondary",
+          }}
+        >
+          <LocalMallIcon fontSize="inherit" />
+        </GridNavLink>
+      ),
+    },
+  ];
 
   return (
-    <List component="div" disablePadding>
-      <ListItem disableGutters disablePadding divider={!isExpanded}>
-        <ListItemButton onClick={handleExpandClick}>
-          <ListItemIcon>
-            <LocalMallIcon />
-          </ListItemIcon>
-          <ListItemText primary="Categories" />
-          {isExpanded ? <ExpandLess /> : <ExpandMore />}
-        </ListItemButton>
-      </ListItem>
-      <Collapse in={isExpanded}>
-        <List component="div" disablePadding>
-          {formattedCategories.map((category) => (
-            <ListItem
-              key={category.label}
-              component={LinkText}
-              to={category.link}
-              disableGutters
-              disablePadding
-            >
-              <ListItemButton sx={{ pl: 4 }}>
-                <ListItemText primary={category.label} />
-              </ListItemButton>
-            </ListItem>
-          ))}
-        </List>
-      </Collapse>
-    </List>
+    <ToggleableDrawerList
+      isSideMenuOpen
+      onCloseDrawer={() => {}}
+      listItem={options}
+    />
   );
+
+  // return (
+  //   <List component="div" disablePadding>
+  //     <ListItem disableGutters disablePadding divider={!isExpanded}>
+  //       <ListItemButton onClick={handleExpandClick}>
+  //         <ListItemIcon>
+  //           <LocalMallIcon />
+  //         </ListItemIcon>
+  //         <ListItemText primary="Categories" />
+  //         {/* {isExpanded ? <ExpandLess /> : <ExpandMore />} */}
+  //       </ListItemButton>
+  //     </ListItem>
+  //     {/* <Collapse in={isExpanded}>
+  //       <List component="div" disablePadding>
+  //         {formattedCategories.map((category) => (
+  //           <ListItem
+  //             key={category.label}
+  //             component={LinkText}
+  //             to={category.link}
+  //             disableGutters
+  //             disablePadding
+  //           >
+  //             <ListItemButton sx={{ pl: 4 }}>
+  //               <ListItemText primary={category.label} />
+  //             </ListItemButton>
+  //           </ListItem>
+  //         ))}
+  //       </List>
+  //     </Collapse> */}
+  //   </List>
+  // );
 };
 
 export default CategoryList;

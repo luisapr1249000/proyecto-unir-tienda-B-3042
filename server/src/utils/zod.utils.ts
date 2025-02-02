@@ -15,8 +15,7 @@ export const objectIdValidator = (fieldName = "_id") =>
     .refine((value) => Types.ObjectId.isValid(value), {
       message: "Invalid ObjectId format",
       path: ["value"],
-    })
-    .transform((value) => new Types.ObjectId(value));
+    });
 
 export const createBasicString = () => z.string().trim();
 

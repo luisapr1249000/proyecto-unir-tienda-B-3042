@@ -9,3 +9,4 @@ export type ReviewInput = z.infer<typeof reviewInputSchema>;
 export type ReviewId = { reviewId: string };
 
 export type ReviewProps = { review: Review };
+export type ReviewData = { data: ReviewInput };

@@ -1,23 +1,20 @@
 import { api } from "../../config/axios.config";
-import { CategoryId } from "../../types/category";
-import {
-  PaginationConfig,
-  PaginationResultProducts,
-  SearchProductsOptions,
-} from "../../types/paginationResult";
 import { Product, ProductId, ProductInput } from "../../types/product";
-import { UserId } from "../../types/user";
+import {
+  ProductPaginationAndSortOptions,
+  ProductPaginationResults,
+} from "../../types/query";
 
 export const createProduct = async (product: ProductInput) => {
   const response = await api.post<Product>(`/products`, product);
   return response.data;
 };
 
-export const updateProduct = async (
-  productId: string,
-  product: ProductInput
-) => {
-  const response = await api.put<Product>(`/products/${productId}`, product);
+export const updateProduct = async ({
+  productId,
+  data,
+}: ProductId & { data: ProductInput }) => {
+  const response = await api.put<Product>(`/products/${productId}`, data);
   return response.data;
 };
 
@@ -52,35 +49,20 @@ export const deleteImagesFromProduct = async (
 };
 
 export const getProductsWithPagination = async ({
-  page,
-  limit,
-  sort,
-  minPrice = 1,
-  maxPrice = Infinity,
-}: PaginationConfig & {
-  minPrice?: number;
-  maxPrice?: number;
-}): Promise<PaginationResultProducts> => {
-  const response = await api<PaginationResultProducts>(
-    `/products?page=${page}&limit=${limit}&sort=${sort}&minPrice=${minPrice}&maxPrice=${maxPrice}`
-  );
-  return response.data;
-};
-
-export const getProductsByCategoryWithPagination = async ({
+  page = 1,
+  limit = 10,
+  sort = "-createdAt",
+  maxPrice = 1,
+  minPrice = Infinity,
+  userId,
   categoryId,
-  page,
-  limit,
-  sort,
-  minPrice = 1,
-  maxPrice = Infinity,
-}: PaginationConfig &
-  CategoryId & {
-    minPrice?: number;
-    maxPrice?: number;
-  }): Promise<PaginationResultProducts> => {
-  const response = await api<PaginationResultProducts>(
-    `/products/category/${categoryId}?page${page}&limit=${limit}&sort=${sort}&minPrice=${minPrice}&maxPrice=${maxPrice}`
+  query,
+}: ProductPaginationAndSortOptions): Promise<ProductPaginationResults> => {
+  const groupByUserId = userId ? `&authorId=${userId}` : "";
+  const groupByCategoryId = categoryId ? `&categoryId=${categoryId}` : "";
+  const hasSearchQuery = query ? `&searchQuery=${query}` : "";
+  const response = await api<ProductPaginationResults>(
+    `/products?page=${page}&limit=${limit}&sort=${sort}&minPrice=${minPrice}&maxPrice=${maxPrice}${groupByUserId}${groupByCategoryId}${hasSearchQuery}`
   );
   return response.data;
 };
@@ -89,31 +71,5 @@ export const getProductById = async ({
   productId,
 }: ProductId): Promise<Product> => {
   const response = await api<Product>(`/products/${productId}`);
-  return response.data;
-};
-
-export const getProductstByAuthorWithPagination = async ({
-  userId,
-  limit,
-  page,
-  sort,
-}: PaginationConfig & UserId): Promise<PaginationResultProducts> => {
-  const response = await api<PaginationResultProducts>(
-    `/products/author/${userId}?page${page}&limit=${limit}&sort=${sort}`
-  );
-  return response.data;
-};
-
-export const searchProductsWithPagination = async ({
-  query,
-  minPrice,
-  maxPrice,
-  page,
-  limit,
-  sort,
-}: SearchProductsOptions & PaginationConfig) => {
-  const response = await api<PaginationResultProducts>(
-    `/products/search?query=${query}&page=${page}&limit=${limit}&sort=${sort}&minPrice=${minPrice}&maxPrice=${maxPrice}`
-  );
   return response.data;
 };

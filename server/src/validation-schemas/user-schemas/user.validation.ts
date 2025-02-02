@@ -37,7 +37,7 @@ export const userRoleSchema = z.object({
 
 const quantityField = createPositiveIntegerField({
   fieldName: "Quantity",
-  minValue: 1,
+  minValue: 0,
 });
 
 export const cartItemSchema = z.object({

@@ -7,6 +7,23 @@ export const getUserCart = async ({ userId }: UserId): Promise<UserCart> => {
   return response.data;
 };
 
+export const clearCart = async ({ userId }: UserId) => {
+  const response = await api.delete(`/users/${userId}/clean-cart/`);
+  return response.data;
+};
+
+export const toggleProductInCart = async ({
+  productId,
+  userId,
+  quantity,
+}: UserId & ProductId & { quantity: number }): Promise<UserCart> => {
+  const response = await api.post<UserCart>(
+    `/users/${userId}/cart/${productId}`,
+    { quantity: quantity }
+  );
+  return response.data;
+};
+
 export const getUserWishlist = async ({
   userId,
 }: UserId): Promise<UserWishlist> => {
@@ -24,14 +41,7 @@ export const toggleProductInWishlist = async ({
   return response.data;
 };
 
-export const toggleProductInCart = async ({
-  productId,
-  userId,
-  quantity,
-}: UserId & ProductId & { quantity: number }): Promise<UserCart> => {
-  const response = await api.post<UserCart>(
-    `/users/${userId}/cart/${productId}`,
-    { productQuantity: quantity }
-  );
+export const clearWishlist = async ({ userId }: UserId) => {
+  const response = await api.delete(`/users/${userId}/clean-wishlist/`);
   return response.data;
 };

@@ -1,8 +1,9 @@
 import { Router } from "express";
 import {
   authMiddleware,
-  isAdmin,
+  isReviewerOrAdmin,
   isUserOwnerOrAdmin,
+  optionalAuth,
   verifyUserOwnershipOrAdminRole,
 } from "../middlewares/auth.middleware";
 import { reviewInputSchema } from "../validation-schemas/review.validation";
@@ -15,35 +16,33 @@ import {
 import { uploadImageReview } from "../config/multer/multer.review";
 import { PRODUCT_ID, PRODUCT_ID_AND_REVIEW_ID, USER_ID } from "../constants";
 import reviewController from "../controllers/review.controller";
-import {
-  paginationCoerceSchema,
-  reviewPaginationAndSortSchema,
-} from "../validation-schemas/query.validation";
+import { reviewPaginationAndSortSchema } from "../validation-schemas/query.validation";
 
 const router = Router();
 
 router.get(
   "/reviews",
-  authMiddleware,
-  isAdmin,
+  optionalAuth,
+  isReviewerOrAdmin,
   validateObjectQueryParams(reviewPaginationAndSortSchema),
   reviewController.getReviews,
 );
-router.get(
-  "/reviews/user/:userId",
-  authMiddleware,
-  isUserOwnerOrAdmin,
-  validateObjectQueryParams(paginationCoerceSchema),
-  validateObjectIdParams(USER_ID),
-  reviewController.getUserReviews,
-);
+// router.get(
+//   "/reviews/user/:userId",
+//   authMiddleware,
+//   isUserOwnerOrAdmin,
+//   validateObjectQueryParams(paginationCoerceSchema),
+//   validateObjectIdParams(USER_ID),
+//   reviewController.getUserReviews,
+// );
 
-router.get(
-  "/products/:productId/reviews",
-  validateObjectQueryParams(paginationCoerceSchema),
-  validateObjectIdParams(PRODUCT_ID),
-  reviewController.getReviewsFromProduct,
-);
+// router.get(
+//   "/products/:productId/reviews",
+//   validateObjectQueryParams(paginationCoerceSchema),
+//   validateObjectIdParams(PRODUCT_ID),
+//   reviewController.getReviewsFromProduct,
+// );
+
 router.get(
   "/products/:productId/reviews/:reviewId",
   validateObjectIdParams(PRODUCT_ID_AND_REVIEW_ID),

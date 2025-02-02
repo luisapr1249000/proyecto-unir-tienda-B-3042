@@ -10,58 +10,63 @@ import { Product } from "../../models/product.model";
 import { extractAuthUserId } from "../../utils/auth.utils";
 import { createObjectId } from "../../utils/product.utils";
 import { toTwoDecimals } from "../../utils/utils";
+import { Types } from "mongoose";
 
 class UserProductActions {
   public async getUserCart(req: Request, res: Response) {
     try {
       const { userId } = req.params;
-      const user = await User.findById(userId).select("cart.items");
+      const user = await User.findById(userId)
+        .select("cart")
+        .populate("cart.items.product cart.items.seller");
       if (!user) {
         return res.status(404).json({ message: "User not found" });
       }
 
-      console.log(user);
-      const groupedBySeller = await User.aggregate([
-        { $match: { _id: user._id } },
-        { $unwind: "$cart.items" },
-        {
-          $lookup: {
-            from: "users",
-            localField: "cart.items.seller",
-            foreignField: "_id",
-            as: "sellerInfo",
-          },
-        },
-        { $unwind: "$sellerInfo" },
-        {
-          $group: {
-            _id: "$cart.items.seller",
-            sellerName: { $first: "$sellerInfo.username" },
-            products: {
-              $push: {
-                product: "$cart.items.product",
-                quantity: "$cart.items.quantity",
-                price: "$cart.items.price",
-              },
-            },
-            totalQuantity: { $sum: "$cart.items.quantity" },
-            totalPrice: {
-              $sum: {
-                $multiply: ["$cart.items.price", "$cart.items.quantity"],
-              },
-            },
-          },
-        },
-        {
-          $addFields: {
-            totalPrice: { $round: ["$totalPrice", 2] }, // Redondea `totalPrice` a 2 decimales
-          },
-        },
-        { $sort: { totalPrice: -1 } }, // Ordena por precio total (opcional)
-      ]);
+      return res.status(200).json(user);
 
-      console.log(groupedBySeller);
-      return res.status(200).json(groupedBySeller);
+      // console.log(user);
+      // const groupedBySeller = await User.aggregate([
+      //   { $match: { _id: user._id } },
+      //   { $unwind: "$cart.items" },
+      //   {
+      //     $lookup: {
+      //       from: "users",
+      //       localField: "cart.items.seller",
+      //       foreignField: "_id",
+      //       as: "sellerInfo",
+      //     },
+      //   },
+      //   { $unwind: "$sellerInfo" },
+      //   {
+      //     $group: {
+      //       _id: "$cart.items.seller",
+      //       sellerName: { $first: "$sellerInfo.username" },
+      //       products: {
+      //         $push: {
+      //           product: "$cart.items.product",
+      //           quantity: "$cart.items.quantity",
+      //           price: "$cart.items.price",
+      //         },
+      //       },
+      //       totalQuantity: { $sum: "$cart.items.quantity" },
+      //       totalPrice: {
+      //         $sum: {
+      //           $multiply: ["$cart.items.price", "$cart.items.quantity"],
+      //         },
+      //       },
+      //     },
+      //   },
+      //   {
+      //     $addFields: {
+      //       totalPrice: { $round: ["$totalPrice", 2] }, // Redondea `totalPrice` a 2 decimales
+      //     },
+      //   },
+      //   { $sort: { totalPrice: -1 } }, // Ordena por precio total (opcional)
+      // ]);
+
+      // console.log(groupedBySeller);
+      // return res.status(200).json(groupedBySeller);
     } catch (e) {
       return handleError(res, e);
     }
@@ -126,7 +131,7 @@ class UserProductActions {
     try {
       const userId = extractAuthUserId(req);
       const { productId } = req.params;
-      const { productQuantity } = req.body;
+      const { quantity } = req.body;
 
       const product = await Product.findById(productId).populate("author");
       if (!product) {
@@ -142,11 +147,11 @@ class UserProductActions {
         (item) => item.product?.toString() === productId,
       );
 
-      if (productIndex === -1 && productQuantity > 0) {
-        const subtotal = toTwoDecimals(product.finalPrice * productQuantity);
+      if (productIndex === -1 && quantity > 0) {
+        const subtotal = toTwoDecimals(product.finalPrice * quantity);
 
         cartItems.push({
-          quantity: productQuantity,
+          quantity: quantity,
           seller: product.author._id,
           price: product.finalPrice,
           product: product._id,
@@ -156,17 +161,15 @@ class UserProductActions {
 
       const existingItem = cartItems[productIndex];
       if (existingItem) {
-        if (productQuantity === 0) {
+        if (quantity === 0) {
           const subtotal = toTwoDecimals(existingItem.subtotal);
           user.cart.totalPrice -= subtotal;
           cartItems.splice(productIndex, 1);
         }
 
-        if (productQuantity > 0) {
-          existingItem.quantity = productQuantity;
-          existingItem.subtotal = toTwoDecimals(
-            product.finalPrice * productQuantity,
-          );
+        if (quantity > 0) {
+          existingItem.quantity = quantity;
+          existingItem.subtotal = toTwoDecimals(product.finalPrice * quantity);
         }
       }
 
@@ -175,11 +178,43 @@ class UserProductActions {
         const quantity = product.quantity ?? 0;
         return accumulator + price * quantity;
       }, 0);
+      user.cart.totalItems = user.cart.items.length;
       await user.save();
 
       return res
         .status(200)
         .json({ message: "Product added to cart", cart: user });
+    } catch (error) {
+      return handleError(res, error);
+    }
+  }
+  public async cleanUserCart(req: Request, res: Response) {
+    try {
+      const { userId } = req.params;
+      const user = await User.findById(userId).select("cart");
+      if (!user) {
+        return res.status(404).json({ message: "User not found" });
+      }
+      user.cart.items = new Types.DocumentArray([]);
+      user.cart.totalItems = 0;
+      user.cart.totalPrice = 0;
+      await user.save();
+      return res.status(204).send();
+    } catch (error) {
+      return handleError(res, error);
+    }
+  }
+
+  public async cleanUserWishlist(req: Request, res: Response) {
+    try {
+      const { userId } = req.params;
+      const user = await User.findById(userId).select("wishlist");
+      if (!user) {
+        return res.status(404).json({ message: "User not found" });
+      }
+      user.wishlist = [];
+      await user.save();
+      return res.status(204).send();
     } catch (error) {
       return handleError(res, error);
     }

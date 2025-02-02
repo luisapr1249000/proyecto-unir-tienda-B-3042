@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Review } from "../../../types/review";
 import Grid from "@mui/material/Grid2";
 import {
@@ -19,39 +19,61 @@ import OutlinedFlagIcon from "@mui/icons-material/OutlinedFlag";
 import ReportButton from "../../common/buttons/report/ReportButton";
 import DialogReportReview from "../dialogs/DialogReportReview";
 import { Image } from "../../../validation-schemas/image.validation";
+import DialogReview from "../dialogs/DialogReview";
 
-const ReviewImages = ({ images }: { images: Image[] }) => {
+const ReviewImages = ({
+  review,
+  images,
+}: {
+  review: Review;
+  images: Image[];
+}) => {
+  const [openDialog, setOpenDialog] = useState(false);
+  const [activeImageUrl, setActiveImageUrl] = useState("");
+  const handleOpenDialog = (activeUrl: string) => {
+    setOpenDialog(true);
+    setActiveImageUrl(activeUrl);
+  };
+  const handleCloseDialog = () => setOpenDialog(false);
+
   return (
     <Grid
       container
-      spacing={2}
-      size={{ xs: 12 }}
+      spacing={3}
       sx={{
-        // border: 1,
         p: 3,
-        justifyContent: "space-evenly",
+        justifyContent: "flex-start",
         alignItems: "center",
       }}
     >
+      <DialogReview
+        review={review}
+        isDialogOpen={openDialog}
+        onClose={handleCloseDialog}
+        activeImageUrl={activeImageUrl}
+      />
       {images.map((image) => (
-        <Grid
-          size={{ xs: 12, md: 3 }}
+        <Paper
+          elevation={5}
+          component={Grid}
+          container
+          size={{ xs: 12, md: 1 }}
           key={image.originalName}
-          sx={{ height: 200 }}
+          sx={{
+            height: 100,
+          }}
         >
-          <Paper
-            elevation={5}
+          <CardMedia
             component="img"
-            src={image.url}
-            alt={image.originalName}
+            onClick={() => handleOpenDialog(image.url)}
+            image={image.url}
             sx={{
-              objectFit: "containe",
-              objectPosition: "center center",
-              height: 1,
-              width: 1,
+              borderRadius: 1,
+              cursor: "pointer",
             }}
+            height={"100%"}
           />
-        </Grid>
+        </Paper>
       ))}
     </Grid>
   );
@@ -71,7 +93,7 @@ const ReviewReportSection = () => {
 
 const ReviewCard = ({ review }: { review: Review }) => {
   return (
-    <Card variant="outlined">
+    <Card elevation={5} sx={{ flexGrow: 1 }}>
       <CardContent
         sx={{ justifyContent: "flex-start", alignItems: "center" }}
         component={Grid}
@@ -86,8 +108,12 @@ const ReviewCard = ({ review }: { review: Review }) => {
         <Typography variant="body2" color="textSecondary">
           {review.author.username}
         </Typography>
+      </CardContent>
+      <Divider />
+      <CardContent>
         <Grid size={{ xs: 12 }}>
-          <Rating value={review.review} size="small" readOnly />
+          <Rating value={review.rating} size="small" readOnly />
+          <Typography variant="body2">{review.title}</Typography>{" "}
         </Grid>
       </CardContent>
       <Divider />
@@ -95,7 +121,9 @@ const ReviewCard = ({ review }: { review: Review }) => {
         <Typography variant="body2">{review.content}</Typography>
       </CardContent>
       <Divider />
-      {review.images.length > 0 && <ReviewImages images={review.images} />}
+      {review.images.length > 0 && (
+        <ReviewImages review={review} images={review.images} />
+      )}
 
       <Divider />
       <CardActions

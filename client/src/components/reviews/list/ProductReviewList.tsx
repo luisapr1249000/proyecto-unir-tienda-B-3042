@@ -1,10 +1,12 @@
 import React from "react";
-import { useGetReviewsFromProductWithPagination } from "../../../hooks/review.hooks";
+import { useGetReviewsWithPagination } from "../../../hooks/review.hooks";
 import Grid from "@mui/material/Grid2";
 import { Card, CardContent, Divider, Typography } from "@mui/material";
 import ReviewCard from "../card/ReviewCard";
 import CircleLoadingGrid from "../../common/loaders/CircleLoadingGrid";
-import ObjectNotFound from "../../common/errors/object-not-found/ObjectNotFound";
+import { ObjectNotFoundCard } from "../../common/errors/object-not-found/ObjectNotFound";
+import { GridBorderRadious } from "../../../assets/css/mui-css-objects/grid";
+import ErrorIcon from "@mui/icons-material/Error";
 
 const NoReviews = () => (
   <Card>
@@ -17,65 +19,49 @@ const NoReviews = () => (
 );
 
 const ProductReviewList = ({ productId }: { productId: string }) => {
-  const { data, isLoading, error, refetch } =
-    useGetReviewsFromProductWithPagination({ productId });
-
-  // if (isLoading) return <CircleLoadingGrid />;
-  // if (error)
-  //   return <ObjectNotFound multiple object="Review" onReload={refetch} />;
-  // if (!data)
-  //   return <ObjectNotFound multiple object="Review" onReload={refetch} />;
+  const { data, isLoading, error, refetch } = useGetReviewsWithPagination({
+    productId,
+  });
 
   return (
-    <Grid container spacing={2} size={{ xs: 12, md: 11 }} sx={{}}>
-      <Card variant="outlined" sx={{ flexGrow: 1 }}>
-        <CardContent>
-          <Typography variant="h6" color="textSecondary">
-            Reviews
-          </Typography>
-        </CardContent>
-        <Divider />
-        <CardContent>
-          {isLoading ? (
-            <CircleLoadingGrid />
-          ) : !data || error ? (
-            <ObjectNotFound multiple object="Review" onReload={refetch} />
-          ) : data?.docs.length > 0 ? (
-            data.docs.map((review, index) => (
-              <Grid key={index}>
-                <ReviewCard review={review} />
-              </Grid>
-            ))
-          ) : (
-            <NoReviews />
-          )}
-          {/* {!data || error ? (
-            <ObjectNotFound multiple object="Review" onReload={refetch} />
-          ) : data?.docs.length > 0 ? (
-            data.docs.map((review, index) => (
-              <Grid key={index}>
-                <ReviewCard review={review} />
-              </Grid>
-            ))
-          ) : (
-            <NoReviews />
-          )} */}
-          {/* {
-            !data || error ? (
-              <ObjectNotFound multiple object="Review" onReload={refetch} />
-            ):    {data?.docs.length > 0 ? (
-              data.docs.map((review, index) => (
-                <Grid key={index}>
-                  <ReviewCard review={review} />
-                </Grid>
-              ))
-            ) : (
-              <NoReviews />
-            )}
-          } */}
-        </CardContent>
-      </Card>
-    </Grid>
+    <Card
+      elevation={4}
+      component={Grid}
+      sx={{ flexGrow: 1, ...GridBorderRadious }}
+      spacing={3}
+      size={{ xs: 12, md: 11 }}
+    >
+      <CardContent sx={{ bgcolor: "action.hover" }}>
+        <Typography variant="h6" color="textSecondary">
+          Reviews
+        </Typography>
+      </CardContent>
+      <Divider />
+      <CardContent
+        component={Grid}
+        container
+        spacing={3}
+        sx={{ justifyContent: "center", alignItems: "center" }}
+      >
+        {isLoading ? (
+          <CircleLoadingGrid />
+        ) : !data || error ? (
+          <ObjectNotFoundCard
+            multiple
+            object="Review"
+            onReload={refetch}
+            message="Try searching for something else"
+            icon={<ErrorIcon fontSize="large" />}
+          />
+        ) : data?.docs.length > 0 ? (
+          data.docs.map((review, index) => (
+            <ReviewCard key={index} review={review} />
+          ))
+        ) : (
+          <NoReviews />
+        )}
+      </CardContent>
+    </Card>
   );
 };
 

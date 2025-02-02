@@ -10,10 +10,9 @@ const ProductCardImage = ({ product }: ProductProp) => {
   return (
     <CardActionArea component={Link} to={`/products/details/${product._id}`}>
       <CardMedia
-        sx={{ height: 200, objectFit: "cover" }}
         component="img"
-        src={product.images[0].url ? product.images[0].url : ""}
-        // onLoad={onLoad}
+        height="200"
+        image={product.images[0].url ? product.images[0].url : ""}
       />
     </CardActionArea>
   );

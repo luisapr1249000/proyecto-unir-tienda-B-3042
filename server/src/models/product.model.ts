@@ -98,6 +98,11 @@ export const productSchema = new Schema(
     productQuestions: { type: [userQuestionSchema], select: false },
     averageReview: { type: Number, default: 0, min: [0, "Average review"] },
     is_modified: { type: Boolean, default: false },
+    soldCount: {
+      type: Number,
+      default: 0,
+      min: [0, "Sold count must be greater than 0"],
+    },
   },
   {
     timestamps: true,

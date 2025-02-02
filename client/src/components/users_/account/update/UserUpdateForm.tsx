@@ -9,8 +9,11 @@ import { updateUser } from "../../../../api/users/user.api";
 import TextField from "../../../common/textfields/TextField";
 import { toast } from "react-toastify";
 import CircleLoadingGrid from "../../../common/loaders/CircleLoadingGrid";
+import ContainerLoader from "../../../common/loaders/ContainerLoader";
 
 const UserUpdateForm = () => {
+  const { data: authUser } = useAuthUser();
+
   const { mutate: updateUserMutation, isPending } = useMutation({
     mutationFn: updateUser,
     onSuccess: () => {
@@ -20,7 +23,7 @@ const UserUpdateForm = () => {
       toast.error(error.message);
     },
   });
-  const { data: authUser } = useAuthUser();
+
   const initialValues = {
     username: authUser?.username ?? "",
     email: authUser?.email ?? "",
@@ -28,17 +31,25 @@ const UserUpdateForm = () => {
     lastName: authUser?.lastName ?? "",
     mobilePhone: authUser?.mobilePhone ?? "",
     bio: authUser?.bio ?? "",
+    birthday: authUser?.birthday ?? "",
   };
 
   const formik = useFormik({
     initialValues,
     enableReinitialize: true,
     validationSchema: toFormikValidationSchema(userInputSchema),
-    onSubmit: (values) =>
-      updateUserMutation({ userId: authUser?._id ?? "", data: values }),
+    onSubmit: ({ birthday, ...values }) => {
+      const formattedBirthday = new Date(birthday);
+      updateUserMutation({
+        userId: authUser?._id ?? "",
+        data: { birthday: formattedBirthday, ...values },
+      });
+    },
   });
 
-  if (isPending) return <CircleLoadingGrid />;
+  console.log(formik.values);
+
+  if (isPending) return <ContainerLoader />;
   return (
     <Grid spacing={3} container component="form" onSubmit={formik.handleSubmit}>
       <Grid size={{ xs: 12 }}>
@@ -177,6 +188,34 @@ const UserUpdateForm = () => {
           }
           color={
             formik.touched.mobilePhone && Boolean(!formik.errors.mobilePhone)
+              ? "success"
+              : undefined
+          }
+        />
+      </Grid>
+      <Grid size={{ xs: 12 }}>
+        <TextField
+          fullWidth
+          type="date"
+          name="birthday"
+          label="Birthday"
+          placeholder="Birthday"
+          value={formik.values.birthday}
+          onChange={formik.handleChange}
+          onBlur={formik.handleBlur}
+          error={formik.touched.birthday && Boolean(formik.errors.birthday)}
+          helperText={
+            formik.touched.birthday && Boolean(formik.errors.birthday)
+              ? formik.errors.birthday
+              : undefined
+          }
+          focused={
+            formik.touched.birthday && Boolean(!formik.errors.birthday)
+              ? true
+              : undefined
+          }
+          color={
+            formik.touched.birthday && Boolean(!formik.errors.birthday)
               ? "success"
               : undefined
           }

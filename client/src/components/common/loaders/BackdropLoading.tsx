@@ -1,7 +1,6 @@
 import { Backdrop, CircularProgress, Typography } from "@mui/material";
-import React from "react";
 
-const BackdropLoading = ({ message }: { message: string }) => {
+const BackdropLoading = ({ message }: { message?: string }) => {
   return (
     <Backdrop
       sx={(theme) => ({

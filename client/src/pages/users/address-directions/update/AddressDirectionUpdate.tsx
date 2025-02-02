@@ -9,20 +9,25 @@ import ObjectNotFound from "../../../../components/common/errors/object-not-foun
 import { useParams } from "react-router-dom";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
+import { useAuthUser } from "../../../../hooks/auth";
 
 const AddressDirectionUpdate = () => {
-  const { userId, addressDirectionId } = useParams() as {
-    userId: string;
+  const { username, addressDirectionId } = useParams() as {
+    username: string;
     addressDirectionId: string;
   };
+
+  const { data: authUser } = useAuthUser();
+  if (!authUser) return <></>;
   const {
     data: address,
     isLoading,
     error,
     refetch,
   } = useGetUserAddressById({
-    userId: userId,
+    userId: authUser._id,
     addressDirectionId: addressDirectionId,
+    enabled: !!authUser,
   });
 
   if (isLoading) return <CircleLoadingGrid />;

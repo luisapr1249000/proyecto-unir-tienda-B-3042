@@ -1,25 +1,126 @@
-import React from "react";
+import { useState } from "react";
 import Card from "@mui/material/Card";
-import { UserCartItem } from "../../../../types/user";
-import { CardContent, CardMedia, Typography } from "@mui/material";
+import {
+  CardContent,
+  Typography,
+  Divider,
+  Button,
+  CardActions,
+} from "@mui/material";
+import Grid from "@mui/material/Grid2";
+import { useAuthUser } from "../../../../hooks/auth";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { clearCart } from "../../../../api/users/userProductActions.api";
+import { toast } from "react-toastify";
+
+const ClearCartButton = ({
+  onClickClearCart,
+}: {
+  onClickClearCart: () => void;
+}) => {
+  const { data: authUser } = useAuthUser();
+  const queryClient = useQueryClient();
+  const { mutate: clearCartMutation } = useMutation({
+    mutationFn: clearCart,
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: [`user-${authUser?._id}-cart`],
+      });
+      toast.success("Cart cleared successfully");
+    },
+    onError: (error) => {
+      console.log("error", error);
+      toast.error("Something went wrong");
+    },
+  });
+
+  const handleClick = () => {
+    if (!authUser) return;
+    clearCartMutation({ userId: authUser._id });
+    onClickClearCart();
+  };
+  return (
+    <Button
+      onClick={handleClick}
+      variant="contained"
+      color="error"
+      size="small"
+    >
+      Clear Cart
+    </Button>
+  );
+};
 
 const UserCartSummaryCard = ({
-  userCartItem,
+  totalItems,
+  totalPrice,
 }: {
-  userCartItem: UserCartItem;
+  totalItems: number;
+  totalPrice: number;
 }) => {
+  const [isCartCleared, setIsCartCleared] = useState(false);
   return (
-    <Card sx={{ display: "flex" }}>
-      <CardMedia
-        component="img"
-        height="200"
-        image={userCartItem.product.images[0].url}
-      />
-
-      <CardContent>
-        <Typography variant="h5">{userCartItem.product.name}</Typography>
-      </CardContent>
-    </Card>
+    <Grid
+      container
+      size={{ xs: 12 }}
+      sx={{
+        justifyContent: "flex-start",
+        alignItems: "flex-start",
+        // position: "relative",
+      }}
+    >
+      <Card elevation={5} sx={{ flexGrow: 1 }}>
+        <CardContent
+          sx={{ bgcolor: "divider" }}
+          component={Grid}
+          size={{ xs: 12 }}
+        >
+          <Typography variant="body2" color="textSecondary">
+            Summary
+          </Typography>
+        </CardContent>
+        <Grid size={{ xs: 12 }}>
+          <Divider />
+        </Grid>
+        <CardContent
+          component={Grid}
+          container
+          spacing={1}
+          sx={{ justifyContent: "flex-start", alignItems: "center" }}
+        >
+          <Typography variant="body2" color="textSecondary">
+            Products:
+          </Typography>
+          <Typography variant="body2">{totalItems}</Typography>
+        </CardContent>
+        <Divider />
+        <CardContent
+          component={Grid}
+          container
+          spacing={1}
+          sx={{ alignItems: "center" }}
+        >
+          <Typography variant="body2" color="textSecondary">
+            Total:{" "}
+          </Typography>
+          <Typography variant="body2">
+            {totalItems > 0 ? totalPrice.toFixed(2) : "0 "} $
+          </Typography>
+        </CardContent>
+        {totalItems > 0 && totalPrice > 0 && (
+          <CardActions sx={{ alignItems: "center" }}>
+            <Button variant="outlined" size="small">
+              Checkout
+            </Button>
+            {!isCartCleared && (
+              <ClearCartButton
+                onClickClearCart={() => setIsCartCleared(true)}
+              />
+            )}
+          </CardActions>
+        )}
+      </Card>
+    </Grid>
   );
 };
 

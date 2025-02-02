@@ -1,6 +1,46 @@
-import { Box, IconButton, Tooltip } from "@mui/material";
+import {
+  Box,
+  Button,
+  IconButton,
+  IconButtonProps,
+  Tooltip,
+} from "@mui/material";
 import ClearIcon from "@mui/icons-material/Clear";
 import Paper from "@mui/material/Paper";
+
+type BorderIconButtonProps = IconButtonProps & {
+  tooltipTitle: string;
+};
+
+export const BorderIconButton = ({
+  tooltipTitle,
+  children,
+  ...props
+}: BorderIconButtonProps) => {
+  // const sx = {
+  //   border: 1,
+  //   borderColor: "divider",
+  //   borderRadius: 3.2,
+  //   boxShadow: 2,
+  // };
+  return (
+    <>
+      <Tooltip title={tooltipTitle}>
+        <IconButton
+          sx={{
+            border: 1,
+            borderColor: "divider",
+            borderRadius: 3.2,
+            boxShadow: 2,
+          }}
+          {...props}
+        >
+          {children}
+        </IconButton>
+      </Tooltip>
+    </>
+  );
+};
 
 const IconButtonDelete = ({ onDelete }: { onDelete: () => void }) => {
   return (

@@ -6,6 +6,7 @@ import ProductCreate from "../pages/products/create/ProductCreate";
 import ProductUpdate from "../pages/products/update/ProductUpdate";
 import ProductsBySeller from "../pages/products/products-by-seller/ProductsBySeller";
 import ProductsSearchResults from "../pages/products/search-results/ProductsSearchResults";
+import Sellers from "../pages/sellers/Sellers";
 
 export const productDetailRoutes: RouteObject[] = [
   {
@@ -24,6 +25,10 @@ const productRoutes: RouteObject[] = [
     element: <Products />,
   },
   {
+    element: <Sellers />,
+    path: "sellers",
+  },
+  {
     path: "/products",
     element: <Products />,
   },
@@ -32,7 +37,7 @@ const productRoutes: RouteObject[] = [
     element: <ProductCreate />,
   },
   {
-    path: "/products/seller/:userId",
+    path: "/products/seller/:username",
     element: <ProductsBySeller />,
   },
 

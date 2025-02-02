@@ -4,6 +4,7 @@ import { ProductId, ProductQuestion } from "../../../../types/product";
 import ProductQuestionCard from "./ProductQuestionCard";
 import { Card, CardContent, Divider, Typography } from "@mui/material";
 import ProductQuestionForm from "./ProductQuestionForm";
+import { GridBorderRadious } from "../../../../assets/css/mui-css-objects/grid";
 
 const NoQuestions = () => (
   <CardContent>
@@ -20,12 +21,11 @@ const ProductQuestions = ({
   return (
     <Card
       component={Grid}
-      // sx={{ border: 1, height: 400 }}
+      sx={{ ...GridBorderRadious }}
       size={{ xs: 11, md: 11 }}
-      spacing={2}
-      variant="outlined"
+      elevation={3}
     >
-      <CardContent>
+      <CardContent sx={{ bgcolor: "action.hover" }}>
         <Typography variant="h6" color="textSecondary">
           Questions
         </Typography>

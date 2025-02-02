@@ -1,12 +1,35 @@
-import React from "react";
 import Grid from "@mui/material/Grid2";
 import { addressDirectionInputSchema } from "../../../../validation-schemas/user-schemas/userAddressDirection.validation";
 import { toFormikValidationSchema } from "zod-formik-adapter";
 import { useFormik } from "formik";
 import TextField from "../../../common/textfields/TextField";
 import SubmitButton from "../../../common/buttons/submit-button/SubmitButton";
+import SelectAddresDirectionType from "./SelectAddressDirection";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { createAddress } from "../../../../api/users/address.api";
+import { toast } from "react-toastify";
+import { UserId } from "../../../../types/user";
+import { useNavigate } from "react-router-dom";
 
-const AddressDirectionCreateForm = () => {
+const AddressDirectionCreateForm = ({ userId }: UserId) => {
+  const navigate = useNavigate();
+  const queryClient = useQueryClient();
+  const { mutate: createAddressDirectionMutation } = useMutation({
+    mutationFn: createAddress,
+    onSuccess: () => {
+      console.log("address created");
+      toast.success("Address created successfully");
+      queryClient.invalidateQueries({
+        queryKey: [`user-${userId}-address-directions`],
+      });
+      navigate(`/users/${userId}/address-directions`);
+    },
+    onError: (error) => {
+      console.log(error);
+      toast.error("Error creating address");
+    },
+  });
+
   const initialValues = {
     country: "",
     mobilePhone: "",
@@ -17,16 +40,25 @@ const AddressDirectionCreateForm = () => {
     cityDistrictTown: "",
     state: "",
     landmark: "",
-    addressType: "",
+    addressType: "home",
   };
   const formik = useFormik({
     initialValues,
     validationSchema: toFormikValidationSchema(addressDirectionInputSchema),
-    onSubmit: (values) => {
-      console.log(values);
+    onSubmit: ({ addressType, ...values }) => {
+      const addressTypeFormatted = addressType as "home" | "work";
+      createAddressDirectionMutation({
+        userId,
+        data: { ...values, addressType: addressTypeFormatted },
+      });
     },
   });
 
+  const setAddressType = (value: "home" | "work") => {
+    formik.setFieldValue("addressType", value);
+  };
+
+  console.log(formik.errors);
   return (
     <Grid container spacing={3} component="form" onSubmit={formik.handleSubmit}>
       <Grid size={{ xs: 12 }}>
@@ -181,6 +213,30 @@ const AddressDirectionCreateForm = () => {
               ? formik.errors.country
               : undefined
           }
+        />
+      </Grid>
+      <Grid size={{ xs: 12 }}>
+        <TextField
+          required
+          fullWidth
+          name="landmark"
+          label="Landmark"
+          placeholder="Landmark"
+          value={formik.values.landmark}
+          onChange={formik.handleChange}
+          onBlur={formik.handleBlur}
+          error={formik.touched.landmark && Boolean(formik.errors.landmark)}
+          helperText={
+            formik.touched.landmark && Boolean(formik.errors.landmark)
+              ? formik.errors.landmark
+              : undefined
+          }
+        />
+      </Grid>
+      <Grid size={{ xs: 12 }}>
+        <SelectAddresDirectionType
+          setAddressType={setAddressType}
+          addressType={formik.values.addressType as "home" | "work"}
         />
       </Grid>
       <Grid size={{ xs: 12 }}>

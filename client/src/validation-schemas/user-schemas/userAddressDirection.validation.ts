@@ -53,6 +53,7 @@ export const addressDirectionInputSchema = z.object({
   landmark: landmarkField,
   addressType: z.enum(["home", "work"]),
   country: countryField,
+  isDefault: z.boolean().optional(),
 });
 
 export const addressDirection = abstractSchema().merge(

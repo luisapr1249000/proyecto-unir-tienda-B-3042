@@ -184,7 +184,7 @@ class AuthController {
       if (!user) return handleObjectNotFound(res, "User");
       user.password = newPassword;
       await user.save();
-      return res.status(200).json({ message: "Password updated successfully" });
+      return res.status(200).redirect(env.CLIENT_DIRECTION_DEV + "/auth/login");
     } catch (e) {
       return handleError(res, e);
     }

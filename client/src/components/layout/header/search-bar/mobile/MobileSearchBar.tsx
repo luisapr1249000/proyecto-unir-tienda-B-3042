@@ -1,25 +1,26 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Grid from "@mui/material/Grid2";
-import SearchBarIconButton from "./SearchBarIconButton";
 import HeaderDrawerSearchbar from "./HeaderDrawerSearchbar";
+import SearchIcon from "@mui/icons-material/Search";
+import { BorderIconButton } from "../../../../common/buttons/iconbutton-delete/IconButtonDelete";
 
 const MobileSearchBar = () => {
   const [open, setOpen] = useState(false);
-  const handleDrawerClick = () => setOpen((prev) => !prev);
+  const handleOpen = () => setOpen(true);
+  console.log("open", open);
   return (
     <Grid
+      size={{ xs: "grow" }}
       container
       sx={{
         justifyContent: "flex-end",
-        border: 1,
         display: { xs: "flex", md: "none" },
       }}
     >
-      <HeaderDrawerSearchbar
-        open={open}
-        handleDrawerClick={handleDrawerClick}
-      />
-      <SearchBarIconButton handleDrawerClick={handleDrawerClick} />
+      <HeaderDrawerSearchbar open={open} onCloseDrawer={() => {}} />
+      {/* <BorderIconButton onClick={handleOpen} size="small" tooltipTitle="Search">
+        <SearchIcon />
+      </BorderIconButton> */}
     </Grid>
   );
 };

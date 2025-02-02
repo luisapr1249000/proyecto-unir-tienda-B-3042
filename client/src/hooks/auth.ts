@@ -1,5 +1,14 @@
-import { useQuery } from "@tanstack/react-query";
-import { getAuthUser, verifyToken } from "../api/auth.api";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { getAuthUser, validateToken } from "../api/auth.api";
+
+export const useGetAuthUser = (isForLogin = false) =>
+  useQuery({
+    queryKey: ["authUser"],
+    queryFn: isForLogin ? getAuthUser : undefined,
+    retry: false,
+    refetchOnWindowFocus: false,
+    staleTime: 15 * 60 * 1000,
+  });
 
 export const useAuthUser = () =>
   useQuery({
@@ -13,7 +22,7 @@ export const useAuthUser = () =>
 export const useVerifyToken = (token: string) =>
   useQuery({
     queryKey: ["valid-token"],
-    queryFn: () => verifyToken(token),
+    queryFn: () => validateToken(token),
     refetchOnWindowFocus: false,
     retry: false,
   });

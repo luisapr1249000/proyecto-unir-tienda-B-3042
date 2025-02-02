@@ -5,17 +5,14 @@ import {
   CategoryInput,
   CategoryName,
 } from "../types/category";
-import {
-  PaginationConfig,
-  PaginationResultCategories,
-} from "../types/paginationResult";
+import { CategoryPaginationResults, PaginationOptions } from "../types/query";
 
 export const getCategoriesWithPagination = async ({
   page = 1,
   limit = 10,
   sort = "-createdAt",
-}: PaginationConfig): Promise<PaginationResultCategories> => {
-  const response = await api<PaginationResultCategories>(
+}: PaginationOptions): Promise<CategoryPaginationResults> => {
+  const response = await api<CategoryPaginationResults>(
     `/categories?page=${page}&limit=${limit}&sort=${sort}`
   );
   return response.data;
@@ -35,8 +32,8 @@ export const getCategoryByName = async ({
   return response.data;
 };
 
-export const createCategory = async (category: CategoryInput) => {
-  const response = await api.post<Category>(`/categories`, category);
+export const createCategory = async (data: CategoryInput) => {
+  const response = await api.post<Category>(`/categories`, data);
   return response.data;
 };
 

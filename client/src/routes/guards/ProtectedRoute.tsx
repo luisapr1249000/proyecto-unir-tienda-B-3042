@@ -10,9 +10,16 @@ const ProtectedRoute = () => {
     return <LoadSpinner />;
   }
 
-  if (isError || error) {
+  if (
+    authUser === undefined ||
+    !authUser ||
+    !authUser._id ||
+    authUser === null ||
+    isError ||
+    error
+  ) {
     console.log(error);
-    queryClient.setQueryData(["authUser"], null);
+    queryClient.invalidateQueries({ queryKey: ["authUser"] });
     return <Navigate to="/" />;
   }
 

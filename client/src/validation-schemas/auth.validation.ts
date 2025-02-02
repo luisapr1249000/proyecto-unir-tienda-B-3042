@@ -33,7 +33,6 @@ export const emailSchema = z.object({ email: createEmailField() });
 
 export const signupResponse = z.object({
   userSaved: userSchema,
-  accessToken: createBasicString(),
 });
 
 export const loginResponse = z.object({ userId: createBasicString() });

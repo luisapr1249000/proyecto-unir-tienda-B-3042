@@ -1,9 +1,8 @@
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
 import LogoutIcon from "@mui/icons-material/Logout";
 import Grid from "@mui/material/Grid2";
-import { Box, Button, Card, IconButton, Tooltip } from "@mui/material";
-import { Link } from "react-router-dom";
-import { responsiveDisplay } from "../../../../../assets/css/mui-css-objects/muiStyles";
+import { BorderIconButton } from "../../../../common/buttons/iconbutton-delete/IconButtonDelete";
+import { Link } from "../../../../common/react-link/Link";
 
 const HeaderAccessButtons = () => {
   const settings = [
@@ -19,46 +18,25 @@ const HeaderAccessButtons = () => {
     },
   ];
 
+  const isSignupButton = (label: string) => label === "Signup";
   return (
     <Grid
       sx={{ justifyContent: "flex-end" }}
-      size={{ xs: "auto", md: 10 }}
+      size={{ xs: "grow" }}
       container
       spacing={2}
     >
       {settings.map((setting) => (
-        <Box key={setting.link}>
-          <Button
+        <Link sx={{ color: "inherit" }} key={setting.link} to={setting.link}>
+          <BorderIconButton
             size="small"
-            endIcon={setting.icon}
-            variant={setting.label === "Signup" ? "contained" : "outlined"}
-            component={Link}
-            to={setting.link}
-            sx={{ ...responsiveDisplay }}
+            color={isSignupButton(setting.label) ? "primary" : "default"}
+            key={setting.link}
+            tooltipTitle={setting.label}
           >
-            {setting.label}
-          </Button>
-          <Box
-            sx={{ display: { xs: "flex", md: "none" } }}
-            component={Card}
-            variant="outlined"
-          >
-            <Tooltip title={setting.label}>
-              <IconButton
-                component={Link}
-                to={setting.link}
-                sx={{
-                  display: { xs: "flex", md: "none" },
-                  height: 1,
-                  borderRadius: 1,
-                }}
-                size="small"
-              >
-                {setting.icon}
-              </IconButton>
-            </Tooltip>
-          </Box>
-        </Box>
+            {setting.icon}
+          </BorderIconButton>
+        </Link>
       ))}
     </Grid>
   );

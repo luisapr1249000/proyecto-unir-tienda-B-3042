@@ -5,13 +5,20 @@ import {
   getUsersWithPagination,
 } from "../api/users/user.api";
 import { UserId } from "../types/user";
-import { QueryKey } from "../types/paginationResult";
-import { getUserAddressById, getUserAddresses } from "../api/users/address.api";
+import {
+  getUserAddressById,
+  getUserAddresses,
+  getUserDefaultAdressDirection,
+} from "../api/users/address.api";
 import {
   getUserCart,
   getUserWishlist,
 } from "../api/users/userProductActions.api";
-import { PaginatedQueryOptions } from "../types/query";
+import {
+  PaginatedQueryOptions,
+  ReactQueryOptions,
+  SearchQueryOptions,
+} from "../types/query";
 
 export const useGetUsersWithPagination_ = ({
   page,
@@ -20,10 +27,11 @@ export const useGetUsersWithPagination_ = ({
   queryKey,
   isKeepPreviousData = false,
   enabled = true,
-}: PaginatedQueryOptions) =>
+  query,
+}: PaginatedQueryOptions & SearchQueryOptions) =>
   useQuery({
-    queryKey: queryKey ?? ["users", { page, limit, sort }],
-    queryFn: () => getUsersWithPagination({ page, limit, sort }),
+    queryKey: queryKey ?? ["users", { page, limit, sort, query }],
+    queryFn: () => getUsersWithPagination({ page, limit, sort, query }),
     retry: false,
     refetchOnWindowFocus: false,
     placeholderData: isKeepPreviousData ? keepPreviousData : undefined,
@@ -33,17 +41,17 @@ export const useGetUsersWithPagination_ = ({
 export const useGetUserByUsername = ({
   username,
   queryKey,
-}: { username: string } & QueryKey) =>
+  enabled = true,
+}: { username: string } & ReactQueryOptions) =>
   useQuery({
     queryKey: queryKey ?? [`user-username-${username}`],
     queryFn: () => getUserByUsername(username),
     retry: false,
     refetchOnWindowFocus: false,
+    enabled: enabled,
   });
 
-export const useGetUserById = (
-  options: UserId & QueryKey & { enabled: boolean }
-) => {
+export const useGetUserById = (options: UserId & ReactQueryOptions) => {
   const { userId, queryKey } = options;
   console.log("user id query key", userId);
   return useQuery({
@@ -55,19 +63,25 @@ export const useGetUserById = (
   });
 };
 
-export const useGetUserAddresses = ({ userId, queryKey }: UserId & QueryKey) =>
+export const useGetUserAddresses = ({
+  userId,
+  queryKey,
+  enabled,
+}: UserId & ReactQueryOptions) =>
   useQuery({
     queryKey: queryKey ?? [`user-${userId}-address-direction`],
     queryFn: () => getUserAddresses(userId),
     retry: false,
     refetchOnWindowFocus: false,
+    enabled: enabled,
   });
 
 export const useGetUserAddressById = ({
   userId,
   addressDirectionId,
   queryKey,
-}: UserId & { addressDirectionId: string } & QueryKey) =>
+  enabled,
+}: UserId & { addressDirectionId: string } & ReactQueryOptions) =>
   useQuery({
     queryKey: queryKey ?? [
       `user-${userId}-address-direction-${addressDirectionId}`,
@@ -75,28 +89,42 @@ export const useGetUserAddressById = ({
     queryFn: () => getUserAddressById(userId, addressDirectionId),
     retry: false,
     refetchOnWindowFocus: false,
+    enabled: enabled,
   });
 
 export const useGetUserCart = ({
   userId,
   queryKey,
   enabled,
-}: UserId & QueryKey & { enabled?: boolean }) =>
+}: UserId & ReactQueryOptions) =>
   useQuery({
     queryKey: queryKey ?? [`user-${userId}-cart`],
     queryFn: () => getUserCart({ userId }),
     refetchOnWindowFocus: false,
     enabled: enabled,
+    retry: false,
   });
 
 export const useGetUserWishlist = ({
   userId,
   queryKey,
   enabled,
-}: UserId & QueryKey & { enabled?: boolean }) =>
+}: UserId & ReactQueryOptions) =>
   useQuery({
     queryKey: queryKey ?? [`user-${userId}-wishlist`],
     queryFn: () => getUserWishlist({ userId }),
+    refetchOnWindowFocus: false,
+    enabled: enabled,
+  });
+
+export const useGetUserDefaultAddressDirection = ({
+  userId,
+  queryKey,
+  enabled,
+}: UserId & ReactQueryOptions) =>
+  useQuery({
+    queryKey: queryKey ?? [`user-${userId}-default-address-direction`],
+    queryFn: () => getUserDefaultAdressDirection(userId),
     refetchOnWindowFocus: false,
     enabled: enabled,
   });

@@ -1,8 +1,8 @@
 import React from "react";
 import { Review } from "../../../../types/review";
-import { PaginationModel } from "../../../../types/paginationResult";
 import { DataGrid, GridColDef, GridToolbar } from "@mui/x-data-grid";
 import { Rating } from "@mui/material";
+import { PaginationModel } from "../../../../types/query";
 
 const AdminReviewTable = ({
   reviews,

@@ -7,6 +7,7 @@ import UserAccountUpdateAvatarForm from "../../../../components/users_/account/a
 import UserUpdateForm from "../../../../components/users_/account/update/UserUpdateForm";
 import UserCard from "../../../../components/users_/card/UserCard";
 import { User } from "../../../../types/user";
+import BackButton from "../../../../components/common/buttons/back-button/BackButton";
 
 const UserAccountUpdate = () => {
   const matches = useMatches();

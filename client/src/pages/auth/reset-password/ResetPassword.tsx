@@ -1,25 +1,21 @@
-import React from "react";
-import { useQuery } from "@tanstack/react-query";
 import { Navigate, useSearchParams } from "react-router-dom";
 import { useVerifyToken } from "../../../hooks/auth";
 import GridLoaderCenter from "../../../components/common/grid/grid-loader-center/GridLoaderCenter";
 import Grid from "@mui/material/Grid2";
 import { Divider, Paper, Typography, Card, CardContent } from "@mui/material";
-import { gridContainerCenter } from "../../../assets/css/mui-css-objects/gridCenter";
-import { gridBreakpoints } from "../../../assets/css/mui-css-objects/muiStyles";
 import ResetPasswordForm from "../../../components/auth/reset-password/ResetPasswordForm";
 import { Link } from "../../../components/common/react-link/Link";
 import { GridResponsive } from "../../../assets/css/mui-css-objects/grid";
 
 const ResetPassword = () => {
-  // const [searchParams] = useSearchParams();
+  const [searchParams] = useSearchParams();
 
-  // const { isLoading, isSuccess, error } = useVerifyToken(
-  //   searchParams.get("token") ?? ""
-  // );
+  const { isLoading, isSuccess, error } = useVerifyToken(
+    searchParams.get("token") ?? ""
+  );
 
-  // if (isLoading) return <GridLoaderCenter />;
-  // if (!isSuccess || error) return <Navigate to="/auth/login" />;
+  if (isLoading) return <GridLoaderCenter />;
+  if (!isSuccess || error) return <Navigate to="/auth/login" />;
 
   return (
     <Grid

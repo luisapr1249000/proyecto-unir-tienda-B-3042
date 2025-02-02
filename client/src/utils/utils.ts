@@ -16,3 +16,23 @@ export const isEmptyString = (string: string) => {
       return "No data";
   }
 };
+
+export const isAdmin = (role: string) => role === "admin";
+
+export const isOwner = ({
+  authorId,
+  userId,
+}: {
+  authorId: string;
+  userId: string;
+}): boolean => userId === authorId;
+
+export const isOwnerOrAdmin = ({
+  role,
+  userId,
+  authorId,
+}: {
+  role: string;
+  userId: string;
+  authorId: string;
+}) => isAdmin(role) || isOwner({ authorId, userId });

@@ -16,6 +16,7 @@ import AddressDirectionCard from "../../../../components/users_/address-directio
 import { ButtonLink } from "../../../../components/common/buttons/link/ButtonLink";
 import Fab from "@mui/material/Fab";
 import AddIcon from "@mui/icons-material/Add";
+import { useAuthUser } from "../../../../hooks/auth";
 
 const MobileCreateButton = ({ username }: { username: string }) => (
   <Fab
@@ -47,8 +48,10 @@ const ButtonAddAddressDirection = ({ username }: { username: string }) => (
 
 const AddressDirectionList = () => {
   const { username } = useParams();
+  const { data: authUser } = useAuthUser();
   const { data: addressDirections, isLoading } = useGetUserAddresses({
-    userId: username ?? "",
+    userId: authUser?._id ?? "",
+    enabled: !!authUser,
   });
 
   if (isLoading) return <CircleLoadingGrid />;
@@ -81,12 +84,12 @@ const AddressDirectionList = () => {
           <ButtonAddAddressDirection username={username ?? ""} />
         </CardContent>
         <Divider />
-        <CardContent>
+        <CardContent component={Grid} container spacing={3} sx={{}}>
           {hasAddressDirections ? (
             addressDirections.map((addressDirection, index) => (
               <Grid
                 key={addressDirection._id}
-                size={{ xs: 12, md: 3 }}
+                size={{ xs: 12, md: 4 }}
                 spacing={3}
               >
                 <AddressDirectionCard

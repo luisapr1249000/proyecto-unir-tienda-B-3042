@@ -1,19 +1,7 @@
 import { RouteObject } from "react-router-dom";
-// import Login from "../pages/auth/login/Login";
-// import Signup from "../pages/auth/signup/Signup";
 import GuessRoute from "./guards/GuessRoute";
-// import ResetPasswordConfirmation from "../pages/auth/reset-password-confirmation/ResetPasswordConfirmation";
-// import SendMailConfirmation from "../pages/auth/send-mail-confirmation/SendMailConfirmation";
-// import LoadSpinner from "../components/common/load-spinner/LoadSpinner";
-import {
-  createLoadableComponent,
-  loadableOptions,
-} from "../utils/utils.loadable";
-import pMinDelay from "p-min-delay";
+import { createLoadableComponent } from "../utils/utils.loadable";
 import AuthLayout from "../components/auth/AuthLayout";
-import SendConfirmationEmail from "../pages/auth/send-mail/SendConfirmationEmail";
-import ForgotPassword from "../pages/auth/forgot-password/ForgotPassword";
-import ResetPassword from "../pages/auth/reset-password/ResetPassword";
 
 const SignupLoadable = createLoadableComponent(
   () => import("../pages/auth/signup/Signup")
@@ -21,6 +9,18 @@ const SignupLoadable = createLoadableComponent(
 
 const LoginLoadable = createLoadableComponent(
   () => import("../pages/auth/login/Login")
+);
+
+const ForgotPasswordLoadable = createLoadableComponent(
+  () => import("../pages/auth/forgot-password/ForgotPassword")
+);
+
+const ResetPasswordLoadable = createLoadableComponent(
+  () => import("../pages/auth/reset-password/ResetPassword")
+);
+
+const SendConfirmationEmailLoadable = createLoadableComponent(
+  () => import("../pages/auth/send-mail/SendConfirmationEmail")
 );
 
 const authRoutes: RouteObject[] = [
@@ -41,26 +41,18 @@ const authRoutes: RouteObject[] = [
 
           {
             path: "/auth/forgot-password",
-            element: <ForgotPassword />,
+            element: <ForgotPasswordLoadable />,
           },
 
           {
             path: "/auth/reset-password",
-            element: <ResetPassword />,
+            element: <ResetPasswordLoadable />,
           },
 
           {
             path: "/auth/send-mail-confirmation",
-            element: <SendConfirmationEmail />,
+            element: <SendConfirmationEmailLoadable />,
           },
-          // {
-          //   path: "/auth/request-reset-password/",
-          //   element: <ResetPasswordConfirmationLoadable />,
-          // },
-          // {
-          //   path: "/auth/send-mail-confirmation",
-          //   element: <SendMailConfirmationLoadable />,
-          // },
         ],
       },
     ],

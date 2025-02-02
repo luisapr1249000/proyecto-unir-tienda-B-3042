@@ -1,11 +1,11 @@
-import { Box, CardContent, Paper, Skeleton } from "@mui/material";
+import { Box, CardContent, CardMedia, Paper, Skeleton } from "@mui/material";
 import KeyboardArrowLeft from "@mui/icons-material/KeyboardArrowLeft";
 import KeyboardArrowRight from "@mui/icons-material/KeyboardArrowRight";
 import MobileStepper from "@mui/material/MobileStepper";
 import Button from "@mui/material/Button";
 import Grid from "@mui/material/Grid2";
 import React, { useState } from "react";
-import { ProductProp } from "../../../types/product";
+import { ProductProp } from "../../../../types/product";
 import { blue, grey } from "@mui/material/colors";
 
 const ImageDisplay = ({
@@ -19,31 +19,15 @@ const ImageDisplay = ({
   loading: boolean;
   onLoad: () => void;
 }) => (
-  <>
-    {loading && (
-      <Skeleton
-        animation="wave"
-        variant="rectangular"
-        sx={{ height: 450, width: 1 }}
-      />
-    )}
-    <Paper
-      sx={{
-        height: 450,
-        width: 1,
-        objectPosition: "center",
-        objectFit: "cover",
-        display: loading ? "none" : "flex",
-        border: 1,
-        borderColor: "grey.500",
-      }}
-      elevation={5}
-      onLoad={onLoad}
+  <Paper component={Grid} size={{ xs: 12 }} container sx={{ height: 0.85 }}>
+    <CardMedia
+      sx={{ borderRadius: 1 }}
       component="img"
-      src={src}
+      height={"100%"}
+      image={src}
       alt={alt}
     />
-  </>
+  </Paper>
 );
 
 const ImageControls = ({
@@ -57,22 +41,24 @@ const ImageControls = ({
   onNext: () => void;
   onBack: () => void;
 }) => (
-  <MobileStepper
-    sx={{ flexGrow: 1 }}
-    nextButton={
-      <Button size="small" endIcon={<KeyboardArrowRight />} onClick={onNext}>
-        Next
-      </Button>
-    }
-    backButton={
-      <Button size="small" startIcon={<KeyboardArrowLeft />} onClick={onBack}>
-        Back
-      </Button>
-    }
-    steps={totalSteps}
-    position="static"
-    activeStep={currentStep}
-  />
+  <Grid sx={{ height: 0.1 }} size={{ xs: 12 }}>
+    <MobileStepper
+      sx={{ flexGrow: 1 }}
+      nextButton={
+        <Button size="small" endIcon={<KeyboardArrowRight />} onClick={onNext}>
+          Next
+        </Button>
+      }
+      backButton={
+        <Button size="small" startIcon={<KeyboardArrowLeft />} onClick={onBack}>
+          Back
+        </Button>
+      }
+      steps={totalSteps}
+      position="static"
+      activeStep={currentStep}
+    />
+  </Grid>
 );
 
 const ProductDetailsImage = ({ product }: ProductProp) => {
@@ -103,11 +89,9 @@ const ProductDetailsImage = ({ product }: ProductProp) => {
       container
       size={{ xs: 12, md: "grow" }}
       sx={{
-        justifyContent: "center",
-        alignItems: "center",
+        height: 1,
         borderRight: 1,
         borderColor: "divider",
-        // p: 3,
       }}
     >
       <ImageDisplay

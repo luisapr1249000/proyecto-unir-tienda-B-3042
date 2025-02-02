@@ -3,7 +3,7 @@ import Grid from "@mui/material/Grid2";
 import { gridContainerCenter } from "../../../assets/css/mui-css-objects/gridCenter";
 import CircleLoadingGrid from "../../../components/common/loaders/CircleLoadingGrid";
 import ObjectNotFound from "../../../components/common/errors/object-not-found/ObjectNotFound";
-import { useGetProductsWithPagination_ } from "../../../hooks/products.hooks";
+import { useGetProductsWithPagination } from "../../../hooks/products.hooks";
 import AdminProductTable from "../../../components/users_/admin/product-table/AdminProductTable";
 
 const AdminProducts = () => {
@@ -17,7 +17,7 @@ const AdminProducts = () => {
     error,
     refetch,
     isFetching,
-  } = useGetProductsWithPagination_({
+  } = useGetProductsWithPagination({
     queryKey: [
       "products-admin",
       paginationModel.page,
