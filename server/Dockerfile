@@ -6,10 +6,12 @@ COPY package*.json tsconfig.json ./
 
 RUN npm install
 
-COPY ./local/types/passport/index.d.ts /app/node_modules/@types/passport/index.d.ts
-COPY ./local/types/multer/index.d.ts /app/node_modules/@types/passport/index.d.ts
 
 COPY src ./src
+
+COPY ./local/types/passport/index.d.ts /app/node_modules/@types/passport/index.d.ts
+COPY ./local/types/multer/index.d.ts /app/node_modules/@types/multer/index.d.ts
+
 
 RUN npm run build
 
