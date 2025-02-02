@@ -4,6 +4,9 @@ WORKDIR /usr/src/app
 
 COPY package*.json tsconfig.json ./
 
+COPY ./local/types/passport/index.d.ts /usr/src/app/node_modules/@types/passport/index.d.ts
+
+
 RUN npm install
 
 COPY src ./src
