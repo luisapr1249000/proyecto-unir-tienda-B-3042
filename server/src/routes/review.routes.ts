@@ -2,7 +2,6 @@ import { Router } from "express";
 import {
   authMiddleware,
   isReviewerOrAdmin,
-  isUserOwnerOrAdmin,
   optionalAuth,
   verifyUserOwnershipOrAdminRole,
 } from "../middlewares/auth.middleware";

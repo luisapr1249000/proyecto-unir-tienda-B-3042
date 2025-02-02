@@ -2,7 +2,7 @@
 import mongoose, { connect } from "mongoose";
 import app from "./app";
 import { env } from "./config/envConfig";
-import { genAdminUser } from "./__tests__/db/setUpDB";
+// import { genAdminUser } from "./__tests__/db/setUpDB";
 // import { createAdmin } from "./utils/mongoose-schemas/mongoose.utils";
 
 mongoose.Promise = global.Promise;

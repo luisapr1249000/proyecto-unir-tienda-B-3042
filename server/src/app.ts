@@ -4,9 +4,9 @@ import cors from "cors";
 import morgan from "morgan";
 import bodyParser from "body-parser";
 import cookieParser from "cookie-parser";
-import swaggerJSDoc from "swagger-jsdoc";
-import swaggerUiExpress from "swagger-ui-express";
-import options from "./docs/docs.configuration";
+// import swaggerJSDoc from "swagger-jsdoc";
+// import swaggerUiExpress from "swagger-ui-express";
+// import options from "./docs/docs.configuration";
 // import { rateLimit } from "express-rate-limit";
 import { AuthRoutes } from "./routes/auth.routes";
 import { UserRoutes } from "./routes/users/user.routes";
@@ -21,10 +21,9 @@ import { UserProductActionsRoutes } from "./routes/users/userProductActions.rout
 import { AddressDirectionRoutes } from "./routes/users/address.routes";
 import { productQuestiontsRoutes } from "./routes/products/productQuestions.routes";
 // import expressListRoutes from "express-list-routes";
-
 const app: Application = express();
 
-const specs = swaggerJSDoc(options);
+// const specs = swaggerJSDoc(options);
 
 // const limiter = rateLimit({
 //   windowMs: 15 * 60 * 1000,
@@ -62,7 +61,7 @@ app.use("/api/v1", ReviewRoutes);
 app.use("/api/v1", OrderRoutes);
 app.use("/api/v1", productQuestiontsRoutes);
 
-app.use("/api/v1/docs/", swaggerUiExpress.serve, swaggerUiExpress.setup(specs));
+// app.use("/api/v1/docs/", swaggerUiExpress.serve, swaggerUiExpress.setup(specs));
 
 app.get("/api/v1/health", (_req, res) => {
   res.status(200).json({ status: "OK" });
