@@ -14,7 +14,7 @@ import {
   validateSchemaBody,
 } from "../middlewares/requestValidation.middleware";
 import { uploadImageReview } from "../config/multer/multer.review";
-import { PRODUCT_ID, PRODUCT_ID_AND_REVIEW_ID, USER_ID } from "../constants";
+import { PRODUCT_ID, PRODUCT_ID_AND_REVIEW_ID } from "../constants";
 import reviewController from "../controllers/review.controller";
 import { reviewPaginationAndSortSchema } from "../validation-schemas/query.validation";
 
@@ -27,21 +27,6 @@ router.get(
   validateObjectQueryParams(reviewPaginationAndSortSchema),
   reviewController.getReviews,
 );
-// router.get(
-//   "/reviews/user/:userId",
-//   authMiddleware,
-//   isUserOwnerOrAdmin,
-//   validateObjectQueryParams(paginationCoerceSchema),
-//   validateObjectIdParams(USER_ID),
-//   reviewController.getUserReviews,
-// );
-
-// router.get(
-//   "/products/:productId/reviews",
-//   validateObjectQueryParams(paginationCoerceSchema),
-//   validateObjectIdParams(PRODUCT_ID),
-//   reviewController.getReviewsFromProduct,
-// );
 
 router.get(
   "/products/:productId/reviews/:reviewId",
@@ -59,7 +44,7 @@ router.post(
 );
 
 router.post(
-  "/products/:productId/reviews/:reviewId/image",
+  "/products/:productId/reviews/:reviewId/images",
   authMiddleware,
   validateObjectIdParams(PRODUCT_ID),
   uploadImageReview,

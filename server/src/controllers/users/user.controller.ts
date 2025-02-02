@@ -31,7 +31,7 @@ class UserController {
       return handleError(res, e);
     }
   }
-  public async uploadImages(req: Request, res: Response) {
+  public async uploadAvatar(req: Request, res: Response) {
     try {
       const authUserId = extractAuthUserId(req);
 

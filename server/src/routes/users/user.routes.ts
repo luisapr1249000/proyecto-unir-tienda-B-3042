@@ -17,6 +17,7 @@ import {
 } from "../../validation-schemas/user-schemas/user.validation";
 import { USER_ID } from "../../constants";
 import { userPaginationAndSort } from "../../validation-schemas/query.validation";
+import { uploadUserAvatar } from "../../config/multer/multer.user";
 
 const router = Router();
 
@@ -32,6 +33,13 @@ router.put(
   verifyUserOwnershipOrAdminRole("userId"),
   validateSchemaBody(userInputSchema),
   userController.updateUser,
+);
+
+router.put(
+  "/users/:userId/avatar",
+  authMiddleware,
+  uploadUserAvatar,
+  userController.uploadAvatar,
 );
 
 router.delete(
