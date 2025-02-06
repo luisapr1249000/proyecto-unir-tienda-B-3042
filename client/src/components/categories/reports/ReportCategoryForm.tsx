@@ -2,8 +2,6 @@ import React from "react";
 import Grid from "@mui/material/Grid2";
 import { useFormik } from "formik";
 import { toFormikValidationSchema } from "zod-formik-adapter";
-import { reportInputSchema } from "../../validation-schemas/report.validation";
-import SubmitButton from "../common/buttons/submit-button/SubmitButton";
 import Radio from "@mui/material/Radio";
 import RadioGroup from "@mui/material/RadioGroup";
 import {
@@ -13,10 +11,12 @@ import {
   TextField,
 } from "@mui/material";
 import { useMutation } from "@tanstack/react-query";
-import { createReport } from "../../api/report.api";
 import { toast } from "react-toastify";
-import { Reason } from "../../types/report";
-import { CategoryId } from "../../types/category";
+import { createReport } from "../../../api/report.api";
+import { Reason } from "../../../types/report";
+import { CategoryId } from "../../../types/category";
+import SubmitButton from "../../common/buttons/submit-button/SubmitButton";
+import { reportInputSchema } from "../../../validation-schemas/report.validation";
 
 const ReportCategoryForm = ({ categoryId }: CategoryId) => {
   const { mutate: createReportMutation } = useMutation({

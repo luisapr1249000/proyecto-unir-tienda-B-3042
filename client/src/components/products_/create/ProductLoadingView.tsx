@@ -1,5 +1,3 @@
-import React from "react";
-import GridLoaderCenter from "../../common/grid/grid-loader-center/GridLoaderCenter";
 import BackdropLoading from "../../common/loaders/BackdropLoading";
 
 const ProductLoadingView = () => {

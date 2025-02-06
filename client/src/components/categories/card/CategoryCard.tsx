@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Category } from "../../../types/category";
 import {
   Card,
@@ -11,10 +11,11 @@ import {
 } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import ReportButton from "../../common/buttons/report/ReportButton";
-import DialogReportCategory from "../dialogs/DialogReportCategory";
 import { Link } from "../../common/react-link/Link";
 import { useAuthUser } from "../../../hooks/auth";
 import { isOwnerOrAdmin } from "../../../utils/utils";
+import BasicReportDialog from "../../common/dialogs/basic-report-dialog/BasicReportDialog";
+import ReportCategoryForm from "../reports/ReportCategoryForm";
 
 const CategoryCard = ({ category }: { category: Category }) => {
   const categoryState = {
@@ -47,7 +48,13 @@ const CategoryCard = ({ category }: { category: Category }) => {
       <Divider />
       <CardActions sx={{ justifyContent: "space-between" }}>
         <ReportButton handleOpen={handleClickOpen} />
-        <DialogReportCategory open={openDialog} handleClose={handleClose} />
+        <BasicReportDialog
+          itemType="Category"
+          open={openDialog}
+          onClose={handleClose}
+        >
+          <ReportCategoryForm categoryId={category._id} />
+        </BasicReportDialog>
 
         {authUser &&
           isOwnerOrAdmin({

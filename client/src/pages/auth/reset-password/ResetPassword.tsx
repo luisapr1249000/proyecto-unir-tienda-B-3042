@@ -1,11 +1,11 @@
 import { Navigate, useSearchParams } from "react-router-dom";
 import { useVerifyToken } from "../../../hooks/auth";
-import GridLoaderCenter from "../../../components/common/grid/grid-loader-center/GridLoaderCenter";
 import Grid from "@mui/material/Grid2";
-import { Divider, Paper, Typography, Card, CardContent } from "@mui/material";
+import { Divider, Typography, Card, CardContent } from "@mui/material";
 import ResetPasswordForm from "../../../components/auth/reset-password/ResetPasswordForm";
 import { Link } from "../../../components/common/react-link/Link";
 import { GridResponsive } from "../../../assets/css/mui-css-objects/grid";
+import CircleLoadingGrid from "../../../components/common/loaders/CircleLoadingGrid";
 
 const ResetPassword = () => {
   const [searchParams] = useSearchParams();
@@ -14,7 +14,7 @@ const ResetPassword = () => {
     searchParams.get("token") ?? ""
   );
 
-  if (isLoading) return <GridLoaderCenter />;
+  if (isLoading) return <CircleLoadingGrid />;
   if (!isSuccess || error) return <Navigate to="/auth/login" />;
 
   return (
@@ -44,7 +44,7 @@ const ResetPassword = () => {
         </CardContent>
         <Divider />
         <CardContent>
-          <ResetPasswordForm />
+          <ResetPasswordForm token={searchParams.get("token") ?? ""} />
         </CardContent>
       </Card>
     </Grid>

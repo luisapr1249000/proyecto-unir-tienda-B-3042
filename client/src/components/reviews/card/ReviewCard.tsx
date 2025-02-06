@@ -20,6 +20,8 @@ import ReportButton from "../../common/buttons/report/ReportButton";
 import DialogReportReview from "../dialogs/DialogReportReview";
 import { Image } from "../../../validation-schemas/image.validation";
 import DialogReview from "../dialogs/DialogReview";
+import BasicReportDialog from "../../common/dialogs/basic-report-dialog/BasicReportDialog";
+import ReportReviewForm from "../reports/ReportReviewForm";
 
 const ReviewImages = ({
   review,
@@ -79,14 +81,16 @@ const ReviewImages = ({
   );
 };
 
-const ReviewReportSection = () => {
+const ReviewReportSection = ({ reviewId }: { reviewId: string }) => {
   const [open, setOpen] = useState(false);
   const handleClose = () => setOpen(false);
   const handleOpen = () => setOpen(true);
   return (
     <>
       <ReportButton handleOpen={handleOpen} />
-      <DialogReportReview handleClose={handleClose} open={open} />
+      <BasicReportDialog open={open} onClose={handleClose} itemType="Review">
+        <ReportReviewForm reviewId={reviewId} />
+      </BasicReportDialog>
     </>
   );
 };

@@ -4,9 +4,7 @@ import { Divider, Paper, Typography, Card, CardContent } from "@mui/material";
 import CategoryUpdateForm from "../../../components/categories/update/CategoryUpdateForm";
 import { useParams } from "react-router-dom";
 import { useGetCategoryById } from "../../../hooks/categories.hooks";
-import LoadSpinner from "../../../components/common/load-spinner/LoadSpinner";
 import ObjectNotFound from "../../../components/common/errors/object-not-found/ObjectNotFound";
-import GridLoaderCenter from "../../../components/common/grid/grid-loader-center/GridLoaderCenter";
 import CircleLoadingGrid from "../../../components/common/loaders/CircleLoadingGrid";
 
 const CategoryUpdate = () => {
@@ -19,7 +17,7 @@ const CategoryUpdate = () => {
     error,
   } = useGetCategoryById({ categoryId });
 
-  if (isLoading || isFetching) return <GridLoaderCenter />;
+  if (isLoading || isFetching) return <CircleLoadingGrid />;
   if (error) return <ObjectNotFound object="Category" onReload={refetch} />;
   if (!category) return <ObjectNotFound object="Category" onReload={refetch} />;
 

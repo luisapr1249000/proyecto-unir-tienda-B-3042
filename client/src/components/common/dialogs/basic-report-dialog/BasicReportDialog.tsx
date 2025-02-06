@@ -11,26 +11,27 @@ import {
 } from "@mui/material";
 import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
-import { it } from "node:test";
 
-const BasicDialogReport = ({
-  open,
-  handleClose,
-  children,
-  itemType,
-}: {
+export type BasicReportDialogProps = {
   open: boolean;
-  handleClose: () => void;
+  onClose: () => void;
   children: React.ReactNode;
   itemType: string;
-}) => {
+};
+
+const BasicReportDialog = ({
+  open,
+  onClose,
+  children,
+  itemType,
+}: BasicReportDialogProps) => {
   return (
-    <Dialog onClose={handleClose} open={open}>
+    <Dialog onClose={onClose} open={open}>
       <DialogTitle>Report {itemType}</DialogTitle>
       <Tooltip title="Close">
         <IconButton
           aria-label="close"
-          onClick={handleClose}
+          onClick={onClose}
           sx={(theme) => ({
             position: "absolute",
             right: 8,
@@ -47,4 +48,4 @@ const BasicDialogReport = ({
   );
 };
 
-export default BasicDialogReport;
+export default BasicReportDialog;

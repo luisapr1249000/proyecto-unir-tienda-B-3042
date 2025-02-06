@@ -1,19 +1,31 @@
-import React from "react";
 import Grid from "@mui/material/Grid2";
 import { TextField } from "@mui/material";
 import { useFormik } from "formik";
 import { toFormikValidationSchema } from "zod-formik-adapter";
 import { emailSchema } from "../../../validation-schemas/auth.validation";
 import SubmitButton from "../../common/buttons/submit-button/SubmitButton";
+import { useMutation } from "@tanstack/react-query";
+import { sendForgotPasswordEmail } from "../../../api/auth.api";
+import { toast } from "react-toastify";
 
 const SendForgotPasswordMailForm = () => {
+  const { mutate: sendForgotPasswordMail } = useMutation({
+    mutationFn: sendForgotPasswordEmail,
+    onSuccess: () => {
+      toast.success("Email sent successfully");
+    },
+    onError: (error) => {
+      toast.error(error.message);
+      toast.error("Email failed to send. Please try again.");
+    },
+  });
   const initialValues = {
     email: "",
   };
   const formik = useFormik({
     initialValues,
     validationSchema: toFormikValidationSchema(emailSchema),
-    onSubmit: (values) => console.log(values),
+    onSubmit: (values) => sendForgotPasswordMail(values),
   });
   return (
     <Grid

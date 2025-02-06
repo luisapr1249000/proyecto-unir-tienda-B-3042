@@ -14,7 +14,7 @@ export const ButtonLink = ({ children, ...props }: ButtonProps & LinkProps) => {
   );
 };
 
-export const IconButtonLink = ({
+export const LinkIconButton = ({
   children,
   ...props
 }: IconButtonProps & LinkProps) => {

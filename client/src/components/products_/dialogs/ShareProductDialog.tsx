@@ -1,20 +1,24 @@
-import BasicDialog, {
-  BasicDialogProps,
-} from "../../common/dialogs/basic-dialog/BasicDialog";
-import { InputAdornment, TextField, IconButton, Tooltip } from "@mui/material";
-import ShareIcon from "@mui/icons-material/Share";
+import InfoDialog from "../../common/dialogs/info-dialog/InfoDialog";
+import { TextField, IconButton, Tooltip, InputAdornment } from "@mui/material";
 import { toast } from "react-toastify";
+import ShareIcon from "@mui/icons-material/Share";
 
-const DialogoShareProduct = ({
+const ShareProductDialog = ({
   productUrl,
-  ...props
-}: { productUrl: string } & BasicDialogProps) => {
+  open,
+  onClose,
+}: {
+  productUrl: string;
+  open: boolean;
+  onClose: () => void;
+}) => {
   const handleClick = () => {
     navigator.clipboard.writeText(productUrl);
     toast.success("Url copied to clipboard!");
   };
+
   return (
-    <BasicDialog {...props}>
+    <InfoDialog dialogTitle="Share Product" onClose={onClose} open={open}>
       <TextField
         fullWidth
         label="Share Product"
@@ -35,8 +39,8 @@ const DialogoShareProduct = ({
           },
         }}
       />
-    </BasicDialog>
+    </InfoDialog>
   );
 };
 
-export default DialogoShareProduct;
+export default ShareProductDialog;

@@ -19,10 +19,10 @@ import PermIdentityIcon from "@mui/icons-material/PermIdentity";
 import Grid from "@mui/material/Grid2";
 import { Link, useNavigate } from "react-router-dom";
 import { logout } from "../../../../../api/auth.api";
-import LoadSpinner from "../../../../common/load-spinner/LoadSpinner";
 import UserCart from "../user-cart/UserCart";
 import { useAuthUser } from "../../../../../hooks/auth";
 import { isAdmin } from "../../../../../utils/utils";
+import BackdropLoading from "../../../../common/loaders/BackdropLoading";
 const HeaderUserMenu = () => {
   const navigate = useNavigate();
   const { data: authUser, isLoading } = useAuthUser();
@@ -98,7 +98,7 @@ const HeaderUserMenu = () => {
     </MenuItem>
   );
 
-  if (isLoading) return <LoadSpinner />;
+  if (isLoading) return <BackdropLoading />;
   if (!authUser) return <></>;
   console.log(authUser);
   return (
@@ -108,7 +108,7 @@ const HeaderUserMenu = () => {
       spacing={1}
     >
       {isLoading ? (
-        <LoadSpinner />
+        <BackdropLoading />
       ) : (
         <>
           <IconButton size="small" onClick={handleMenu} color="inherit">

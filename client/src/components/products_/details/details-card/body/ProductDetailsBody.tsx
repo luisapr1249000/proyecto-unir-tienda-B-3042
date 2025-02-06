@@ -1,7 +1,6 @@
 import React from "react";
-import { CardContent, Chip, Divider, Rating, Typography } from "@mui/material";
+import { CardContent, Divider, Typography } from "@mui/material";
 import Grid from "@mui/material/Grid2";
-import ProductCardActions from "../../../card/ProductCardActions";
 import { ProductProp } from "../../../../../types/product";
 import ProductDetailsRating from "./ProductDetailsRating";
 import { formatDate } from "../../../../../utils/util.dates";

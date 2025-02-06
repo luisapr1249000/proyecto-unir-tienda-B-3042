@@ -17,12 +17,6 @@ export const BorderIconButton = ({
   children,
   ...props
 }: BorderIconButtonProps) => {
-  // const sx = {
-  //   border: 1,
-  //   borderColor: "divider",
-  //   borderRadius: 3.2,
-  //   boxShadow: 2,
-  // };
   return (
     <>
       <Tooltip title={tooltipTitle}>

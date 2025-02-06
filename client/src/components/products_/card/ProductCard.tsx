@@ -3,9 +3,9 @@ import Grid from "@mui/material/Grid2";
 import { ProductProp } from "../../../types/product";
 import ProductCardImage from "./ProductCardImage";
 import ProductCardSecondaryActions from "./ProductCardSecondaryActions";
-import ProductCardActions from "./ProductCardActions";
 import ProductCardContent from "./ProductCardBody";
 import { Link } from "../../common/react-link/Link";
+import Wishlist from "./secondary-actions/wishlist/Wishlist";
 
 const ProductCard = ({
   product,
@@ -22,10 +22,9 @@ const ProductCard = ({
     >
       <ProductCardImage product={product} />
       <Divider />
-
-      <ProductCardActions
-        isWishlistItem={isWishlistItem}
+      <Wishlist
         productId={product._id}
+        isWishlistItem={isWishlistItem}
         wishlistCount={product.wishlistCount}
       />
 

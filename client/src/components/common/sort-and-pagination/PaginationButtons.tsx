@@ -2,7 +2,7 @@ import React from "react";
 
 import { Pagination, Typography } from "@mui/material";
 import Grid from "@mui/material/Grid2";
-import LoadSpinner from "../load-spinner/LoadSpinner";
+import BackdropLoading from "../loaders/BackdropLoading";
 const PaginationButtons = ({
   page,
   count,
@@ -31,7 +31,7 @@ const PaginationButtons = ({
       />
       <Grid container>
         {isLoadingNextPage ? (
-          <LoadSpinner />
+          <BackdropLoading />
         ) : (
           <>
             <Typography variant="body2" color="textSecondary">

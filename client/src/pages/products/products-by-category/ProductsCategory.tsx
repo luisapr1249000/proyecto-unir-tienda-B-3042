@@ -19,7 +19,6 @@ import ProductCard from "../../../components/products_/card/ProductCard";
 import PaginationButtons from "../../../components/common/sort-and-pagination/PaginationButtons";
 import { Category } from "../../../types/category";
 import SkeletonCardGrid from "../../../components/common/skeleton/SkeletonCardGrid";
-import BreadCrumbs from "../../../components/common/breadcrumbs/BreadCrumbs";
 import { useGetUserWishlist } from "../../../hooks/user";
 import { useAuthUser } from "../../../hooks/auth";
 import priceStore from "../../../zustand/priceSlice";

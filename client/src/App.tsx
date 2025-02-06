@@ -1,5 +1,4 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import BaseLayout from "./components/layout/base-layout/BaseLayout";
 import authRoutes from "./routes/auth.routes";
 import { useAuthUser, useGetAuthUser } from "./hooks/auth";
 import { ToastContainer } from "react-toastify";

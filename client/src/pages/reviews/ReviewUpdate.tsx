@@ -5,10 +5,10 @@ import { Card } from "@mui/material";
 
 import { useParams } from "react-router-dom";
 import { useGetProductById } from "../../hooks/products.hooks";
-import LoadSpinner from "../../components/common/load-spinner/LoadSpinner";
 import { useGetReviewById } from "../../hooks/review.hooks";
 import ReviewUpdateForm from "../../components/reviews/update/ReviewUpdateForm";
 import ObjectNotFound from "../../components/common/errors/object-not-found/ObjectNotFound";
+import BackdropLoading from "../../components/common/loaders/BackdropLoading";
 
 const ReviewUpdate = () => {
   const { productId, reviewId } = useParams();
@@ -27,7 +27,7 @@ const ReviewUpdate = () => {
     reviewId: reviewId ?? "",
     productId: productId ?? "",
   });
-  if (isLoadingProduct || isLoadingReview) return <LoadSpinner isBackdrop />;
+  if (isLoadingProduct || isLoadingReview) return <BackdropLoading />;
   if (!product || !review)
     return <ObjectNotFound object="Product" onReload={refetch} />;
   if (productError || !product || !review || reviewError)

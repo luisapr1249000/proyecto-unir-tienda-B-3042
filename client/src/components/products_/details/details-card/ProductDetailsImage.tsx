@@ -1,18 +1,15 @@
-import { Box, CardContent, CardMedia, Paper, Skeleton } from "@mui/material";
+import { CardContent, CardMedia, Paper } from "@mui/material";
 import KeyboardArrowLeft from "@mui/icons-material/KeyboardArrowLeft";
 import KeyboardArrowRight from "@mui/icons-material/KeyboardArrowRight";
 import MobileStepper from "@mui/material/MobileStepper";
 import Button from "@mui/material/Button";
 import Grid from "@mui/material/Grid2";
-import React, { useState } from "react";
+import { useState } from "react";
 import { ProductProp } from "../../../../types/product";
-import { blue, grey } from "@mui/material/colors";
 
 const ImageDisplay = ({
   src,
   alt,
-  loading,
-  onLoad,
 }: {
   src: string;
   alt: string;

@@ -4,7 +4,6 @@ import { Paper, Divider, Card, CardContent, Typography } from "@mui/material";
 import CategoryCard from "../../../components/categories/card/CategoryCard";
 import { useGetCategoriesWithPagination_ } from "../../../hooks/categories.hooks";
 import PaginationButtons from "../../../components/common/sort-and-pagination/PaginationButtons";
-import LoadSpinner from "../../../components/common/load-spinner/LoadSpinner";
 import ObjectNotFound from "../../../components/common/errors/object-not-found/ObjectNotFound";
 import QueryResultSummary from "../../../components/common/query/QueryResultSummary";
 import PageLimitSetter from "../../../components/common/query/PageLimitSetter";

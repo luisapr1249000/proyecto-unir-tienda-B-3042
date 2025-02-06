@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import { useState } from "react";
+import { Footer } from "../layout/footer/Footer";
 import Header from "../layout/header/header/Header";
 import { Outlet } from "react-router-dom";
 import Grid from "@mui/material/Grid2";
@@ -28,6 +29,7 @@ const AuthLayout = () => {
 
       <Grid sx={{ minHeight: "calc(100vh)" }} direction="column" container>
         <Outlet />
+        <Footer />
       </Grid>
     </>
   );

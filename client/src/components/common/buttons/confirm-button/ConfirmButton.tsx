@@ -1,16 +1,10 @@
-import { Button } from "@mui/material";
-import React from "react";
+import { Button, Typography, ButtonProps } from "@mui/material";
+import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 
-const ConfirmButton = ({
-  onConfirm,
-  text = "Confirm",
-}: {
-  onConfirm: () => void;
-  text?: string;
-}) => {
+export const ConfirmButton = (props: ButtonProps) => {
   return (
-    <Button variant="contained" onClick={onConfirm}>
-      {text}
+    <Button {...props} endIcon={<DeleteForeverIcon fontSize="inherit" />}>
+      <Typography variant="body2">Confirm</Typography>
     </Button>
   );
 };

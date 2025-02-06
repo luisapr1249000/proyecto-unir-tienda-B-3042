@@ -8,7 +8,6 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { isEmptyString } from "../../../../utils/utils";
 import { GridBorderRadious } from "../../../../assets/css/mui-css-objects/grid";
 
 const ProductSpecificationCard = ({

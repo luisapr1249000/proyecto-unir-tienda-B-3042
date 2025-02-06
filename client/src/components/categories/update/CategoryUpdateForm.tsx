@@ -2,7 +2,7 @@ import React from "react";
 import Grid from "@mui/material/Grid2";
 import { useFormik } from "formik";
 import { toFormikValidationSchema } from "zod-formik-adapter";
-import { Category, CategoryInput, CategoryProp } from "../../../types/category";
+import { CategoryInput, CategoryProp } from "../../../types/category";
 import { categoryInputSchema } from "../../../validation-schemas/category.validation";
 import SubmitButton from "../../common/buttons/submit-button/SubmitButton";
 import TextField from "../../common/textfields/TextField";

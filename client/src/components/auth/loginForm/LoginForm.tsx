@@ -19,16 +19,13 @@ import ContainerLoader from "../../common/loaders/ContainerLoader";
 
 const LoginForm = () => {
   const queryClient = useQueryClient();
-  const {
-    mutate: loginMutate,
-    error,
-    isPending,
-  } = useMutation({
+  const { mutate: loginMutate, isPending } = useMutation({
     mutationFn: login,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["authUser"] });
     },
-    onError: () => {
+    onError: (error) => {
+      toast.error(error.message);
       toast.error("Login failed. Please check your credentials.");
     },
   });

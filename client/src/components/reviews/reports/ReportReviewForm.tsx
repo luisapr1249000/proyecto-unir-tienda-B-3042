@@ -2,23 +2,25 @@ import React from "react";
 import Grid from "@mui/material/Grid2";
 import { useFormik } from "formik";
 import { toFormikValidationSchema } from "zod-formik-adapter";
-import { reportInputSchema } from "../../validation-schemas/report.validation";
-import SubmitButton from "../common/buttons/submit-button/SubmitButton";
 import Radio from "@mui/material/Radio";
 import RadioGroup from "@mui/material/RadioGroup";
-import { ProductId } from "../../types/product";
+import { ProductId } from "../../../types/product";
+import { reportInputSchema } from "../../../validation-schemas/report.validation";
+import SubmitButton from "../../common/buttons/submit-button/SubmitButton";
 import {
   FormControl,
   FormControlLabel,
   FormLabel,
   TextField,
 } from "@mui/material";
-import { useMutation } from "@tanstack/react-query";
-import { createReport } from "../../api/report.api";
-import { toast } from "react-toastify";
-import { Reason } from "../../types/report";
+import { ReviewId } from "../../../types/review";
 
-const ReportProductForm = ({ productId }: ProductId) => {
+import { useMutation } from "@tanstack/react-query";
+import { createReport } from "../../../api/report.api";
+import { toast } from "react-toastify";
+import { Reason } from "../../../types/report";
+
+const ReportReviewForm = ({ reviewId }: ReviewId) => {
   const { mutate: createReportMutation } = useMutation({
     mutationFn: createReport,
     onSuccess: () => {
@@ -34,7 +36,6 @@ const ReportProductForm = ({ productId }: ProductId) => {
     problemDescription: "",
     itemType: "Product",
   };
-
   const formik = useFormik({
     initialValues,
     validationSchema: toFormikValidationSchema(reportInputSchema),
@@ -42,7 +43,7 @@ const ReportProductForm = ({ productId }: ProductId) => {
       createReportMutation({
         itemType: "Product",
         reason: reason as Reason,
-        reportedItemId: productId,
+        reportedItemId: reviewId,
         problemDescription: problemDescription ?? "No problem description",
       }),
   });
@@ -104,4 +105,5 @@ const ReportProductForm = ({ productId }: ProductId) => {
     </Grid>
   );
 };
-export default ReportProductForm;
+
+export default ReportReviewForm;

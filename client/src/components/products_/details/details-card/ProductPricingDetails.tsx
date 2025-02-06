@@ -1,6 +1,5 @@
-import React from "react";
 import { ProductProp } from "../../../../types/product";
-import { Button, CardContent, Divider, Typography } from "@mui/material";
+import { CardContent, Divider, Typography } from "@mui/material";
 import Grid from "@mui/material/Grid2";
 import ProductQuantitySelectorForm from "./quantity-selector/ProductQuantitySelectorForm";
 

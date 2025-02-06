@@ -7,21 +7,15 @@ import { InputAdornment, TextField } from "@mui/material";
 import SubmitButton from "../../common/buttons/submit-button/SubmitButton";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { signup } from "../../../api/auth.api";
-import LoadSpinner from "../../common/load-spinner/LoadSpinner";
 import { toast } from "react-toastify";
 import ShowPassword from "../show-password/ShowPassword";
-import GridLoaderCenter from "../../common/grid/grid-loader-center/GridLoaderCenter";
 import ContainerLoader from "../../common/loaders/ContainerLoader";
 
 const SignupForm = () => {
   const [showPassword, setShowPassword] = useState(false);
   const handleClickShowPassword = () => setShowPassword((show) => !show);
   const queryClient = useQueryClient();
-  const {
-    mutate: signUpMutate,
-    isPending,
-    error,
-  } = useMutation({
+  const { mutate: signUpMutate, isPending } = useMutation({
     mutationFn: signup,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["authUser"] });

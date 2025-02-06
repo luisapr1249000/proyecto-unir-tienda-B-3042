@@ -4,7 +4,6 @@ import { gridContainerCenter } from "../../assets/css/mui-css-objects/gridCenter
 import { Card } from "@mui/material";
 import { useGetProductById } from "../../hooks/products.hooks";
 import { useParams } from "react-router-dom";
-import LoadSpinner from "../../components/common/load-spinner/LoadSpinner";
 import ReviewCreateForm from "../../components/reviews/create/ReviewCreateForm";
 import ProductCard from "../../components/products_/card/ProductCard";
 import ObjectNotFound from "../../components/common/errors/object-not-found/ObjectNotFound";
@@ -17,7 +16,7 @@ const ReviewCreate = () => {
     refetch,
   } = useGetProductById({ productId: productId ?? "" });
 
-  if (isLoading) return <LoadSpinner isBackdrop />;
+  if (isLoading) return <BackdropLoading />;
   if (error) return <ObjectNotFound object="Product" onReload={refetch} />;
   if (!product) return <ObjectNotFound object="Product" onReload={refetch} />;
 

@@ -1,7 +1,5 @@
 import ClearIcon from "@mui/icons-material/Clear";
-import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import { Button, Typography } from "@mui/material";
-import React from "react";
 
 export const ConfirmButton = ({
   fullWidth = false,

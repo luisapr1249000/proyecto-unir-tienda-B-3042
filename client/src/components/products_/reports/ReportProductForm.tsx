@@ -4,23 +4,20 @@ import { useFormik } from "formik";
 import { toFormikValidationSchema } from "zod-formik-adapter";
 import Radio from "@mui/material/Radio";
 import RadioGroup from "@mui/material/RadioGroup";
-import { ProductId } from "../../types/product";
-import { reportInputSchema } from "../../validation-schemas/report.validation";
-import SubmitButton from "../common/buttons/submit-button/SubmitButton";
 import {
   FormControl,
   FormControlLabel,
   FormLabel,
   TextField,
 } from "@mui/material";
-import { ReviewId } from "../../types/review";
-
 import { useMutation } from "@tanstack/react-query";
-import { createReport } from "../../api/report.api";
 import { toast } from "react-toastify";
-import { Reason } from "../../types/report";
-
-const ReportReviewForm = ({ reviewId }: ReviewId) => {
+import { createReport } from "../../../api/report.api";
+import { Reason } from "../../../types/report";
+import { ProductId } from "../../../types/product";
+import SubmitButton from "../../common/buttons/submit-button/SubmitButton";
+import { reportInputSchema } from "../../../validation-schemas/report.validation";
+const ReportProductForm = ({ productId }: ProductId) => {
   const { mutate: createReportMutation } = useMutation({
     mutationFn: createReport,
     onSuccess: () => {
@@ -36,6 +33,7 @@ const ReportReviewForm = ({ reviewId }: ReviewId) => {
     problemDescription: "",
     itemType: "Product",
   };
+
   const formik = useFormik({
     initialValues,
     validationSchema: toFormikValidationSchema(reportInputSchema),
@@ -43,7 +41,7 @@ const ReportReviewForm = ({ reviewId }: ReviewId) => {
       createReportMutation({
         itemType: "Product",
         reason: reason as Reason,
-        reportedItemId: reviewId,
+        reportedItemId: productId,
         problemDescription: problemDescription ?? "No problem description",
       }),
   });
@@ -105,5 +103,4 @@ const ReportReviewForm = ({ reviewId }: ReviewId) => {
     </Grid>
   );
 };
-
-export default ReportReviewForm;
+export default ReportProductForm;

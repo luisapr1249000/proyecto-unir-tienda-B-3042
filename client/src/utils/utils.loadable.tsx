@@ -1,8 +1,8 @@
 import loadable, { DefaultComponent } from "@loadable/component";
-import LoadSpinner from "../components/common/load-spinner/LoadSpinner";
 import pMinDelay from "p-min-delay";
+import BackdropLoading from "../components/common/loaders/BackdropLoading";
 
-export const loadableOptions = { fallback: <LoadSpinner isBackdrop /> };
+export const loadableOptions = { fallback: <BackdropLoading /> };
 
 export const createLoadableComponent = (
   loader: () => Promise<DefaultComponent<any>>,

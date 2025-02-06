@@ -1,25 +1,41 @@
 import { useFormik } from "formik";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { toFormikValidationSchema } from "zod-formik-adapter";
 import { forgotPasswordSchema } from "../../../validation-schemas/auth.validation";
 import Grid from "@mui/material/Grid2";
 import { InputAdornment, TextField } from "@mui/material";
-import ShowPassword from "../show-password/ShowPassword";
 import SubmitButton from "../../common/buttons/submit-button/SubmitButton";
+import { toast } from "react-toastify";
+import { useMutation } from "@tanstack/react-query";
+import CircleLoadingGrid from "../../common/loaders/CircleLoadingGrid";
+import { forgotPassword } from "../../../api/auth.api";
+import ShowPassword from "../show-password/ShowPassword";
 
-const ResetPasswordForm = () => {
+const ResetPasswordForm = ({ token }: { token: string }) => {
+  const { mutate: forgotPasswordMutation, isPending } = useMutation({
+    mutationFn: forgotPassword,
+    onSuccess: () => {
+      toast.success("newPassword reset successfully");
+    },
+    onError: (error) => {
+      toast.error(error.message);
+      toast.error("newPassword reset failed. Please try again.");
+    },
+  });
   const [showPassword, setShowPassword] = useState(false);
   const handleClickShowPassword = () => setShowPassword((show) => !show);
 
   const initialValues = {
-    password: "",
+    newPassword: "",
     confirmPassword: "",
   };
   const formik = useFormik({
     initialValues,
     validationSchema: toFormikValidationSchema(forgotPasswordSchema),
-    onSubmit: (values) => console.log(values),
+    onSubmit: (values) => forgotPasswordMutation({ data: values, token }),
   });
+
+  if (isPending) return <CircleLoadingGrid />;
 
   return (
     <Grid container spacing={3} component="form" onSubmit={formik.handleSubmit}>
@@ -28,17 +44,19 @@ const ResetPasswordForm = () => {
           fullWidth
           required
           type={showPassword ? "text" : "password"}
-          id="password"
-          name="password"
-          label="Password"
-          placeholder="Password"
-          value={formik.values.password}
+          id="newPassword"
+          name="newPassword"
+          label="newPassword"
+          placeholder="newPassword"
+          value={formik.values.newPassword}
           onChange={formik.handleChange}
           onBlur={formik.handleBlur}
-          error={formik.touched.password && Boolean(formik.errors.password)}
+          error={
+            formik.touched.newPassword && Boolean(formik.errors.newPassword)
+          }
           helperText={
-            formik.touched.password && Boolean(formik.errors.password)
-              ? formik.errors.password
+            formik.touched.newPassword && Boolean(formik.errors.newPassword)
+              ? formik.errors.newPassword
               : undefined
           }
           slotProps={{
@@ -55,12 +73,12 @@ const ResetPasswordForm = () => {
             inputLabel: { shrink: true },
           }}
           focused={
-            formik.touched.password && Boolean(!formik.errors.password)
+            formik.touched.newPassword && Boolean(!formik.errors.newPassword)
               ? true
               : undefined
           }
           color={
-            formik.touched.password && Boolean(!formik.errors.password)
+            formik.touched.newPassword && Boolean(!formik.errors.newPassword)
               ? "success"
               : undefined
           }
@@ -70,11 +88,11 @@ const ResetPasswordForm = () => {
         <TextField
           fullWidth
           required
-          type={showPassword ? "text" : "password"}
+          type={showPassword ? "text" : "newPassword"}
           id="confirmPassword"
           name="confirmPassword"
-          label="Confirm Password"
-          placeholder="Confirm Password"
+          label="Confirm newPassword"
+          placeholder="Confirm newPassword"
           value={formik.values.confirmPassword}
           onChange={formik.handleChange}
           onBlur={formik.handleBlur}
