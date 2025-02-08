@@ -1,30 +1,27 @@
-import { useLocation, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import Grid from "@mui/material/Grid2";
 import {
   Card,
   CardActions,
   CardContent,
   Divider,
-  Paper,
   Typography,
 } from "@mui/material";
 import { useGetCategoryByName } from "../../../hooks/categories.hooks";
-import GridLoadingSkeleton from "../../../components/common/load-spinner/GridLoadingSkeleton";
 import ObjectNotFound from "../../../components/common/errors/object-not-found/ObjectNotFound";
 import QueryResultSummary from "../../../components/common/query/QueryResultSummary";
 import { useEffect, useState } from "react";
 import PageLimitSetter from "../../../components/common/query/PageLimitSetter";
 import SortSelecter from "../../../components/common/sort-and-pagination/SortSelecter";
-import ProductCard from "../../../components/products_/card/ProductCard";
+import ProductCard from "../../../components/products/card/ProductCard";
 import PaginationButtons from "../../../components/common/sort-and-pagination/PaginationButtons";
 import { Category } from "../../../types/category";
-import SkeletonCardGrid from "../../../components/common/skeleton/SkeletonCardGrid";
 import { useGetUserWishlist } from "../../../hooks/user";
 import { useAuthUser } from "../../../hooks/auth";
 import priceStore from "../../../zustand/priceSlice";
 import { useGetProductsWithPagination } from "../../../hooks/products.hooks";
 import { Link } from "../../../components/common/react-link/Link";
-import CircleLoadingGrid from "../../../components/common/loaders/CircleLoadingGrid";
+import ProductCardSkeletonGrid from "../../../components/products/skeleton/ProductCardSkeletonGrid";
 
 const ProductsByCategory = ({ category }: { category: Category }) => {
   const [sortBy, setSortBy] = useState("-createdAt");
@@ -62,7 +59,7 @@ const ProductsByCategory = ({ category }: { category: Category }) => {
     window.scrollTo({ top: 0, behavior: "smooth" }); // Smooth scroll to top
   }, [page]);
 
-  if (isLoadingProducts) return <CircleLoadingGrid />;
+  if (isLoadingProducts) return <ProductCardSkeletonGrid />;
   if (errorProducts)
     return <ObjectNotFound object="Products" onReload={refetchProducts} />;
   if (!products)
@@ -167,7 +164,7 @@ const ProductsCategory = () => {
     categoryName,
   });
 
-  if (isLoading) return <CircleLoadingGrid />;
+  if (isLoading) return <ProductCardSkeletonGrid />;
   if (error)
     return <ObjectNotFound object="Category" onReload={refetchCategory} />;
   if (!category)

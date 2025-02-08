@@ -12,7 +12,7 @@ import {
   Typography,
 } from "@mui/material";
 import { CartItem } from "../../../../types/user";
-import ProductQuantitySelector from "../../../products_/quantity-selector/ProductQuantitySelector";
+import ProductQuantitySelector from "../../../products/quantity-selector/ProductQuantitySelector";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import { useAuthUser } from "../../../../hooks/auth";

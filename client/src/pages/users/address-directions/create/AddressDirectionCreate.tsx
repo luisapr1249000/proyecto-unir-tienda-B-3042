@@ -9,8 +9,8 @@ const AddressDirectionCreate = () => {
   const { data: authUser } = useAuthUser();
   if (!authUser) return <></>;
   return (
-    <Grid container spacing={3} size={{ xs: 10 }} sx={{ border: 1, p: 3 }}>
-      <Card>
+    <Grid container spacing={3} size={{ xs: 10 }} sx={{ p: 3 }}>
+      <Card sx={{ flexGrow: 1 }} elevation={4}>
         <CardContent>
           <Typography variant="h5">Address Directions</Typography>
         </CardContent>

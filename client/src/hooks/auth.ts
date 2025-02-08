@@ -1,4 +1,4 @@
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { getAuthUser, validateToken } from "../api/auth.api";
 
 export const useGetAuthUser = (isForLogin = false) =>

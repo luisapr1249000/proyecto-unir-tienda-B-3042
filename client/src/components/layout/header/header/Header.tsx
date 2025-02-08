@@ -1,12 +1,12 @@
 import { AppBar, Divider, Toolbar } from "@mui/material";
 import Grid from "@mui/material/Grid2";
 import HeaderSearchBar from "../search-bar/HeaderSearchBar";
-import SkeletonCircle from "../../../common/skeleton/SkeletonCircle";
 import { useAuthUser } from "../../../../hooks/auth";
 import HeaderHomeButton from "../home-button/HeaderHomeButton";
 import HeaderThemeSwitcherButton from "../header-theme-switcher/HeaderThemeSwitcherButton";
 import HeaderUserMenu from "../auth/user-menu/HeaderUserMenu";
 import HeaderAccessButtons from "../auth/access-buttons/HeaderAccessButtons";
+import UserMenuSkeleton from "../skeleton/UserMenuSkeleton";
 
 const Header = ({ handleOpenDrawer }: { handleOpenDrawer: () => void }) => {
   const { data: authUser, isSuccess, isLoading } = useAuthUser();
@@ -35,7 +35,7 @@ const Header = ({ handleOpenDrawer }: { handleOpenDrawer: () => void }) => {
           sx={{ justifyContent: "flex-end", alignItems: "center" }}
         >
           {isLoading ? (
-            <SkeletonCircle />
+            <UserMenuSkeleton />
           ) : isSuccess && authUser ? (
             <HeaderUserMenu />
           ) : (

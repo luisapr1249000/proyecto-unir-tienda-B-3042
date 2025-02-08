@@ -7,14 +7,10 @@ import productRoutes, { productDetailRoutes } from "./routes/products.routes";
 import categoryRoutes from "./routes/category.routes";
 import { useServerStatus } from "./hooks/server.hook";
 import { useNavigatorOnLine } from "./hooks/navigatorOnLine.hooks";
-import { useEffect } from "react";
-import NetworkOffline from "./components/network/network-offline/NetworkOffline";
 import adminRoutes from "./routes/admin.routes";
 import reviewsRoutes from "./routes/review.routes";
-import addressDirectionRoutes from "./routes/addressDirections.routes";
-import ProductLayout from "./components/products_/ProductsLayout";
-import ProductDetailLayout from "./components/products_/details/ProductDetailLayout";
-import CircleLoadingGrid from "./components/common/loaders/CircleLoadingGrid";
+import ProductLayout from "./components/products/ProductsLayout";
+import ProductDetailLayout from "./components/products/details/ProductDetailLayout";
 import UserCartRoutes from "./routes/userCart.routes";
 
 function App() {
@@ -37,7 +33,7 @@ function App() {
       element: <ProductDetailLayout />,
       children: [...productDetailRoutes, ...categoryRoutes],
     },
-    ...adminRoutes,
+    // ...adminRoutes,
     ...authRoutes,
     ...userRoutes,
     ...reviewsRoutes,

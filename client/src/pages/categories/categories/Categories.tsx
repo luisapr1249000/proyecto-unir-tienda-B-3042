@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Grid from "@mui/material/Grid2";
-import { Paper, Divider, Card, CardContent, Typography } from "@mui/material";
+import { Divider, Card, CardContent, Typography } from "@mui/material";
 import CategoryCard from "../../../components/categories/card/CategoryCard";
 import { useGetCategoriesWithPagination_ } from "../../../hooks/categories.hooks";
 import PaginationButtons from "../../../components/common/sort-and-pagination/PaginationButtons";
@@ -8,8 +8,8 @@ import ObjectNotFound from "../../../components/common/errors/object-not-found/O
 import QueryResultSummary from "../../../components/common/query/QueryResultSummary";
 import PageLimitSetter from "../../../components/common/query/PageLimitSetter";
 import { Link } from "../../../components/common/react-link/Link";
-import CircleLoadingGrid from "../../../components/common/loaders/CircleLoadingGrid";
 import SortSelecter from "../../../components/common/sort-and-pagination/SortSelecter";
+import CategoryCardSkeletonGrid from "../../../components/categories/skeleton/CategoryCardSkeletonGrid";
 
 const Categories = () => {
   const [sortBy, setSortBy] = useState("-createdAt");
@@ -40,7 +40,7 @@ const Categories = () => {
     window.scrollTo({ top: 0, behavior: "smooth" }); // Smooth scroll to top
   }, [page]);
 
-  if (isLoading) return <CircleLoadingGrid />;
+  if (isLoading) return <CategoryCardSkeletonGrid />;
   if (error) return <ObjectNotFound object="Category" onReload={refetch} />;
   if (!categories)
     return <ObjectNotFound object="Category" onReload={refetch} />;

@@ -1,14 +1,5 @@
-import React from "react";
-
 import { UserProp } from "../../../../types/user";
-import {
-  Card,
-  CardContent,
-  Divider,
-  Paper,
-  TextField,
-  Typography,
-} from "@mui/material";
+import { CardContent, Divider, TextField } from "@mui/material";
 import Grid from "@mui/material/Grid2";
 import { formatDate } from "../../../../utils/util.dates";
 
@@ -25,7 +16,6 @@ const UserSpecificationCard = ({
     placeholder="Specification"
     value={specification}
     fullWidth
-    // disabled
     variant="standard"
     slotProps={{ inputLabel: { shrink: true }, input: { readOnly: true } }}
   />
@@ -56,7 +46,7 @@ const UserOverviewCard = ({ user }: UserProp) => {
     },
     {
       label: "Phone Number",
-      value: user.phoneNumber,
+      value: user.mobilePhone,
     },
     {
       label: "Is Seller",

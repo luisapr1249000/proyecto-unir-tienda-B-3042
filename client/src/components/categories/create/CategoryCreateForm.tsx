@@ -8,13 +8,16 @@ import TextField from "../../common/textfields/TextField";
 import { createCategory } from "../../../api/category.api";
 import { toast } from "react-toastify";
 import { useMutation } from "@tanstack/react-query";
-import CircleLoadingGrid from "../../common/loaders/CircleLoadingGrid";
+import { useNavigate } from "react-router-dom";
+import ContainerCircleLoader from "../../common/loaders/ContainerCircleLoader";
 
 const CategoryCreateForm = () => {
+  const navigate = useNavigate();
   const { mutate: createCategoryMutation, isPending } = useMutation({
     mutationFn: createCategory,
     onSuccess: () => {
       toast.success("Category created successfully");
+      navigate("/categories");
     },
     onError: (error) => {
       toast.error(error.message);
@@ -33,7 +36,7 @@ const CategoryCreateForm = () => {
     },
   });
 
-  if (isPending) return <CircleLoadingGrid />;
+  if (isPending) return <ContainerCircleLoader />;
   return (
     <Grid spacing={2} container component="form" onSubmit={formik.handleSubmit}>
       <Grid size={{ xs: 12 }}>

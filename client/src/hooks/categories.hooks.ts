@@ -39,6 +39,6 @@ export const useGetCategoryByName = ({ categoryName }: CategoryName) =>
     queryFn: () => getCategoryByName({ categoryName }),
     retry: false,
     refetchOnWindowFocus: false,
-    enabled: !!Boolean(categoryName),
+    enabled: !!categoryName,
     staleTime: Infinity,
   });

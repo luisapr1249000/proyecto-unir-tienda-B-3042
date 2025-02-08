@@ -1,8 +1,8 @@
 import {
   Card,
   CardContent,
+  CardMedia,
   Divider,
-  Paper,
   Tooltip,
   Typography,
 } from "@mui/material";
@@ -65,16 +65,11 @@ export const DisplayImage = ({
   onDeleteFile: (index: number) => void;
 }) => (
   <Grid size={{ xs: 12 }} sx={{ position: "relative", height: 1, width: 1 }}>
-    <Paper
-      elevation={5}
+    <CardMedia
       component="img"
-      src={preview}
-      sx={{
-        width: 1,
-        height: 1,
-        objectFit: "cover",
-        objectPosition: "center",
-      }}
+      height={"100%"}
+      image={preview}
+      alt={imageIndex.toString()}
     />
     <IconButtonDelete
       onDelete={() => {
@@ -125,7 +120,7 @@ const DisplayImagePreview = ({
     selectedFiles.length > 0 &&
     previews &&
     previews.length > 0 && (
-      <Card variant="outlined" sx={{ flexGrow: 1 }}>
+      <Card elevation={4} sx={{ flexGrow: 1 }}>
         <CardContent>
           <Typography variant="body2" component="h2" color="textSecondary">
             Preview
@@ -137,7 +132,7 @@ const DisplayImagePreview = ({
             <Card
               component={Grid}
               container
-              variant="outlined"
+              elevation={5}
               sx={{ height: 200, overflow: "auto" }}
               size={{ xs: 4 }}
             >

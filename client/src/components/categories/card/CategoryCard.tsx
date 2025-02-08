@@ -1,32 +1,19 @@
-import { useState } from "react";
 import { Category } from "../../../types/category";
 import {
   Card,
   CardActionArea,
-  CardActions,
   CardContent,
   Divider,
-  IconButton,
   Typography,
 } from "@mui/material";
-import EditIcon from "@mui/icons-material/Edit";
-import ReportButton from "../../common/buttons/report/ReportButton";
 import { Link } from "../../common/react-link/Link";
-import { useAuthUser } from "../../../hooks/auth";
-import { isOwnerOrAdmin } from "../../../utils/utils";
-import BasicReportDialog from "../../common/dialogs/basic-report-dialog/BasicReportDialog";
-import ReportCategoryForm from "../reports/ReportCategoryForm";
+import CategoryCardSecondaryActions from "./secondary-actions/CategoryCardSecondaryActions";
 
 const CategoryCard = ({ category }: { category: Category }) => {
   const categoryState = {
     categoryId: category._id,
   };
 
-  const { data: authUser } = useAuthUser();
-
-  const [openDialog, setOpenDialog] = useState(false);
-  const handleClickOpen = () => setOpenDialog(true);
-  const handleClose = () => setOpenDialog(false);
   return (
     <Card elevation={5} sx={{}}>
       <CardActionArea
@@ -46,32 +33,11 @@ const CategoryCard = ({ category }: { category: Category }) => {
         </CardContent>
       </CardActionArea>
       <Divider />
-      <CardActions sx={{ justifyContent: "space-between" }}>
-        <ReportButton handleOpen={handleClickOpen} />
-        <BasicReportDialog
-          itemType="Category"
-          open={openDialog}
-          onClose={handleClose}
-        >
-          <ReportCategoryForm categoryId={category._id} />
-        </BasicReportDialog>
-
-        {authUser &&
-          isOwnerOrAdmin({
-            authorId: category.author._id,
-            userId: authUser._id,
-            role: authUser.role,
-          }) && (
-            <IconButton
-              component={Link}
-              to={`/categories/${category._id}/update`}
-              size="small"
-              color="inherit"
-            >
-              <EditIcon fontSize="inherit" />
-            </IconButton>
-          )}
-      </CardActions>
+      <CategoryCardSecondaryActions
+        categoryId={category._id}
+        authorId={category.author._id}
+        categoryName={category.name}
+      />
     </Card>
   );
 };

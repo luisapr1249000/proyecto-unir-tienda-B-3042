@@ -9,7 +9,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { signup } from "../../../api/auth.api";
 import { toast } from "react-toastify";
 import ShowPassword from "../show-password/ShowPassword";
-import ContainerLoader from "../../common/loaders/ContainerLoader";
+import ContainerCircleLoader from "../../common/loaders/ContainerCircleLoader";
 
 const SignupForm = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -38,7 +38,7 @@ const SignupForm = () => {
       signUpMutate(values, { onError: () => resetForm() });
     },
   });
-  if (isPending) return <ContainerLoader />;
+  if (isPending) return <ContainerCircleLoader />;
   return (
     <Grid
       spacing={3}

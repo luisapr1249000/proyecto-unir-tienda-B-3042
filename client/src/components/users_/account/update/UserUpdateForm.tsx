@@ -9,7 +9,7 @@ import { updateUser } from "../../../../api/users/user.api";
 import TextField from "../../../common/textfields/TextField";
 import { toast } from "react-toastify";
 import CircleLoadingGrid from "../../../common/loaders/CircleLoadingGrid";
-import ContainerLoader from "../../../common/loaders/ContainerLoader";
+import ContainerCircleLoader from "../../../common/loaders/ContainerCircleLoader";
 
 const UserUpdateForm = () => {
   const { data: authUser } = useAuthUser();
@@ -49,7 +49,7 @@ const UserUpdateForm = () => {
 
   console.log(formik.values);
 
-  if (isPending) return <ContainerLoader />;
+  if (isPending) return <ContainerCircleLoader />;
   return (
     <Grid spacing={3} container component="form" onSubmit={formik.handleSubmit}>
       <Grid size={{ xs: 12 }}>

@@ -17,9 +17,10 @@ import { Reason } from "../../../types/report";
 import { CategoryId } from "../../../types/category";
 import SubmitButton from "../../common/buttons/submit-button/SubmitButton";
 import { reportInputSchema } from "../../../validation-schemas/report.validation";
+import BackdropLoading from "../../common/loaders/BackdropLoading";
 
 const ReportCategoryForm = ({ categoryId }: CategoryId) => {
-  const { mutate: createReportMutation } = useMutation({
+  const { mutate: createReportMutation, isPending } = useMutation({
     mutationFn: createReport,
     onSuccess: () => {
       toast.success("Report Created successfully!");
@@ -52,6 +53,7 @@ const ReportCategoryForm = ({ categoryId }: CategoryId) => {
   console.log(formik.values);
   console.log(formik.errors);
 
+  if (isPending) return <BackdropLoading />;
   return (
     <Grid container spacing={2} component="form" onSubmit={formik.handleSubmit}>
       <FormControl>

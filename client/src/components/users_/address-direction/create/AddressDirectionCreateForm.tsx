@@ -10,11 +10,12 @@ import { createAddress } from "../../../../api/users/address.api";
 import { toast } from "react-toastify";
 import { UserId } from "../../../../types/user";
 import { useNavigate } from "react-router-dom";
+import ContainerCircleLoader from "../../../common/loaders/ContainerCircleLoader";
 
 const AddressDirectionCreateForm = ({ userId }: UserId) => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
-  const { mutate: createAddressDirectionMutation } = useMutation({
+  const { mutate: createAddressDirectionMutation, isPending } = useMutation({
     mutationFn: createAddress,
     onSuccess: () => {
       console.log("address created");
@@ -45,12 +46,17 @@ const AddressDirectionCreateForm = ({ userId }: UserId) => {
   const formik = useFormik({
     initialValues,
     validationSchema: toFormikValidationSchema(addressDirectionInputSchema),
-    onSubmit: ({ addressType, ...values }) => {
+    onSubmit: ({ addressType, ...values }, { resetForm }) => {
       const addressTypeFormatted = addressType as "home" | "work";
-      createAddressDirectionMutation({
-        userId,
-        data: { ...values, addressType: addressTypeFormatted },
-      });
+      createAddressDirectionMutation(
+        {
+          userId,
+          data: { ...values, addressType: addressTypeFormatted },
+        },
+        {
+          onSuccess: () => resetForm(),
+        }
+      );
     },
   });
 
@@ -59,6 +65,7 @@ const AddressDirectionCreateForm = ({ userId }: UserId) => {
   };
 
   console.log(formik.errors);
+  if (isPending) return <ContainerCircleLoader />;
   return (
     <Grid container spacing={3} component="form" onSubmit={formik.handleSubmit}>
       <Grid size={{ xs: 12 }}>

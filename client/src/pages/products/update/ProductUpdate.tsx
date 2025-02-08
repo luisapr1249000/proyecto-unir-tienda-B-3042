@@ -3,7 +3,7 @@ import { Divider, Typography } from "@mui/material";
 import { gridContainerCenter } from "../../../assets/css/mui-css-objects/gridCenter";
 import { useGetProductById } from "../../../hooks/products.hooks";
 import { useParams } from "react-router-dom";
-import ProductUpdateForm from "../../../components/products_/update/ProductUpdateForm";
+import ProductUpdateForm from "../../../components/products/update/ProductUpdateForm";
 import { ProductId } from "../../../types/product";
 import CircleLoadingGrid from "../../../components/common/loaders/CircleLoadingGrid";
 import ObjectNotFound from "../../../components/common/errors/object-not-found/ObjectNotFound";

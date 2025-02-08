@@ -1,29 +1,20 @@
 import { useEffect, useState } from "react";
 import { useGetProductsWithPagination } from "../../../hooks/products.hooks";
 import Grid from "@mui/material/Grid2";
-import ProductCard from "../../../components/products_/card/ProductCard";
-import ObjectNotFound, {
-  GridObjectNotFound,
-  ObjectNotFoundCard,
-} from "../../../components/common/errors/object-not-found/ObjectNotFound";
+import ProductCard from "../../../components/products/card/ProductCard";
+import { GridObjectNotFound } from "../../../components/common/errors/object-not-found/ObjectNotFound";
 import QueryResultSummary from "../../../components/common/query/QueryResultSummary";
 import SortSelecter from "../../../components/common/sort-and-pagination/SortSelecter";
 import PaginationButtons from "../../../components/common/sort-and-pagination/PaginationButtons";
-import {
-  Divider,
-  Card,
-  CardContent,
-  CardActions,
-  Typography,
-} from "@mui/material";
+import { Divider, Card, CardContent, Typography } from "@mui/material";
 import PageLimitSetter from "../../../components/common/query/PageLimitSetter";
-import SkeletonCardGrid from "../../../components/common/skeleton/SkeletonCardGrid";
 import { useAuthUser } from "../../../hooks/auth";
 import { useGetUserWishlist } from "../../../hooks/user";
 
 import usePriceStore from "../../../zustand/priceSlice";
 import { Link } from "../../../components/common/react-link/Link";
 import { GridBorderRadious } from "../../../assets/css/mui-css-objects/grid";
+import ProductCardSkeletonGrid from "../../../components/products/skeleton/ProductCardSkeletonGrid";
 
 const Products = () => {
   const [sortBy, setSortBy] = useState("-createdAt");
@@ -57,12 +48,7 @@ const Products = () => {
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" }); // Smooth scroll to top
   }, [page]);
-  if (isLoading || isFetching)
-    return (
-      <SkeletonCardGrid
-        sx={{ justifyContent: "center", alignItems: "center", py: 6 }}
-      />
-    );
+  if (isFetching || isLoading) return <ProductCardSkeletonGrid />;
   if (error)
     return (
       <GridObjectNotFound

@@ -7,9 +7,9 @@ import ShowPassword from "../../../auth/show-password/ShowPassword";
 import SubmitButton from "../../../common/buttons/submit-button/SubmitButton";
 import { changePasswordSchema } from "../../../../validation-schemas/auth.validation";
 import { changePassword } from "../../../../api/auth.api";
-import CircleLoadingGrid from "../../../common/loaders/CircleLoadingGrid";
 import { useMutation } from "@tanstack/react-query";
 import { toast } from "react-toastify";
+import ContainerCircleLoader from "../../../common/loaders/ContainerCircleLoader";
 
 const ChangePasswordForm = () => {
   const { mutate: changePasswordMutation, isPending } = useMutation({
@@ -33,12 +33,12 @@ const ChangePasswordForm = () => {
   const formik = useFormik({
     initialValues,
     validationSchema: toFormikValidationSchema(changePasswordSchema),
-    onSubmit: (values) => {
-      changePasswordMutation(values);
+    onSubmit: (values, { resetForm }) => {
+      changePasswordMutation(values, { onSuccess: () => resetForm() });
     },
   });
 
-  if (isPending) return <CircleLoadingGrid />;
+  if (isPending) return <ContainerCircleLoader />;
   return (
     <Grid container spacing={3} component="form" onSubmit={formik.handleSubmit}>
       <Grid size={{ xs: 12 }}>

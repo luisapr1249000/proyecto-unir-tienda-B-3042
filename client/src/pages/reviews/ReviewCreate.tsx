@@ -5,7 +5,7 @@ import { Card } from "@mui/material";
 import { useGetProductById } from "../../hooks/products.hooks";
 import { useParams } from "react-router-dom";
 import ReviewCreateForm from "../../components/reviews/create/ReviewCreateForm";
-import ProductCard from "../../components/products_/card/ProductCard";
+import ProductCard from "../../components/products/card/ProductCard";
 import ObjectNotFound from "../../components/common/errors/object-not-found/ObjectNotFound";
 const ReviewCreate = () => {
   const { productId } = useParams();

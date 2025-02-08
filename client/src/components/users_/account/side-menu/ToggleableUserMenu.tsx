@@ -1,4 +1,3 @@
-import React from "react";
 import ToggleableDrawer from "../../../common/drawers/ToggleableSideMenu";
 import { GridNavLink } from "../../../common/react-link/Link";
 import { User } from "../../../../types/user";

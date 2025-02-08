@@ -15,7 +15,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { login } from "../../../api/auth.api";
 import { toast } from "react-toastify";
 import ShowPassword from "../show-password/ShowPassword";
-import ContainerLoader from "../../common/loaders/ContainerLoader";
+import ContainerCircleLoader from "../../common/loaders/ContainerCircleLoader";
 
 const LoginForm = () => {
   const queryClient = useQueryClient();
@@ -49,7 +49,7 @@ const LoginForm = () => {
     formik.setFieldValue("rememberMe", event.target.checked);
   };
 
-  if (isPending) return <ContainerLoader />;
+  if (isPending) return <ContainerCircleLoader />;
 
   return (
     <Grid

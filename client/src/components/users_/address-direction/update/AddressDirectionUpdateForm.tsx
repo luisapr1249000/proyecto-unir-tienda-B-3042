@@ -1,4 +1,3 @@
-import React from "react";
 import Grid from "@mui/material/Grid2";
 import { addressDirectionInputSchema } from "../../../../validation-schemas/user-schemas/userAddressDirection.validation";
 import { toFormikValidationSchema } from "zod-formik-adapter";
@@ -10,26 +9,24 @@ import { updateAddress } from "../../../../api/users/address.api";
 import { toast } from "react-toastify";
 import { useMutation } from "@tanstack/react-query";
 import SelectAddresDirectionType from "../create/SelectAddressDirection";
+import ContainerCircleLoader from "../../../common/loaders/ContainerCircleLoader";
 
 const AddressDirectionUpdateForm = ({
   address,
 }: {
   address: AddressDirection;
 }) => {
-  const {
-    mutate: updateAddressMutation,
-    isPending: isUpdatePending,
-    error: updateError,
-  } = useMutation({
-    mutationFn: updateAddress,
-    onSuccess: () => {
-      console.log("Address updated successfully!");
-      toast.success("Address updated successfully!");
-    },
-    onError: () => {
-      toast.error("Please check your credentials.");
-    },
-  });
+  const { mutate: updateAddressMutation, isPending: isUpdatePending } =
+    useMutation({
+      mutationFn: updateAddress,
+      onSuccess: () => {
+        console.log("Address updated successfully!");
+        toast.success("Address updated successfully!");
+      },
+      onError: () => {
+        toast.error("Please check your credentials.");
+      },
+    });
 
   const initialValues = {
     country: address.country ?? "",
@@ -58,6 +55,8 @@ const AddressDirectionUpdateForm = ({
   const setAddressType = (value: "home" | "work") => {
     formik.setFieldValue("addressType", value);
   };
+
+  if (isUpdatePending) return <ContainerCircleLoader />;
 
   return (
     <Grid container spacing={3} component="form" onSubmit={formik.handleSubmit}>

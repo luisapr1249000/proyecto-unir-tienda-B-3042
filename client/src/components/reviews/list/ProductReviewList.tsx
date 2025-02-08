@@ -3,10 +3,10 @@ import { useGetReviewsWithPagination } from "../../../hooks/review.hooks";
 import Grid from "@mui/material/Grid2";
 import { Card, CardContent, Divider, Typography } from "@mui/material";
 import ReviewCard from "../card/ReviewCard";
-import CircleLoadingGrid from "../../common/loaders/CircleLoadingGrid";
 import { ObjectNotFoundCard } from "../../common/errors/object-not-found/ObjectNotFound";
 import { GridBorderRadious } from "../../../assets/css/mui-css-objects/grid";
 import ErrorIcon from "@mui/icons-material/Error";
+import ContainerCircleLoader from "../../common/loaders/ContainerCircleLoader";
 
 const NoReviews = () => (
   <Card>
@@ -44,7 +44,7 @@ const ProductReviewList = ({ productId }: { productId: string }) => {
         sx={{ justifyContent: "center", alignItems: "center" }}
       >
         {isLoading ? (
-          <CircleLoadingGrid />
+          <ContainerCircleLoader />
         ) : !data || error ? (
           <ObjectNotFoundCard
             multiple

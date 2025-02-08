@@ -5,7 +5,7 @@ import Grid from "@mui/material/Grid2";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import { Divider, Typography } from "@mui/material";
-import ProductCard from "../../../../components/products_/card/ProductCard";
+import ProductCard from "../../../../components/products/card/ProductCard";
 
 const UserWishlist = () => {
   const { data: authUser } = useAuthUser();
@@ -24,7 +24,7 @@ const UserWishlist = () => {
         p: 3,
       }}
     >
-      <Card elevation={4}>
+      <Card sx={{ flexGrow: 1 }} elevation={4}>
         <CardContent>
           <Typography variant="h5">Your Wishlist</Typography>
         </CardContent>

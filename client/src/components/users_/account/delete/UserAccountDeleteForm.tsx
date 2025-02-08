@@ -1,13 +1,11 @@
-import React from "react";
-import { Button, TextField } from "@mui/material";
+import { Button } from "@mui/material";
 import PersonRemoveIcon from "@mui/icons-material/PersonRemove";
-import Grid from "@mui/material/Grid2";
 import { useState } from "react";
-import DialogConfirmAction from "../../../common/dialogs/dialog-confirm-action/DialogConfirmAction";
 import { useNavigate } from "react-router-dom";
 import { useMutation } from "@tanstack/react-query";
 import { deleteUser } from "../../../../api/users/user.api";
 import { toast } from "react-toastify";
+import ConfirmDialog from "../../../common/dialogs/confirm-dialog/ConfirmDialog";
 
 const UserAccountDeleteForm = ({ userId }: { userId: string }) => {
   const navigate = useNavigate();
@@ -35,17 +33,17 @@ const UserAccountDeleteForm = ({ userId }: { userId: string }) => {
 
   return (
     <>
-      <DialogConfirmAction
+      <ConfirmDialog
         open={isDialogOpen}
         onClose={handleCloseDialog}
-        onDeleteObject={handleDelete}
+        onConfirm={handleDelete}
+        message="Are you sure? This action cant be undone"
       />
-
       <Button
-        endIcon={<PersonRemoveIcon />}
-        color="error"
         variant="contained"
+        color="error"
         onClick={handleOpenDialog}
+        endIcon={<PersonRemoveIcon />}
       >
         Delete
       </Button>

@@ -49,11 +49,8 @@ export const createAddress = async ({
 export const deleteAddress = async ({
   addressDirectionId,
   userId,
-}: addressDirectionId & UserId): Promise<User> => {
-  const response = await api.delete<User>(
-    `/users/${userId}/address-directions/${addressDirectionId}`
-  );
-  return response.data;
+}: addressDirectionId & UserId) => {
+  await api.delete(`/users/${userId}/address-directions/${addressDirectionId}`);
 };
 
 export const updateAddress = async ({

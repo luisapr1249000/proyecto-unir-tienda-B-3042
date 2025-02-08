@@ -1,4 +1,3 @@
-import React from "react";
 import Grid from "@mui/material/Grid2";
 import { useFormik } from "formik";
 import { toFormikValidationSchema } from "zod-formik-adapter";
@@ -9,13 +8,16 @@ import TextField from "../../common/textfields/TextField";
 import { useMutation } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import { updateCategory } from "../../../api/category.api";
-import CircleLoadingGrid from "../../common/loaders/CircleLoadingGrid";
+import { useNavigate } from "react-router-dom";
+import ContainerCircleLoader from "../../common/loaders/ContainerCircleLoader";
 
 const CategoryUpdateForm = ({ category }: CategoryProp) => {
+  const navigate = useNavigate();
   const { mutate: updateCategoryMutation, isPending } = useMutation({
     mutationFn: updateCategory,
     onSuccess: () => {
       toast.success("Category updated successfully");
+      navigate("/categories");
     },
     onError: (error) => {
       toast.error(error.message);
@@ -35,7 +37,7 @@ const CategoryUpdateForm = ({ category }: CategoryProp) => {
     },
   });
 
-  if (isPending) return <CircleLoadingGrid />;
+  if (isPending) return <ContainerCircleLoader />;
 
   return (
     <Grid spacing={3} container component="form">

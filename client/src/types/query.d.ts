@@ -1,5 +1,4 @@
-import { QueryKey } from "@tanstack/react-query";
-import { CategoryId } from "./category";
+import { Category } from "./category";
 import { Report } from "./report";
 import { User, UserId } from "./user";
 import { ProductId } from "./product";

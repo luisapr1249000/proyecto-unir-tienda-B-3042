@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Grid from "@mui/material/Grid2";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import GridLoadingSkeleton from "../../../components/common/load-spinner/GridLoadingSkeleton";
 import ObjectNotFound, {
   GridObjectNotFound,
 } from "../../../components/common/errors/object-not-found/ObjectNotFound";
@@ -17,11 +16,12 @@ import QueryResultSummary from "../../../components/common/query/QueryResultSumm
 import PageLimitSetter from "../../../components/common/query/PageLimitSetter";
 import SortSelecter from "../../../components/common/sort-and-pagination/SortSelecter";
 import PaginationButtons from "../../../components/common/sort-and-pagination/PaginationButtons";
-import ProductCard from "../../../components/products_/card/ProductCard";
+import ProductCard from "../../../components/products/card/ProductCard";
 import { useAuthUser } from "../../../hooks/auth";
 import { useGetUserWishlist } from "../../../hooks/user";
 import { useGetProductsWithPagination } from "../../../hooks/products.hooks";
 import { Link } from "../../../components/common/react-link/Link";
+import ProductCardSkeletonGrid from "../../../components/products/skeleton/ProductCardSkeletonGrid";
 
 const ProductsSearchResults = () => {
   const navigate = useNavigate();
@@ -60,7 +60,7 @@ const ProductsSearchResults = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   }, [page, searchParams.get("query"), navigate]);
 
-  if (isLoading) return <GridLoadingSkeleton />;
+  if (isLoading) return <ProductCardSkeletonGrid />;
   if (error)
     return (
       <GridObjectNotFound

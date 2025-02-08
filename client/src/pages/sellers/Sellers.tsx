@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Grid from "@mui/material/Grid2";
 import { useGetUsersWithPagination_ } from "../../hooks/user";
 import CircleLoadingGrid from "../../components/common/loaders/CircleLoadingGrid";

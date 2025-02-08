@@ -3,12 +3,11 @@ import { useOutletContext } from "react-router-dom";
 import Grid from "@mui/material/Grid2";
 import { gridContainerCenter } from "../../../assets/css/mui-css-objects/gridCenter";
 import { Card, Divider, Typography } from "@mui/material";
-import ProductCard from "../../../components/products/product-card/product-card/ProductCard";
-import GridLoadingSkeleton from "../../../components/common/load-spinner/GridLoadingSkeleton";
 import { useGetUserCart } from "../../../hooks/user";
 import { User } from "../../../types/user";
 import GridObjectNotFound from "../../../components/common/object-not-found/GridObjectNotFound";
 import UserAccountCartNoItems from "./UserAccountCartNoItems";
+import ProductCardSkeletonGrid from "../../../components/products/skeleton/ProductCardSkeletonGrid";
 
 const UserAccountCart = () => {
   const context = useOutletContext<User>();
@@ -18,7 +17,7 @@ const UserAccountCart = () => {
 
   console.log(data);
 
-  if (isLoading) return <GridLoadingSkeleton />;
+  if (isLoading) return <ProductCardSkeletonGrid />;
   if (error)
     return <GridObjectNotFound object="Product" onReload={refetch} multiple />;
 
