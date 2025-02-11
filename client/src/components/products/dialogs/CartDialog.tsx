@@ -37,7 +37,9 @@ export const CartForm = ({
   const { mutate: addToCartMutation, isPending } = useMutation({
     mutationFn: toggleProductInCart,
     onSuccess: () => {
-      toast.success("Product added to Cart successfully");
+      toast.success("Product added to Cart successfully", {
+        position: "bottom-left",
+      });
       onClose();
       queryClient.invalidateQueries({
         queryKey: [`user-${userId}-cart`],
@@ -81,8 +83,12 @@ export const CartForm = ({
           margin="dense"
           id="quantity"
           fullWidth
+          placeholder={`Available: ${availabilityQuantity}`}
           slotProps={{
-            htmlInput: { min: 1, max: availabilityQuantity },
+            input: {
+              inputProps: { min: 1, max: availabilityQuantity },
+            },
+            inputLabel: { shrink: true },
           }}
           variant="standard"
           value={formik.values.quantity}
@@ -94,7 +100,7 @@ export const CartForm = ({
       </Grid>
       <Grid size={{ xs: 12 }} container spacing={1}>
         <SubmitButton isValid={formik.isValid} />
-        <ClearButton onCancel={onClose} />
+        <ClearButton onClick={onClose} />
       </Grid>
     </Grid>
   );

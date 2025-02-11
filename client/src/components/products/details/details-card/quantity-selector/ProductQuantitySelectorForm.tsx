@@ -1,34 +1,32 @@
-import React from "react";
 import Grid from "@mui/material/Grid2";
-import {
-  Button,
-  Divider,
-  IconButton,
-  InputAdornment,
-  Paper,
-  TextField,
-  Typography,
-} from "@mui/material";
-import AddIcon from "@mui/icons-material/Add";
-import RemoveIcon from "@mui/icons-material/Remove";
+import { Button, Paper, TextField, Typography } from "@mui/material";
 import { useFormik } from "formik";
 import { toFormikValidationSchema } from "zod-formik-adapter";
 import { productQuantitySchema } from "../../../../../validation-schemas/product-schemas/product.validation";
+import { useDirectCheckoutStore } from "../../../../../zustand/directCheckout.store";
+import { ProductProp } from "../../../../../types/product";
+import { useNavigate } from "react-router-dom";
 
-const ProductQuantitySelectorForm = ({
-  productQuantity,
-}: {
-  productQuantity: number;
-}) => {
+const ProductQuantitySelectorForm = ({ product }: ProductProp) => {
+  const navigate = useNavigate();
+  const { setCartItem } = useDirectCheckoutStore();
   const initialValues = { quantity: 1 };
-  const quantitySchema = productQuantitySchema(productQuantity);
+  const quantitySchema = productQuantitySchema(product.quantity);
   const formik = useFormik({
     initialValues,
     validationSchema: toFormikValidationSchema(quantitySchema),
-    onSubmit: (values) => console.log(values),
+    onSubmit: ({ quantity }) => {
+      setCartItem({
+        price: product.price,
+        product: product,
+        quantity,
+        subtotal: product.price,
+        seller: product.author,
+      });
+      navigate("/checkout");
+    },
   });
   console.log(formik.values);
-  console.log(productQuantity);
   return (
     <Grid
       component="form"
@@ -48,7 +46,7 @@ const ProductQuantitySelectorForm = ({
             value={formik.values.quantity}
             sx={{ input: { textAlign: "center" } }}
             slotProps={{
-              input: { inputProps: { min: 1, max: productQuantity } },
+              input: { inputProps: { min: 1, max: product.quantity } },
             }}
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
@@ -56,7 +54,7 @@ const ProductQuantitySelectorForm = ({
         </Grid>
         <Grid sx={{ mt: 0.5 }} size={{ xs: 12 }}>
           <Typography sx={{}} variant="caption" color="textSecondary">
-            Products Available: {productQuantity}
+            Products Available: {product.quantity}
           </Typography>
         </Grid>
       </Grid>
@@ -71,12 +69,8 @@ const ProductQuantitySelectorForm = ({
         variant="outlined"
         sx={{ p: 2, my: 3, justifyContent: "center", alignItems: "center" }}
       >
-        <Button fullWidth variant="contained">
+        <Button type="submit" fullWidth variant="contained">
           Buy Now
-        </Button>
-        <Divider sx={{ width: 1 }} />
-        <Button fullWidth variant="outlined">
-          Add To Cart
         </Button>
       </Grid>
     </Grid>

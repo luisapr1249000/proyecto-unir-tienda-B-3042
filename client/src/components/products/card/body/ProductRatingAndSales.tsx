@@ -19,7 +19,7 @@ const ProductRatingsAndSales = ({
       <Rating value={averageReview} size="small" readOnly />
     </Tooltip>
     <Typography color="textSecondary" variant="caption">
-      {soldCount ?? 0} Sold
+      ({soldCount ?? 0} Sold)
     </Typography>
   </Grid>
 );

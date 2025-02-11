@@ -1,7 +1,6 @@
-import React from "react";
 import { ListItem, ListItemIcon, ListItemText } from "@mui/material";
 import { ListItemProps } from "../../../../types/abstract";
-import { GridNavLink, NavLinkListItemButton } from "../../react-link/Link";
+import { NavLinkListItemButton } from "../../react-link/Link";
 
 const ToggleableDrawerList = ({
   listItem,

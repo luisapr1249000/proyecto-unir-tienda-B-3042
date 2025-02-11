@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import { useNavigatorOnLine } from "../../../hooks/navigatorOnLine.hooks";
 import { toast } from "react-toastify";
 

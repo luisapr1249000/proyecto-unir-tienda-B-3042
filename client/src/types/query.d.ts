@@ -12,7 +12,7 @@ export type SearchProductsOptions = {
 
 export type ReactQueryOptions = {
   enabled?: boolean;
-  queryKey?: (string | boolean | number)[];
+  queryKey?: unknown[];
   isKeepPreviousData?: boolean;
 };
 

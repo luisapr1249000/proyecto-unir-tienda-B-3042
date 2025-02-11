@@ -35,6 +35,7 @@ const ProductQuantitySelector = ({
     if (formik.values.quantity > 0) {
       onChange(formik.values.quantity);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [formik.values.quantity]);
   console.log("formik.values.quantity", formik.values.quantity);
   return (

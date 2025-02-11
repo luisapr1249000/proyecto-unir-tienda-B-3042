@@ -1,53 +1,58 @@
 import { RouteObject } from "react-router-dom";
-import ProductsCategory from "../pages/products/products-by-category/ProductsCategory";
-import Products from "../pages/products/products/Products";
-import ProductDetails from "../pages/products/details/ProductDetails";
-import ProductCreate from "../pages/products/create/ProductCreate";
-import ProductUpdate from "../pages/products/update/ProductUpdate";
-import ProductsBySeller from "../pages/products/products-by-seller/ProductsBySeller";
-import ProductsSearchResults from "../pages/products/search-results/ProductsSearchResults";
-import Sellers from "../pages/sellers/Sellers";
+
+import ProductDetailsLoadable from "../pages/products/details/ProductDetailsLoadable";
+import ProductUpdateLoadable from "../pages/products/update/ProductUpdateLoadable";
+import ProductsLoadable from "../pages/products/products/ProductsLoadable";
+import SellersLoadable from "../pages/sellers/SellersLoadable";
+import ProductCreateLoadable from "../pages/products/create/ProductCreateLoadable";
+import ProductsBySellerLoadable from "../pages/products/products-by-seller/ProductsBySellerLoadable";
+import ProductsByCategoryLoadable from "../pages/products/products-by-category/ProductsByCategoryLoadable";
+import ProductsSearchResultsLoadable from "../pages/products/search-results/ProductsSearchResultsLoadable";
 
 export const productDetailRoutes: RouteObject[] = [
   {
     path: "/products/details/:productId",
-    element: <ProductDetails />,
+    element: <ProductDetailsLoadable />,
   },
   {
     path: "/products/items/:productId/update",
-    element: <ProductUpdate />,
+    element: <ProductUpdateLoadable />,
   },
 ];
 
 const productRoutes: RouteObject[] = [
   {
-    path: "/",
-    element: <Products />,
+    index: true,
+    element: <ProductsLoadable />,
   },
   {
-    element: <Sellers />,
+    path: "/",
+    element: <ProductsLoadable />,
+  },
+  {
+    element: <SellersLoadable />,
     path: "sellers",
   },
   {
     path: "/products",
-    element: <Products />,
+    element: <ProductsLoadable />,
   },
   {
     path: "products/create",
-    element: <ProductCreate />,
+    element: <ProductCreateLoadable />,
   },
   {
     path: "/products/seller/:username",
-    element: <ProductsBySeller />,
+    element: <ProductsBySellerLoadable />,
   },
 
   {
     path: "/products/categories/:categoryName",
-    element: <ProductsCategory />,
+    element: <ProductsByCategoryLoadable />,
   },
   {
     path: "/products/search",
-    element: <ProductsSearchResults />,
+    element: <ProductsSearchResultsLoadable />,
   },
 ];
 

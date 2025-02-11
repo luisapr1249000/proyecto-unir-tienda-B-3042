@@ -46,6 +46,7 @@ export const PriceSliderContainer = ({ marks }: { marks: Mark[] }) => {
 
       setQueryLink(`/products/search?query=${queryValue}`);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   return (
     <Card sx={{ flexGrow: 1 }} elevation={4}>

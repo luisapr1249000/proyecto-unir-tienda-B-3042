@@ -20,6 +20,7 @@ import priceStore from "../../../zustand/priceSlice";
 import { useGetProductsWithPagination } from "../../../hooks/products.hooks";
 import { Link } from "../../../components/common/react-link/Link";
 import ProductCardSkeletonGrid from "../../../components/products/skeleton/ProductCardSkeletonGrid";
+import ProductsBySellerHelmet from "./ProductsBySellerHelmet";
 
 const ProductsBySeller = () => {
   const { username } = useParams() as { username: string };
@@ -91,90 +92,93 @@ const ProductsBySeller = () => {
       />
     );
   return (
-    <Grid
-      container
-      spacing={5}
-      sx={{
-        justifyContent: "center",
-        alignItems: "center",
-        p: 3,
-      }}
-    >
-      <Card elevation={4}>
-        <CardContent
-          component={Grid}
-          container
-          direction={{ xs: "column", md: "row" }}
-          spacing={1}
-          sx={{ justifyContent: "space-between", alignItems: "center" }}
-        >
-          <Typography>
-            <Link underline="none" to="/products">
-              Products
-            </Link>
-          </Typography>
-          <QueryResultSummary
-            page={page}
-            limit={limit}
-            pagingCounter={products.pagingCounter}
-            countPerPage={products.limit}
-            total={products.totalDocs}
-            querySearch={`Products by ${user.username}`}
-            totalPages={products.totalPages}
-          />
-        </CardContent>
-        <Divider />
-        <CardContent>
-          <Grid
+    <>
+      <ProductsBySellerHelmet sellerName={user.username} />
+      <Grid
+        container
+        spacing={5}
+        sx={{
+          justifyContent: "center",
+          alignItems: "center",
+          p: 3,
+        }}
+      >
+        <Card elevation={4}>
+          <CardContent
+            component={Grid}
             container
-            spacing={3}
             direction={{ xs: "column", md: "row" }}
-            sx={{ alignItems: "center" }}
+            spacing={1}
+            sx={{ justifyContent: "space-between", alignItems: "center" }}
           >
+            <Typography>
+              <Link underline="none" to="/products">
+                Products
+              </Link>
+            </Typography>
+            <QueryResultSummary
+              page={page}
+              limit={limit}
+              pagingCounter={products.pagingCounter}
+              countPerPage={products.limit}
+              total={products.totalDocs}
+              querySearch={`Products by ${user.username}`}
+              totalPages={products.totalPages}
+            />
+          </CardContent>
+          <Divider />
+          <CardContent>
             <Grid
               container
-              sx={{ justifyContent: "center", alignItems: "center" }}
-              size={{ xs: 12, md: "grow" }}
+              spacing={3}
+              direction={{ xs: "column", md: "row" }}
+              sx={{ alignItems: "center" }}
             >
-              <PageLimitSetter limit={limit} setLimit={setLimit} />
-            </Grid>
+              <Grid
+                container
+                sx={{ justifyContent: "center", alignItems: "center" }}
+                size={{ xs: 12, md: "grow" }}
+              >
+                <PageLimitSetter limit={limit} setLimit={setLimit} />
+              </Grid>
 
-            <Grid
-              container
-              size={{ xs: 12, md: "grow" }}
-              sx={{ justifyContent: "center", alignItems: "center" }}
-            >
-              <SortSelecter sortBy={sortBy} handleChange={handleChangeSort} />
+              <Grid
+                container
+                size={{ xs: 12, md: "grow" }}
+                sx={{ justifyContent: "center", alignItems: "center" }}
+              >
+                <SortSelecter sortBy={sortBy} handleChange={handleChangeSort} />
+              </Grid>
             </Grid>
-          </Grid>
-        </CardContent>
-        <Divider />
-        <CardContent sx={{ p: 6 }} component={Grid} container spacing={2}>
-          {products.docs.map((product) => {
-            const isWishlistItem = wishlistList?.wishlist
-              .map((p) => p._id)
-              .includes(product._id);
-            console.log("isWishlistItem", isWishlistItem);
-            return (
-              <ProductCard
-                key={product._id}
-                product={product}
-                isWishlistItem={isWishlistItem}
-              />
-            );
-          })}
-        </CardContent>
-        <Divider />
-        <CardActions sx={{ mt: 3 }}>
-          <PaginationButtons
-            page={page}
-            count={products.totalPages}
-            handleChange={(_e, value) => setPage(value)}
-            isLoadingNextPage={isFetching}
-          />
-        </CardActions>
-      </Card>
-    </Grid>
+          </CardContent>
+          <Divider />
+          <CardContent sx={{ p: 6 }} component={Grid} container spacing={2}>
+            {products.docs.map((product) => {
+              const isWishlistItem = wishlistList?.wishlist
+                .map((p) => p._id)
+                .includes(product._id);
+              console.log("isWishlistItem", isWishlistItem);
+              return (
+                <ProductCard
+                  key={product._id}
+                  product={product}
+                  isWishlistItem={isWishlistItem}
+                />
+              );
+            })}
+          </CardContent>
+          <Divider />
+          <CardActions sx={{ mt: 3 }}>
+            <PaginationButtons
+              page={page}
+              count={products.totalPages}
+              handleChange={(_e, value) => setPage(value)}
+              isLoadingNextPage={isFetching}
+            />
+          </CardActions>
+        </Card>
+      </Grid>
+    </>
   );
 };
 

@@ -1,5 +1,4 @@
-import { Badge, IconButton, Tooltip } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import { Badge } from "@mui/material";
 import CartIcon from "@mui/icons-material/ShoppingCart";
 import { BorderIconButton } from "../../../../common/buttons/iconbutton-delete/IconButtonDelete";
 import { useGetUserCart } from "../../../../../hooks/user";

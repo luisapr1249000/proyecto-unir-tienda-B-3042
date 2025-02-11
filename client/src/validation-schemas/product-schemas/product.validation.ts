@@ -16,9 +16,6 @@ import { abstractSchema } from "../abstract.validation";
 const wishlistCountField = createPositiveIntegerField({
   fieldName: "Wishlist Count",
 });
-const reviewCountField = createPositiveIntegerField({
-  fieldName: "Review Count",
-});
 const averageReviewField = createPositiveNumberField({
   fieldName: "Avaregate Review",
 });

@@ -1,13 +1,10 @@
 import { z } from "zod";
 import {
   changePasswordSchema,
-  emailSchema,
   forgotPasswordSchema,
   loginResponse,
   loginSchema,
   mailRequestSchema,
-  resetPasswordSchema,
-  signupResponse,
   signupSchema,
 } from "../validation-schemas/auth.validation";
 import { userSchema } from "../validation-schemas/user-schemas/user.validation";

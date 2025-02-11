@@ -1,14 +1,8 @@
 import {
   Link as MuiLink,
   LinkProps as MuiLinkProps,
-  ListItemProps,
-  ListItem,
-  TypographyProps,
-  Typography,
   ListItemButtonProps,
   ListItemButton,
-  ListItemIconProps,
-  ListItemIcon,
   Grid2Props,
 } from "@mui/material";
 import Grid from "@mui/material/Grid2";

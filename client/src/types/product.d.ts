@@ -2,7 +2,6 @@ import { z } from "zod";
 import {
   productInputSchema,
   productSchema,
-  productUpdateInput,
   productUserQuestionId,
 } from "../validation-schemas/product-schemas/product.validation";
 import {

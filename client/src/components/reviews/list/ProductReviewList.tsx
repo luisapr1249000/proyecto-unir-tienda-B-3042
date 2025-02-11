@@ -1,4 +1,3 @@
-import React from "react";
 import { useGetReviewsWithPagination } from "../../../hooks/review.hooks";
 import Grid from "@mui/material/Grid2";
 import { Card, CardContent, Divider, Typography } from "@mui/material";

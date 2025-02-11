@@ -1,13 +1,11 @@
 import WishlistButton from "./WishlistButton";
-import { Paper, Typography } from "@mui/material";
+import { Paper } from "@mui/material";
 import Grid from "@mui/material/Grid2";
 import { ProductId } from "../../../../../types/product";
 const Wishlist = ({
-  wishlistCount,
   productId,
   isWishlistItem = false,
 }: ProductId & {
-  wishlistCount: number;
   isWishlistItem: boolean;
 }) => {
   return (
@@ -27,11 +25,6 @@ const Wishlist = ({
       elevation={1}
     >
       <WishlistButton productId={productId} isWishlistItem={isWishlistItem} />
-      <Grid container>
-        <Typography variant="caption" color="textSecondary">
-          {wishlistCount}
-        </Typography>
-      </Grid>
     </Paper>
   );
 };

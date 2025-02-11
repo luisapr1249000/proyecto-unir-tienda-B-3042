@@ -1,16 +1,14 @@
 import SearchIcon from "@mui/icons-material/Search";
 import { Drawer } from "@mui/material";
-import React, { useEffect, useState } from "react";
-import { useNavigate, useParams, useSearchParams } from "react-router-dom";
+import React, { useState } from "react";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import HeaderSearchbarForm from "../HeaderSearchbarForm";
 import Grid from "@mui/material/Grid2";
 import { BorderIconButton } from "../../../../common/buttons/iconbutton-delete/IconButtonDelete";
 
 const HeaderDrawerSearchbar = ({
-  open,
   onCloseDrawer,
 }: {
-  open: boolean;
   onCloseDrawer: () => void;
 }) => {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);

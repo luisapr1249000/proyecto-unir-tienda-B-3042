@@ -9,7 +9,6 @@ import {
 import ErrorIcon from "@mui/icons-material/Error";
 import RefetchButton from "../../buttons/refetch/RefetchButton";
 import HomeButton from "../../buttons/home/HomeButton";
-import { yellow } from "@mui/material/colors";
 
 export const ObjectNotFoundCard = ({
   onReload,
@@ -65,54 +64,3 @@ export const GridObjectNotFound = (props: {
     <ObjectNotFoundCard {...props} />
   </Grid>
 );
-
-const ObjectNotFound = ({
-  object = "Page",
-  multiple = false,
-  message = "Try looking up other or Go home",
-  onReload,
-  height = 100,
-}: {
-  onReload: () => void;
-  object?: string;
-  multiple?: boolean;
-  message?: string;
-  iconFontSize?: number;
-  icon?: JSX.Element;
-}) => (
-  <Grid
-    container
-    sx={{
-      height: "calc(100vh)",
-      justifyContent: "center",
-      alignItems: "center",
-    }}
-  >
-    <Card
-      variant="outlined"
-      component={Grid}
-      size={{ xs: 11, md: 12 }}
-      direction="column"
-      container
-    >
-      <CardContent sx={{ textAlign: "center" }}>
-        <ErrorIcon sx={{ fontSize: height, color: yellow[700] }} />
-        <Typography gutterBottom variant="h6" component="div">
-          {`${object}${multiple ? "s" : ""} Not Found`}
-        </Typography>
-        <Typography color="textSecondary" variant="body2">
-          {message}
-        </Typography>
-      </CardContent>
-      <Divider />
-      <CardActions
-        sx={{ justifyContent: "center", alignItems: "center", p: 3 }}
-      >
-        <RefetchButton size="small" onRefetch={onReload} />
-        <HomeButton size="small" />
-      </CardActions>
-    </Card>
-  </Grid>
-);
-
-export default ObjectNotFound;

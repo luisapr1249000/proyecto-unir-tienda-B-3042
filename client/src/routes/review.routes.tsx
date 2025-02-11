@@ -1,16 +1,15 @@
-import React from "react";
 import { RouteObject } from "react-router-dom";
-import ReviewsCreate from "../pages/reviews/ReviewCreate";
-import ReviewsUpdate from "../pages/reviews/ReviewUpdate";
+import ReviewCreateLoadable from "../pages/reviews/create/ReviewCreateLoadable";
+import ReviewUpdateLoadable from "../pages/reviews/update/ReviewUpdateLoadable";
 
 const reviewsRoutes: RouteObject[] = [
   {
     path: "/products/item/:productId/reviews",
-    element: <ReviewsCreate />,
+    element: <ReviewCreateLoadable />,
   },
   {
     path: "/products/item/:productId/reviews/:reviewId",
-    element: <ReviewsUpdate />,
+    element: <ReviewUpdateLoadable />,
   },
 ];
 

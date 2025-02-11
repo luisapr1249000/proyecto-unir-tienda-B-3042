@@ -6,10 +6,13 @@ import Button from "@mui/material/Button";
 import Grid from "@mui/material/Grid2";
 import { useState } from "react";
 import { ProductProp } from "../../../../types/product";
+import ContainerCircleLoader from "../../../common/loaders/ContainerCircleLoader";
 
 const ImageDisplay = ({
   src,
   alt,
+  loading,
+  onLoad,
 }: {
   src: string;
   alt: string;
@@ -17,12 +20,14 @@ const ImageDisplay = ({
   onLoad: () => void;
 }) => (
   <Paper component={Grid} size={{ xs: 12 }} container sx={{ height: 0.85 }}>
+    {loading && <ContainerCircleLoader />}
     <CardMedia
-      sx={{ borderRadius: 1 }}
+      sx={{ borderRadius: 1, display: loading ? "none" : "block" }}
       component="img"
       height={"100%"}
       image={src}
       alt={alt}
+      onLoad={onLoad}
     />
   </Paper>
 );

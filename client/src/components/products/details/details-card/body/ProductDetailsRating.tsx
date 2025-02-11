@@ -1,4 +1,3 @@
-import React from "react";
 import Grid from "@mui/material/Grid2";
 import { Rating, Typography } from "@mui/material";
 import { ProductProp } from "../../../../../types/product";
@@ -6,14 +5,9 @@ import { ProductProp } from "../../../../../types/product";
 const ProductDetailsRating = ({ product }: ProductProp) => (
   <Grid container sx={{}}>
     <Grid size={{ xs: 12 }}>
-      <Rating readOnly size="small" value={3} />
+      <Rating readOnly size="small" value={product.averageReview} />
       <Typography variant="body2" color="textSecondary" gutterBottom>
-        ({product.price})
-      </Typography>
-    </Grid>
-    <Grid size={{ xs: 12 }}>
-      <Typography variant="body2" color="textSecondary" gutterBottom>
-        Reviews
+        ({product.soldCount} Sold)
       </Typography>
     </Grid>
   </Grid>

@@ -17,11 +17,7 @@ const ReviewUpdateForm = ({
   review: Review;
   productId: string;
 }) => {
-  const {
-    mutate: updateReviewMutation,
-    isPending,
-    error,
-  } = useMutation({
+  const { mutate: updateReviewMutation, isPending } = useMutation({
     mutationFn: updateReview,
     onSuccess: () => {
       console.log("success");
@@ -34,8 +30,9 @@ const ReviewUpdateForm = ({
   });
 
   const initialValues = {
+    title: review.title ?? "",
     content: review.content ?? "",
-    review: review.review ?? 1,
+    rating: review.rating ?? 1,
   };
   const formik = useFormik({
     initialValues,
@@ -51,13 +48,13 @@ const ReviewUpdateForm = ({
   });
 
   const onChangeRating = (newValue: number | null) => {
-    formik.setFieldValue("review", newValue);
+    formik.setFieldValue("rating", newValue);
   };
   return (
     <Grid container spacing={3} component="form" onSubmit={formik.handleSubmit}>
       <ReviewRatingField
         onChangeRating={onChangeRating}
-        value={formik.values.review}
+        value={formik.values.rating}
       />
       {isPending && <CircleLoadingGrid />}
       <Grid size={{ xs: 12 }}>

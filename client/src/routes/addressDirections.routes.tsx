@@ -1,19 +1,7 @@
 import { RouteObject } from "react-router-dom";
-import { createLoadableComponent } from "../utils/utils.loadable";
-
-const AddressDirectionListLoadable = createLoadableComponent(
-  () => import("../pages/users/address-directions/list/AddressDirectionList")
-);
-
-const AddressDirectionCreateLoadable = createLoadableComponent(
-  () =>
-    import("../pages/users/address-directions/create/AddressDirectionCreate")
-);
-
-const AddressDirectionUpdateLoadable = createLoadableComponent(
-  () =>
-    import("../pages/users/address-directions/update/AddressDirectionUpdate")
-);
+import AddressDirectionListLoadable from "../pages/users/address-directions/list/AddressDirectionListLoadable";
+import AddressDirectionCreateLoadable from "../pages/users/address-directions/create/AddressDirectionCreateLoadable";
+import AddressDirectionUpdateLoadable from "../pages/users/address-directions/update/AddressDirectionUpdateLoadable";
 
 const addressDirectionRoutes: RouteObject[] = [
   {

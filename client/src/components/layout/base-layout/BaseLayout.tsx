@@ -1,5 +1,5 @@
 import Grid from "@mui/material/Grid2";
-import React, { ReactNode, useState } from "react";
+import { ReactNode } from "react";
 import { Footer } from "../footer/Footer";
 import { Outlet } from "react-router-dom";
 

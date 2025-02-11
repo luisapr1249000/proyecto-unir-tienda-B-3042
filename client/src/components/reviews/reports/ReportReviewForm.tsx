@@ -4,7 +4,6 @@ import { useFormik } from "formik";
 import { toFormikValidationSchema } from "zod-formik-adapter";
 import Radio from "@mui/material/Radio";
 import RadioGroup from "@mui/material/RadioGroup";
-import { ProductId } from "../../../types/product";
 import { reportInputSchema } from "../../../validation-schemas/report.validation";
 import SubmitButton from "../../common/buttons/submit-button/SubmitButton";
 import {

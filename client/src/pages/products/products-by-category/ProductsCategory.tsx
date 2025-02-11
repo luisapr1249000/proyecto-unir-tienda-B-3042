@@ -8,7 +8,7 @@ import {
   Typography,
 } from "@mui/material";
 import { useGetCategoryByName } from "../../../hooks/categories.hooks";
-import ObjectNotFound from "../../../components/common/errors/object-not-found/ObjectNotFound";
+import { GridObjectNotFound } from "../../../components/common/errors/object-not-found/ObjectNotFound";
 import QueryResultSummary from "../../../components/common/query/QueryResultSummary";
 import { useEffect, useState } from "react";
 import PageLimitSetter from "../../../components/common/query/PageLimitSetter";
@@ -22,6 +22,7 @@ import priceStore from "../../../zustand/priceSlice";
 import { useGetProductsWithPagination } from "../../../hooks/products.hooks";
 import { Link } from "../../../components/common/react-link/Link";
 import ProductCardSkeletonGrid from "../../../components/products/skeleton/ProductCardSkeletonGrid";
+import ProductsCategoryHelmet from "./ProductsCategoryHelmet";
 
 const ProductsByCategory = ({ category }: { category: Category }) => {
   const [sortBy, setSortBy] = useState("-createdAt");
@@ -61,9 +62,9 @@ const ProductsByCategory = ({ category }: { category: Category }) => {
 
   if (isLoadingProducts) return <ProductCardSkeletonGrid />;
   if (errorProducts)
-    return <ObjectNotFound object="Products" onReload={refetchProducts} />;
+    return <GridObjectNotFound object="Products" onReload={refetchProducts} />;
   if (!products)
-    return <ObjectNotFound object="Products" onReload={refetchProducts} />;
+    return <GridObjectNotFound object="Products" onReload={refetchProducts} />;
   return (
     <Grid
       container
@@ -166,11 +167,16 @@ const ProductsCategory = () => {
 
   if (isLoading) return <ProductCardSkeletonGrid />;
   if (error)
-    return <ObjectNotFound object="Category" onReload={refetchCategory} />;
+    return <GridObjectNotFound object="Category" onReload={refetchCategory} />;
   if (!category)
-    return <ObjectNotFound object="Category" onReload={refetchCategory} />;
+    return <GridObjectNotFound object="Category" onReload={refetchCategory} />;
 
-  return <ProductsByCategory category={category} />;
+  return (
+    <>
+      <ProductsCategoryHelmet categoryName={category.name} />
+      <ProductsByCategory category={category} />
+    </>
+  );
 };
 
 export default ProductsCategory;

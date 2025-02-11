@@ -1,4 +1,3 @@
-import React from "react";
 import { CardContent, Divider, Typography } from "@mui/material";
 import Grid from "@mui/material/Grid2";
 import { ProductProp } from "../../../../../types/product";
@@ -14,8 +13,6 @@ const ProductDetailsBody = ({ product }: ProductProp) => (
     component={Grid}
     container
   >
-    {/* <ProductCardActions /> */}
-
     <Grid sx={{}} size={{ xs: 12 }}>
       <Typography
         component="div"
@@ -37,7 +34,7 @@ const ProductDetailsBody = ({ product }: ProductProp) => (
       <Typography
         component="div"
         color="textSecondary"
-        sx={{ width: 0.8 }}
+        sx={{ width: 0.8, my: 1 }}
         variant="body2"
       >
         {product.description}

@@ -1,20 +1,17 @@
 import React, { useState } from "react";
-import AccountBoxIcon from "@mui/icons-material/AccountBox";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import SettingsIcon from "@mui/icons-material/Settings";
 import LogoutIcon from "@mui/icons-material/Logout";
 import LocalMallIcon from "@mui/icons-material/LocalMall";
 import {
   Avatar,
-  Box,
   IconButton,
   ListItemIcon,
-  ListItemText,
   Menu,
   MenuItem,
   Typography,
 } from "@mui/material";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQueryClient } from "@tanstack/react-query";
 import PermIdentityIcon from "@mui/icons-material/PermIdentity";
 import Grid from "@mui/material/Grid2";
 import { Link, useNavigate } from "react-router-dom";
@@ -22,7 +19,8 @@ import { logout } from "../../../../../api/auth.api";
 import UserCart from "../user-cart/UserCart";
 import { useAuthUser } from "../../../../../hooks/auth";
 import { isAdmin } from "../../../../../utils/utils";
-import BackdropLoading from "../../../../common/loaders/BackdropLoading";
+import UserMenuSkeleton from "../../skeleton/UserMenuSkeleton";
+
 const HeaderUserMenu = () => {
   const navigate = useNavigate();
   const { data: authUser, isLoading } = useAuthUser();
@@ -35,21 +33,6 @@ const HeaderUserMenu = () => {
   const handleClose = () => {
     setAnchorEl(null);
   };
-
-  const adminOrSellerOptions = [
-    {
-      label: "Post Product",
-      link: `/products/create`,
-      icon: <PermIdentityIcon />,
-      requiresSeller: true,
-    },
-    {
-      label: "Create Category",
-      link: `/categories/create`,
-      icon: <PermIdentityIcon />,
-      requiresSeller: true,
-    },
-  ];
 
   const settings = [
     {
@@ -87,7 +70,7 @@ const HeaderUserMenu = () => {
     queryClient.setQueryData(["authUser"], null);
     handleClose();
     await logout();
-    navigate("/");
+    navigate("/home");
   };
   const logoutItem = (
     <MenuItem onClick={logoutFunction}>
@@ -97,8 +80,6 @@ const HeaderUserMenu = () => {
       <Typography variant="body2">Logout</Typography>
     </MenuItem>
   );
-
-  if (isLoading) return <BackdropLoading />;
   if (!authUser) return <></>;
   console.log(authUser);
   return (
@@ -108,7 +89,7 @@ const HeaderUserMenu = () => {
       spacing={1}
     >
       {isLoading ? (
-        <BackdropLoading />
+        <UserMenuSkeleton />
       ) : (
         <>
           <IconButton size="small" onClick={handleMenu} color="inherit">

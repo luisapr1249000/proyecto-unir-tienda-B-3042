@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useGetProductsWithPagination } from "../../../hooks/products.hooks";
 import Grid from "@mui/material/Grid2";
 import ProductCard from "../../../components/products/card/ProductCard";
@@ -15,17 +15,32 @@ import usePriceStore from "../../../zustand/priceSlice";
 import { Link } from "../../../components/common/react-link/Link";
 import { GridBorderRadious } from "../../../assets/css/mui-css-objects/grid";
 import ProductCardSkeletonGrid from "../../../components/products/skeleton/ProductCardSkeletonGrid";
+import useProductStore from "../../../zustand/productSlice";
+import ProductsHelmet from "./ProductsHelmet";
 
 const Products = () => {
-  const [sortBy, setSortBy] = useState("-createdAt");
-  const [limit, setLimit] = useState(12);
-  const [page, setPage] = useState(1);
+  // const [sortBy, setSortBy] = useState("-createdAt");
+  // const [limit, setLimit] = useState(12);
+  // const [page, setPage] = useState(1);
+  const { setSortBy, setPage, setLimit, sortBy, page, limit } =
+    useProductStore();
 
   const { data: authUser } = useAuthUser();
   const { data: wishlistList } = useGetUserWishlist({
     userId: authUser?._id ?? "",
     enabled: !!authUser,
   });
+
+  const queryKey = [
+    "products",
+    {
+      sortBy,
+      page,
+      limit,
+      minPrice: usePriceStore.getState().price.min,
+      maxPrice: usePriceStore.getState().price.max,
+    },
+  ];
 
   const {
     data: products,
@@ -35,19 +50,22 @@ const Products = () => {
     isFetching,
   } = useGetProductsWithPagination({
     isKeepPreviousData: true,
+    queryKey,
     page,
     limit,
     sort: sortBy,
     minPrice: usePriceStore.getState().price.min,
     maxPrice: usePriceStore.getState().price.max,
   });
+
   const handleChangeSort = (sort: string) => {
     setSortBy(sort);
     setPage(1);
   };
   useEffect(() => {
-    window.scrollTo({ top: 0, behavior: "smooth" }); // Smooth scroll to top
+    window.scrollTo({ top: 0, behavior: "smooth" });
   }, [page]);
+
   if (isFetching || isLoading) return <ProductCardSkeletonGrid />;
   if (error)
     return (
@@ -69,91 +87,94 @@ const Products = () => {
     );
 
   return (
-    <Grid
-      container
-      spacing={5}
-      sx={{
-        justifyContent: "center",
-        alignItems: "center",
-        p: 3,
-      }}
-    >
-      <Card elevation={4} sx={{ flexGrow: 1, ...GridBorderRadious }}>
-        <CardContent
-          component={Grid}
-          container
-          direction={{ xs: "column", md: "row" }}
-          spacing={1}
-          sx={{ justifyContent: "space-between", alignItems: "center" }}
-        >
-          <Typography>
-            <Link underline="none" to="/products">
-              Products
-            </Link>
-          </Typography>
-          <QueryResultSummary
-            page={page}
-            limit={limit}
-            pagingCounter={products.pagingCounter}
-            countPerPage={products.limit}
-            total={products.totalDocs}
-            querySearch={`Products`}
-            totalPages={products.totalPages}
-          />
-        </CardContent>
-        <Divider />
-        <CardContent>
-          <Grid
+    <>
+      <ProductsHelmet />
+      <Grid
+        container
+        spacing={5}
+        sx={{
+          justifyContent: "center",
+          alignItems: "center",
+          p: 3,
+        }}
+      >
+        <Card elevation={4} sx={{ flexGrow: 1, ...GridBorderRadious }}>
+          <CardContent
+            component={Grid}
             container
-            spacing={3}
             direction={{ xs: "column", md: "row" }}
-            sx={{ alignItems: "center" }}
+            spacing={1}
+            sx={{ justifyContent: "space-between", alignItems: "center" }}
           >
+            <Typography>
+              <Link underline="none" to="/products">
+                Products
+              </Link>
+            </Typography>
+            <QueryResultSummary
+              page={page}
+              limit={limit}
+              pagingCounter={products.pagingCounter}
+              countPerPage={products.limit}
+              total={products.totalDocs}
+              querySearch={`Products`}
+              totalPages={products.totalPages}
+            />
+          </CardContent>
+          <Divider />
+          <CardContent>
             <Grid
               container
-              sx={{ justifyContent: "center", alignItems: "center" }}
-              size={{ xs: 12, md: "grow" }}
+              spacing={3}
+              direction={{ xs: "column", md: "row" }}
+              sx={{ alignItems: "center" }}
             >
-              <PageLimitSetter limit={limit} setLimit={setLimit} />
-            </Grid>
+              <Grid
+                container
+                sx={{ justifyContent: "center", alignItems: "center" }}
+                size={{ xs: 12, md: "grow" }}
+              >
+                <PageLimitSetter limit={limit} setLimit={setLimit} />
+              </Grid>
 
-            <Grid
-              container
-              size={{ xs: 12, md: "grow" }}
-              sx={{ justifyContent: "center", alignItems: "center" }}
-            >
-              <SortSelecter sortBy={sortBy} handleChange={handleChangeSort} />
+              <Grid
+                container
+                size={{ xs: 12, md: "grow" }}
+                sx={{ justifyContent: "center", alignItems: "center" }}
+              >
+                <SortSelecter sortBy={sortBy} handleChange={handleChangeSort} />
+              </Grid>
             </Grid>
-          </Grid>
-        </CardContent>
+          </CardContent>
 
-        <Divider />
-        <CardContent sx={{ p: 3 }} component={Grid} container spacing={3}>
-          {products.docs.map((product) => {
-            const isWishlistItem = wishlistList?.wishlist
-              .map((p) => p._id)
-              .includes(product._id);
-            console.log("isWishlistItem", isWishlistItem);
-            return (
-              <ProductCard
-                key={product._id}
-                product={product}
-                isWishlistItem={isWishlistItem}
-              />
-            );
-          })}
-        </CardContent>
-        <Divider />
-        <CardContent>
-          <PaginationButtons
-            page={page}
-            count={products.totalPages}
-            handleChange={(_e, value) => setPage(value)}
-            isLoadingNextPage={isFetching}
-          />
-        </CardContent>
-      </Card>
-    </Grid>
+          <Divider />
+          <CardContent sx={{ p: 3 }} component={Grid} container spacing={3}>
+            {products.docs.map((product) => {
+              const isWishlistItem = wishlistList?.wishlist
+                .map((p) => p._id)
+                .includes(product._id);
+              console.log("isWishlistItem", isWishlistItem);
+              return (
+                <ProductCard
+                  key={product._id}
+                  product={product}
+                  isWishlistItem={isWishlistItem}
+                />
+              );
+            })}
+          </CardContent>
+          <Divider />
+          <CardContent>
+            <PaginationButtons
+              page={page}
+              count={products.totalPages}
+              handleChange={(_e, value) => setPage(value)}
+              isLoadingNextPage={isFetching}
+            />
+          </CardContent>
+        </Card>
+      </Grid>
+    </>
   );
 };
 

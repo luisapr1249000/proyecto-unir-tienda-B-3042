@@ -1,11 +1,12 @@
-import React from "react";
 import Grid from "@mui/material/Grid2";
 import { Divider, Typography } from "@mui/material";
 import { Card, CardContent } from "@mui/material";
 import CategoryCreateForm from "../../../components/categories/create/CategoryCreateForm";
+import CreateCategoryHelmet from "./CategoryCreateHelmet";
 
-const CategoryCreate = () => {
-  return (
+const CategoryCreate = () => (
+  <>
+    <CreateCategoryHelmet />
     <Grid
       sx={{
         p: 3,
@@ -23,7 +24,7 @@ const CategoryCreate = () => {
         </CardContent>
       </Card>
     </Grid>
-  );
-};
+  </>
+);
 
 export default CategoryCreate;

@@ -1,5 +1,3 @@
-import React from "react";
-
 import IconButton from "@mui/material/IconButton";
 import OutlinedFlagIcon from "@mui/icons-material/OutlinedFlag";
 

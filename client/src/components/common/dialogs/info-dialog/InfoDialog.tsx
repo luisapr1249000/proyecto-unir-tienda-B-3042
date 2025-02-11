@@ -1,4 +1,4 @@
-import { Dialog, DialogContent, DialogTitle, Divider } from "@mui/material";
+import { Dialog, DialogContent, DialogTitle } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import BorderIconButton from "../../buttons/border-icon-button/BorderIconButton";
 

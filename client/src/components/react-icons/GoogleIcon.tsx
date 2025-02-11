@@ -1,6 +1,4 @@
-import React from "react";
 import SvgIcon from "@mui/material/SvgIcon";
-import googleIcon from "../../assets/svg/googleIcon.svg";
 const GoogleIcon = () => (
   <SvgIcon>
     <svg

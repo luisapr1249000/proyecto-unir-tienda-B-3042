@@ -8,7 +8,9 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { toggleProductInWishlist } from "../../../../../api/users/userProductActions.api";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import BackdropLoading from "../../../../common/loaders/BackdropLoading";
+import IconLoader from "../../../../common/loaders/IconLoader";
+import useProductStore from "../../../../../zustand/productSlice";
+import { ProductPaginationResults } from "../../../../../types/query";
 
 const WishlistButton = ({
   isWishlistItem = false,
@@ -16,17 +18,35 @@ const WishlistButton = ({
 }: {
   isWishlistItem: boolean;
 } & ProductId) => {
+  const { sortBy, page, limit } = useProductStore();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const { data: authUser } = useAuthUser();
   const { mutate: addToWishlistMutation, isPending } = useMutation({
     mutationFn: toggleProductInWishlist,
     onSuccess: () => {
-      console.log("success");
-      toast.success("Product added to Wishlist successfully");
       queryClient.invalidateQueries({
         queryKey: [`user-${authUser?._id}-wishlist`],
       });
+      queryClient.setQueryData(
+        ["products", { sortBy, page, limit }],
+        (
+          oldData?: ProductPaginationResults
+        ): ProductPaginationResults | undefined => {
+          if (!oldData) return oldData;
+          return {
+            ...oldData,
+            docs: oldData.docs.map((product) => {
+              if (product._id === productId) {
+                return isWishlistItem
+                  ? { ...product, wishlistCount: product.wishlistCount - 1 }
+                  : { ...product, wishlistCount: product.wishlistCount + 1 };
+              }
+              return product;
+            }),
+          };
+        }
+      );
     },
     onError: (error) => {
       console.log("error", error);
@@ -46,7 +66,7 @@ const WishlistButton = ({
       });
   };
 
-  if (isPending) return <BackdropLoading />;
+  if (isPending) return <IconLoader />;
 
   return (
     <Grid

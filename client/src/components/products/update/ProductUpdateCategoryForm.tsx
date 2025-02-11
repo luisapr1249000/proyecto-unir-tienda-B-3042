@@ -26,6 +26,7 @@ const ProductUpdateCategoryForm = ({
     if (selectedCategories && selectedCategories.length > 0) {
       setCategories(selectedCategories ?? []);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   if (!categories) return <></>;

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useState } from "react";
 import { Review } from "../../../types/review";
 import Grid from "@mui/material/Grid2";
 import {
@@ -9,15 +9,12 @@ import {
   CardContent,
   CardMedia,
   Divider,
-  IconButton,
   Paper,
   Rating,
   Typography,
 } from "@mui/material";
 import { formatDate } from "../../../utils/util.dates";
-import OutlinedFlagIcon from "@mui/icons-material/OutlinedFlag";
 import ReportButton from "../../common/buttons/report/ReportButton";
-import DialogReportReview from "../dialogs/DialogReportReview";
 import { Image } from "../../../validation-schemas/image.validation";
 import DialogReview from "../dialogs/DialogReview";
 import BasicReportDialog from "../../common/dialogs/basic-report-dialog/BasicReportDialog";
@@ -147,7 +144,7 @@ const ReviewCard = ({ review }: { review: Review }) => {
             </>
           )}
         </Box>
-        <ReviewReportSection />
+        <ReviewReportSection reviewId={review._id} />
       </CardActions>
     </Card>
   );

@@ -1,10 +1,5 @@
 import { api } from "../config/axios.config";
-import {
-  Report,
-  ReportedItemId,
-  ReportInput,
-  ReportResolution,
-} from "../types/report";
+import { Report, ReportedItemId, ReportInput } from "../types/report";
 import { PaginationOptions, ReportPaginationResults } from "../types/query";
 
 export const createReport = async ({

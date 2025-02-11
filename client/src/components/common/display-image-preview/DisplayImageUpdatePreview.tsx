@@ -51,11 +51,13 @@ const DisplayImageUpdatePreview = ({
           {existedImages && existedImages.length > 0 && (
             <>
               {existedImages.map((existedImage, index) => (
-                <DisplayImage
-                  preview={existedImage}
-                  onDeleteFile={onDeleteExistedImage}
-                  imageIndex={index}
-                />
+                <Grid container size={{ xs: "grow" }} sx={{ height: 200 }}>
+                  <DisplayImage
+                    preview={existedImage}
+                    onDeleteFile={onDeleteExistedImage}
+                    imageIndex={index}
+                  />
+                </Grid>
               ))}
             </>
           )}

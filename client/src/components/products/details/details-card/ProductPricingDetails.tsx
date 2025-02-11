@@ -50,7 +50,7 @@ const ProductPricingDetails = ({ product }: ProductProp) => (
       </Typography>
     )}
     <Divider sx={{ flexGrow: 1, my: 3 }} />
-    <ProductQuantitySelectorForm productQuantity={product.quantity} />
+    <ProductQuantitySelectorForm product={product} />
   </CardContent>
 );
 

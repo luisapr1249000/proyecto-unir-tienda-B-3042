@@ -1,10 +1,4 @@
-import {
-  Box,
-  Button,
-  IconButton,
-  IconButtonProps,
-  Tooltip,
-} from "@mui/material";
+import { IconButton, IconButtonProps, Tooltip } from "@mui/material";
 import ClearIcon from "@mui/icons-material/Clear";
 import Paper from "@mui/material/Paper";
 

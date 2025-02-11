@@ -1,4 +1,3 @@
-import React, { useState } from "react";
 import Grid from "@mui/material/Grid2";
 import { useFormik } from "formik";
 import { useMutation } from "@tanstack/react-query";
@@ -9,7 +8,7 @@ import SubmitButton from "../../common/buttons/submit-button/SubmitButton";
 import { reviewInputSchema } from "../../../validation-schemas/review.validation";
 import ReviewRatingField from "./ReviewRatingField";
 import ReviewAttachImages from "./ReviewAttachImages";
-import { createReview } from "../../../api/review.api";
+import { createReview, uploadReviewImage } from "../../../api/review.api";
 import { toast } from "react-toastify";
 import CircleLoadingGrid from "../../common/loaders/CircleLoadingGrid";
 
@@ -26,19 +25,45 @@ const ReviewCreateForm = ({ productId }: ProductId) => {
     },
   });
 
+  const { mutate: uploadReviewImageMutation } = useMutation({
+    mutationFn: uploadReviewImage,
+    onSuccess: () => {
+      console.log("success");
+      toast.success("Review image uploaded successfully");
+    },
+    onError: () => {
+      console.log("error");
+      toast.error("Something went wrong");
+    },
+  });
+
   const initialValues = {
+    title: "",
     content: "",
-    review: 1,
+    rating: 1,
     images: [],
   };
   const formik = useFormik({
     initialValues,
     validationSchema: toFormikValidationSchema(reviewInputSchema),
-    onSubmit: (values) => {
-      createReviewMutation({
-        values,
-        productId,
-      });
+    onSubmit: ({ images, ...values }) => {
+      createReviewMutation(
+        {
+          productId,
+          values: values,
+        },
+        {
+          onSuccess: (review) => {
+            if (images && images.length > 0) {
+              uploadReviewImageMutation({
+                reviewId: review._id,
+                productId,
+                files: images,
+              });
+            }
+          },
+        }
+      );
     },
   });
 
@@ -46,17 +71,47 @@ const ReviewCreateForm = ({ productId }: ProductId) => {
     formik.setFieldValue("review", newValue);
   };
 
-  const setImages = (files: File[]) => {
-    formik.setFieldValue("images", files);
-  };
+  const setImages = (files: File[]) => formik.setFieldValue("images", files);
 
   return (
     <Grid container spacing={3} component="form" onSubmit={formik.handleSubmit}>
       {isPending && <CircleLoadingGrid />}
       <ReviewRatingField
         onChangeRating={onChangeRating}
-        value={formik.values.review}
+        value={formik.values.rating}
       />
+      <Grid size={{ xs: 12 }}>
+        <TextField
+          fullWidth
+          required
+          id="title"
+          name="title"
+          label="Review title"
+          placeholder="Review title"
+          value={formik.values.title}
+          onChange={formik.handleChange}
+          onBlur={formik.handleBlur}
+          error={formik.touched.title && Boolean(formik.errors.title)}
+          helperText={
+            formik.touched.title && Boolean(formik.errors.title)
+              ? formik.errors.title
+              : undefined
+          }
+          slotProps={{
+            inputLabel: { shrink: true },
+          }}
+          focused={
+            formik.touched.title && Boolean(!formik.errors.title)
+              ? true
+              : undefined
+          }
+          color={
+            formik.touched.title && Boolean(!formik.errors.title)
+              ? "success"
+              : undefined
+          }
+        />
+      </Grid>
       <Grid size={{ xs: 12 }}>
         <TextField
           multiline

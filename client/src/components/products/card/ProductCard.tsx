@@ -22,11 +22,7 @@ const ProductCard = ({
     >
       <ProductCardImage product={product} />
       <Divider />
-      <Wishlist
-        productId={product._id}
-        isWishlistItem={isWishlistItem}
-        wishlistCount={product.wishlistCount}
-      />
+      <Wishlist productId={product._id} isWishlistItem={isWishlistItem} />
 
       <CardActionArea component={Link} to={`/products/details/${product._id}`}>
         <ProductCardContent product={product} />

@@ -1,4 +1,3 @@
-import React from "react";
 import Grid from "@mui/material/Grid2";
 import WifiOffIcon from "@mui/icons-material/WifiOff";
 import { gridContainerCenter } from "../../../assets/css/mui-css-objects/gridCenter";

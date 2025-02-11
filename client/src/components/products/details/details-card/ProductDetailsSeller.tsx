@@ -1,4 +1,3 @@
-import React from "react";
 import { Typography } from "@mui/material";
 import { ProductProp } from "../../../../types/product";
 import { Link } from "../../../common/react-link/Link";

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Slider } from "@mui/material";
 import Grid from "@mui/material/Grid2";
 import { ButtonLink } from "../buttons/link/ButtonLink";

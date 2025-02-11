@@ -7,4 +7,5 @@ export const useServerStatus = () =>
     queryFn: getServerStatus,
     staleTime: 5 * 60 * 1000,
     retry: false,
+    refetchOnWindowFocus: false,
   });

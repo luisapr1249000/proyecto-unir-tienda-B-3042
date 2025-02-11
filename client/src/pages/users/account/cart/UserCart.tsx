@@ -1,23 +1,19 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Grid from "@mui/material/Grid2";
 import {
   Divider,
   Typography,
-  Paper,
   Card,
   CardContent,
   CardActions,
   Button,
 } from "@mui/material";
-import { useParams } from "react-router-dom";
 import {
   useGetUserCart,
   useGetUserDefaultAddressDirection,
 } from "../../../../hooks/user";
 import CircleLoadingGrid from "../../../../components/common/loaders/CircleLoadingGrid";
-import ObjectNotFound, {
-  GridObjectNotFound,
-} from "../../../../components/common/errors/object-not-found/ObjectNotFound";
+import { GridObjectNotFound } from "../../../../components/common/errors/object-not-found/ObjectNotFound";
 import { useAuthUser } from "../../../../hooks/auth";
 import UserCartCard from "../../../../components/users_/account/cart/UserCartCard";
 import UserCartSummaryCard from "../../../../components/users_/account/cart/UserCartSummaryCard";
@@ -26,6 +22,8 @@ import HomeButton from "../../../../components/common/buttons/home/HomeButton";
 import { CartItem } from "../../../../types/user";
 import AddressDirectionCard from "../../../../components/users_/address-direction/card/AddressDirectionCard";
 import { Link } from "../../../../components/common/react-link/Link";
+import UserCartHelmet from "./UserCartHelmet";
+
 const EmptyCart = () => {
   return (
     <Card elevation={4}>
@@ -122,101 +120,102 @@ const UserCart = () => {
     return <GridObjectNotFound object="Cart" onReload={refetch} />;
   if (!userCart) return <GridObjectNotFound object="Cart" onReload={refetch} />;
 
-  const defaultHeight =
-    userCart.cart.items.length < 5 ? "calc(100vh - 64px)" : undefined;
   return (
-    <Grid
-      container
-      spacing={3}
-      size={{ xs: 10 }}
-      sx={{ p: 3, height: { xs: undefined, md: defaultHeight } }}
-      direction={{ xs: "column-reverse", md: "row" }}
-    >
-      <Grid container size={{ xs: 12, md: 8 }}>
-        <Card
-          sx={{
-            flexGrow: 1,
-          }}
-          elevation={4}
-        >
-          <CardContent
-            component={Grid}
-            container
-            size={{ xs: 12 }}
-            sx={{ bgcolor: "divider", flexGrow: 1 }}
-          >
-            <Typography variant="body2" color="textSecondary">
-              User Cart
-            </Typography>
-          </CardContent>
-          <Divider />
-          <CardContent
-            size={{ xs: 12 }}
-            component={Grid}
-            container
-            spacing={3}
-            sx={{
-              justifyContent: "center",
-              alignItems: "center",
-            }}
-          >
-            {userCart.cart.items.length === 0 ? (
-              <EmptyCart />
-            ) : (
-              <>
-                {products.map((cartItem, i) => (
-                  <UserCartCard
-                    subtotal={cartItem.subtotal}
-                    cartItem={cartItem}
-                    key={i}
-                    onChange={handleChange}
-                  />
-                ))}
-              </>
-            )}
-          </CardContent>
-        </Card>
-      </Grid>
-
+    <>
+      <UserCartHelmet />
       <Grid
         container
-        size={{ xs: 12, md: 4 }}
-        sx={{
-          // border: 1,
-          justifyContent: "flex-start",
-          alignItems: "flex-start",
-        }}
-        direction="column"
+        spacing={3}
+        size={{ xs: 10 }}
+        sx={{ p: 3 }}
+        direction={{ xs: "column-reverse", md: "row" }}
       >
-        <UserCartSummaryCard
-          totalItems={userCart.cart.totalItems}
-          totalPrice={totalPrice}
-        />
-        {addressDirection ? (
-          <Grid container size={{ xs: 12 }} sx={{}}>
-            <AddressDirectionCard address={addressDirection} />
-          </Grid>
-        ) : (
-          <Card component={Grid} size={{ xs: 12 }} sx={{}}>
-            <CardContent sx={{ bgcolor: "divider" }}>
-              <Typography color="textSecondary" variant="body2">
-                Select an address direction
+        <Grid container size={{ xs: 12, md: 8 }}>
+          <Card
+            sx={{
+              flexGrow: 1,
+            }}
+            elevation={4}
+          >
+            <CardContent
+              component={Grid}
+              container
+              size={{ xs: 12 }}
+              sx={{ bgcolor: "divider", flexGrow: 1 }}
+            >
+              <Typography variant="body2" color="textSecondary">
+                User Cart
               </Typography>
             </CardContent>
-            <CardActions>
-              <Button
-                component={Link}
-                to={`/users/${authUser?.username}/address-directions/create`}
-                variant="outlined"
-                size="small"
-              >
-                Select Address Direction
-              </Button>
-            </CardActions>
+            <Divider />
+            <CardContent
+              size={{ xs: 12 }}
+              component={Grid}
+              container
+              spacing={3}
+              sx={{
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              {userCart.cart.items.length === 0 ? (
+                <EmptyCart />
+              ) : (
+                <>
+                  {products.map((cartItem, i) => (
+                    <UserCartCard
+                      subtotal={cartItem.subtotal}
+                      cartItem={cartItem}
+                      key={i}
+                      onChange={handleChange}
+                    />
+                  ))}
+                </>
+              )}
+            </CardContent>
           </Card>
-        )}
+        </Grid>
+
+        <Grid
+          container
+          size={{ xs: 12, md: 4 }}
+          sx={{
+            // border: 1,
+            justifyContent: "flex-start",
+            alignItems: "flex-start",
+          }}
+          direction="column"
+        >
+          <UserCartSummaryCard
+            totalItems={userCart.cart.totalItems}
+            totalPrice={totalPrice}
+          />
+          {addressDirection ? (
+            <Grid container size={{ xs: 12 }} sx={{}}>
+              <AddressDirectionCard address={addressDirection} />
+            </Grid>
+          ) : (
+            <Card component={Grid} size={{ xs: 12 }} sx={{}}>
+              <CardContent sx={{ bgcolor: "divider" }}>
+                <Typography color="textSecondary" variant="body2">
+                  Select an address direction
+                </Typography>
+              </CardContent>
+              <CardActions>
+                <Button
+                  component={Link}
+                  to={`/users/${authUser?.username}/address-directions/create`}
+                  variant="outlined"
+                  size="small"
+                >
+                  Select Address Direction
+                </Button>
+              </CardActions>
+            </Card>
+          )}
+        </Grid>
       </Grid>
-    </Grid>
+    </>
   );
 };
 

@@ -42,6 +42,24 @@ export const createReview = async ({
   return response.data;
 };
 
+export const uploadReviewImage = async ({
+  reviewId,
+  productId,
+  files,
+}: {
+  reviewId: string;
+  productId: string;
+  files: File[];
+}) => {
+  const formData = new FormData();
+  files.forEach((file) => formData.append("images", file));
+  const response = await api.post<Review>(
+    `/products/${productId}/reviews/${reviewId}/images/`,
+    formData
+  );
+  return response.data;
+};
+
 export const updateReview = async ({
   values,
   productId,

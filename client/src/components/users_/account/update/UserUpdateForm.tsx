@@ -8,7 +8,6 @@ import { useMutation } from "@tanstack/react-query";
 import { updateUser } from "../../../../api/users/user.api";
 import TextField from "../../../common/textfields/TextField";
 import { toast } from "react-toastify";
-import CircleLoadingGrid from "../../../common/loaders/CircleLoadingGrid";
 import ContainerCircleLoader from "../../../common/loaders/ContainerCircleLoader";
 
 const UserUpdateForm = () => {

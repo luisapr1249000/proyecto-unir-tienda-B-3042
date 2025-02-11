@@ -1,11 +1,12 @@
-import React from "react";
 import Grid from "@mui/material/Grid2";
 import { Divider, Typography } from "@mui/material";
 import ChangePasswordForm from "../../../../components/users_/account/change-password/ChangePasswordForm";
 import { Card, CardContent } from "@mui/material";
+import ChangePasswordHelmet from "./ChangePasswordHelmet";
 
-const ChangePassword = () => {
-  return (
+const ChangePassword = () => (
+  <>
+    <ChangePasswordHelmet />
     <Grid
       sx={{
         p: 3,
@@ -27,7 +28,7 @@ const ChangePassword = () => {
         </CardContent>
       </Card>
     </Grid>
-  );
-};
+  </>
+);
 
 export default ChangePassword;

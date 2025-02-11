@@ -1,14 +1,10 @@
-import React, { useState } from "react";
 import Grid from "@mui/material/Grid2";
 import {
   Button,
   Card,
-  CardActionArea,
-  CardActions,
   CardContent,
   CardMedia,
   Divider,
-  TextField,
   Typography,
 } from "@mui/material";
 import { CartItem } from "../../../../types/user";
@@ -24,7 +20,7 @@ import { useNavigate } from "react-router-dom";
 import { ProductId } from "../../../../types/product";
 import BackdropLoading from "../../../common/loaders/BackdropLoading";
 
-export const UserCartAddToWishlistButton = ({ productId }) => {
+export const UserCartAddToWishlistButton = ({ productId }: ProductId) => {
   const { data: authUser } = useAuthUser();
   const navigate = useNavigate();
   const { mutate: addToWishlistMutation } = useMutation({
@@ -63,23 +59,20 @@ export const UserCartRemoveButton = ({ productId }: ProductId) => {
   const queryClient = useQueryClient();
   const { data: authUser } = useAuthUser();
   const navigate = useNavigate();
-  const {
-    mutate: removeFromCartMutation,
-    isPending: isRemovingItem,
-    error,
-  } = useMutation({
-    mutationFn: toggleProductInCart,
-    onSuccess: () => {
-      toast.success("Product removed from Cart successfully");
-      queryClient.invalidateQueries({
-        queryKey: [`user-${authUser?._id}-cart`],
-      });
-    },
-    onError: (error) => {
-      console.log("error", error);
-      toast.error("Something went wrong");
-    },
-  });
+  const { mutate: removeFromCartMutation, isPending: isRemovingItem } =
+    useMutation({
+      mutationFn: toggleProductInCart,
+      onSuccess: () => {
+        toast.success("Product removed from Cart successfully");
+        queryClient.invalidateQueries({
+          queryKey: [`user-${authUser?._id}-cart`],
+        });
+      },
+      onError: (error) => {
+        console.log("error", error);
+        toast.error("Something went wrong");
+      },
+    });
 
   const handleClick = () => {
     console.log("authUser", authUser);
@@ -174,6 +167,7 @@ const UserCartCard = ({
           <Grid
             container
             sx={{ justifyContent: "flex-end", alignItems: "center" }}
+            spacing={0.5}
           >
             {cartItem.product.discount && (
               <Grid
@@ -196,12 +190,13 @@ const UserCartCard = ({
                 </Typography>
               </Grid>
             )}
+            <Divider flexItem sx={{ width: 0.66 }} />
             <Grid
               size={{ xs: 12 }}
               container
               spacing={1}
               sx={{
-                // border: 1,
+                mt: 0.5,
                 justifyContent: "flex-end",
                 alignItems: "center",
               }}

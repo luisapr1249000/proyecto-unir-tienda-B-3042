@@ -1,4 +1,3 @@
-import React from "react";
 import ShareIcon from "@mui/icons-material/Share";
 import { IconButton, IconButtonProps } from "@mui/material";
 

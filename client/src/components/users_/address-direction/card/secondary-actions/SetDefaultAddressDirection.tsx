@@ -1,4 +1,3 @@
-import React from "react";
 import { useAuthUser } from "../../../../../hooks/auth";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { setDefaultAddressDirection } from "../../../../../api/users/address.api";

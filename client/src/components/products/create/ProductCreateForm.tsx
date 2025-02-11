@@ -85,9 +85,8 @@ const ProductCreateForm = () => {
     { label: "No", value: "false" },
   ];
 
-  const setCategories = (selectedCategoriesId: string[]) => {
+  const setCategories = (selectedCategoriesId: string[]) =>
     formik.setFieldValue("categories", selectedCategoriesId);
-  };
 
   const setImages = (files: File[]) => formik.setFieldValue("images", files);
 

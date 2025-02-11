@@ -1,5 +1,3 @@
-import React from "react";
-
 const ToggleableDrawerMenu = () => {
   return <div>ToggleableDrawerMenu</div>;
 };

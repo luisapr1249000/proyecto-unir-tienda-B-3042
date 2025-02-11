@@ -1,11 +1,12 @@
-import React from "react";
 import Grid from "@mui/material/Grid2";
-import { Divider, Paper, Typography } from "@mui/material";
+import { Divider, Typography } from "@mui/material";
 import ProductCreateForm from "../../../components/products/create/ProductCreateForm";
 import { Card, CardContent } from "@mui/material";
+import ProductCreateHelmet from "./ProductCreateHelmet";
 
-const ProductCreate = () => {
-  return (
+const ProductCreate = () => (
+  <>
+    <ProductCreateHelmet />
     <Grid
       sx={{
         p: 3,
@@ -22,7 +23,7 @@ const ProductCreate = () => {
         </CardContent>
       </Card>
     </Grid>
-  );
-};
+  </>
+);
 
 export default ProductCreate;

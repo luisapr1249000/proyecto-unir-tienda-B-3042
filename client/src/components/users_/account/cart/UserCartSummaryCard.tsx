@@ -12,6 +12,7 @@ import { useAuthUser } from "../../../../hooks/auth";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { clearCart } from "../../../../api/users/userProductActions.api";
 import { toast } from "react-toastify";
+import PaymentForm from "../../../payment/payment-form/PaymentForm";
 
 const ClearCartButton = ({
   onClickClearCart,
@@ -107,17 +108,29 @@ const UserCartSummaryCard = ({
             {totalItems > 0 ? totalPrice.toFixed(2) : "0 "} $
           </Typography>
         </CardContent>
+        <Divider />
         {totalItems > 0 && totalPrice > 0 && (
-          <CardActions sx={{ alignItems: "center" }}>
-            <Button variant="outlined" size="small">
-              Checkout
-            </Button>
-            {!isCartCleared && (
-              <ClearCartButton
-                onClickClearCart={() => setIsCartCleared(true)}
-              />
-            )}
-          </CardActions>
+          <>
+            <CardContent>
+              <Typography variant="body2" color="textSecondary">
+                Payment
+              </Typography>
+            </CardContent>
+            <CardContent>
+              <PaymentForm />
+            </CardContent>
+            <Divider />
+            <CardActions sx={{ alignItems: "center" }}>
+              <Button variant="outlined" size="small">
+                Checkout
+              </Button>
+              {!isCartCleared && (
+                <ClearCartButton
+                  onClickClearCart={() => setIsCartCleared(true)}
+                />
+              )}
+            </CardActions>
+          </>
         )}
       </Card>
     </Grid>

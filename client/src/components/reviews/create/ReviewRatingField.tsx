@@ -1,4 +1,3 @@
-import React from "react";
 import Grid from "@mui/material/Grid2";
 import Rating from "@mui/material/Rating";
 import Typography from "@mui/material/Typography";

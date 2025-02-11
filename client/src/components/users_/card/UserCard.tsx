@@ -1,11 +1,4 @@
-import {
-  Box,
-  Card,
-  CardContent,
-  Divider,
-  Tooltip,
-  Typography,
-} from "@mui/material";
+import { Card, CardContent, Divider, Tooltip, Typography } from "@mui/material";
 import Avatar from "@mui/material/Avatar";
 import Grid from "@mui/material/Grid2";
 import CheckIcon from "@mui/icons-material/Check";

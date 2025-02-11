@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import Grid from "@mui/material/Grid2";
 import ButtonInputFile from "../../common/buttons/button-input-file/ButtonInputFile";
 import { toast } from "react-toastify";
@@ -50,12 +50,6 @@ const ReviewAttachImages = ({
     setSelectedFiles([]);
     setImages([]);
   };
-
-  useEffect(() => {
-    if (selectedFiles.length > 0) {
-      setImages(selectedFiles);
-    }
-  }, [selectedFiles]);
 
   return (
     <Grid container spacing={3} size={{ xs: 12 }} sx={{}}>

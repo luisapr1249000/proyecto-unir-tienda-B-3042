@@ -70,6 +70,7 @@ export const DisplayImage = ({
       height={"100%"}
       image={preview}
       alt={imageIndex.toString()}
+      sx={{ width: 1 }}
     />
     <IconButtonDelete
       onDelete={() => {

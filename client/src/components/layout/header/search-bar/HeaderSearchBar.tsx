@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import Grid from "@mui/material/Grid2";
 import { useNavigate, useParams } from "react-router-dom";
-import HeaderDrawerSearchbar from "./mobile/HeaderDrawerSearchbar";
 import HeaderSearchbarForm from "./HeaderSearchbarForm";
 import MobileSearchBar from "./mobile/MobileSearchBar";
 
